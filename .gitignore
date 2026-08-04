@@ -1,0 +1,13 @@
+# eclipse
+.metadata
+.settings
+.classpath
+.project
+
+# tomcat
+Servers
+
+# java
+bin
+build
+*.class
