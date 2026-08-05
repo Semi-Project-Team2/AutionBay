@@ -1,7 +1,9 @@
 package com.kh.spring.member;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,9 +28,16 @@ public class MemberController {
 	 * URL : [GET] /member/list
 	 */
 	@GetMapping("/list")
-	public String memberList() {
+	public String memberList(
+			Model model
+			) {
+		List<MemberDTO> list = service.getMemberList();
 		
-		return ""; // TODO:
+		// 조회된 결과(list)를 request 영역에 저장 (k: memberList)
+		model.addAttribute("memberList", list);
+		
+		// 포워드 처리됨! 
+		return "member/list"; // => /WEB-INF/views/member/list.jsp
 	}
 	
 	/**
@@ -48,8 +57,9 @@ public class MemberController {
 	 */
 	@GetMapping("/delete/{id}")
 	public String delete(@PathVariable int id) {
-		
-		return "";	// TODO:
+		service.deleteMember(id);
+		// 회원 목록 페이지 재요청.... (리다이렉트)
+		return "redirect:/member/list";
 	}
 }
 

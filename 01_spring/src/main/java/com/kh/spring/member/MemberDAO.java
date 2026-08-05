@@ -75,14 +75,59 @@ public class MemberDAO {
 		
 		// Connection 객체 생성, PreparedStatement 객체 생성
 		// 물음표 채우기 --- *
+		try (Connection conn = DBUtil.getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(sql);
+			) {
+			// 첫번째 물음표 --> NAME 컬럼에 저장할 값 (이름)
+			pstmt.setString(1, member.getName());
+			// 두번째 물음표 --> EMAIL 컬럼에 저장할 값 (이메일)
+			pstmt.setString(2, member.getEmail());
+			// 세번째 물음표 --> AGE 컬럼에 저장할 값 (나이)
+			pstmt.setInt(3, member.getAge());
+			
+			// 쿼리문 실행 후 결과 받기
+			int result = pstmt.executeUpdate();
+			if (result > 0) {
+				System.out.println("회원 추가 성공!");
+			} else {
+				System.out.println("회원 추가 실패..");
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		
 	}
 	
 	// 회원 삭제
 	// => 전달된 회원 번호를 기준으로 member 테이블에서 삭제하는 메소드
 	public void delete(int id) {
+		// member 테이블에서 회원 번호가 전달된 값(id)과 일치하는 행을 삭제
+		String sql = "DELETE FROM MEMBER WHERE ID = ?";
 		
+		// TODO: 쿼리 실행까지...
+		
+		try (Connection conn = DBUtil.getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(sql);
+			) {
+			pstmt.setInt(1, id);
+			int result = pstmt.executeUpdate();
+			if (result > 0) {
+				System.out.println("회원 삭제 성공! : "  + id);
+			} else {
+				System.out.println("회원 삭제 실패! : " + id);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// throw new RuntimeException(e.getMessage());
+		}
 	}
 	
 	
 }
+
+
+
+
+
