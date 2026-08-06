@@ -20,7 +20,7 @@ public class MemberDAO {
 	public List<MemberDTO> findAll() {
 		List<MemberDTO> list = new ArrayList<>();
 		
-		String sql = "SELECT ID, NAME, EMAIL, AGE FROM MEMBER";
+		String sql = "SELECT ID, NAME, EMAIL, AGE FROM MEMBER ORDER BY ID";
 		
 		// * JDBC 실행 순서
 		//	 0) 드라이버 로드 (환경에 따라 생략 가능)
@@ -124,8 +124,75 @@ public class MemberDAO {
 		}
 	}
 	
+	// 회원 정보 수정
+	// => 전달된 회원 정보 중 회원번호를 기준으로
+	//			이름, 이메일, 나이 컬럼의 값을 변경
+	public void update(MemberDTO member) {
+		String sql = "UPDATE MEMBER SET NAME = ?, EMAIL = ?, AGE = ? WHERE ID = ?";
+		
+		
+		try (Connection conn = DBUtil.getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(sql);
+				) {
+			
+			pstmt.setString(1, member.getName());
+			pstmt.setString(2, member.getEmail());
+			pstmt.setInt(3, member.getAge());
+			pstmt.setInt(4, member.getId());
+			
+			int result = pstmt.executeUpdate();
+			if (result > 0) {
+				System.out.println("수정 완료! : " + member.getId());
+			} else {
+				System.out.println("수정 실패.. : " + member.getId());
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 	
+	// 회원 정보 조회
+	// => member 테이블에서 전달 받은 회원 번호(id)에 해당하는
+	//			회원 정보를 조회한 결과 반환
+	public MemberDTO findById(int id) {
+		MemberDTO member = null;
+		
+		String sql = "SELECT ID, NAME, EMAIL, AGE FROM MEMBER WHERE ID = ?";
+		
+		try (Connection conn = DBUtil.getConnection();
+		     PreparedStatement pstmt = conn.prepareStatement(sql);
+			) {
+			
+			pstmt.setInt(1, id);
+			ResultSet rset = pstmt.executeQuery();
+			if (rset.next()) {
+				
+				member = new MemberDTO(
+							rset.getInt("id"),
+							rset.getString("name"),
+							rset.getString("email"),
+							rset.getInt("age")
+						);
+				
+			}
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return member;
+	}
 }
+
+
+
+
+
+
+
+
 
 
 

@@ -24,7 +24,7 @@ public class MemberController {
 	}
 
 	/**
-	 * 회원 목록 조회
+	 * 회원 목록 조회 --> R (Read)
 	 * URL : [GET] /member/list
 	 */
 	@GetMapping("/list")
@@ -41,18 +41,19 @@ public class MemberController {
 	}
 	
 	/**
-	 * 회원 등록 
+	 * 회원 등록 --> C (Create)
 	 * URL : [POST] /member/insert
 	 * Parameter : age (나이), email (이메일), name (이름) => MemberDTO로 한번에 받을 수 있음
 	 */
 	@PostMapping("/insert")
 	public String insert(@ModelAttribute MemberDTO member) {
+		service.insertMember(member);
 		
-		return ""; // TODO:
+		return "redirect:/member/list"; 
 	}
 	
 	/**
-	 * 회원 삭제
+	 * 회원 삭제 --> D (Delete)
 	 * URL : [GET] /member/delete/{id}
 	 */
 	@GetMapping("/delete/{id}")
@@ -60,6 +61,37 @@ public class MemberController {
 		service.deleteMember(id);
 		// 회원 목록 페이지 재요청.... (리다이렉트)
 		return "redirect:/member/list";
+	}
+	
+	/**
+	 * 회원 수정 --> U (Update)
+	 * URL : [POST] /member/update
+	 * 요청 파라미터 : {id: 회원번호, name: 이름, email: 이메일, age: 나이} --> MemberDTO
+	 */
+	@PostMapping("/update")
+	public String update(@ModelAttribute MemberDTO member) {
+		
+		// 서비스로 수정 요청
+		service.updateMember(member);
+		return "redirect:/member/list";
+	}
+	
+	/**
+	 * 회원 수정 페이지 응답
+	 * [GET] /member/update/회원번호
+	 */
+	@GetMapping("/update/{id}")
+	public String updateForm(@PathVariable int id
+							, Model model) {
+		// 회원 번호를 기준으로 회원 정보를 조회
+		MemberDTO member = service.getMember(id);
+		
+		// request 영역에 회원 정보 저장
+		model.addAttribute("member", member);
+		
+		return "member/updateForm";
+		// => prefix + 리턴값 + suffix
+		//	  /WEB-INF/views/member/updateForm.jsp
 	}
 }
 

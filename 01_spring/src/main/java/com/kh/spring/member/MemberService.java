@@ -31,6 +31,26 @@ public class MemberService {
 	public void deleteMember(int id) {
 		dao.delete(id);
 	}
+	
+	// 회원 정보 수정
+	// -> 수정할 회원 정보(DTO)를 전달받아서
+	//		회원 번호를 기준으로 이름, 이메일, 나이를 DB에서 변경
+	public void updateMember(MemberDTO member) {
+		
+		// DAO 에게 DB 변경 요청
+		dao.update(member);
+	}
+	
+	// 회원 정보 조회
+	// -> 회원 번호를 전달받아서
+	//			해당 회원 정보를 DB에서 조회 후 반환
+	public MemberDTO getMember(int id) {
+		
+		return dao.findById(id);
+	}
 }
+
+
+
 
 
