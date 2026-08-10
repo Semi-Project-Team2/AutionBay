@@ -2,8 +2,12 @@ package com.kh.community.member.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.kh.community.member.model.dto.MemberDTO;
 
 /*
  * "회원" 관련 화면 이동, 폼 처리 등을 담당할 컨트롤러
@@ -20,8 +24,12 @@ public class MemberController {
 	// --------------------
 	
 	@PostMapping("/join")
-	public String join() {
+	public String join(@ModelAttribute MemberDTO member,
+					   MultipartFile profileImage) {
+		System.out.println(member);
+		System.out.println(profileImage);
 		
+		return "redirect:/member/join";
 	}
 
 }
