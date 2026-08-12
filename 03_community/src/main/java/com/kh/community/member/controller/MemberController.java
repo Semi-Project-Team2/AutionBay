@@ -5,9 +5,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.community.member.model.dto.MemberDTO;
+import com.kh.community.member.service.MemberService;
 
 /*
  * "회원" 관련 화면 이동, 폼 처리 등을 담당할 컨트롤러
@@ -15,6 +17,14 @@ import com.kh.community.member.model.dto.MemberDTO;
 @Controller
 @RequestMapping("/member")
 public class MemberController {
+	// MemberService 를 DI 처리 (생성자 주입방식)
+	private final MemberService service;
+	public MemberController(MemberService service) {
+		this.service = service;
+	}
+	
+	
+	
 	// --- 화면 이동 요청 ----
 	@GetMapping("/join")
 	public String joinForm() {
@@ -25,7 +35,7 @@ public class MemberController {
 	
 	@PostMapping("/join")
 	public String join(@ModelAttribute MemberDTO member,
-					   MultipartFile profileImage) {
+					   @RequestParam(required=false) MultipartFile profileImage) {
 		System.out.println(member);
 		System.out.println(profileImage);
 		
