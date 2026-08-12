@@ -1,8 +1,15 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
-<h2 class="page-title">회원가입</h2>
+	<h2 class="page-title">회원가입</h2>
+
+	<c:if test="${ error != null }">
+		<p class="alert alert-error">
+			${ error }
+		</p>
+	</c:if>	
 
 	<%--
 		* enctype="multipart/form-data"
