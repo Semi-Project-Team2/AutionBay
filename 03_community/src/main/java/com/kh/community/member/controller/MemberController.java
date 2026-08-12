@@ -1,5 +1,7 @@
 package com.kh.community.member.controller;
 
+import java.io.IOException;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -31,6 +33,11 @@ public class MemberController {
 		return "member/join";
 	}
 	
+	@GetMapping("/login")
+	public String loginForm() {
+		return "member/login";
+	}
+	
 	// --------------------
 	
 	@PostMapping("/join")
@@ -39,7 +46,20 @@ public class MemberController {
 		System.out.println(member);
 		System.out.println(profileImage);
 		
-		return "redirect:/member/join";
+		try {
+			
+			service.join(member, profileImage);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			// "회원 가입 실패" 메시지를 저장 ---> 클라이언트에서 사용
+			
+			// 예외 발생 시 회원 가입 페이지로 리다이렉트
+			return "redirect:/member/join";
+		}
+		
+		// 회원 가입 성공 시 로그인 페이지로 리다이렉트
+		return "redirect:/member/login";
 	}
 
 }

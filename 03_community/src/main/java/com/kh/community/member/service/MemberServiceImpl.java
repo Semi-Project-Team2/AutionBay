@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.kh.community.common.util.FileUploadUtil;
 import com.kh.community.common.util.SavedFile;
 import com.kh.community.member.model.dto.MemberDTO;
+import com.kh.community.member.model.mapper.MemberMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +18,9 @@ import lombok.RequiredArgsConstructor;
 public class MemberServiceImpl implements MemberService {
 	// FileUploadUtil 을 DI처리 (생성자 주입 방식, 롬복 사용)
 	private final FileUploadUtil uploadUtil;
+	// MemberMapper DI
+	private final MemberMapper mapper;
+	
 	
 	@Value("${file.upload-dir.profile}")
 	private String profileUploadDir;
@@ -32,7 +36,7 @@ public class MemberServiceImpl implements MemberService {
 		}
 		
 		// TB_MEMBER 테이블("DB")에 데이터 저장 --> Mapper
-		
+		mapper.insertMember(member);
 	}
 
 	@Override
