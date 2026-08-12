@@ -28,7 +28,7 @@ public class FileUploadUtil {
 	 * @throws IOException 
 	 * @throws IllegalStateException 
 	 */
-	public String save(MultipartFile file, String uploadDir, String webPrefix) throws IllegalStateException, IOException {
+	public SavedFile save(MultipartFile file, String uploadDir, String webPrefix) throws IllegalStateException, IOException {
 		if (file == null || file.isEmpty()) {
 			return null;
 		}
@@ -60,7 +60,9 @@ public class FileUploadUtil {
 		File target = new File(dir, saveName);
 		file.transferTo(target);	// MultipartFile 형태로 전달받은 파일을 실제 target 정보로 저장
 		
-		return webPrefix + "/" + saveName;
+		String path = webPrefix + "/" + saveName;
+		
+		return new SavedFile(originalName, saveName, path);
 	}
 }
 
