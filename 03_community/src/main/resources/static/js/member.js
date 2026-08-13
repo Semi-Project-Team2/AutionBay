@@ -63,7 +63,7 @@ memberIdInput.addEventListener("input", function() {
 
 // 아이디 [중복확인] 버튼의 클릭 이벤트 리스너 추가 (TODO: alert)
 const checkIdBtn = document.querySelector("#check-id-btn");
-checkIdBtn.addEventListener("click", function() {
+checkIdBtn.addEventListener("click", async function() {
 	const memberId = memberIdInput.value.trim();
 	// 아이디 값이 입력되지 않았을 경우, 요청 x
 	if (memberId.length === 0) {
@@ -84,8 +84,29 @@ checkIdBtn.addEventListener("click", function() {
 		- settings : 설정 객체 (요청 방식, 헤더, 데이터 등)
 		  - method: 요청 방식
 		  - headers: 헤더 설정 
+		  
+		encodeURIComponent() : 전달하는 파라미터에 &, =와 같은 특수문자가 있을 경우 URL 형식이 깨지는 것을 방지(인코딩)
+		"X-Requested-With": "XMLHttpRequest" 
+		=> 이 요청이 브라우저 주소창에서 이동한 것이 아니라, 자바스크립트(AJAX)를 통해 보낸 것임을 서버에 알려주는 설정(관례)
 	*/
-	
+	try {
+		const response = await fetch("/member/checkId?memberId=" + encodeURIComponent(memberId), {
+			method: "GET",
+			headers: { "X-Requested-With": "XMLHttpRequest" }  
+		});
+		
+		// response.json() : json 응답을 자바스크립트 객체로 변경
+		const result = await response.json();
+		
+		// console.log(result);
+		checkIdResult.textContent = result.message;
+		checkIdResult.className = result.data ? "form-tip form-tip-error" : "form-tip form-tip-ok";
+	} catch (error) {
+		console.log(error);
+		
+		checkIdResult.textContent = "중복 확인 중 오류가 발생했습니다.";
+		checkIdResult.className = "form-tip form-tip-error";
+	}
 });
 
 

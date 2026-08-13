@@ -29,6 +29,10 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public void join(MemberDTO member, MultipartFile profileImage) throws IOException {
+		// 아이디 중복검사
+		if (isMemberIdCheck(member.getMemberId())) {
+			throw new IllegalStateException("이미 사용중인 아이디입니다.");
+		}
 		
 		// 비밀번호 암호화 처리 -> BCryptPasswordEncoder => SecurityConfig 설정
 		// * 암호화 : passwordEncoder.encode(입력받은비밀번호)
@@ -48,8 +52,8 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public boolean isMemberIdCheck(String memberId) {
-		// TODO Auto-generated method stub
-		return false;
+		// 중복된 아이디가 있을 경우 => 1개 일 것임!
+		return mapper.countByMemberId(memberId) > 0;
 	}
 
 	@Override

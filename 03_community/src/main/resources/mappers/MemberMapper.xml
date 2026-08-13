@@ -9,4 +9,11 @@
 		VALUES (#{memberId}, #{memberPwd}, #{memberName}, #{nickname}, #{email}, #{profile})
 	</insert>
 	
+	<select id="countByMemberId" parameterType="string" resultType="int">
+		SELECT COUNT(*) FROM TB_MEMBER WHERE MEMBER_ID = #{memberId}		
+	</select>
+	
+	
 </mapper>
+
+

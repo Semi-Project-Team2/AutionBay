@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kh.community.common.dto.ApiResponse;
 import com.kh.community.member.model.dto.MemberDTO;
 import com.kh.community.member.service.MemberService;
 
@@ -66,6 +68,21 @@ public class MemberController {
 		// 회원 가입 성공 시 로그인 페이지로 리다이렉트
 		redirectAttr.addFlashAttribute("joinSuccess", true);
 		return "redirect:/member/login";
+	}
+	
+	// @ResponseBody : 응답 본문에 데이터를 담아 처리
+	/*
+	 * URL : [GET] /member/checkId?memberId=XXX
+	 */
+	@GetMapping("/checkId")
+	@ResponseBody
+	public ApiResponse<Boolean> checkId(String memberId) {
+		
+		boolean isDuplicate = service.isMemberIdCheck(memberId);
+		
+		String message = isDuplicate ? "이미 사용중인 아이디입니다." : "사용 가능한 아이디입니다.";
+		
+		return ApiResponse.success(message, isDuplicate);
 	}
 
 }
