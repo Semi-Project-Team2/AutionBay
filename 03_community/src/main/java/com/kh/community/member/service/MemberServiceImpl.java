@@ -3,6 +3,7 @@ package com.kh.community.member.service;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,13 +21,19 @@ public class MemberServiceImpl implements MemberService {
 	private final FileUploadUtil uploadUtil;
 	// MemberMapper DI
 	private final MemberMapper mapper;
-	
+	// PasswordEncoder DI
+	private final PasswordEncoder passwordEncoder;
 	
 	@Value("${file.upload-dir.profile}")
 	private String profileUploadDir;
 
 	@Override
 	public void join(MemberDTO member, MultipartFile profileImage) throws IOException {
+		
+		// 비밀번호 암호화 처리 -> BCryptPasswordEncoder => SecurityConfig 설정
+		// * 암호화 : passwordEncoder.encode(입력받은비밀번호)
+		String encodePwd = passwordEncoder.encode(member.getMemberPwd());
+		member.setMemberPwd(encodePwd); // 비밀번호 필드를 암호화된 값으로 변경
 
 		// 프로필 이미지 파일을 "서버"에 저장 --> 공통 클래스로 분리
 		SavedFile saved = uploadUtil.save(profileImage, profileUploadDir, "/uploads/profile");

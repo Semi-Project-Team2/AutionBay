@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 /*
@@ -57,7 +59,29 @@ public class SecurityConfig {
 		return http.build();
 	}
 
+	
+	/**
+	 * * BCryptPasswordEncoder : 비밀번호 단방향 해시 암호화
+	 * 
+	 *   - 단방향 암호화
+	 *     : 암호화는 가능하지만 복호화는 불가능한 방식.
+	 *       DB에 비밀번호 평문을 저장하는 대신, 암호화된 해시값을 저장함.
+	 *       --> DB가 유출되어도 원본 비밀번호는 알 수 없음!
+	 *       
+	 *   - BCrypt 특징
+	 *     : 같은 비밀번호라도 암호화할 때마다 다른 해시값이 적용됨. (salt 적용)
+	 *       일치 여부를 확인할 때, passwordEncoder.matches(평문, 암호문) 으로 검증
+	 */
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 }
+
+
+
+
+
 
 
 
