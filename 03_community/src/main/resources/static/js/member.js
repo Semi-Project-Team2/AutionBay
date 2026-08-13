@@ -55,10 +55,13 @@ function validatePwdConfirm() {
 memberPwd.addEventListener('input', validatePwdConfirm);
 memberPwdConfirm.addEventListener('input', validatePwdConfirm);
 
+
+let checkId = null;		// 아이디 중복체크 값
 const checkIdResult = document.querySelector("#check-id-result");
 const memberIdInput = document.querySelector("#member-id");
 memberIdInput.addEventListener("input", function() {
 	checkIdResult.textContent = "";
+	checkId = null;
 });
 
 // 아이디 [중복확인] 버튼의 클릭 이벤트 리스너 추가 (TODO: alert)
@@ -69,6 +72,7 @@ checkIdBtn.addEventListener("click", async function() {
 	if (memberId.length === 0) {
 		checkIdResult.textContent = "아이디를 입력해주세요.";
 		checkIdResult.className = "form-tip form-tip-error";
+		checkId = null;
 		return;
 	}
 	
@@ -101,18 +105,28 @@ checkIdBtn.addEventListener("click", async function() {
 		// console.log(result);
 		checkIdResult.textContent = result.message;
 		checkIdResult.className = result.data ? "form-tip form-tip-error" : "form-tip form-tip-ok";
+		
+		checkId = result.data ? null : memberId;
 	} catch (error) {
 		console.log(error);
 		
 		checkIdResult.textContent = "중복 확인 중 오류가 발생했습니다.";
 		checkIdResult.className = "form-tip form-tip-error";
+		
+		checkId = null;
 	}
 });
 
 
-// 회원가입 폼 제출 => 비밀번호가 일치했을 때 제출하도록 처리
+// 회원가입 폼 제출 => 비밀번호가 일치했을 때, 사용 가능한 아이디인 경우 제출하도록 처리
 const joinForm = document.querySelector("#join-form");
 joinForm.addEventListener("submit", function(e) {
+	
+	if (!checkId) {
+		e.preventDefault();
+		alert("아이디 중복확인을 진행해주세요.");
+		return;
+	}
 	
 	if (!checkPwd) {
 		e.preventDefault();		// 기존 폼 제출 동작을 막기!
