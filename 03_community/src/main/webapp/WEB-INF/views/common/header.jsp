@@ -15,9 +15,23 @@
 				<a href="/" class="logo">커뮤니티</a>
 				
 				<nav class="nav">
-					<a href="#">로그인</a>
-					<a href="/member/join">회원가입</a>
+					<c:choose>
+						<c:when test="${ not empty sessionScope.loginMember }">
+							<span>${sessionScope.loginMember.nickname}님</span>
+							
+						</c:when>
+						<c:otherwise>
+							<a href="/member/login">로그인</a>
+							<a href="/member/join">회원가입</a>				
+						</c:otherwise>		
+					</c:choose>
+					
 				</nav>
 			</div>			
 		</header>
 		<main class="container">
+			
+			
+			
+			
+			

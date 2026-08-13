@@ -16,6 +16,8 @@ import com.kh.community.common.dto.ApiResponse;
 import com.kh.community.member.model.dto.MemberDTO;
 import com.kh.community.member.service.MemberService;
 
+import jakarta.servlet.http.HttpSession;
+
 /*
  * "회원" 관련 화면 이동, 폼 처리 등을 담당할 컨트롤러
  */
@@ -85,6 +87,21 @@ public class MemberController {
 		return ApiResponse.success(message, isDuplicate);
 	}
 
+	@PostMapping("/login")
+	public String login(String memberId, String memberPwd
+						, HttpSession session
+						, RedirectAttributes redirectAttr) {
+		try {
+			MemberDTO member = service.login(memberId, memberPwd);			
+			// 로그인 성공 --> 세션에 로그인 정보 저장
+			session.setAttribute("loginMember", member);
+		} catch (IllegalStateException e) {
+			redirectAttr.addFlashAttribute("error", e.getMessage());
+			return "redirect:/member/login";
+		}
+		
+		return "redirect:/";
+	}
 }
 
 

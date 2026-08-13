@@ -13,4 +13,12 @@ public interface MemberMapper {
 	// 아이디 중복 확인 -> 데이터를 조회
 	int countByMemberId(String memberId);
 	
+	// 아이디를 통한 회원 조회
+	MemberDTO selectByMemberId(String memberId);
+	
 }
+
+
+
+
+

@@ -57,9 +57,21 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public MemberDTO login(String memberId, String memberPwd) {
-		// TODO Auto-generated method stub
-		return null;
+	public MemberDTO login(String memberId, String memberPwd) throws IllegalStateException {
+		// 아이디를 기준으로 회원 정보를 조회
+		MemberDTO member = mapper.selectByMemberId(memberId);
+		
+		// 조회된 정보 중 비밀번호(암호문)와 전달된 비밀번호(평문)가 일치하는 지 확인
+		// * 암호화된 비밀번호 => DB에서 조회한 값 (member.getMemberPwd())
+		// * 평문 비밀번호 => 전달된 값 (memberPwd)
+		
+		// passwordEncoder.matches(평문, 암호문) => 동일한 경우 true, 그렇지않으면 false 반환
+		if (member == null || !passwordEncoder.matches(memberPwd, member.getMemberPwd()) ) {
+			throw new IllegalStateException("아이디 또는 비밀번호가 일치하지 않습니다.");
+		}
+		
+		// 회원 정보를 반환
+		return member;
 	}
 
 	@Override

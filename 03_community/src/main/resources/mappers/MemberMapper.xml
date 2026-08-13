@@ -13,6 +13,17 @@
 		SELECT COUNT(*) FROM TB_MEMBER WHERE MEMBER_ID = #{memberId}		
 	</select>
 	
+	<select id="selectByMemberId" parameterType="string" resultType="MemberDTO">
+		SELECT MEMBER_ID,
+		       MEMBER_PWD,
+		       MEMBER_NAME,
+		       NICKNAME,
+		       EMAIL, 
+		       PROFILE,
+		       TO_CHAR(CREATE_AT, 'YYYY-MM-DD HH24:MI') AS CREATE_AT_STR
+		  FROM TB_MEMBER
+		 WHERE MEMBER_ID = #{memberId}	
+	</select>
 	
 </mapper>
 
