@@ -25,6 +25,12 @@
 		 WHERE MEMBER_ID = #{memberId}	
 	</select>
 	
+	<delete id="deleteMember" parameterType="string">
+		DELETE FROM TB_MEMBER WHERE MEMBER_ID = #{memberId}
+	</delete>
+	
 </mapper>
+
+
 
 

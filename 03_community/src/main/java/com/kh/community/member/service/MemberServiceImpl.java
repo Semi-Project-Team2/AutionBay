@@ -76,8 +76,17 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public void withdraw(String memberId) {
-		// TODO Auto-generated method stub
+		// 삭제 전 아이디를 기준으로 조회
+		MemberDTO member = mapper.selectByMemberId(memberId);
 		
+		// DB 에서 해당 사용자 정보를 삭제 (Mapper)
+		mapper.deleteMember(memberId);
+		
+		// 프로필 이미지가 있는 경우 서버에서 이미지 파일 삭제 (FileUploadUtil)
+		String profile = member.getProfile();
+		if (profile != null) {
+			uploadUtil.delete(profile, profileUploadDir);
+		}
 	}
 
 }

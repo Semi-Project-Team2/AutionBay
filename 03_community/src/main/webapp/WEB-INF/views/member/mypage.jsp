@@ -40,5 +40,22 @@
 		
 		
 	</div>
+	
+	<form action="/member/withdraw" method="post" class="form form-flex form-row-center"
+	      onsubmit="return confirm('정말 탈퇴하시겠습니까?')">
+		<button class="btn btn-danger">회원 탈퇴</button>
+	</form>
 
+	
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
+
+
+
+
+
+
+
+
+
+
+

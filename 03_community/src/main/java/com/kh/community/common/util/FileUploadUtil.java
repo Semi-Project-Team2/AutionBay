@@ -64,6 +64,33 @@ public class FileUploadUtil {
 		
 		return new SavedFile(originalName, saveName, path);
 	}
+	
+	
+	/**
+	 * 웹 요청 주소와 파일이 저장된 위치 경로를 전달받아
+	 * 해당 파일을 삭제
+	 * 
+	 * @param webPath 저장된 웹 요청 주소 (/uploads/profile/xxx.png)
+	 * @param uploadDir 파일이 저장된 위치 (uploads/profile)
+	 */
+	public boolean delete(String webPath, String uploadDir) {
+		if (webPath == null || webPath.isEmpty()) {
+			return false;
+		}
+		if (uploadDir == null || uploadDir.isEmpty()) {
+			return false;
+		}
+		
+		// 파일명을 추출
+		String fileName = webPath.substring( webPath.lastIndexOf("/") + 1 );
+		
+		File target = new File( new File(uploadDir).getAbsoluteFile(), fileName );
+		if (target.exists()) {
+			target.delete();
+		}
+		
+		return true;
+	}
 }
 
 

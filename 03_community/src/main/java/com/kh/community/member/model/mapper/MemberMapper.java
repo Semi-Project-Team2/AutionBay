@@ -16,6 +16,9 @@ public interface MemberMapper {
 	// 아이디를 통한 회원 조회
 	MemberDTO selectByMemberId(String memberId);
 	
+	// 아이디를 기준으로 회원 삭제 -> 데이터를 삭제
+	int deleteMember(String memberId);
+	
 }
 
 

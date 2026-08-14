@@ -118,6 +118,21 @@ public class MemberController {
 		
 		return "redirect:/";
 	}
+	
+	@PostMapping("/withdraw")
+	public String withdraw(HttpSession session) {
+		// 세션에 저장되어 있는 사용자 정보를 추출
+		MemberDTO loginMember = (MemberDTO)session.getAttribute("loginMember");
+		
+		// 서비스에게 비즈니스 로직 요청
+		service.withdraw(loginMember.getMemberId());
+		
+		// 세션 영역에서 모든 데이터 삭제(세션 만료)
+		session.invalidate();
+		
+		// 메인 페이지로 리다이렉트
+		return "redirect:/";
+	}
 }
 
 
