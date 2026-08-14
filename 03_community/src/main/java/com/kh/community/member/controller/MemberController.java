@@ -95,6 +95,7 @@ public class MemberController {
 
 	@PostMapping("/login")
 	public String login(String memberId, String memberPwd
+						, @RequestParam(required=false) String redirectURL
 						, HttpSession session
 						, RedirectAttributes redirectAttr) {
 		try {
@@ -104,6 +105,10 @@ public class MemberController {
 		} catch (IllegalStateException e) {
 			redirectAttr.addFlashAttribute("error", e.getMessage());
 			return "redirect:/member/login";
+		}
+		
+		if (redirectURL != null && !redirectURL.isBlank()) {
+			return "redirect:" + redirectURL;
 		}
 		
 		return "redirect:/";
