@@ -1,0 +1,25 @@
+package com.kh.community.board.service;
+
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import com.kh.community.board.model.dto.BoardDTO;
+
+public interface BoardService {
+	
+	// 게시글 목록 조회
+	List<BoardDTO> getBoardList();
+
+	// 게시글 추가
+	int writeBoard(BoardDTO board, List<MultipartFile> images);
+	
+	// 게시글 상세 조회
+	BoardDTO getBoardDetail(Long boardId);
+	
+}
+
+
+
+
+

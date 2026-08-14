@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.community.board.model.mapper.BoardMapper">
+
+	<select id="selectBoardList" resultType="BoardDTO">
+		SELECT BOARD_ID, B.MEMBER_ID, CATEGORY, TITLE, COUNT, B.CREATE_AT, UPDATE_AT,
+		        TO_CHAR(B.CREATE_AT, 'YYYY-MM-DD HH24:MI') AS CREATE_AT_STR,
+		        NICKNAME AS WRITER_NICKNAME
+		  FROM TB_BOARD B
+		    LEFT JOIN TB_MEMBER M ON B.MEMBER_ID = M.MEMBER_ID
+		ORDER BY BOARD_ID DESC
+	</select>
+</mapper>
