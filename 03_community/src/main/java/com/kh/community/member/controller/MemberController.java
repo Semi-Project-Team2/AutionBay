@@ -16,6 +16,7 @@ import com.kh.community.common.dto.ApiResponse;
 import com.kh.community.member.model.dto.MemberDTO;
 import com.kh.community.member.service.MemberService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 /*
@@ -41,6 +42,11 @@ public class MemberController {
 	@GetMapping("/login")
 	public String loginForm() {
 		return "member/login";
+	}
+	
+	@GetMapping("/mypage")
+	public String mypage() {
+		return "member/mypage";
 	}
 	
 	// --------------------
@@ -98,6 +104,16 @@ public class MemberController {
 		} catch (IllegalStateException e) {
 			redirectAttr.addFlashAttribute("error", e.getMessage());
 			return "redirect:/member/login";
+		}
+		
+		return "redirect:/";
+	}
+	
+	@GetMapping("/logout")
+	public String logout(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			session.invalidate(); 	// 세션 자체를 만료(모두 삭제)
 		}
 		
 		return "redirect:/";

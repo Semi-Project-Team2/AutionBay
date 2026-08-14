@@ -19,6 +19,9 @@
 						<c:when test="${ not empty sessionScope.loginMember }">
 							<span>${sessionScope.loginMember.nickname}님</span>
 							
+							<a href="#">게시판</a>
+							<a href="/member/mypage">마이페이지</a>
+							<a href="/member/logout">로그아웃</a>
 						</c:when>
 						<c:otherwise>
 							<a href="/member/login">로그인</a>
