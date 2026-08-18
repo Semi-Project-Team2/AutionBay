@@ -4,6 +4,11 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 	<h2 class="page-title">게시판</h2>
 	
+	<!-- 글쓰기 버튼을 추가 -->
+	<h4 class="text-right">
+		<a class="btn btn-outline" href="/board/write">글쓰기</a>
+	</h4>
+	
 	<c:choose>
 		<c:when test="${empty boardList}">
 			<p>등록된 게시글이 없습니다.</p>

@@ -8,6 +8,7 @@
 		<title>커뮤니티</title>
 		
 		<link rel="stylesheet" href="/css/common.css">
+		<link rel="stylesheet" href="/css/board.css">
 	</head>
 	<body>
 		<header class="site-header">
