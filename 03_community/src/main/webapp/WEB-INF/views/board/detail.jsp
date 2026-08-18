@@ -4,6 +4,7 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
     <h2 class="page-title">게시글 상세보기</h2>
 	
+	<input type="hidden" id="board-key" value="${board.boardId}">
 	<article class="board-detail">
         <header>
             <span>${board.category}</span>
@@ -83,4 +84,11 @@
             <button type="button" class="btn btn-outline comment-delete-btn">삭제</button>
         </li>
     </template>
+<script src="/js/board.js"></script>	
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
+
+
+
+
+
+
