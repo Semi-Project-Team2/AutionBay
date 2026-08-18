@@ -18,6 +18,9 @@ public interface BoardService {
 	// 게시글 상세 조회
 	BoardDTO getBoardDetail(Long boardId);
 	
+	// 게시글 삭제
+	void deleteBoard(Long boardId);
+	
 }
 
 

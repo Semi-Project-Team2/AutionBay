@@ -17,4 +17,23 @@ public interface BoardMapper {
 	
 	// 게시글 이미지 추가
 	int insertBoardImage(BoardImageDTO boardImage);
+	
+	// 조회 수 1 증가 (DML-update)
+	int increaseViewCount(Long boardId);
+	
+	// 게시글 상세 조회
+	BoardDTO selectBoardDetail(Long boardId);
+	
+	// 게시글 이미지 조회
+	List<BoardImageDTO> selectImagesByBoardId(Long boardId);
+	
+	// 게시글 삭제 (DML - delete)
+	int deleteBoard(Long boardId);
 }
+
+
+
+
+
+
+

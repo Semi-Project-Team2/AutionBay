@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,7 +41,24 @@ public class BoardController {
 	@GetMapping("/write")
 	public String writeForm() {
 		return "board/form";
-	}	
+	}
+	
+	@GetMapping("/detail/{boardId}")
+	public String detail(@PathVariable Long boardId,
+						Model model, HttpSession session) {
+		BoardDTO board = service.getBoardDetail(boardId);
+		
+		model.addAttribute("board", board);
+		
+		// 로그인한 회원이 작성자인지 여부
+		MemberDTO loginMember = (MemberDTO)session.getAttribute(SessionConst.LOGIN_MEMBER);
+		
+		boolean isOwner = loginMember != null && loginMember.getMemberId().equals(board.getMemberId());
+		model.addAttribute("isOwner", isOwner);
+		
+		
+		return "board/detail";
+	}
 	// -----------------------------
 	
 	@PostMapping("/write")
@@ -55,6 +73,13 @@ public class BoardController {
 		service.writeBoard(board, images);
 		
 		return "redirect:/board/list";	// TODO: 상세페이지 추가 후 변경
+	}
+	
+	@PostMapping("/delete/{boardId}")
+	public String delete(@PathVariable Long boardId) {
+		service.deleteBoard(boardId);
+		
+		return "redirect:/board/list";
 	}
 }
 

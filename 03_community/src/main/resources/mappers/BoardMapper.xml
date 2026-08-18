@@ -29,6 +29,32 @@
 		INSERT INTO TB_BOARD_IMAGE (IMAGE_ID, BOARD_ID, ORIGINAL_NAME, SAVE_NAME, IMAGE_PATH, IMAGE_ORDER)
 		VALUES (SEQ_BOARD_IMAGE.NEXTVAL, #{boardId}, #{originalName}, #{saveName}, #{imagePath}, #{imageOrder})
 	</insert>
+	
+	<update id="increaseViewCount" parameterType="long">
+		UPDATE TB_BOARD SET COUNT = COUNT + 1 WHERE BOARD_ID = #{boardId}
+	</update>
+	
+	<select id="selectBoardDetail" parameterType="long" resultType="BoardDTO">
+		SELECT BOARD_ID, B.MEMBER_ID, CATEGORY, TITLE, COUNT,
+		       B.CREATE_AT, UPDATE_AT, CONTENT,
+		       TO_CHAR(B.CREATE_AT, 'YYYY-MM-DD HH24:MI') AS CREATE_AT_STR,
+		       TO_CHAR(B.UPDATE_AT, 'YYYY-MM-DD HH24:MI') AS UPDATE_AT_STR,
+		       NICKNAME AS WRITER_NICKNAME
+		  FROM TB_BOARD B
+		    LEFT JOIN TB_MEMBER M ON B.MEMBER_ID = M.MEMBER_ID
+		 WHERE BOARD_ID = #{boardId}
+	</select>
+	
+	<select id="selectImagesByBoardId" parameterType="long" resultType="BoardImageDTO">
+		SELECT IMAGE_ID, BOARD_ID, ORIGINAL_NAME, SAVE_NAME, IMAGE_PATH, IMAGE_ORDER, CREATE_AT
+		  FROM TB_BOARD_IMAGE
+		 WHERE BOARD_ID = #{boardId}
+		 ORDER BY IMAGE_ORDER ASC
+	</select>
+	
+	<delete id="deleteBoard">
+		DELETE FROM TB_BOARD WHERE BOARD_ID = #{boardId}
+	</delete>
 </mapper>
 
 

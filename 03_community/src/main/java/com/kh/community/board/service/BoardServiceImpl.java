@@ -78,10 +78,30 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public BoardDTO getBoardDetail(Long boardId) {
-		// TODO Auto-generated method stub
-		return null;
+		// 상세페이지 접근 시 조회 수 1 증가 (업데이트)
+		mapper.increaseViewCount(boardId);		
+		
+		// boardId에 해당하는 게시글 조회
+		BoardDTO board = mapper.selectBoardDetail(boardId);
+		
+		// boardId에 해당하는 게시글 이미지 조회
+		board.setImages( mapper.selectImagesByBoardId(boardId) );
+		
+		return board;
+	}
+
+	@Override
+	public void deleteBoard(Long boardId) {
+		mapper.deleteBoard(boardId);
+		
+		// 회원탈퇴처럼.. 이미지 서버에서 삭제
 	}
 	
 	
 
 }
+
+
+
+
+
