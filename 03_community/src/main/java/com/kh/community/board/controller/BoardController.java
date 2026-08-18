@@ -1,5 +1,6 @@
 package com.kh.community.board.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -45,7 +46,7 @@ public class BoardController {
 	@PostMapping("/write")
 	public String write(@ModelAttribute BoardDTO board,
 						@RequestParam(value="imageFiles", required=false) List<MultipartFile> images,
-						HttpSession session) {
+						HttpSession session) throws IllegalStateException, IOException {
 		// 세션 영역에서 로그인 정보를 추출하여 DTO에 저장
 		MemberDTO loginMember = (MemberDTO)session.getAttribute(SessionConst.LOGIN_MEMBER);
 		board.setMemberId( loginMember.getMemberId() );

@@ -28,13 +28,15 @@
 					 </thead>
 					 <tbody>
 						<c:forEach var="board" items="${boardList}" varStatus="status">
-							<tr>
-								<td class="board-table_col-no">번호</td>
-								<td class="board-table_col-category">카테고리</td>
-								<td class="board-table_col-title">제목</td>
-								<td class="board-table_col-writer">작성자</td>
-								<td class="board-table_col-date">작성일</td>
-								<td class="board-table_col-count">조회수</td>								
+							<tr onclick="location.href = '/board/detail/${board.boardId}'">
+								<td class="board-table_col-no">${board.boardId}</td>
+								<td class="board-table_col-category">
+									<span class="board-table_category">${board.category}</span>
+								</td>
+								<td class="board-table_col-title">${board.title}</td>
+								<td class="board-table_col-writer">${board.writerNickname}</td>
+								<td class="board-table_col-date">${board.createAtStr}</td>
+								<td class="board-table_col-count">${board.count}</td>
 							</tr>
 						</c:forEach>
 					 </tbody>

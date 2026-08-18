@@ -12,4 +12,25 @@
 		    LEFT JOIN TB_MEMBER M ON B.MEMBER_ID = M.MEMBER_ID
 		ORDER BY BOARD_ID DESC
 	</select>
+	
+	<insert id="insertBoard" parameterType="BoardDTO">
+		<!--
+			오라클에서 데이터 추가 시 사용된 시퀀스 값 추출(조회) 방법
+			selectKey 태그로 삽입 전 시퀀스를 읽어 DTO에 저장
+		-->
+		<selectKey keyProperty="boardId" resultType="long" order="BEFORE">
+			SELECT SEQ_BOARD.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO TB_BOARD (BOARD_ID, MEMBER_ID, CATEGORY, TITLE, CONTENT)
+		VALUES (#{boardId}, #{memberId}, #{category}, #{title}, #{content})
+	</insert>
+	
+	<insert id="insertBoardImage" parameterType="BoardImageDTO">
+		INSERT INTO TB_BOARD_IMAGE (IMAGE_ID, BOARD_ID, ORIGINAL_NAME, SAVE_NAME, IMAGE_PATH, IMAGE_ORDER)
+		VALUES (SEQ_BOARD_IMAGE.NEXTVAL, #{boardId}, #{originalName}, #{saveName}, #{imagePath}, #{imageOrder})
+	</insert>
 </mapper>
+
+
+
+
