@@ -92,9 +92,18 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public void deleteBoard(Long boardId) {
+		// 삭제 전 이미지 정보 조회
+		List<BoardImageDTO> images = mapper.selectImagesByBoardId(boardId);
+		
+		// 게시글 삭제
 		mapper.deleteBoard(boardId);
 		
 		// 회원탈퇴처럼.. 이미지 서버에서 삭제
+		if (images != null && !images.isEmpty()) {
+			for (BoardImageDTO image : images) {
+				fileUploadUtil.delete(image.getImagePath(), boardUploadDir);
+			}
+		}
 	}
 	
 	
