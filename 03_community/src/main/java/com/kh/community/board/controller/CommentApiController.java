@@ -18,6 +18,9 @@ import com.kh.community.member.model.dto.MemberDTO;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
+/*
+ * "댓글" 관련 요청을 담당할 컨트롤러
+ */
 @RestController  // @Controller + @ResponseBody
 @RequestMapping("/api")
 @RequiredArgsConstructor

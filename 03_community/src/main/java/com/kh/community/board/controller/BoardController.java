@@ -21,6 +21,9 @@ import com.kh.community.member.model.dto.MemberDTO;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
+/*
+ * "게시판" 관련 화면 이동, 폼 처리 등을 담당할 컨트롤러
+ */
 @Controller
 @RequestMapping("/board")
 @RequiredArgsConstructor
