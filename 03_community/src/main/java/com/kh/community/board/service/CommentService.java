@@ -11,5 +11,8 @@ public interface CommentService {
 	
 	// 댓글 목록 조회
 	List<CommentDTO> getComments(Long boardId);
+	
+	// 댓글 삭제
+	void deleteComment(Long commentId, String requestMemberId);
 
 }

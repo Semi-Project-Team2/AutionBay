@@ -21,6 +21,10 @@
 		 WHERE C.COMMENT_ID = #{commentId}
 	</select>
 	
+	<delete id="deleteComment" parameterType="long">
+		DELETE FROM TB_COMMENT WHERE COMMENT_ID = #{commentId}
+	</delete>
+	
 </mapper>
 
 

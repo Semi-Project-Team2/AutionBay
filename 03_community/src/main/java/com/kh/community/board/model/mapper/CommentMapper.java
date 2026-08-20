@@ -13,4 +13,7 @@ public interface CommentMapper {
 	// 댓글 단건 조회 - commentId
 	CommentDTO selectCommentById(Long commentId);
 	
+	// 댓글 삭제
+	int deleteComment(Long commentId);
+	
 }

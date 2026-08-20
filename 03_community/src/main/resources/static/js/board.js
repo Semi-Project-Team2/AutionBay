@@ -70,9 +70,9 @@ if (commentForm) {
 			
 			// TODO: 응답 결과를 화면에 표시
 			// alert("댓글 작성 성공");
+			appendComment(result.data);
 			
-			
-			
+			contentInput.value = "";
 			
 		} catch (error) {
 			alert("댓글 등록 중 오류가 발생했습니다.");
@@ -103,7 +103,44 @@ function appendComment(comment) {
 }
 
 
-
+// 댓글 영역에 표시되는 댓글 삭제 기능
+if (commentList) {
+	
+	commentList.addEventListener("click", async function(e) {
+		/*
+			if (!e.target.classList.contains("comment-delete-btn")) return;
+			
+			const delBtn = e.target;
+		*/
+		
+		// closest(선택자) : 클릭한 요소로부터 부모 방향으로 선택자에 해당하는 요소를 찾아줌
+		const delBtn = e.target.closest(".comment-delete-btn");
+		if (!delBtn) return;	// 삭제 버튼이 아니면 메소드 종료
+		
+		if (!confirm("댓글을 삭제하시겠습니까?")) return;
+		
+		const commentId = delBtn.dataset.commentId;
+		try {
+			const response = await fetch(`/api/comments/${commentId}`, {
+				method: "DELETE",   // Restful 설계 원칙에 따라 요청 방식은 get, post, put, patch, delete로 나뉘어짐
+				headers: {"X-Requested-With": "XMLHttpRequest"}
+			});
+			
+			const result = await response.json();
+			
+			if (!response.ok || !result.success) {
+				alert(result.message || "댓글 삭제에 실패했습니다.");
+				return;
+			} 
+			
+			// 화면상에서 해당 댓글 제거
+			document.querySelector(`#comment-${commentId}`).remove();
+		} catch (error) {
+			alert("댓글 삭제 중 오류가 발생했습니다.");
+		}
+	});	
+	
+}
 
 
 
