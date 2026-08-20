@@ -1,4 +1,4 @@
-package com.kh.auctionBay.myPage.model.mapper;
+package com.kh.auctionBay.user.model.mapper;
 
 public interface TransactionHistoryMapper {
 
