@@ -42,7 +42,7 @@
 
 	<%-- 댓글 영역 --%>
     <section class="comment-section">
-        <h3 class="comment-section_title">댓글 7</h3>
+        <h3 class="comment-section_title">댓글 ${empty comments ? 0 : comments.size()}</h3>
         <ul class="comment-list" id="comment-list">
             <c:forEach var="comment" items="${comments}">
                 <li id="comment-${comment.commentId}">

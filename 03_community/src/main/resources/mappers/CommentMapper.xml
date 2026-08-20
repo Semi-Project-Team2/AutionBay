@@ -15,7 +15,7 @@
 	<select id="selectCommentById" parameterType="long" resultType="CommentDTO">
 		SELECT C.COMMENT_ID, C.BOARD_ID, C.MEMBER_ID, C.CONTENT, C.CREATE_AT,
 			   TO_CHAR(C.CREATE_AT, 'YYYY-MM-DD HH24:MI') AS CREATE_AT_STR,
-			   M.NICKNAME AS WRITER_NICKNAME
+			   NVL(M.NICKNAME, '탈퇴한 회원') AS WRITER_NICKNAME
 		  FROM TB_COMMENT C
 		  	LEFT JOIN TB_MEMBER M ON C.MEMBER_ID = M.MEMBER_ID
 		 WHERE C.COMMENT_ID = #{commentId}
@@ -24,6 +24,16 @@
 	<delete id="deleteComment" parameterType="long">
 		DELETE FROM TB_COMMENT WHERE COMMENT_ID = #{commentId}
 	</delete>
+	
+	<select id="selectCommentsByBoardId" parameterType="long" resultType="CommentDTO">
+		SELECT C.COMMENT_ID, C.BOARD_ID, C.MEMBER_ID, C.CONTENT, C.CREATE_AT,
+			   TO_CHAR(C.CREATE_AT, 'YYYY-MM-DD HH24:MI') AS CREATE_AT_STR,
+			   NVL(M.NICKNAME, '탈퇴한 회원') AS WRITER_NICKNAME
+		  FROM TB_COMMENT C
+		  	LEFT JOIN TB_MEMBER M ON C.MEMBER_ID = M.MEMBER_ID
+		 WHERE C.BOARD_ID = #{boardId}
+		 ORDER BY C.COMMENT_ID ASC	
+	</select>
 	
 </mapper>
 

@@ -35,8 +35,7 @@ public class CommentServiceImpl implements CommentService {
 
 	@Override
 	public List<CommentDTO> getComments(Long boardId) {
-		// TODO Auto-generated method stub
-		return null;
+		return mapper.selectCommentsByBoardId(boardId);
 	}
 
 	@Override

@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.community.board.model.dto.BoardDTO;
+import com.kh.community.board.model.dto.CommentDTO;
 import com.kh.community.board.service.BoardService;
+import com.kh.community.board.service.CommentService;
 import com.kh.community.common.SessionConst;
 import com.kh.community.member.model.dto.MemberDTO;
 
@@ -30,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 public class BoardController {
 	
 	private final BoardService service;
+	private final CommentService commentService;
 	
 	// ------- 화면 이동 요청 ---------
 	@GetMapping("/list")
@@ -51,7 +54,11 @@ public class BoardController {
 						Model model, HttpSession session) {
 		BoardDTO board = service.getBoardDetail(boardId);
 		
+		// 댓글 목록 조회
+		List<CommentDTO> comments = commentService.getComments(boardId);
+		
 		model.addAttribute("board", board);
+		model.addAttribute("comments", comments);
 		
 		// 로그인한 회원이 작성자인지 여부
 		MemberDTO loginMember = (MemberDTO)session.getAttribute(SessionConst.LOGIN_MEMBER);
