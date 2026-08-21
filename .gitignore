@@ -13,3 +13,5 @@ build
 *.class
 
 uploads
+
+application.properties
