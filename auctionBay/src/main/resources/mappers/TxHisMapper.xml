@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.auctionBay.review.model.mapper.TxHistoryMapper">
+	<select id="selectTxHistoryList" parameterType="long" resultType="TxHistoryDTO">
+		select HISTORY_ID, T.PRODUCT_ID, TRADE_TYPE, SELLER_NO,
+				BUYER_NO, FINAL_PRICE,
+				to_char(COMPLETED_AT, 'YYYY-MM-DD HH24:MI') as "CREATED_AT_STR"
+		from TRANSACTION_HISTORY T
+		    left join USERS UB on T.BUYER_NO = UB.USER_NO
+		    left join USERS US on T.SELLER_NO = US.USER_NO
+		    left join PRODUCTS P on T.PRODUCT_ID = P.PRODUCT_ID
+		where UB.USER_NO = #{userNo} or US.USER_NO = #{userNo}
+		order by T.COMPLETED_AT desc 
+	</select>
+	
+	<select id="selectTxHistoryById" parameterType="long" resultType="TxHistoryDTO">
+		select *
+		from TRANSACTION_HISTORY
+		where HISTORY_ID = #{historyId}
+	</select>
+
+</mapper>
