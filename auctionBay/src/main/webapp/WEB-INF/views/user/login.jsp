@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -79,7 +80,7 @@
     <p style="color:#2a7a2a; font-size:13px; margin-bottom:14px;">회원가입이 완료되었습니다. 로그인해주세요.</p>
   </c:if>
 
-  <form action="${pageContext.request.contextPath}/member/login" method="post">
+  <form action="${pageContext.request.contextPath}/user/login" method="post">
 
     <div class="field-row">
       <label for="userId">아이디</label>

@@ -23,6 +23,9 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public void join(UserDTO user) {
 		
+		if(isUserIdCheck(user.getUserId())) {
+			throw new IllegalStateException("이미 사용중인 아이디입니다.");
+		}
 		
 		String encodePWd = passwordEncoder.encode(user.getPassword());
 		user.setPassword(encodePWd); // 비밀번호 암호화
@@ -31,6 +34,14 @@ public class UserServiceImpl implements UserService{
 		mapper.insertUser(user);
 		
 		
+		
+	}
+	
+	
+	@Override
+	public boolean isUserIdCheck(String userId) {
+		
+		return mapper.countByUserId(userId) > 0;
 		
 	}
 
@@ -42,10 +53,21 @@ public class UserServiceImpl implements UserService{
 		
 		UserDTO user = mapper.selectByUserId(userId);
 		
+		if (user == null || !passwordEncoder.matches(password, user.getPassword()) ) {
+			throw new IllegalStateException("아이디 또는 비밀번호가 일치하지 않습니다.");
+		}
+		
+		
 		return user;
 		
 		
 	}
+
+
+
+
+
+
 	
 	
 	
