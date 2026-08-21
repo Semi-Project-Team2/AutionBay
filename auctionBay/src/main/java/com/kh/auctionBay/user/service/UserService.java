@@ -6,4 +6,6 @@ public interface UserService {
 	
 	void join(UserDTO user);
 	
+	UserDTO login(String userId, String password);
+	
 }

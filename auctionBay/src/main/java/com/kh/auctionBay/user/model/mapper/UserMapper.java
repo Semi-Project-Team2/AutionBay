@@ -9,4 +9,6 @@ public interface UserMapper {
 	
 	int insertUser(UserDTO user);
 	
+	UserDTO selectByUserId(String userId);
+	
 }

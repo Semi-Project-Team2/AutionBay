@@ -15,17 +15,20 @@ import lombok.ToString;
 @ToString
 public class UserDTO {
 	
-	private int userNo;
+	private Long userNo;
 	private String userId;
 	private String password;
 	private String email;
 	private String nickname;
 	private String phoneNumber;
 	private String profileImg;
-	private String regionAdress;
+	private String regionAddress;
 	private LocalDateTime createdAt;
 	private int isDeleted;
 	private LocalDateTime deletedAt;
+	
+	private String createdAtStr;
+	private String deletedAtStr;
 	
 	
 	

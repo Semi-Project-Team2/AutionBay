@@ -33,6 +33,21 @@ public class UserServiceImpl implements UserService{
 		
 		
 	}
+
+
+
+
+	@Override
+	public UserDTO login(String userId, String password) {
+		
+		UserDTO user = mapper.selectByUserId(userId);
+		
+		return user;
+		
+		
+	}
+	
+	
 	
 	
 	
