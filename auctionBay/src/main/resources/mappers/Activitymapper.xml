@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- ActivityMapper 인터페이스와 매핑 연결 -->
+<mapper namespace="com.kh.auctionBay.activity.mapper.ActivityMapper">
+
+	<!-- 1. 내가 작성한 게시글 조회 -->
+	<select id="selectMyBoardList" parameterType="long" resultType="MyBoardDTO">
+		/* 내가 작성한 게시글 목록 가져오기 (대표 이미지 1개 조인) */
+		SELECT P.PRODUCT_ID, P.WRITER_NO, P.CATEGORY_ID, P.TRADE_TYPE, P.TITLE, 
+		       P.DESCRIPTION, P.PRICE, P.PRODUCT_CONDITION, P.STATUS, P.VIEW_COUNT, 
+		       P.CREATED_AT,
+		       /* 오라클 날짜 타입을 화면 출력용 문자열 형태(YYYY-MM-DD HH24:MI)로 변환 */
+		       TO_CHAR(P.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS CREATED_AT_STR,
+		       /* 미디어 테이블에서 첫 번째(MEDIA_ORDER = 1) 썸네일 이미지 가져오기 */
+		       PM.THUMBNAIL_URL AS MAIN_IMAGE
+		  FROM PRODUCTS P
+		    /* 미디어가 없는 게시글도 조회되도록 LEFT JOIN 사용 */
+		    LEFT JOIN PRODUCT_MEDIA PM 
+		           ON P.PRODUCT_ID = PM.PRODUCT_ID AND PM.MEDIA_ORDER = 1
+		 WHERE P.WRITER_NO = #{userNo} /* 로그인한 회원의 작성글만 필터링 */
+		   AND P.FIELD = 0            /* 삭제 처리되지 않은 정상 게시글만 조회 */
+		 ORDER BY P.CREATED_AT DESC   /* 최신 등록순 정렬 */
+	</select>
+
+	<!-- 2. 내가 작성한 댓글 조회 -->
+	<select id="selectMyCommentList" parameterType="long" resultType="MyCommentDTO">
+		/* 내가 작성한 댓글 목록과 원본 게시글 제목 조회 */
+		SELECT C.COMMENT_ID, C.PRODUCT_ID, C.WRITER_NO, C.PARENT_NO, C.CONTENT, 
+		       C.CREATED_AT,
+		       /* 작성일시 포맷팅 */
+		       TO_CHAR(C.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS CREATED_AT_STR,
+		       /* 댓글이 달린 게시글의 제목 가져오기 */
+		       P.TITLE AS PRODUCT_TITLE
+		  FROM COMMENTS C
+		    /* 원본 게시글 정보 확인을 위해 JOIN */
+		    JOIN PRODUCTS P ON C.PRODUCT_ID = P.PRODUCT_ID
+		 WHERE C.WRITER_NO = #{userNo} /* 내가 쓴 댓글만 필터링 */
+		   AND P.FIELD = 0            /* 원본 게시글이 삭제되지 않은 경우만 조회 */
+		 ORDER BY C.CREATED_AT DESC   /* 최신 댓글순 정렬 */
+	</select>
+
+	<!-- 3. 찜 목록 조회 -->
+	<select id="selectMyWishlist" parameterType="long" resultType="WishlistDTO">
+		/* 내가 찜한 상품 목록 조회 (상품 정보 + 대표 이미지 포함) */
+		SELECT W.WISHLIST_ID, W.USER_NO, W.PRODUCT_ID, W.CREATED_AT,
+		       P.TITLE, P.PRICE, P.TRADE_TYPE, P.STATUS,
+		       PM.THUMBNAIL_URL AS MAIN_IMAGE,
+		       /* 찜 등록일시 포맷팅 */
+		       TO_CHAR(W.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS WISHED_AT_STR
+		  FROM WISHLISTS W
+		    /* 찜한 상품의 상세 정보를 가져오기 위해 JOIN */
+		    JOIN PRODUCTS P ON W.PRODUCT_ID = P.PRODUCT_ID
+		    /* 상품의 대표 썸네일 이미지 연결 */
+		    LEFT JOIN PRODUCT_MEDIA PM 
+		           ON P.PRODUCT_ID = PM.PRODUCT_ID AND PM.MEDIA_ORDER = 1
+		 WHERE W.USER_NO = #{userNo} /* 내가 찜한 내역만 필터링 */
+		   AND P.FIELD = 0            /* 삭제되지 않은 상품만 조회 */
+		 ORDER BY W.CREATED_AT DESC   /* 최근 찜한 순서대로 정렬 */
+	</select>
+
+	<!-- 4. 최근 본 글 조회 -->
+	<select id="selectRecentViews" parameterType="long" resultType="RecentViewDTO">
+		/* 최근 조회한 상품 기록 및 상품 정보 조회 */
+		SELECT RV.VIEW_ID, RV.USER_NO, RV.PRODUCT_ID, RV.VIEWED_AT,
+		       P.TITLE, P.PRICE, P.STATUS,
+		       PM.THUMBNAIL_URL AS MAIN_IMAGE,
+		       /* 최근 조회일시 포맷팅 */
+		       TO_CHAR(RV.VIEWED_AT, 'YYYY-MM-DD HH24:MI') AS VIEWED_AT_STR
+		  FROM RECENT_VIEWS RV
+		    /* 조회했던 상품 정보를 가져오기 위해 JOIN */
+		    JOIN PRODUCTS P ON RV.PRODUCT_ID = P.PRODUCT_ID
+		    /* 상품의 대표 썸네일 이미지 연결 */
+		    LEFT JOIN PRODUCT_MEDIA PM 
+		           ON P.PRODUCT_ID = PM.PRODUCT_ID AND PM.MEDIA_ORDER = 1
+		 WHERE RV.USER_NO = #{userNo} /* 로그인 회원의 최근본글 내역만 필터링 */
+		   AND P.FIELD = 0            /* 삭제되지 않은 상품만 조회 */
+		 ORDER BY RV.VIEWED_AT DESC   /* 최근에 읽은 순서대로 정렬 */
+	</select>
+	<delete id
+
+</mapper>
