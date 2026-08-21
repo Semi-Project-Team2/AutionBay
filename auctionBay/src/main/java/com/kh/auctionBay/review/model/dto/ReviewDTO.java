@@ -1,4 +1,4 @@
-package com.kh.auctionBay.user.model.dto;
+package com.kh.auctionBay.review.model.dto;
 
 import java.time.LocalDateTime;
 

@@ -1,4 +1,4 @@
-package com.kh.auctionBay.user.model.mapper;
+package com.kh.auctionBay.review.model.mapper;
 
 public interface TransactionHistoryMapper {
 
