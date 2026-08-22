@@ -21,7 +21,7 @@ public class TxHistoryServiceImpl implements TxHistoryService {
 	public List<TxHistoryDTO> getTxHistories(Long userNo) {
 		// 전체 거래내역 조회
 		List<TxHistoryDTO> txHistories 
-				= txHistoryMapper.selectTxHistoryList(userNo);
+				= txHistoryMapper.selectTxHistories(userNo);
 		
 		return txHistories;
 	}

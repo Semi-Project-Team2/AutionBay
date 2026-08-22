@@ -15,5 +15,5 @@ public interface TxHistoryService {
 	TxHistoryDTO getTxHistoryDetail(Long historyId);
 	
 	// 거래 내역 추가
-	int addTxHistory(TxHistoryDTO tx) throws IllegalStateException, IOException ;
+	int addTxHistory(TxHistoryDTO tx) throws IllegalStateException, IOException;
 }
