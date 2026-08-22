@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kh.auctionBay.review.model.mapper.TxHistoryMapper">
-	<select id="selectTxHistoryList" parameterType="long" resultType="TxHistoryDTO">
+	
+	<!-- 거래내역 리스트 조회 -->
+	<select id="selectTxHistories" parameterType="long" resultType="TxHistoryDTO">
 		select HISTORY_ID, PRODUCT_ID, TRADE_TYPE,
 				SELLER_NO, BUYER_NO, FINAL_PRICE,
 				to_char(COMPLETED_AT, 'YYYY-MM-DD HH24:MI') as "CREATED_AT_STR"
@@ -10,10 +12,18 @@
 		order by COMPLETED_AT desc
 	</select>
 	
+	<!-- 거래내역 상세 조회 -->
 	<select id="selectTxHistoryById" parameterType="long" resultType="TxHistoryDTO">
 		select *
 		from TRANSACTION_HISTORY
 		where HISTORY_ID = #{historyId}
 	</select>
+	
+	<!-- 거래내역 추가 -->
+	<insert id="insertTxHistory" parameterType="TxHistoryDTO">
+		<!-- historyId는 자동생성되므로 제외 -->
+		insert into TRANSACTION_HISTORY (PRODUCT_ID, TRADE_TYPE, SELLER_NO, BUYER_NO, FINAL_PRICE)
+		values (#{productId}, #{tradeType}, #{sellerNo}, #{buyerNo}, #{finalPrice})
+	</insert>
 
 </mapper>
