@@ -1,15 +1,19 @@
 package com.kh.auctionBay.user.controller;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.kh.auctionBay.review.model.dto.TxHistoryDTO;
 import com.kh.auctionBay.review.service.ReviewService;
 import com.kh.auctionBay.review.service.TxHistoryService;
 import com.kh.auctionBay.user.service.UserService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -23,16 +27,20 @@ public class MyPageController {
 //	private final ProductService productService;
 	
 	
-	/* --------- 화면 이동 요청 ----------- */
+	/* ------------- 화면 이동 요청 --------------- */
 	@GetMapping("/txHistory/{userId}")
-	public String mypage(@PathVariable String userId, Model model) {
+	public String mypage(@PathVariable String userId, HttpSession session,
+						Long userNo, Long productId, Model model) {
 		
+		// 로그인 한 사용자의 
+		List<TxHistoryDTO> txHistories = txService.getTxHistoryList(userNo);
+		model.addAttribute("txHistories", txHistories);
 		
 		return "mypage/txHistory";
 	}
 	
 	
-	/* --------------------------------------- */
+	/* ----------------------------------------- */
 	
 
 }

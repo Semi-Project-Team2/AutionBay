@@ -17,16 +17,16 @@ public class TxHistoryServiceImpl implements TxHistoryService {
 	private final TxHistoryMapper txHistoryMapper;
 
 	@Override
-	public List<TxHistoryDTO> getTransactionHistoryList(Long userNo, Long productId) {
+	public List<TxHistoryDTO> getTxHistoryList(Long userNo) {
 		// 전체 거래내역 조회
 		List<TxHistoryDTO> txHistories 
-				= txHistoryMapper.selectTxHistoryList(userNo, productId);
+				= txHistoryMapper.selectTxHistoryList(userNo);
 		
 		return txHistories;
 	}
 
 	@Override
-	public TxHistoryDTO getTransactionHistoryDetail(Long historyId) {
+	public TxHistoryDTO getTxHistoryDetail(Long historyId) {
 		// 거래내역 상세 조회 후 리턴		
 		return txHistoryMapper.selectTxHistoryById(historyId);
 	}

@@ -6,7 +6,7 @@ import com.kh.auctionBay.review.model.dto.TxHistoryDTO;
 
 public interface TxHistoryMapper {
 	// 거래내역 목록 조회
-	List<TxHistoryDTO> selectTxHistoryList(Long userNo, Long productId);
+	List<TxHistoryDTO> selectTxHistoryList(Long userNo);
 	
 	// 거래내역 상세 조회
 	TxHistoryDTO selectTxHistoryById(Long historyId);

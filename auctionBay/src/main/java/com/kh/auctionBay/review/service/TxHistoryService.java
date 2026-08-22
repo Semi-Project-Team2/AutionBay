@@ -7,10 +7,10 @@ import com.kh.auctionBay.review.model.dto.TxHistoryDTO;
 
 public interface TxHistoryService {
 	// 거래 내역 목록 조회
-	List<TxHistoryDTO> getTransactionHistoryList(Long userNo, Long productId);
+	List<TxHistoryDTO> getTxHistoryList(Long userNo);
 	
 	// 거래 내역 상세 조회
-	TxHistoryDTO getTransactionHistoryDetail(Long historyId);
+	TxHistoryDTO getTxHistoryDetail(Long historyId);
 	
 	// 거래 내역 추가
 	int addTxHistory(TxHistoryDTO tx) throws IllegalStateException, IOException ;
