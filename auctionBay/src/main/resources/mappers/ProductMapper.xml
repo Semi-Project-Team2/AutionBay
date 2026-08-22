@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kh.auctionBay.product.model.mapper.productMapper">
+<mapper namespace="com.kh.auctionBay.product.model.mapper.ProductMapper">
 
-<select id="selectProductById" resultType="productDTO">
+<select id="selectCategories" resultType="CategoryDTO">
+	SELECT CATEGORY_ID, CATEGORY_NAME
+	FROM CATEGORIES
+</select>
+
+<select id="selectProductById" resultType="ProductDTO">
 	SELECT PRODUCT_ID, WRITER_NO, CATEGORY_ID, TRADE_TYPE, TITLE, DESCRIPTION, PRICE,
 		PRODUCT_CONDITION, AUCTION_START_PRICE, AUCTION_END_TIME, IS_DIRECT, TRADE_LOCATION, 
 		STATUS, VIEW_COUNT, CREATED_AT, UPDATED_AT, IS_DELETED,
@@ -13,5 +18,108 @@
 	WHERE product_id = #{productId}
 	
 </select>
+<!-- 
+		sql 태그 : 여러 select 태그에서 공통으로 쓰는 sql 조각을 정의
+	-->
+
+<sql id="productSearchWhere">
+	<where>
+		P.IS_DELETED = 0
+		
+		<!-- 1. 카테고리 필터 -->
+		<if test="categoryId != null">
+			AND P.CATEGORY_ID = #{categoryId}
+		</if>
+		
+		<!-- 2. 거래 유형 필터 -->
+		<if test="tradeType != null and tradeType != ''">
+			AND P.TRADE_TYPE = #{tradeType}
+		</if>
+		
+		<!-- 3. 가격 범위 필터 -->
+		<if test="minPrice != null">
+		    AND P.PRICE &gt;= #{minPrice}
+		</if>
+		<if test="maxPrice != null">
+		    AND P.PRICE &lt;= #{maxPrice}
+		</if>
+		
+		<!-- 4. 상품 상태 필터 -->
+		<if test="productCondition != null and productCondition != ''">
+			AND P.PRODUCT_CONDITION = #{productCondition}
+		</if>
+		
+		<!-- 5. 판매/경매 진행 상태 필터 -->
+		<if test="status != null and status != ''">
+			AND P.STATUS = #{status}
+		</if>
+		
+		<!-- 6. 직거래 여부 필터 -->
+		<if test="isDirect != null">
+			AND P.IS_DIRECT = #{isDirect}
+		</if>
+		
+		<!-- 7. 키워드 검색 (DESCRIPTION 기준) -->
+		<!-- 키워드 통합 검색 (제목 또는 작성자 닉네임 기준) -->
+        <if test="keyword != null and keyword != ''">
+            AND (
+                P.TITLE LIKE '%' || #{keyword} || '%' 
+                OR U.NICKNAME LIKE '%' || #{keyword} || '%'
+            )
+        </if>
+	</where> 	
+</sql>
+
+<!-- 전체 상품 개수 조회 (카운트 쿼리) -->
+<select id="selectProductCount" parameterType="com.kh.auctionBay.product.model.dto.ProductSearchCondition" resultType="int">
+	SELECT COUNT(*)
+	  FROM PRODUCTS P
+	    LEFT JOIN USERS U ON P.WRITER_NO = U.USER_NO
+	<include refid="productSearchWhere" />
+</select>
+
+<!-- 조건별 상품 목록 조회 (페이징 및 정렬 포함 - VIEW_COUNT, CREATED_AT 반영) -->
+<select id="selectProductList" parameterType="com.kh.auctionBay.product.model.dto.ProductSearchCondition" resultType="com.kh.auctionBay.product.model.dto.ProductDTO">
+	SELECT P.PRODUCT_ID, P.WRITER_NO, P.CATEGORY_ID, P.TRADE_TYPE, P.TITLE, P.DESCRIPTION, P.PRICE,
+	       P.PRODUCT_CONDITION, P.AUCTION_START_PRICE, P.AUCTION_END_TIME, P.IS_DIRECT, P.TRADE_LOCATION, 
+	       P.STATUS, P.VIEW_COUNT, P.CREATED_AT, P.UPDATED_AT, P.IS_DELETED,
+	       TO_CHAR(P.AUCTION_END_TIME, 'YYYY-MM-DD HH24:MI:SS') AS AUCTION_END_TIME_STR,
+	       TO_CHAR(P.CREATED_AT, 'YYYY-MM-DD HH24:MI:SS') AS CREATED_AT_STR,
+	       TO_CHAR(P.UPDATED_AT, 'YYYY-MM-DD HH24:MI:SS') AS UPDATED_AT_STR,
+	       NVL(U.NICKNAME, '탈퇴한 회원') AS WRITER_NICKNAME,
+	       C.CATEGORY_NAME AS CATEGORY_NAME
+	  FROM PRODUCTS P
+	    LEFT JOIN USERS U ON P.WRITER_NO = U.USER_NO
+	    LEFT JOIN CATEGORIES C ON P.CATEGORY_ID = C.CATEGORY_ID
+	<include refid="productSearchWhere" />
+	
+	<!-- 정렬 조건 처리 (VIEW_COUNT 기준 정렬 반영) -->
+	ORDER BY 
+	<choose>
+		<when test="sortBy == 'priceAsc'">
+			P.PRICE ASC, P.PRODUCT_ID DESC
+		</when>
+		<when test="sortBy == 'priceDesc'">
+			P.PRICE DESC, P.PRODUCT_ID DESC
+		</when>
+		<when test="sortBy == 'views'">
+			P.VIEW_COUNT DESC, P.PRODUCT_ID DESC
+		</when>
+		<otherwise>
+			P.PRODUCT_ID DESC
+		</otherwise>
+	</choose>
+	
+	<!--
+		페이징 처리를 위해 OFFSET / FETCH NEXT 추가 (oracle 12c 이상)
+		: ORDER BY로 정렬된 결과셋에서 특정 행 수를 건너뛰고(OFFSET), 지정한 행 수만큼 조회(FETCH).
+		
+		OFFSET 건너뛸행수 ROWS
+		FETCH NEXT 조회할행수 ROWS ONLY
+	-->
+	OFFSET #{offset} ROWS
+	FETCH NEXT #{size} ROWS ONLY
+</select>
+
 
 </mapper>
