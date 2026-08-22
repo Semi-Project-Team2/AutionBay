@@ -48,4 +48,13 @@ public class ProductDTO {
 	private String auctionEndTimeStr;
 	private String createdAtStr;
 	private String updatedAtStr;
+	
+	// 작성자의 닉네임(join할때)
+	private String writerNickname;
+	
+	//카테고리 이름(join할때)
+	private String categoryName;
+	
+	// 상세보기 화면에서 보여줄 이미지 목록
+	
 }
