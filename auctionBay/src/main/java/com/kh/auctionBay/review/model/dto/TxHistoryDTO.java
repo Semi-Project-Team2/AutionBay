@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TransactionHistoryDTO {
+public class TxHistoryDTO {
 //    history_id NUMBER(19) GENERATED ALWAYS AS IDENTITY,
 //    product_id NUMBER(19) NOT NULL,
 //    trade_type VARCHAR2(10) NOT NULL,
