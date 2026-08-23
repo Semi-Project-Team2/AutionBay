@@ -41,11 +41,11 @@ public class MyPageController {
 	 * @param model
 	 * @return
 	 */
-	@GetMapping("/txHistory")
+	@GetMapping("/txHistories")
 	public String mypageTxHistory(HttpSession session, Model model) {
 		
 		// 로그인한 사용자 정보를 loginUser로 백엔드에 저장
-		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_MEMBER);
+		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
 		// userNo(PK)에 로그인한 사용자의 userNo값 저장
 		Long userNo = loginUser.getUserNo();
 		
@@ -55,7 +55,7 @@ public class MyPageController {
 		// 브라우저에서 "txHistories"로 요청 시 컨트롤러 클래스에 txHistories라고 저장된 데이터를 전달
 		model.addAttribute("txHistories", txHistories);
 		
-		return "mypage/txHistory";
+		return "mypage/txHistories";
 	}
 	
 	/**
@@ -88,11 +88,11 @@ public class MyPageController {
 	 * @param model
 	 * @return
 	 */
-	@GetMapping("/review")
+	@GetMapping("/reviews")
 	public String mypageReview(HttpSession session, Model model) {
 		
 		// 로그인한 사용자 정보를 loginUser로 백엔드에 저장
-		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_MEMBER);
+		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
 		// userNo(PK)에 로그인한 사용자의 userNo값 저장
 		Long userNo = loginUser.getUserNo();
 		
@@ -102,10 +102,10 @@ public class MyPageController {
 		
 		// 브라우저에서 "receivedReviews"로 요청 시 컨트롤러 클래스의 receivedReviews 전달
 		// 브라우저에서 "sentReviews"로 요청 시 컨트롤러 클래스의 sentReviews 전달
-		model.addAttribute("sentReviews", sentReviews);
+		model.addAttribute("receivedReviews", receivedReviews);
 		model.addAttribute("sentReviews", sentReviews);
 		
-		return "mypage/review";
+		return "mypage/reviews";
 	}	
 		
 	/* ----------------------------------------- */
@@ -117,12 +117,12 @@ public class MyPageController {
 	public String writeReview(@ModelAttribute ReviewDTO review, HttpSession session) 
 				throws IllegalStateException, IOException {
 		// MessageController에서 불러오게 될 것 같긴 함
-		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_MEMBER);
+		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
 		Long userNo = loginUser.getUserNo();
 		
 		int result = reviewService.writeReview(review);
 		review.setReviewerNo(userNo);
 		
-		return "redirect:/review";
+		return "redirect:/mypage/review";
 	}
 }

@@ -265,7 +265,7 @@
 	            <c:choose>
 	                <%-- 로그인 상태가 아닐 때 --%>
 	                <c:when test="${empty sessionScope.loginUser}">
-	                    <a href="${pageContext.request.contextPath}/member/login" class="auth-btn">로그인</a>
+	                    <a href="${pageContext.request.contextPath}/user/login" class="auth-btn">로그인</a>
 	                    <a href="${pageContext.request.contextPath}/member/signup" class="auth-btn">회원가입</a>
 	                </c:when>
 	                <%-- 로그인 상태일 때 --%>
@@ -273,6 +273,7 @@
 	                    <span style="font-size: 13px; font-weight: bold; align-self: center; margin-right: 5px;">
 	                        ${sessionScope.loginUser.nickname}님 환영합니다!
 	                    </span>
+                        <a href="${pageContext.request.contextPath}/mypage/txHistories" class="auth-btn">마이페이지</a>
 	                    <a href="${pageContext.request.contextPath}/member/logout" class="auth-btn">로그아웃</a>
 	                </c:otherwise>
 	            </c:choose>
