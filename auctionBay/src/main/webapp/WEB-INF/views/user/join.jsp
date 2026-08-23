@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -17,7 +18,9 @@
 
   <div>
     <label>아이디</label>
-    <input type="text" name="userId">
+    <input type="text" name="userId" id="user-id">
+	<button type="button" id="check-id-btn">중복확인</button>
+  	<p id="check-id-result"></p>
   </div>
 
   <div>
@@ -56,5 +59,6 @@
 
 </form>
 
+<script src="/js/user.js"></script>
 </body>
 </html>

@@ -23,6 +23,7 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public void join(UserDTO user) {
 		
+		// 아이디 중복 검사
 		if(isUserIdCheck(user.getUserId())) {
 			throw new IllegalStateException("이미 사용중인 아이디입니다.");
 		}

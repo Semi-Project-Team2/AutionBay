@@ -5,9 +5,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.auctionBay.user.model.dto.UserDTO;
 import com.kh.auctionBay.user.service.UserService;
+import com.kh.auctionBay.common.dto.ApiResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,6 +37,17 @@ public class UserContoller {
 		service.join(user);
 		
 		return "redirect:/user/login";
+	}
+	
+	@GetMapping("/checkId")
+	@ResponseBody
+	public ApiResponse<Boolean> checkId(String userId) {
+		
+		boolean isDuplicate = service.isUserIdCheck(userId);
+		
+		String message = isDuplicate ? "이미 사용중인 아이디입니다." : "사용 가능한 아이디입니다.";
+		
+		return ApiResponse.success(message, isDuplicate);
 	}
 	
 	@PostMapping("/login")

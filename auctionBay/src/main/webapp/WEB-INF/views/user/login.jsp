@@ -99,7 +99,7 @@
   </form>
 
   <div class="links">
-    <a href="${pageContext.request.contextPath}/member/join">회원가입</a>
+    <a href="${pageContext.request.contextPath}/user/join">회원가입</a>
   </div>
 </div>
 
