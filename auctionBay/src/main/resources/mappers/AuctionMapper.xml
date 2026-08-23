@@ -91,7 +91,7 @@
     </update>
     
     <insert id="insertTxHistory">
-    	INSERT INTO transation_history
+    	INSERT INTO transaction_history
     	(product_id, trade_type, seller_no, buyer_no, final_price)
     	VALUES
     	(#{productId}, #{tradeType}, #{sellerNo}, #{buyerNo}, #{finalPrice})
