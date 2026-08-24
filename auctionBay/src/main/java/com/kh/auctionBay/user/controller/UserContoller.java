@@ -70,7 +70,7 @@ public class UserContoller {
 			HttpSession session, RedirectAttributes redirectAttr) {
 		try {
 			UserDTO user = service.login(userId, password);
-			session.setAttribute(SessionConst.LOGIN_MEMBER, user);
+			session.setAttribute(SessionConst.LOGIN_USER, user);
 		} catch (IllegalStateException e) {
 			redirectAttr.addFlashAttribute("error", e.getMessage());
 			return "redirect:/member/login";

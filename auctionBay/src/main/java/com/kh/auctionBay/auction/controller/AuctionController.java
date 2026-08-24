@@ -51,7 +51,7 @@ public class AuctionController {
 	public String auctionBid(@ModelAttribute BidsDTO bidDTO,
 			HttpSession session, RedirectAttributes rttr) {
 		
-		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_MEMBER);
+		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
 		if (loginUser == null) {
 	        rttr.addFlashAttribute("message", "로그인 후 이용해주세요.");
 	        return "redirect:/user/login";
