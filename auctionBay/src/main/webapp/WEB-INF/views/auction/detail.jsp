@@ -363,9 +363,43 @@
             font-weight: bold;
             color: #111;
         }
+		
+		/* 찜 버튼 전체 스타일 (테두리, 배경 제거 및 정렬) */
+		#wishBtn {
+		    background: transparent;
+		    border: none;
+		    cursor: pointer;
+		    font-size: 24px; /* 아이콘 크기 조절 */
+		    padding: 8px;
+		    display: flex;
+		    align-items: center;
+		    justify-content: center;
+		    transition: transform 0.2s ease; /* 부드러운 효과 */
+		}
+
+		/* 마우스 올렸을 때 살짝 커지는 효과 */
+		#wishBtn:hover {
+		    transform: scale(1.1);
+		}
+
+		/* 1. 빈 하트 (기본 상태) */
+		#wishBtn .fa-regular.fa-heart {
+		    color: #999; /* 평소에는 회색빛 */
+		    transition: color 0.2s ease;
+		}
+
+		#wishBtn .fa-regular.fa-heart:hover {
+		    color: #ff4757; /* 마우스 올렸을 때 빨간색으로 미리보기 */
+		}
+
+		/* 2. 채워진 하트 (isLiked가 true일 때: fa-solid 클래스) */
+		#wishBtn .fa-solid.fa-heart {
+		    color: #ff4757; /* 선명한 빨간색 */
+		}
         
     </style>
     <link rel="stylesheet" href="/css/common.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <!-- 공통 헤더 -->
@@ -440,7 +474,9 @@
             <!-- 버튼 영역 -->
             <div class="action-group">
                 <button type="button" class="btn-submit" id="btnSubmitBid" data-product-id="${product.productId}">입찰하기</button>
-                <button type="button" class="btn-wish" id="btnWishlist">♡</button>
+				<button type="button" id="wishBtn" data-product-id="${product.productId}">
+				    <i class="${isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart'}"></i>
+				</button>
             </div>
 
             <!-- 판매자 정보 영역 -->
@@ -454,8 +490,8 @@
                 <div class="seller-stats">
                     <div class="stat-item">
                         <div class="stat-value">
-                            <span id="reviewAverage">리뷰 평균</span> 
-                            <span id="reviewCount" class="review-count-text">리뷰개수</span>
+                            <span id="reviewAverage">리뷰 평균 : ${reviewSummary.reviewAvg}</span> 
+                            <span id="reviewCount" class="review-count-text">리뷰개수 : ${reviewSummary.reviewCount}</span>
                         </div>
                     </div>
                 </div>

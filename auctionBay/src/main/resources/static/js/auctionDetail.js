@@ -121,16 +121,15 @@ const startPriceElem = document.getElementById('startPrice');
 
 // 1. 입찰 단위 및 기준 가격(현재가 혹은 시작가) 숫자로 추출
 const unit = parseInt(bidUnitElem.textContent.replace(/[^0-9]/g, '')) || 2000;
-//console.log(unit);
+
 
 // 2. 현재가 엘리먼트에서 가격 읽어오기 
 const currentPrice = parseInt(currentPriceElem.textContent.replace(/[^0-9]/g, '')) || 0;
 
-console.log(currentPrice);
 
 // 3. 최소 입찰 가능 금액 = 현재가(또는 시작가) + 입찰단위
 const minValidBid = currentPrice + unit;
-console.log(minValidBid);
+
 
 // 페이지가 처음 뜰 때 희망 입찰가 입력창에 최소 입찰 가능 금액 기본 세팅
 if (bidInput && !bidInput.value) {
@@ -237,3 +236,43 @@ if (btnSubmitBid) {
         form.submit();
     });
 }
+
+// 찜목록 버튼 클릭 시 토글효과
+const wishBtn = document.getElementById('wishBtn');
+wishBtn.addEventListener('click', async function() {
+    const productId = wishBtn.dataset.productId; // data-product-id 값을 가져옴
+
+    console.log("보낼 productId:", productId); // 👈 여기서 값이 콘솔에 잘 찍히는지 확인해보세요
+    try{
+        const response = await fetch('/auction/wish', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ productId: productId })
+        })
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            alert(result.message || "찜목록 처리 중 오류가 발생했습니다.");
+            return;
+        }
+        
+        const icon = wishBtn.querySelector('i');
+        
+        // 서버에서 현재 찜 상태(isLiked)를 boolean타입으로 보내줌
+        if (result.data) { // 찜이 안되어 있어서 찜한상태로 변경
+            icon.classList.remove('fa-regular');
+            icon.classList.add('fa-solid'); // 빨간 하트로 변경
+        } else {            // 찜이 되어 있던 것이므로 찜 취소 상태로 변경
+            icon.classList.remove('fa-solid');
+            icon.classList.add('fa-regular'); // 빈 하트로 변경
+        }
+    }
+    catch (error) {
+        console.error('Error:', error);
+        alert("네크워크 오류 발생");
+    }
+
+});

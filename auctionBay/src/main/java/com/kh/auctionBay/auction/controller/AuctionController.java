@@ -2,21 +2,29 @@ package com.kh.auctionBay.auction.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.auctionBay.auction.model.dto.BidsDTO;
 import com.kh.auctionBay.auction.service.AuctionService;
 import com.kh.auctionBay.common.SessionConst;
+import com.kh.auctionBay.common.dto.ApiResponse;
 import com.kh.auctionBay.product.model.dto.ProductDTO;
 import com.kh.auctionBay.product.service.ProductService;
+import com.kh.auctionBay.review.model.dto.ReviewSummaryDTO;
+import com.kh.auctionBay.review.service.ReviewService;
 import com.kh.auctionBay.user.model.dto.UserDTO;
+import com.kh.auctionBay.wish.model.dto.WishRequest;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +36,7 @@ public class AuctionController {
 
 	private final AuctionService service;
 	private final ProductService productService;
+	private final ReviewService reviewService;
 	
 	
 	// ------- 화면 이동 요청 ---------
@@ -37,16 +46,35 @@ public class AuctionController {
 	public String auctionDetail(@PathVariable Long productId, 
 					HttpSession session, Model model) {
 		
+		// 세션 영역에서 로그인된 유저 가져오기
+		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		
+		// 경매 입찰 내역 조회용
 		List<BidsDTO> bids = service.getBidsByProductId(productId);
+		
+		// 상품정보 조회용
 		ProductDTO product = productService.getProductByProductId(productId);
+		
+		// 게시물 등록자의 받은 리뷰 조회용(ReviewSummaryDTO에는 reviewAvg, reviewCount 필드 저장되어있음
+		ReviewSummaryDTO rs = reviewService.getAvgAndCountReview(product.getWriterNo());
+		
+		// 찜 여부 조회
+		boolean isLiked = false;
+		if(loginUser != null) {
+			isLiked = service.checkIsLiked(loginUser.getUserNo(),productId);
+		}
 		
 		model.addAttribute("bidCount", bids.size());
 		model.addAttribute("product", product);
 		model.addAttribute("bids", bids);
+		model.addAttribute("reviewSummary", rs);
+		model.addAttribute("isLiked", isLiked);
 		
 		return "auction/detail";
 	}
 	
+	
+	// -----------------------------------------------
 	@PostMapping("/bid")
 	public String auctionBid(@ModelAttribute BidsDTO bidDTO,
 			HttpSession session, RedirectAttributes rttr) {
@@ -72,6 +100,26 @@ public class AuctionController {
 		
 		return "redirect:/auction/"+bidDTO.getProductId()+"/detail";
 	}
+	
+	@PostMapping("/wish")
+	@ResponseBody
+	public ResponseEntity<ApiResponse<Boolean>> wish(@RequestBody WishRequest wishRequest, HttpSession session){
+		
+		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		if(loginUser == null)
+			return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.fail("로그인이 필요합니다."));
+		
+		try {
+			boolean isLiked = service.toggleWish(loginUser.getUserNo(), wishRequest.getProductId());
+			
+			return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(isLiked));
+		
+		} catch (RuntimeException e) {
+			e.printStackTrace(); // 
+	        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.fail("찜 처리 중 문제가 발생했습니다. 다시 시도해주세요."));
+		}
+	}
+		
 	
 	
 }
