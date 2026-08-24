@@ -74,15 +74,6 @@ public class MyPageController {
 	}
 	
 	/**
-	 * 거래내역 중 후기 작성 버튼
-	 * @return
-	 */
-	@GetMapping("/reviewForm")
-	public String reviewForm() {	
-		return "review/form";
-	}
-	
-	/**
 	 * 후기 목록 화면
 	 * @param session
 	 * @param model
@@ -106,8 +97,27 @@ public class MyPageController {
 		model.addAttribute("sentReviews", sentReviews);
 		
 		return "mypage/reviews";
-	}	
-		
+	}
+	
+	
+	/**
+	 * 거래내역 중 후기 작성 버튼
+	 * @return
+	 */
+	@GetMapping("/reviewForm")
+	public String reviewForm() {	
+		return "review/form";
+	}
+	
+	/**
+	 * 마이페이지 회원 정보 수정 버튼 클릭 시
+	 * @return
+	 */
+	@GetMapping("/profileEditForm")
+	public String editProfile() {
+		return "editProfile";
+	}
+	
 	/* ----------------------------------------- */
 
 	/**
@@ -123,6 +133,16 @@ public class MyPageController {
 		int result = reviewService.writeReview(review);
 		review.setReviewerNo(userNo);
 		
-		return "redirect:/mypage/review";
+		return "redirect:/mypage/reviews";
 	}
+	
+	@PostMapping("/form")
+	public String editProfile(@ModelAttribute UserDTO user, HttpSession session)
+				throws IllegalStateException, IOException {
+		
+		
+		return "redirect:/mypage/txHistories";
+	}
+	
+	
 }
