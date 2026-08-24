@@ -1,11 +1,16 @@
 package com.kh.auctionBay.user.controller;
 
+import java.io.IOException;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.auctionBay.user.model.dto.UserDTO;
 import com.kh.auctionBay.user.service.UserService;
@@ -31,11 +36,16 @@ public class UserContoller {
 	}
 	
 	@PostMapping("/join")
-	public String join(@ModelAttribute UserDTO user){
-		System.out.println(user);
+	public String join(@ModelAttribute UserDTO user, @RequestParam(required=false) MultipartFile profileImg, RedirectAttributes redirectAttr){
 		
-		service.join(user);
-		
+		try {
+		service.join(user, profileImg);
+		} catch (IOException e) {
+			e.printStackTrace();
+			redirectAttr.addFlashAttribute("error", "회원가입 실패");
+			return "redirect:user/join";
+		}
+		redirectAttr.addFlashAttribute("joinSuccess", true);
 		return "redirect:/user/login";
 	}
 	
