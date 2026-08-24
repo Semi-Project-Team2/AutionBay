@@ -38,9 +38,9 @@ public class WebConfig implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry registry) {
 		
 		registry.addInterceptor(new LoginInterceptor())
-				.addPathPatterns("/member/mypage", 
-								"/member/withdraw",
-								"/board/write");
+				.addPathPatterns("/user/mypage", 
+								"/user/withdraw"
+								/*"/auction/bid"*/);
 		
 	}
 

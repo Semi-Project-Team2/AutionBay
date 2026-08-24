@@ -48,4 +48,16 @@ public class ProductDTO {
 	private String auctionEndTimeStr;
 	private String createdAtStr;
 	private String updatedAtStr;
+	
+	// 작성자의 닉네임(join할때)
+	private String writerNickname;
+	
+	//카테고리 이름(join할때)
+	private String categoryName;
+	
+	// 상세보기 화면에서 보여줄 이미지 목록
+	
+	// 경매 종료 시간 확인용 임시 필드(시간 마감시 "Y", 아닐시 "N" 저장용)
+	private String isClosed;
+	
 }
