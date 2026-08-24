@@ -4,8 +4,19 @@
 
 	<insert id="insertUser" >
 		INSERT INTO USERS (user_id, password, email, nickname, phone_number, profile_img, region_address) 
-		VALUES ( #{userId}, #{password}, #{email}, #{nickname}, #{phoneNumber}, #{profileImg}, #{regionAddress} );
+		VALUES ( #{userId}, #{password}, #{email}, #{nickname}, #{phoneNumber}, #{profileImg}, #{regionAddress} )
 	</insert>
+	
+	<select id="countByUserId" parameterType="string" resultType="int">
+		SELECT COUNT(*) FROM users WHERE user_id = #{userId} AND is_deleted = 0
+	</select>
+	
+	<select id="selectByUserId" parameterType="string" resultType="UserDTO">
+		SELECT user_no, user_id, password, email, nickname, phone_number, profile_img, region_address, is_deleted
+    	FROM users
+    	WHERE user_id = #{userId}
+      	AND is_deleted = 0
+	</select>
 
 
 </mapper>
