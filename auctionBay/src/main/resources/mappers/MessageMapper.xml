@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.auctionBay.message.model.mapper.MessageMapper">
+
+	<select id="findReceived" parameterType="long" resultType="MessageDTO">
+		SELECT * 
+		FROM (
+			SELECT M.MESSAGE_ID, M.SENDER_NO, M.RECEIVER_NO, M.PRODUCT_ID,
+				M.CONTENT, M.IS_READ, M.CREATED_AT,
+				U.NICKNAME,P.TITLE,P.STATUS,
+				ROW_NUMBER() OVER (PARTITION BY M.PRODUCT_ID, M.SENDER_NO
+				ORDER BY M.CREATED_AT DESC) AS RN
+			FROM MESSAGES M
+			JOIN USERS U ON U.USER_NO = M.SENDER_NO
+			JOIN PRODUCTS P ON P.PRODUCT_ID = M.PRODUCT_ID
+			WHERE M.RECEIVER_NO = #{myNo} AND M.RECEIVER_DELETED =0
+				
+			)
+			WHERE RN =1
+			ORDER BY CREATED_AT DESC
+	</select>
+	
+	<select id="findSent" parameterType="long" resultType="MessageDTO">
+		SELECT *
+        FROM (
+            SELECT M.MESSAGE_ID, M.SENDER_NO, M.RECEIVER_NO, M.PRODUCT_ID,
+                   m.content, m.is_read, m.created_at,
+                   u.nickname AS opponent_nickname,
+                   p.title AS product_title,
+                   p.status AS product_status,
+                   ROW_NUMBER() OVER (
+                       PARTITION BY m.product_id, m.receiver_no
+                       ORDER BY m.created_at DESC
+                   ) AS rn
+            FROM MESSAGES m
+            JOIN USERS u ON u.user_no = m.receiver_no
+            JOIN PRODUCTS p ON p.product_id = m.product_id
+            WHERE m.sender_no = #{myNo}
+              AND m.sender_deleted = 0
+        )
+        WHERE rn = 1
+        ORDER BY created_at DESC
+	</select>
+
+
+</mapper>
+
