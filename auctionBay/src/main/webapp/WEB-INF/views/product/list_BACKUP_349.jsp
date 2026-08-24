@@ -10,6 +10,7 @@
 </head>
 <body>
 
+<<<<<<< HEAD
 <div class="container">
 	<!-- 헤더 영역 -->
 	<header class="header">
@@ -48,9 +49,11 @@
 	    </div>
 	</header>
 
+=======
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
 	
 <main class="container">
+>>>>>>> c733be8fe2ba9ed630c0f23100a293c7e96bafc9
     <!-- 검색/필터 유지를 위한 공통 Form -->
     <form id="searchForm" action="${pageContext.request.contextPath}/product/list" method="get">
         <input type="hidden" name="tradeType" id="tradeType" value="${condition.tradeType}">

@@ -1,5 +1,6 @@
 package com.kh.auctionBay.review.service;
 
+<<<<<<< HEAD
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -9,11 +10,13 @@ import com.kh.auctionBay.review.model.mapper.ReviewMapper;
 
 import lombok.RequiredArgsConstructor;
 
-
+@Service
+@RequiredArgsConstructor
+=======
 import org.springframework.stereotype.Service;
 
-@RequiredArgsConstructor
 @Service
+>>>>>>> c733be8fe2ba9ed630c0f23100a293c7e96bafc9
 public class ReviewServiceImpl implements ReviewService {
 	/* Mapper DI (생성자 주입) */
 	private final ReviewMapper reviewMapper;

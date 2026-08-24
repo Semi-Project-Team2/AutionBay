@@ -5,5 +5,13 @@ import java.util.List;
 import com.kh.auctionBay.auction.model.dto.BidsDTO;
 
 public interface AuctionService {
+	
+	// productId로 해당 게시물 모든 경매이력 조회
 	List<BidsDTO> getBidsByProductId(Long productId);
+	
+	// 입찰 처리하는 메서드
+	String processBid(BidsDTO bidDTO);
+	
+	// 스케쥴링 메서드
+	void checkAndCloseAuctions();
 }

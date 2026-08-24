@@ -9,11 +9,8 @@ import com.kh.auctionBay.review.model.mapper.ReviewMapper;
 
 import lombok.RequiredArgsConstructor;
 
-
-import org.springframework.stereotype.Service;
-
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
 	/* Mapper DI (생성자 주입) */
 	private final ReviewMapper reviewMapper;

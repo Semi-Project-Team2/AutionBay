@@ -10,44 +10,6 @@
 </head>
 <body>
 
-<div class="container">
-	<!-- 헤더 영역 -->
-	<header class="header">
-	    <div class="header-container">
-	        
-	        <!-- 1. 로고 (Auction Bay) -->
-	        <a href="${pageContext.request.contextPath}/" class="header-logo">
-	            Auction
-	            <span class="bay">Bay</span>
-	        </a>
-
-			<!-- 2. 검색창 영역 (헤더 내부에 배치) -->
-			<div class="header-search">
-			    <input type="text" name="keyword" value="${condition.keyword}" placeholder="제목 또는 작성자 검색" form="searchForm">
-			</div>
-
-	        <!-- 3. 로그인 / 회원가입 영역 -->
-	        <div class="header-auth">
-	            <c:choose>
-	                <%-- 로그인 상태가 아닐 때 --%>
-	                <c:when test="${empty sessionScope.loginUser}">
-	                    <a href="${pageContext.request.contextPath}/user/login" class="auth-btn">로그인</a>
-	                    <a href="${pageContext.request.contextPath}/member/signup" class="auth-btn">회원가입</a>
-	                </c:when>
-	                <%-- 로그인 상태일 때 --%>
-	                <c:otherwise>
-	                    <span style="font-size: 13px; font-weight: bold; align-self: center; margin-right: 5px;">
-	                        ${sessionScope.loginUser.nickname}님 환영합니다!
-	                    </span>
-                        <a href="${pageContext.request.contextPath}/mypage/txHistories" class="auth-btn">마이페이지</a>
-	                    <a href="${pageContext.request.contextPath}/member/logout" class="auth-btn">로그아웃</a>
-	                </c:otherwise>
-	            </c:choose>
-	        </div>
-
-	    </div>
-	</header>
-
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
 	
 <main class="container">
