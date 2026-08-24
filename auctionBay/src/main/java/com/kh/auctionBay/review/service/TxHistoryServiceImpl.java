@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.kh.auctionBay.review.model.dto.TxHistoryDTO;
 import com.kh.auctionBay.review.model.mapper.TxHistoryMapper;
@@ -17,10 +18,10 @@ public class TxHistoryServiceImpl implements TxHistoryService {
 	private final TxHistoryMapper txHistoryMapper;
 
 	@Override
-	public List<TxHistoryDTO> getTxHistoryList(Long userNo) {
+	public List<TxHistoryDTO> getTxHistories(Long userNo) {
 		// 전체 거래내역 조회
 		List<TxHistoryDTO> txHistories 
-				= txHistoryMapper.selectTxHistoryList(userNo);
+				= txHistoryMapper.selectTxHistories(userNo);
 		
 		return txHistories;
 	}
@@ -33,8 +34,9 @@ public class TxHistoryServiceImpl implements TxHistoryService {
 
 	@Override
 	public int addTxHistory(TxHistoryDTO tx) throws IllegalStateException, IOException {
-		// TODO Auto-generated method stub
-		return 0;
+		// 거래내역 추가 후 추가된 개수 리턴
+		int result = txHistoryMapper.insertTxHistory(tx);
+		return result;
 	}
 	
 	
