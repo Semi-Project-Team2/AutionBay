@@ -12,14 +12,12 @@ import com.kh.auctionBay.user.model.dto.UserDTO;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 @Controller
 public class HomeController {
-	private final ProductController productController;
 	
 	@GetMapping("/")
     public String home(@ModelAttribute ProductSearchCondition condition, Model model) {
-        return productController.getProductList(condition, model);
+        return "redirect:/product/list";
     }
 	
 	/* 테스트 유저(userNo = 1L)로 로그인(시작): 필요 시 주석 처리 해제하여 사용하시고 지우지 말아주세요 */
