@@ -6,7 +6,7 @@ package com.kh.auctionBay.common;
  */
 public class SessionConst {
 	
-	public static final String LOGIN_MEMBER = "loginUser";
+	public static final String LOGIN_USER = "loginUser";
 	
 	// 이 클래스는 정적 상수만 관리하기 위해서 객체 생성을 막아두기.
 	private SessionConst() {}
