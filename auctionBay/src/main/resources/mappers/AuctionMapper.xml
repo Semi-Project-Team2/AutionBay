@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.auctionBay.auction.model.mapper.AuctionMapper">
+
+	<select id="selectBidsByProductId" resultType="BidsDTO">
+		SELECT B.BID_ID, B.PRODUCT_ID, B.BIDDER_NO, B.BID_PRICE, B.CREATED_AT, 
+		U.USER_ID AS BIDDER_ID,
+		TO_CHAR(B.CREATED_AT, 'YYYY-MM-DD HH24:MI:SS') AS CREATED_AT_STR
+		FROM BIDS B
+			LEFT JOIN USERS U ON B.BIDDER_NO = U.USER_NO
+		WHERE B.PRODUCT_ID = #{productId}
+		ORDER BY B.BID_ID DESC
+	</select>
+	
+	<!-- 동시성 제어를 위한 FOR UPDATE 구문-->
+	<select id="selectProductForBid" resultType="ProductDTO">
+    SELECT product_id, 
+           auction_start_price, 
+           auction_end_time,
+           status,
+           CASE 
+               WHEN auction_end_time &lt; SYSDATE THEN 'Y' 
+               ELSE 'N' 
+           END AS is_closed
+    FROM products
+    WHERE product_id = #{productId}
+      AND is_deleted = 0
+    FOR UPDATE
+	</select>
+	
+	<!-- 최고가 조회 -->
+	<select id="getMaxBidPrice" resultType="long">
+	    SELECT MAX(b.bid_price) 
+	    FROM bids b
+	    WHERE b.product_id = #{productId}
+	</select>
+	
+	<insert id="insertBid" useGeneratedKeys="true" keyProperty="bidId" keyColumn="bid_id">
+	    INSERT INTO bids (product_id, bidder_no, bid_price)
+	    VALUES (#{productId}, #{bidderNo}, #{bidPrice})
+	</insert>
+	
+	<!-- 이전 최고 입찰자의 홀드 상태를 'OUTBID_RELEASED'로 변경 -->
+    <update id="updateHoldToReleased">
+        UPDATE auction_holds
+        SET hold_status = 'OUTBID_RELEASED',
+            released_at = SYSDATE
+        WHERE product_id = #{productId}
+          AND hold_status = 'HELD'
+    </update>
+    
+    <!-- 새로운 입찰자의 홀드 생성 -->
+    <insert id="insertAuctionHold">
+        INSERT INTO auction_holds 
+        	(bid_id, product_id, user_no, hold_amount, hold_status) 
+        	VALUES 
+        	(#{bidId}, #{productId},  #{userNo}, #{holdAmount}, 'HELD')
+    </insert>
+    
+    <!-- 상태가 ONGOING 이지만 경매 마감시간이 지난 데이터 조회 -->
+    <select id="selectExpiredOngoingProducts" resultType="ProductDTO">
+    	SELECT product_id, auction_start_price, auction_end_time, status, is_deleted
+        FROM products
+        WHERE status = 'ONGOING'
+          AND auction_end_time &lt;= SYSDATE
+          AND is_deleted = 0
+    </select>
+    
+    <select id="selectHighestBidByProductId" resultType="BidsDTO">
+	    SELECT * 
+	    FROM (
+		    SELECT bid_id, product_id, bidder_no, bid_price
+		    FROM bids
+		    WHERE product_id = #{productId}
+		    ORDER BY bid_price DESC
+		) 
+		WHERE ROWNUM = 1
+    </select>
+    
+    <update id="updateProductExpired">
+    	UPDATE products
+    	SET status = 'EXPIRED'
+    	WHERE product_id = #{productId}
+    </update>
+    
+    <update id="updateHeldToCaptured">
+    	UPDATE auction_holds
+    	SET hold_status = 'CAPTURED',
+    		released_at = sysdate
+    	WHERE bid_id = #{bidId}
+    </update>
+    
+    <insert id="insertTxHistory">
+    	INSERT INTO transaction_history
+    	(product_id, trade_type, seller_no, buyer_no, final_price)
+    	VALUES
+    	(#{productId}, #{tradeType}, #{sellerNo}, #{buyerNo}, #{finalPrice})
+    </insert>
+
+</mapper>

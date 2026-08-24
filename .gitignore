@@ -13,5 +13,8 @@ build
 *.class
 
 uploads
+<<<<<<< HEAD
 
 application.properties
+=======
+>>>>>>> c733be8fe2ba9ed630c0f23100a293c7e96bafc9

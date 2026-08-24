@@ -3,6 +3,7 @@ package com.kh.auctionBay.user.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.auctionBay.user.model.dto.UserDTO;
 import com.kh.auctionBay.user.model.mapper.UserMapper;
@@ -21,7 +22,7 @@ public class UserServiceImpl implements UserService{
 	
 
 	@Override
-	public void join(UserDTO user) {
+	public void join(UserDTO user, MultipartFile profileImg) {
 		
 		// 아이디 중복 검사
 		if(isUserIdCheck(user.getUserId())) {
