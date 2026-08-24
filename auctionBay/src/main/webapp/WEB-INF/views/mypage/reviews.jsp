@@ -111,9 +111,9 @@
                             <c:forEach var="r" items="${receivedReviews}">
                                 <div class="review-item">
                                     <div class="review-header">
-                                        <span class="rating">⭐ 평점</span>
-                                        <span class="nickname">닉네임</span>
-                                        <span class="time">날짜</span>
+                                        <span class="rating">⭐ ${r.rating}</span>
+                                        <span class="nickname">${r.reviewerNickname}</span>
+                                        <span class="time">${r.createdAtStr}</span>
                                     </div>
                                     <div class="review-body">
                                         <p>${r.content}</p>
@@ -134,9 +134,9 @@
                             <c:forEach var="r" items="${sentReviews}">
                                 <div class="review-item">
                                     <div class="review-header">
-                                        <span class="rating">⭐ 평점</span>
-                                        <span class="nickname">상대방: 닉네임</span>
-                                        <span class="time">날짜</span>
+                                        <span class="rating">⭐ ${r.rating}</span>
+                                        <span class="nickname">${r.revieweeNickname}</span>
+                                        <span class="time">${r.createdAtStr}</span>
                                     </div>
                                     <div class="review-body">
                                         <p>${r.content}</p>

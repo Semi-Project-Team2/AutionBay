@@ -73,7 +73,7 @@ public class UserContoller {
 			session.setAttribute(SessionConst.LOGIN_USER, user);
 		} catch (IllegalStateException e) {
 			redirectAttr.addFlashAttribute("error", e.getMessage());
-			return "redirect:/member/login";
+			return "redirect:/user/login";
 		}
 
 		if (redirectURL != null && !redirectURL.isBlank()) {

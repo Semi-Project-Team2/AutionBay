@@ -35,7 +35,7 @@ public class ReviewServiceImpl implements ReviewService {
 	public List<ReviewDTO> getSentReviews(Long userNo) {
 		List<ReviewDTO> sentReviews = reviewMapper.selectSentReviews(userNo);
 
-		return null;
+		return sentReviews;
 	}
 
 	/**

@@ -202,7 +202,7 @@
                     <p>${sessionScope.loginUser.email}</p>
                 </div>
             </div>
-            <a href="${pageContext.request.contextPath}/mypage/edit" class="btn-edit">회원 정보 수정</a>
+            <a href="${pageContext.request.contextPath}/mypage/editProfile" class="btn-edit">회원 정보 수정</a>
         </div>
 
         <!-- 2. 메인 콘텐츠 (사이드바 + 내용) -->
@@ -212,7 +212,7 @@
             <div class="mypage-sidebar">
                 <a href="${pageContext.request.contextPath}/mypage/boards" class="sidebar-item">게시글 관리</a>
                 <a href="${pageContext.request.contextPath}/mypage/comments" class="sidebar-item">댓글 관리</a>
-                <a href="${pageContext.request.contextPath}/mypage/txHistoies" class="sidebar-item active">거래 내역</a>
+                <a href="${pageContext.request.contextPath}/mypage/txHistories" class="sidebar-item active">거래 내역</a>
                 <a href="${pageContext.request.contextPath}/mypage/reviews" class="sidebar-item">후기</a>
                 <a href="${pageContext.request.contextPath}/mypage/recent" class="sidebar-item">최근 본 글</a>
             </div>
@@ -228,60 +228,24 @@
                 <div class="history-list">
                     
                     <c:choose>
-                        <c:when test="${not empty txList}">
-                            <c:forEach var="tx" items="${txList}">
+                        <c:when test="${not empty txHistories}">
+                            <c:forEach var="txHistory" items="${txHistories}">
                                 <div class="history-card">
                                     <div class="history-info">
-                                        <span>${tx.title}</span>
+                                        <span>${txHistory.title}</span>
                                         <span class="divider">|</span>
-                                        <span>${tx.tradeType}</span>
+                                        <span>${txHistory.tradeType}</span>
+                                        <span class="divider" style="margin-left: 40px;">|</span>
+                                        <span>${txHistory.finalPrice}원</span>
                                         <span class="divider">|</span>
-                                        <span>${tx.price}원</span>
-                                        <span class="divider">|</span>
-                                        <span>${tx.partnerNickname}</span>
+                                        <span>${txHistory.partnerNickname}</span>
                                     </div>
-                                    <a href="${pageContext.request.contextPath}/review/write?txNo=${tx.txNo}" class="btn-review">후기 작성</a>
+                                    <a href="${pageContext.request.contextPath}/mypage/review/writeForm" class="btn-review">후기 작성</a>
                                 </div>
                             </c:forEach>
                         </c:when>
                         <c:otherwise>
-                            <!-- 데이터가 없을 때 시안 느낌의 임시 카드 3개 노출 (원하시면 c:forEach로 교체하세요) -->
-                            <div class="history-card">
-                                <div class="history-info">
-                                    <span>제목</span>
-                                    <span class="divider">|</span>
-                                    <span>거래유형</span>
-                                    <span class="divider" style="margin-left: 40px;">|</span>
-                                    <span>가격</span>
-                                    <span class="divider">|</span>
-                                    <span>닉네임</span>
-                                </div>
-                                <a href="#" class="btn-review" onclick="alert('후기 작성 기능 준비 중');">후기 작성</a>
-                            </div>
-                            <div class="history-card">
-                                <div class="history-info">
-                                    <span>제목</span>
-                                    <span class="divider">|</span>
-                                    <span>거래유형</span>
-                                    <span class="divider" style="margin-left: 40px;">|</span>
-                                    <span>가격</span>
-                                    <span class="divider">|</span>
-                                    <span>닉네임</span>
-                                </div>
-                                <a href="#" class="btn-review" onclick="alert('후기 작성 기능 준비 중');">후기 작성</a>
-                            </div>
-                            <div class="history-card">
-                                <div class="history-info">
-                                    <span>제목</span>
-                                    <span class="divider">|</span>
-                                    <span>거래유형</span>
-                                    <span class="divider" style="margin-left: 40px;">|</span>
-                                    <span>가격</span>
-                                    <span class="divider">|</span>
-                                    <span>닉네임</span>
-                                </div>
-                                <a href="#" class="btn-review" onclick="alert('후기 작성 기능 준비 중');">후기 작성</a>
-                            </div>
+                            <span>거래 내역이 없습니다.</span>
                         </c:otherwise>
                     </c:choose>
 
@@ -305,6 +269,6 @@
     </div>
     <!-- 공통 푸터 포함 -->
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />
-
+<script src="/js/review.js"></script>
 </body>
 </html>

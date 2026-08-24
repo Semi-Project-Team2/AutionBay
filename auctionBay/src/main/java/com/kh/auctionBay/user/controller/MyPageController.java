@@ -46,6 +46,11 @@ public class MyPageController {
 		
 		// 로그인한 사용자 정보를 loginUser로 백엔드에 저장
 		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		
+		if (loginUser == null) {
+			return "redirect:/user/login";
+		}
+		
 		// userNo(PK)에 로그인한 사용자의 userNo값 저장
 		Long userNo = loginUser.getUserNo();
 		
@@ -104,18 +109,18 @@ public class MyPageController {
 	 * 거래내역 중 후기 작성 버튼
 	 * @return
 	 */
-	@GetMapping("/reviewForm")
+	@GetMapping("/review/writeForm")
 	public String reviewForm() {	
-		return "review/form";
+		return "mypage/review/writeForm";
 	}
 	
 	/**
-	 * 마이페이지 회원 정보 수정 버튼 클릭 시
+	 * 마이페이지 회원 정보 수정 버튼
 	 * @return
 	 */
-	@GetMapping("/profileEditForm")
+	@GetMapping("/editProfile")
 	public String editProfile() {
-		return "editProfile";
+		return "mypage/profile/editForm";
 	}
 	
 	/* ----------------------------------------- */
@@ -123,20 +128,19 @@ public class MyPageController {
 	/**
 	 * 후기 작성 폼
 	 */
-	@PostMapping("/form")
-	public String writeReview(@ModelAttribute ReviewDTO review, HttpSession session) 
+	@PostMapping("/writeReview")
+	public String writeReview(@ModelAttribute ReviewDTO review, 
+			Model model, HttpSession session) 
 				throws IllegalStateException, IOException {
 		// MessageController에서 불러오게 될 것 같긴 함
 		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
-		Long userNo = loginUser.getUserNo();
 		
 		int result = reviewService.writeReview(review);
-		review.setReviewerNo(userNo);
 		
 		return "redirect:/mypage/reviews";
 	}
 	
-	@PostMapping("/form")
+	@PostMapping("/user/edit")
 	public String editProfile(@ModelAttribute UserDTO user, HttpSession session)
 				throws IllegalStateException, IOException {
 		

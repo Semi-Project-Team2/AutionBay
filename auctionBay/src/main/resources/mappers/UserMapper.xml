@@ -17,6 +17,17 @@
     	WHERE user_id = #{userId}
       	AND is_deleted = 0
 	</select>
+	
+	<update id="updateUser" parameterType="UserDTO">
+		update into USERS
+		set PROFILE_IMG = #{profileImg}, PASSWORD = #{password}, EMAIL = #{email}, 
+			NICKNAME = #{nickname},	PHONE_NUMBER = #{phoneNumber}
+		where USER_NO = #{userNo}
+	</update>
+	
+	<update id="updateUserWithdrawal" parameterType="long">
+	
+	</update>
 
 
 </mapper>

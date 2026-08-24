@@ -16,4 +16,10 @@ public interface UserMapper {
 	// 로그인
 	UserDTO selectByUserId(String userId);
 	
+	// 회원 정보 수정
+	int updateUser(UserDTO user);
+	
+	// 회원 탈퇴 (DB에는 남겨 두고 숨김 처리)
+	int updateUserWithdrawal(Long userNo);
+	
 }

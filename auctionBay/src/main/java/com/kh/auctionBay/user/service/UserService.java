@@ -13,7 +13,6 @@ public interface UserService {
 	// 아이디 중복 체크
 	boolean isUserIdCheck(String userId);
 	
-	
 	// 로그인
 	UserDTO login(String userId, String password);
 	

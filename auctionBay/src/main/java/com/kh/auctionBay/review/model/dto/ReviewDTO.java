@@ -24,7 +24,12 @@ public class ReviewDTO {
 	private Long revieweeNo;
 	private int rating;
 	private String content;
-	private LocalDateTime createAt;
+	private LocalDateTime createdAt;
 	
-	private String createAtStr;
+	private String createdAtStr;
+	
+	// 보낸/받은 후기 상대방 닉네임
+	private String reviewerNickname;
+	private String revieweeNickname;
+	
 }

@@ -28,32 +28,14 @@
 				</label>
 			</div>
 
-
-			<div class="form-row">
-				<label>아이디</label>
-				<input type="text" name="userId" id="user-id">
-				<button type="button" id="check-id-btn">중복확인</button>
-				<p id="check-id-result" class="form-tip"></p>
-			</div>
-
-			<div class="form-row">
-				<label>비밀번호</label>
-				<input type="password" name="password" id="user-pwd" required>
-			</div>
-			<div class="form-row">
-			    <label for="user-pwd">비밀번호 확인</label>
-			    <input type="password" id="password-confirm" required>
-				<p id="check-pwd-result" class="form-tip"></p>
-			</div>
-
 			<div class="form-row">
 				<label>닉네임</label>
-				<input type="text" name="nickname" required>
+				<input type="text" name="nickname" required value="${loginUser.nickname}">
 			</div>
 
 			<div class="form-row">
 				<label>이메일</label>
-				<input type="email" name="email" required>
+				<input type="email" name="email" required value="${loginUser.email}">
 			</div>
 
 			<div class="form-row">
@@ -68,7 +50,7 @@
 
 
 			<div class="form-row">
-				<button type="submit" class="btn btn-primary">가입</button>
+				<button type="submit" class="btn btn-primary">수정 완료</button>
 			</div>
 
 		</form>
