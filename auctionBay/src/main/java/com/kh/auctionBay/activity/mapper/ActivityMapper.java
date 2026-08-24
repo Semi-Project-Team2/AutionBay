@@ -2,6 +2,8 @@ package com.kh.auctionBay.activity.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.kh.auctionBay.activity.dto.MyBoardDTO;
 import com.kh.auctionBay.activity.dto.MyCommentDTO;
 import com.kh.auctionBay.activity.dto.RecentViewDTO;
@@ -17,5 +19,9 @@ public interface ActivityMapper {
 
 	// 4. 회원 번호(userNo)를 받아 해당 회원이 최근 본 글 목록을 조회하는 메서드
 	List<RecentViewDTO> selectRecentViews(Long userNo);
+	// 5. 내가 작성한 게시글 삭제 (성공 시 변경된 행 수 반환)
+		int deleteMyBoard(@Param("productNo") Long productNo, @Param("writerNo") Long writerNo);
 
+		// 6. 내가 작성한 댓글 삭제
+		int deleteMyComment(@Param("commentNo") Long commentNo, @Param("writerNo") Long writerNo);
 }

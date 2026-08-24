@@ -47,5 +47,17 @@ public class ActivityServiceImpl implements ActivityService {
 		// Mapper를 호출하여 해당 회원이 조회했던 최근 글 목록 데이터를 받아온 후 그대로 반환
 		return activityMapper.selectRecentViews(userNo);
 	}
-	
+	// 5. 내가 작성한 게시글 삭제 로직
+		@Override
+		public boolean deleteMyBoard(Long productNo, Long writerNo) {
+			int result = activityMapper.deleteMyBoard(productNo, writerNo);
+			return result > 0;
+		}
+
+		// 6. 내가 작성한 댓글 삭제 로직
+		@Override
+		public boolean deleteMyComment(Long commentNo, Long writerNo) {
+			int result = activityMapper.deleteMyComment(commentNo, writerNo);
+			return result > 0;
+		}
 }

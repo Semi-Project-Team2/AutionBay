@@ -78,6 +78,22 @@
 		   AND P.FIELD = 0            /* 삭제되지 않은 상품만 조회 */
 		 ORDER BY RV.VIEWED_AT DESC   /* 최근에 읽은 순서대로 정렬 */
 	</select>
-	<delete id
+	<!-- 5. 내가 작성한 게시글 삭제 (상태값 변경 방식) -->
+	<update id="deleteMyBoard">
+		/* 내가 작성한 게시글 상태를 삭제 상태(IS_DELETED = 1)로 변경 */
+		UPDATE PRODUCTS
+		   SET IS_DELETED = 1,
+		       UPDATED_AT = SYSDATE
+		 WHERE PRODUCT_ID = #{productNo}
+		   AND WRITER_NO = #{writerNo} /* 본인 작성글만 삭제되도록 방어 */
+	</update>
+
+	<!-- 6. 내가 작성한 댓글 삭제 (실제 DELETE 방식) -->
+	<delete id="deleteMyComment">
+		/* 내가 작성한 댓글 DB에서 삭제 */
+		DELETE FROM COMMENTS
+		 WHERE COMMENT_ID = #{commentNo}
+		   AND WRITER_NO = #{writerNo} /* 본인 작성 댓글만 삭제되도록 방어 */
+	</delete>
 
 </mapper>
