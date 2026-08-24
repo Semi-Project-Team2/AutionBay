@@ -14,6 +14,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.auctionBay.user.model.dto.UserDTO;
 import com.kh.auctionBay.user.service.UserService;
+
+import jakarta.servlet.http.HttpSession;
+
+import com.kh.auctionBay.common.SessionConst;
 import com.kh.auctionBay.common.dto.ApiResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -22,24 +26,25 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserContoller {
-	
+
 	private final UserService service;
-	
+
 	@GetMapping("/join")
 	public String joinForm() {
 		return "user/join";
 	}
-	
+
 	@GetMapping("/login")
 	public String loginForm() {
 		return "user/login";
 	}
-	
+
 	@PostMapping("/join")
-	public String join(@ModelAttribute UserDTO user, @RequestParam(required=false) MultipartFile profileImg, RedirectAttributes redirectAttr){
-		
+	public String join(@ModelAttribute UserDTO user, @RequestParam(required = false) MultipartFile profileImage,
+			RedirectAttributes redirectAttr) {
+
 		try {
-		service.join(user, profileImg);
+			service.join(user, profileImage);
 		} catch (IOException e) {
 			e.printStackTrace();
 			redirectAttr.addFlashAttribute("error", "회원가입 실패");
@@ -48,21 +53,34 @@ public class UserContoller {
 		redirectAttr.addFlashAttribute("joinSuccess", true);
 		return "redirect:/user/login";
 	}
-	
+
 	@GetMapping("/checkId")
 	@ResponseBody
 	public ApiResponse<Boolean> checkId(String userId) {
-		
+
 		boolean isDuplicate = service.isUserIdCheck(userId);
-		
+
 		String message = isDuplicate ? "이미 사용중인 아이디입니다." : "사용 가능한 아이디입니다.";
-		
+
 		return ApiResponse.success(message, isDuplicate);
 	}
-	
+
 	@PostMapping("/login")
-	public String login(String userId, String password) {
-		return null;
+	public String login(String userId, String password, @RequestParam(required = false) String redirectURL,
+			HttpSession session, RedirectAttributes redirectAttr) {
+		try {
+			UserDTO user = service.login(userId, password);
+			session.setAttribute(SessionConst.LOGIN_MEMBER, user);
+		} catch (IllegalStateException e) {
+			redirectAttr.addFlashAttribute("error", e.getMessage());
+			return "redirect:/member/login";
+		}
+
+		if (redirectURL != null && !redirectURL.isBlank()) {
+			return "redirect:" + redirectURL;
+		}
+
+		return "redirect:/";
 	}
-	
+
 }

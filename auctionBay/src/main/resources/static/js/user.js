@@ -39,3 +39,52 @@ checkIdBtn.addEventListener("click", async function() {
         checkId = null;
     }
 });
+
+// 프로필 이미지 미리보기
+const profileImg = document.querySelector("#profile-image");
+profileImg.addEventListener('change', function(e) {
+	const file = e.target.files[0];
+	if(!file){
+		return;
+	}
+	
+	const reader = new FileReader();
+	reader.onload = function(e){
+		const profilePreview = document.querySelector("#profile-preview");
+		profilePreview.src = e.target.result;
+		profilePreview.style.display = "block";
+		
+		document.querySelector("#profile-preview-placeholder").style.display = "none";
+	}
+	
+	reader.readAsDataURL(file);
+	
+
+});
+
+// 비밀번호 체크
+const password = document.querySelector("#user-pwd");
+const passwordConfirm = document.querySelector("#password-confirm");
+
+let checkPwd = false;
+
+function validatePwdConfirm(){
+	const confirmResult = document.querySelector("#check-pwd-result");
+	
+	if (!passwordConfirm.value.trim()){
+		confirmResult.textContent= "";
+		checkPwd = false;
+		return;
+	}
+	
+	checkPwd = password.value === passwordConfirm.value;
+	
+	confirmResult.textContent = checkPwd ? "비밀번호가 일치합니다." : "비밀번호가 일치하지 않습니다";
+	confirmResult.className = checkPwd ? "form-tip form-tip-ok" : "form-tip form-tip-error";
+	
+}
+
+password.addEventListener('input', validatePwdConfirm);
+passwordConfirm.addEventListener('input', validatePwdConfirm);
+
+

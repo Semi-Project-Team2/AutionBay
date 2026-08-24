@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
+<link rel="stylesheet" href="/css/common.css">
 <!-- 헤더 영역 -->
 <header class="header">
     <div class="header-container">
