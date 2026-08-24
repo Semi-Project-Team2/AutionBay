@@ -2,12 +2,19 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <footer>
-    <div class="footer-links">
-        <a href="#">이용약관</a>
-        <a href="#">개인정보처리방침</a>
-        <a href="#">고객센터</a>
-        <a href="#">광고제휴</a>
+    <div class="footer-container">
+        <!-- 상단 링크 메뉴 -->
+        <div class="footer-links">
+            <a href="${pageContext.request.contextPath}/terms">이용약관</a>
+            <a href="${pageContext.request.contextPath}/privacy">개인정보처리방침</a>
+            <a href="${pageContext.request.contextPath}/support">고객센터</a>
+            <a href="${pageContext.request.contextPath}/partner">광고제휴</a>
+        </div>
+        
+        <!-- 하단 회사 정보 및 카피라이트 -->
+        <div class="footer-info">
+            <p>대표이사: 2조전랑</p>
+            <p>&copy; Copyright All Rights Reserved</p>
+        </div>
     </div>
-    <p>대표이사: 2조전략</p>
-    <p>&copy;Copyright All Rights Reserved</p>
 </footer>
