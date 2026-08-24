@@ -7,20 +7,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class BidsDTO {
+@AllArgsConstructor
+public class HoldsDTO {
+	private Long holdId;
 	private Long bidId;
 	private Long productId;
-	private Long bidderNo;
-	private Long bidPrice;
+	private Long userNo;
+	private Long holdAmount;
+	private String holdStatus;
 	private LocalDateTime createdAt;
-	
-	private String createdAtStr;
-	
-	// join용
-	private String bidderId;
-	
-	// 입찰 단위
-	private Long bidUnit;
+	private LocalDateTime releasedAt;
 }
