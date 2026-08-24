@@ -22,9 +22,11 @@ public class HomeController {
         return productController.getProductList(condition, model);
     }
 	
-	@GetMapping("/user/login")
+	/* 테스트 유저(userNo = 1L)로 로그인(시작): 필요 시 주석 처리 해제하여 사용하시고 지우지 말아주세요 */
+	
+	@GetMapping("/user/logintest")
 	public String login() {
-		return "user/login";
+		return "user/logintest";
 	}
 	
 	@GetMapping("/loginProcess")
@@ -45,4 +47,7 @@ public class HomeController {
 	    // 4. 메인 페이지로 리다이렉트 (새로고침 효과와 함께 세션이 확실히 반영됨)
 	    return "redirect:/";
 	}
+	
+	/* 테스트 유저(userNo = 1L)로 로그인(종료): 필요 시 주석 처리 해제하여 사용하시고 지우지 말아주세요 */
+	
 }

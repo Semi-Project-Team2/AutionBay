@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>마이페이지 - 후기</title>
+    <link rel="stylesheet" href="/css/common.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Malgun Gothic', sans-serif; background-color: #f8f9fa; color: #333; }
@@ -89,7 +90,7 @@
                 <ul>
                     <li><a href="${pageContext.request.contextPath}/mypage/boards">게시글 관리</a></li>
                     <li><a href="${pageContext.request.contextPath}/mypage/comments">댓글 관리</a></li>
-                    <li><a href="${pageContext.request.contextPath}/mypage/txHistory">거래 내역</a></li>
+                    <li><a href="${pageContext.request.contextPath}/mypage/txHistories">거래 내역</a></li>
                     <li><a href="${pageContext.request.contextPath}/mypage/review/list" class="active">후기</a></li>
                     <li><a href="${pageContext.request.contextPath}/mypage/recent">최근 본 글</a></li>
                 </ul>
