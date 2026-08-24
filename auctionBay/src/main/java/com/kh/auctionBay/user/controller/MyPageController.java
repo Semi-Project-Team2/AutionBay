@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.auctionBay.common.SessionConst;
 import com.kh.auctionBay.review.model.dto.ReviewDTO;
@@ -118,7 +119,7 @@ public class MyPageController {
 	 * 마이페이지 회원 정보 수정 버튼
 	 * @return
 	 */
-	@GetMapping("/editProfile")
+	@GetMapping("/profile/editForm")
 	public String editProfile() {
 		return "mypage/profile/editForm";
 	}
@@ -129,11 +130,18 @@ public class MyPageController {
 	 * 후기 작성 폼
 	 */
 	@PostMapping("/writeReview")
-	public String writeReview(@ModelAttribute ReviewDTO review, 
+	public String writeReview(@RequestParam("historyId") Long historyId,
+			@ModelAttribute ReviewDTO review, 
 			Model model, HttpSession session) 
 				throws IllegalStateException, IOException {
 		// MessageController에서 불러오게 될 것 같긴 함
 		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		
+		// DB에서 거래내역 조회 후 변수에 저장
+		TxHistoryDTO txHistory = txService.getTxHistoryDetail(historyId);
+				
+		// 브라우저에서 "txHistory"로 요청 시 txHistory 전달
+		model.addAttribute("txHistory", txHistory);
 		
 		int result = reviewService.writeReview(review);
 		

@@ -202,7 +202,7 @@
                     <p>${sessionScope.loginUser.email}</p>
                 </div>
             </div>
-            <a href="${pageContext.request.contextPath}/mypage/editProfile" class="btn-edit">회원 정보 수정</a>
+            <a href="${pageContext.request.contextPath}/mypage/profile/editForm" class="btn-edit">회원 정보 수정</a>
         </div>
 
         <!-- 2. 메인 콘텐츠 (사이드바 + 내용) -->
@@ -239,8 +239,10 @@
                                         <span>${txHistory.finalPrice}원</span>
                                         <span class="divider">|</span>
                                         <span>${txHistory.partnerNickname}</span>
+                                        <span class="divider">|</span>
+                                        <span>${txHistory.completedAtStr}</span>
                                     </div>
-                                    <a href="${pageContext.request.contextPath}/mypage/review/writeForm" class="btn-review">후기 작성</a>
+                                    <a href="${pageContext.request.contextPath}/mypage/review/writeForm?historyId=${txHistory.historyId}" class="btn-review">후기 작성</a>
                                 </div>
                             </c:forEach>
                         </c:when>

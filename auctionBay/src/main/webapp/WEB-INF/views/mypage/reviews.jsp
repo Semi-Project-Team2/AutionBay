@@ -78,7 +78,7 @@
                 </div>
             </div>
             <div class="profile-right">
-                <a href="${pageContext.request.contextPath}/mypage/edit" class="btn-edit">회원 정보 수정</a>
+                <a href="${pageContext.request.contextPath}/mypage/profile/editForm" class="btn-edit">회원 정보 수정</a>
                 <a href="${pageContext.request.contextPath}/member/withdraw" class="btn-withdraw">회원 탈퇴</a>
             </div>
         </div>

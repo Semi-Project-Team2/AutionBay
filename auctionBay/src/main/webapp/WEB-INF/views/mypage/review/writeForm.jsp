@@ -14,7 +14,7 @@
             <h2>거래 후기 작성</h2>
             <div class="trade-info-box">
                 <div class="popup-title">${txHistory.title}</div>
-                <div class="popup-nickname">${txHistory.</div>
+                <div class="popup-nickname">${txHistory.partnerNickname}</div>
             </div>
         </div>
 
@@ -22,7 +22,7 @@
         <form action="${pageContext.request.contextPath}/mypage/review/writeForm" method="post" class="popup-form">
             
             <!-- Hidden 데이터 전달 영역 (productId, reviewerNo, revieweeNo) -->
-            
+
             <input type="hidden" name="productId" value="${txHistory.productId}">
             <input type="hidden" name="reviewerNo" value="${txHistory.reviewerNo}">
             <input type="hidden" name="revieweeNo" value="${txHistory.revieweeNo}">

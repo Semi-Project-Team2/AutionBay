@@ -6,7 +6,7 @@
 	<select id="selectTxHistories" parameterType="long" resultType="TxHistoryDTO">
 		select HISTORY_ID, PRODUCT_ID, T.TRADE_TYPE,
 		        SELLER_NO, BUYER_NO, FINAL_PRICE,
-		        to_char(COMPLETED_AT, 'YYYY-MM-DD HH24:MI') as "CREATED_AT_STR",
+		        to_char(COMPLETED_AT, 'YYYY-MM-DD HH24:MI') as "COMPLETED_AT_STR",
 		        COMPLETED_AT, P.TITLE, U.NICKNAME as "PARTNER_NICKNAME"
 		from TRANSACTION_HISTORY T
 		    join PRODUCTS P using (PRODUCT_ID)
