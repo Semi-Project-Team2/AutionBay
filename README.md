@@ -1,17 +1,31 @@
-# 5_Framework
-`Step#5 Framework`
----
-프레임워크 실습 파일 저장소
+# 중고거래사이트
 
-* 실습 시 workspace 경로 : `C:\workspace\5_Framework`
+Spring / MyBatis / JSP 기반 중고 거래 세미 프로젝트입니다.
+쪽지(메시지) 기능을 통해 구매자-판매자 간 거래를 유도하는 것이 핵심 기능입니다.
 
-### 실습 시 개발 도구
-- STS (Eclipse 기반의 스프링 개발 도구)
-### 프로젝트 생성 방법
-- File -> New -> Spring Starter Project
-### 프로젝트 import 방법
-- File -> Import -> Maven -> Existing Maven Projects -> 다운로드 받은 `프로젝트 폴더` 선택
+## 기술 스택
 
-### 실행 방법
-- `@SpringBootApplication` 어노테이션이 적용된 클래스 실행 (`main` 메소드가 있음!)
-  - 기본 패키지 경로에 위치함.
+* Backend: Spring, MyBatis
+* View: JSP
+* DB: Oracle
+
+## 주요 기능
+
+* 상품 등록/조회
+* 쪽지(1:1 문의) 기능
+
+  * 실시간 채팅 대신 게시판 형태의 비동기 쪽지 방식
+  * room 테이블 없이 product\_id + 상대방 user\_no 조합으로 대화 필터링
+
+## ERD / 테이블
+
+* USERS
+* PRODUCTS
+* MESSAGES (message\_id, sender\_no, receiver\_no, product\_id, content, is\_read, sender\_deleted, receiver\_deleted, created\_at)
+
+  * USERS, PRODUCTS와 FK 연결
+
+## 실행 방법
+
+(추후 작성)
+
