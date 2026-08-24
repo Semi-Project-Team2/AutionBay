@@ -387,7 +387,7 @@
                     <span class="info-label">남은시간</span>
                     <div class="info-content">
                         <div class="time-highlight" id="remainingTime"></div>
-                        <div class="time-sub" id="auctionEndTime">2026-08-24 16:12:34</div>
+                        <div class="time-sub" id="auctionEndTime">${product.auctionEndTime}</div>
                     </div>
                 </div>
 

@@ -51,19 +51,19 @@ public class AuctionController {
 	public String auctionBid(@ModelAttribute BidsDTO bidDTO,
 			HttpSession session, RedirectAttributes rttr) {
 		
-		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_MEMBER);
-		if (loginUser == null) {
-	        rttr.addFlashAttribute("message", "로그인 후 이용해주세요.");
-	        return "redirect:/user/login";
-	    }
-
-		// 로그인한 유저의 UserNo 세팅 
-		bidDTO.setBidderNo(loginUser.getUserNo());
+//		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_MEMBER);
+//		if (loginUser == null) {
+//	        rttr.addFlashAttribute("message", "로그인 후 이용해주세요.");
+//	        return "redirect:/user/login";
+//	    }
+//
+//		// 로그인한 유저의 UserNo 세팅 
+//		bidDTO.setBidderNo(loginUser.getUserNo());
 
 //		test용 코드
-//		UserDTO testUser = new UserDTO();
-//		testUser.setUserNo(1L);
-//		bidDTO.setBidderNo(testUser.getUserNo());
+		UserDTO testUser = new UserDTO();
+		testUser.setUserNo(9L);
+		bidDTO.setBidderNo(testUser.getUserNo());
 		
 	    // 서비스 호출 (비즈니스 로직 처리 후 결과 문자열 리턴 받기)
 	    String message = service.processBid(bidDTO);
