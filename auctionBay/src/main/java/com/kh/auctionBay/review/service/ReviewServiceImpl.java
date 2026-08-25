@@ -6,6 +6,7 @@ import com.kh.auctionBay.common.dto.PageInfo;
 import com.kh.auctionBay.review.model.dto.ReviewDTO;
 import com.kh.auctionBay.review.model.dto.ReviewResultList;
 import com.kh.auctionBay.review.model.dto.SearchCondition;
+import com.kh.auctionBay.review.model.dto.ReviewSummaryDTO;
 import com.kh.auctionBay.review.model.mapper.ReviewMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -72,5 +73,13 @@ public class ReviewServiceImpl implements ReviewService {
 		int result = reviewMapper.insertReview(review);
 		return result;
 	}
+
+	@Override
+	public ReviewSummaryDTO getAvgAndCountReview(Long revieweeNo) {
+		
+		return reviewMapper.selectAvgAndCountReview(revieweeNo);
+	}
+	
+	
 
 }

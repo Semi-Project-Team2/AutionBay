@@ -87,14 +87,14 @@ public class AuctionServiceImpl implements AuctionService{
 	    return "성공적으로 입찰되었습니다!";
 	}
 
-	@Scheduled(fixedDelay = 60000)
+	@Scheduled(fixedDelay = 30000)
 	@Transactional
 	@Override
 	public void checkAndCloseAuctions() {
 		
 		// 1. 마감 시간이 지났지만 아직 ONGOING 상태인 상품 리스트 조회
 	    List<ProductDTO> expiredProducts = mapper.selectExpiredOngoingProducts();
-	    
+	    System.out.println("마감시간 지난 아직 ONGOING 상품"+expiredProducts);
 	    if (expiredProducts == null || expiredProducts.isEmpty()) {
 	        return;
 	    }
@@ -104,7 +104,7 @@ public class AuctionServiceImpl implements AuctionService{
 
 	        // 2. 해당 상품의 최고 입찰 내역 조회
 	        BidsDTO highestBid = mapper.selectHighestBidByProductId(productId);
-
+	        System.out.println("최고 입찰 내역 "+highestBid);
 	        if (highestBid == null) {
 	            // 입찰자가 없는 경우 (유찰)
 	            mapper.updateProductExpired(productId);
@@ -127,13 +127,35 @@ public class AuctionServiceImpl implements AuctionService{
 	            txHistory.setSellerNo(product.getWriterNo());
 	            txHistory.setBuyerNo(highestBid.getBidderNo());
 	            txHistory.setFinalPrice(highestBid.getBidPrice());
-	            
+	            System.out.println(txHistory);
 	            mapper.insertTxHistory(txHistory);
 	            
 	            System.out.println("경매 낙찰 완료 (홀드 상태 변경 포함) - 상품 ID: " + productId + ", 낙찰가: " + highestBid.getBidPrice());
 	        }
 	    }
 	}
+
+	@Override
+	public boolean checkIsLiked(Long userNo, Long productId) {
+	    return mapper.checkIsLiked(userNo, productId) > 0;
+	}
+
+	@Override
+	public boolean toggleWish(Long userNo, Long productId) {
+		boolean isAlreadyLiked = mapper.checkIsLiked(userNo, productId) > 0;
+
+		if (isAlreadyLiked) {
+	        // 이미 찜 되어있다면 -> 삭제 (취소)
+	        mapper.deleteWish(userNo, productId);
+	        return false; // 최종 상태: 찜 해제됨
+	    } else {
+	        // 찜 안 되어있다면 -> 추가
+	        mapper.insertWish(userNo, productId);
+	        return true; // 최종 상태: 찜 등록됨
+	    }
+	}
+	
+	
 
 	
 }

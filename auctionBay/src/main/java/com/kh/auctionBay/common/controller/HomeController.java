@@ -14,15 +14,12 @@ import com.kh.auctionBay.user.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 @Controller
 public class HomeController {
-	private final ProductController productController;
-	private final UserService userService;
 	
 	@GetMapping("/")
     public String home(@ModelAttribute ProductSearchCondition condition, Model model) {
-        return productController.getProductList(condition, model);
+        return "redirect:/product/list";
     }
 	
 }

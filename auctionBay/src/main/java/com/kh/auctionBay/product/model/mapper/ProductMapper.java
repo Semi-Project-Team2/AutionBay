@@ -21,4 +21,7 @@ public interface ProductMapper {
     
     // 카테고리 전부 조회하기
     List<CategoryDTO> selectCategories();
+    
+    // 조회수 증가
+    void updateViewCount(Long productId);
 }

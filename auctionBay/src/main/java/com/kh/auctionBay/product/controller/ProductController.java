@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class ProductController {
 	private final ProductService service;
 
-	// 메인페이지 ( HomeController에서 이 메소드를 호출해서 url링크가 없으면 이 메소드가 호출됨)
+	// 메인페이지 ( HomeController에서 리다이렉트됨)
     @GetMapping("/list")
     public String getProductList(@ModelAttribute ProductSearchCondition condition, Model model) {
         ProductListResult result = service.getProductList(condition);

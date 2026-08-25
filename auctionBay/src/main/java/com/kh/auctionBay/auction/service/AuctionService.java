@@ -14,4 +14,10 @@ public interface AuctionService {
 	
 	// 스케쥴링 메서드
 	void checkAndCloseAuctions();
+	
+	//찜 여부 조회 메서드
+	boolean checkIsLiked(Long userNo, Long productId);
+	
+	// 찜 토글 기능 메서드
+	boolean toggleWish(Long userNo, Long productId);
 }

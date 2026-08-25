@@ -49,5 +49,11 @@
 		insert into REVIEWS (PRODUCT_ID, REVIEWER_NO, REVIEWEE_NO, RATING, CONTENT)
 		values (#{productId}, #{reviewerNo}, #{revieweeNo}, #{rating}, #{content})
 	</insert>
+	
+	<select id="selectAvgAndCountReview" resultType="ReviewSummaryDTO">
+		SELECT NVL(ROUND(AVG(RATING), 2), 0) AS REVIEW_AVG, COUNT(*) AS REVIEW_COUNT
+		FROM REVIEWS
+		WHERE REVIEWEE_NO = #{reviewee_no}
+	</select>
 
 </mapper>
