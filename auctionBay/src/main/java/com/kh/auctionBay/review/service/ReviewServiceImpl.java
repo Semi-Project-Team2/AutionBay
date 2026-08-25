@@ -20,18 +20,21 @@ public class ReviewServiceImpl implements ReviewService {
 	 * 받은 후기 목록 조회
 	 */
 	@Override
-	public ReviewResultList getReceivedReviews(Long userNo) {
+	public ReviewResultList getReceivedReviews(SearchCondition condition) {
 		// 받은 후기 개수 조회
-		int totalCount = reviewMapper.selectReceivedReviewsCount(userNo);
+		int totalCount = reviewMapper.selectReceivedReviewsCount(condition);
 		
 		// 페이징 정보 저장
-		int page = 1;	// 페이지 번호 1로 초기화
-		int size = 5;	// 한 페이지 당 5개씩 보이도록 초기화
+		int page = condition.getPage();
+		int size = condition.getSize();
 		PageInfo pageInfo = new PageInfo(page, size, totalCount);
+		
+		// offset을 pageInfo에서 가져오기
+		condition.setOffset(pageInfo.getOffset());
 		
 		// 받은 후기 리스트 조회 및 저장
 		ReviewResultList receivedReviews = new ReviewResultList(
-				 reviewMapper.selectReceivedReviews(userNo),
+				 reviewMapper.selectReceivedReviews(condition),
 				 pageInfo);
 		
 		return receivedReviews;
@@ -41,20 +44,23 @@ public class ReviewServiceImpl implements ReviewService {
 	 * 보낸 후기 목록 조회
 	 */
 	@Override
-	public ReviewResultList getSentReviews(Long userNo) {
+	public ReviewResultList getSentReviews(SearchCondition condition) {
 		// 보낸 후기 개수 조회
-		int totalCount = reviewMapper.selectSentReviewsCount(userNo);
+		int totalCount = reviewMapper.selectSentReviewsCount(condition);
 		
 		// 페이징 정보 저장
-		int page = 1;
-		int size = 5;
+		int page = condition.getPage();
+		int size = condition.getSize();
 		PageInfo pageInfo = new PageInfo(page, size, totalCount);
 		
+		// offset을 pageInfo에서 가져오기
+		condition.setOffset(pageInfo.getOffset());
+
 		// 보낸 후기 리스트 조회 및 저장
 		ReviewResultList sentReviews = new ReviewResultList(
-				reviewMapper.selectSentReviews(userNo),
+				reviewMapper.selectSentReviews(condition),
 				pageInfo);
-
+		
 		return sentReviews;
 	}
 

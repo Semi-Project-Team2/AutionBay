@@ -302,27 +302,27 @@
                         <!-- 페이징 바 -->
                         <div class="pagination">
                             <%-- 이전 페이지 그룹이 있을 경우 --%>
-                                <c:if test="${pageInfo.hasPrevGroup}">
-                                    <a class="page-btn"
-                                        href="/mypage/txHistories?page=${pageInfo.startPage - 1}&keyword=${condition.keyword}">
-                                        &lt;&lt;
-                                    </a>
-                                </c:if>
-                                <%-- 현재 페이지 그룹 표시 --%>
-                                    <c:forEach var="i" begin="${pageInfo.startPage}" end="${pageInfo.endPage}">
-                                        <a class="page-btn"
-                                            href="/mypage/txHistories?page=${i}&keyword=${condition.keyword}">
-                                            ${i}
-                                        </a>
-                                    </c:forEach>
+                            <c:if test="${pageInfo.hasPrevGroup}">
+                                <a class="page-btn"
+                                    href="/mypage/txHistories?page=${pageInfo.startPage - 1}&keyword=${condition.keyword}">
+                                    &lt;&lt;
+                                </a>
+                            </c:if>
+                            <%-- 현재 페이지 그룹 표시 --%>
+                            <c:forEach var="i" begin="${pageInfo.startPage}" end="${pageInfo.endPage}">
+                                <a class="page-btn"
+                                    href="/mypage/txHistories?page=${i}&keyword=${condition.keyword}">
+                                    ${i}
+                                </a>
+                            </c:forEach>
 
-                                    <%-- 다음 페이지 그룹이 있을 경우 --%>
-                                        <c:if test="${pageInfo.hasNextGroup}">
-                                            <a class="page-btn"
-                                                href="/mypage/txHistories?page=${pageInfo.endPage + 1}&keyword=${condition.keyword}">
-                                                &gt;&gt;
-                                            </a>
-                                        </c:if>
+                            <%-- 다음 페이지 그룹이 있을 경우 --%>
+                            <c:if test="${pageInfo.hasNextGroup}">
+                                <a class="page-btn"
+                                    href="/mypage/txHistories?page=${pageInfo.endPage + 1}&keyword=${condition.keyword}">
+                                    &gt;&gt;
+                                </a>
+                            </c:if>
                         </div>
 
                     </div>

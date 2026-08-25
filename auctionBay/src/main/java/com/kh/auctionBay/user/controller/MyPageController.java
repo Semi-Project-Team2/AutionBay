@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.kh.auctionBay.common.SessionConst;
 import com.kh.auctionBay.review.model.dto.ReviewDTO;
 import com.kh.auctionBay.review.model.dto.ReviewResultList;
+import com.kh.auctionBay.review.model.dto.SearchCondition;
 import com.kh.auctionBay.review.model.dto.TxHistoryDTO;
 import com.kh.auctionBay.review.model.dto.TxHistoryResultList;
-import com.kh.auctionBay.review.model.dto.SearchCondition;
 import com.kh.auctionBay.review.service.ReviewService;
 import com.kh.auctionBay.review.service.TxHistoryService;
 import com.kh.auctionBay.user.model.dto.UserDTO;
@@ -97,7 +97,8 @@ public class MyPageController {
 	 * @return
 	 */
 	@GetMapping("/reviews")
-	public String reviews(HttpSession session, Model model) {
+	public String reviews(HttpSession session, Model model,
+				@ModelAttribute SearchCondition condition) {
 		
 		// 로그인한 사용자 정보를 loginUser로 백엔드에 저장
 		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
@@ -107,17 +108,18 @@ public class MyPageController {
 			return "redirect:/user/login";
 		}
 		
-		// userNo에 로그인한 사용자의 userNo값 저장
+		// 검색 조건 중 userNo 필드에 로그인한 사용자 넘버 저장
 		Long userNo = loginUser.getUserNo();
+		condition.setUserNo(userNo);
 		
 		// DB에서 데이터 조회 후 변수에 저장
-		ReviewResultList receivedReviews = reviewService.getReceivedReviews(userNo);
-		ReviewResultList sentReviews = reviewService.getSentReviews(userNo);
-		
+		ReviewResultList receivedReviews = reviewService.getReceivedReviews(condition);
+		ReviewResultList sentReviews = reviewService.getSentReviews(condition);
+
 		// 브라우저에서 "receivedReviews"로 요청 시 컨트롤러 클래스의 receivedReviews 전달
-		model.addAttribute("receivedReviews", receivedReviews);
+		model.addAttribute("receivedReviews", receivedReviews.getReviews());
 		// 브라우저에서 "sentReviews"로 요청 시 컨트롤러 클래스의 sentReviews 전달
-		model.addAttribute("sentReviews", sentReviews);
+		model.addAttribute("sentReviews", sentReviews.getReviews());
 		// 페이징 정보 저장 (받은 후기: receivedPageInfo, 보낸 후기: sentPageInfo)
 		model.addAttribute("receivedPageInfo", receivedReviews.getPageInfo());
 		model.addAttribute("sentPageInfo", sentReviews.getPageInfo());

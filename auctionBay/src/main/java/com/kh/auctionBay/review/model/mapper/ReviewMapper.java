@@ -11,16 +11,16 @@ import com.kh.auctionBay.review.model.dto.SearchCondition;
 public interface ReviewMapper {
 	
 	// 받은 후기 목록 조회
-	List<ReviewDTO> selectReceivedReviews(Long userNo);
+	List<ReviewDTO> selectReceivedReviews(SearchCondition condition);
 	
 	// 받은 후기 개수 조회 (페이징 계산용)
-	int selectReceivedReviewsCount(Long userNo);
+	int selectReceivedReviewsCount(SearchCondition condition);
 	
 	// 보낸 후기 목록 조회
-	List<ReviewDTO> selectSentReviews(Long userNo);
+	List<ReviewDTO> selectSentReviews(SearchCondition condition);
 	
 	// 보낸 후기 개수 조회 (페이징 계산용)
-	int selectSentReviewsCount(Long userNo);
+	int selectSentReviewsCount(SearchCondition condition);
 	
 	// 후기 작성
 	int insertReview(ReviewDTO review);

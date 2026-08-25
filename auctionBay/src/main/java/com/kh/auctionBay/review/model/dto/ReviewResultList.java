@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewResultList {
-	private List<ReviewDTO> reviewList;
+	private List<ReviewDTO> reviews;
 	private PageInfo pageInfo;
 }
