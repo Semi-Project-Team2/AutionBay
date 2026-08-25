@@ -24,7 +24,7 @@
             <c:choose>
                 <%-- 로그인 상태가 아닐 때 --%>
                 <c:when test="${empty sessionScope.loginUser}">
-                    <a href="${pageContext.request.contextPath}/user/logintest" class="auth-btn">로그인</a>
+                    <a href="${pageContext.request.contextPath}/user/login" class="auth-btn">로그인</a>
                     <a href="${pageContext.request.contextPath}/user/signup" class="auth-btn">회원가입</a>
                 </c:when>
                 <%-- 로그인 상태일 때 --%>

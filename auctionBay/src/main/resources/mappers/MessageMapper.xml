@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.auctionBay.message.model.mapper.MessageMapper">
+
+	<!-- 받은 쪽지함 -->
+	<select id="findReceived" parameterType="long" resultType="MessageDTO">
+		SELECT * 
+		FROM (
+			SELECT M.MESSAGE_ID, M.SENDER_NO, M.RECEIVER_NO, M.PRODUCT_ID,
+				M.CONTENT, M.IS_READ, M.CREATED_AT,
+				U.NICKNAME AS OPPONENT_NICKNAME,
+				P.TITLE AS PRODUCT_TITLE,
+				P.STATUS AS PRODUCT_STATUS,
+				ROW_NUMBER() OVER (PARTITION BY M.PRODUCT_ID, M.SENDER_NO
+				ORDER BY M.CREATED_AT DESC) AS RN
+			FROM MESSAGES M
+			JOIN USERS U ON U.USER_NO = M.SENDER_NO
+			JOIN PRODUCTS P ON P.PRODUCT_ID = M.PRODUCT_ID
+			WHERE M.RECEIVER_NO = #{myNo} AND M.RECEIVER_DELETED =0
+				
+			)
+			WHERE RN =1
+			ORDER BY CREATED_AT DESC
+	</select>
+	
+	<!-- 보낸 쪽지함 -->
+	<select id="findSent" parameterType="long" resultType="MessageDTO">
+		SELECT *
+        FROM (
+            SELECT M.MESSAGE_ID, M.SENDER_NO, M.RECEIVER_NO, M.PRODUCT_ID,
+                   m.content, m.is_read, m.created_at,
+                   u.nickname AS opponent_nickname,
+                   p.title AS product_title,
+                   p.status AS product_status,
+                   ROW_NUMBER() OVER (
+                       PARTITION BY m.product_id, m.receiver_no
+                       ORDER BY m.created_at DESC
+                   ) AS rn
+            FROM MESSAGES m
+            JOIN USERS u ON u.user_no = m.receiver_no
+            JOIN PRODUCTS p ON p.product_id = m.product_id
+            WHERE m.sender_no = #{myNo}
+              AND m.sender_deleted = 0
+        )
+        WHERE rn = 1
+        ORDER BY created_at DESC
+	</select>
+	
+	<!-- 쪽지 목록 -->
+	<select id="findById" parameterType="long" resultType="messageDTO">
+		SELECT MESSAGE_ID, SENDER_NO, RECEIVER_NO, PRODUCT_ID, CONTENT, IS_READ, CREATED_AT
+		FROM MESSAGES
+		WHERE MESSAGE_ID = #{messageId}
+	</select>
+	
+	<!-- 쪽지함 전체 -->
+	<select id="findAllMessage" resultType="MessageDTO">
+		SELECT M.MESSAGE_ID, M.SENDER_NO, M.RECEIVER_NO, M.PRODUCT_ID, M.CONTENT, M.IS_READ, M.CREATED_AT,
+        U.NICKNAME AS OPPONENT_NICKNAME
+		FROM MESSAGES M
+		JOIN USERS U ON U.USER_NO = #{opponentNo}
+		WHERE M.PRODUCT_ID = #{productId}
+		AND((M.SENDER_NO = #{myNo} AND M.RECEIVER_NO = #{opponentNo}) OR
+			(M.SENDER_NO = #{opponentNo} AND M.RECEIVER_NO = #{myNo}))
+		AND((M.SENDER_NO = #{myNo} AND M.SENDER_DELETED = 0) OR
+			(M.RECEIVER_NO = #{myNo} AND M.RECEIVER_DELETED = 0))
+		ORDER BY M.CREATED_AT 
+	</select>
+	
+	<!-- 쪽지 읽음 처리 -->
+	<update id="markAsRead">
+		UPDATE MESSAGES SET IS_READ = 1
+		WHERE RECEIVER_NO = #{myNo}
+		AND SENDER_NO = #{opponentNo}
+		AND PRODUCT_ID = #{productId}
+		AND IS_READ = 0
+	</update>
+	
+	<!-- 쪽지 저장 -->
+	<insert id="insertMessage" parameterType="MessageDTO"
+				useGeneratedKeys="true" keyProperty="messageId" keyColumn="MESSAGE_ID">
+		INSERT INTO MESSAGES (SENDER_NO, RECEIVER_NO, PRODUCT_ID, CONTENT)
+		VALUES (#{senderNo}, #{receiverNo}, #{productId}, #{content})
+	</insert>
+
+</mapper>
+
