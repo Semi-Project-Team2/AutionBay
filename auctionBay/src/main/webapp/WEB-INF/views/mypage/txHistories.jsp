@@ -221,7 +221,11 @@
             <div class="mypage-main">
                 <div class="content-header">
                     <span class="content-title">거래 내역</span>
-                    <div class="search-bar">검색창</div>
+                    <div class="search-bar">
+                        <form action="${pageContext.request.contextPath}/mypage/txHistories" method="get" style="width: 100%;">
+                            <input type="text" name="keyword" value="${param.keyword}" placeholder="제목 또는 닉네임 검색">
+                        </form>
+                    </div>
                 </div>
 
                 <!-- 리스트 반복 영역 -->
@@ -229,7 +233,12 @@
                     
                     <c:choose>
                         <c:when test="${not empty txHistories}">
-                            <c:forEach var="txHistory" items="${txHistories}">
+                            <c:forEach var="txHistory" items="${txHistories.txHistories}">
+                            <!-- 
+                            txHistories.txHistories: 
+                                TxHistoryResultList txHisotries의 getTxHistories() 호출
+                                TxHistoryResultList 클래스의 필드가 List<TxHistoryDTO> txhistories
+                            -->    
                                 <div class="history-card">
                                     <div class="history-info">
                                         <span>${txHistory.title}</span>
@@ -255,13 +264,28 @@
 
                 <!-- 페이징 바 -->
                 <div class="pagination">
-                    <a class="page-btn" href="#">&lt; 이전</a>
-                    <a class="page-btn active" href="#">1</a>
-                    <a class="page-btn" href="#">2</a>
-                    <a class="page-btn" href="#">3</a>
-                    <a class="page-btn" href="#">4</a>
-                    <a class="page-btn" href="#">5</a>
-                    <a class="page-btn" href="#">다음 &gt;</a>
+                    <%-- 이전 페이지 그룹이 있을 경우 --%>
+                    <c:if test="${txHistories.pageInfo.hasPrevGroup}">
+                        <a class="page-btn"
+                                href="/mypage/txHistories?page=${txHistories.pageInfo.startPage - 1}&keyword=${condition.keyword}">
+                            &lt;&lt;
+                        </a>
+                    </c:if>
+                    <%-- 현재 페이지 그룹 표시 --%>
+                    <c:forEach var="i" begin="${txHistories.pageInfo.startPage}" end="${txHistories.pageInfo.endPage}">
+                        <a class="page-btn"
+                                href="/mypage/txHistories?page=${i}&keyword=${txHistories.condition.keyword}">
+                            ${i}
+                        </a>
+                    </c:forEach>
+
+                    <%-- 다음 페이지 그룹이 있을 경우 --%>
+                    <c:if test="${txHistories.pageInfo.hasNextGroup}">
+                        <a class="page-btn"
+                                href="/mypage/txHistories?page=${txHistories.pageInfo.startPage + 1}&keyword=${condition.keyword}">
+                            &gt;&gt;
+                        </a>
+                    </c:if>
                 </div>
 
             </div>

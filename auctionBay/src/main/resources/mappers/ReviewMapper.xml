@@ -9,7 +9,7 @@
 		    R.CREATED_AT, U.NICKNAME as "REVIEWER_NICKNAME"
 		from REVIEWS R
 		    join USERS U on R.REVIEWER_NO = U.USER_NO
-		where REVIEWEE_NO = 1
+		where REVIEWEE_NO = #{userNo}
 		order by CREATED_AT desc
 	</select>
 

@@ -1,15 +1,14 @@
 package com.kh.auctionBay.review.service;
 
 import java.io.IOException;
-import java.util.List;
-
-import org.springframework.stereotype.Service;
 
 import com.kh.auctionBay.review.model.dto.TxHistoryDTO;
+import com.kh.auctionBay.review.model.dto.TxHistoryResultList;
+import com.kh.auctionBay.review.model.dto.TxHistorySearchCondition;
 
 public interface TxHistoryService {
 	// 거래 내역 목록 조회
-	List<TxHistoryDTO> getTxHistories(Long userNo);
+	TxHistoryResultList getTxHistories(TxHistorySearchCondition condition);
 	
 	// 거래 내역 상세 조회
 	TxHistoryDTO getTxHistoryDetail(Long historyId);

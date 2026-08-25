@@ -5,12 +5,10 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.kh.auctionBay.review.model.dto.ReviewDTO;
+import com.kh.auctionBay.review.model.dto.ReviewResultList;
 import com.kh.auctionBay.review.model.mapper.ReviewMapper;
 
 import lombok.RequiredArgsConstructor;
-
-
-import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
@@ -22,8 +20,8 @@ public class ReviewServiceImpl implements ReviewService {
 	 * 받은 후기 목록 조회
 	 */
 	@Override
-	public List<ReviewDTO> getReceivedReviews(Long userNo) {
-		List<ReviewDTO> receivedReviews = reviewMapper.selectReceivedReviews(userNo);
+	public ReviewResultList getReceivedReviews(Long userNo) {
+		ReviewResultList receivedReviews = reviewMapper.selectReceivedReviews(userNo);
 		
 		return receivedReviews;
 	}
@@ -32,8 +30,8 @@ public class ReviewServiceImpl implements ReviewService {
 	 * 보낸 후기 목록 조회
 	 */
 	@Override
-	public List<ReviewDTO> getSentReviews(Long userNo) {
-		List<ReviewDTO> sentReviews = reviewMapper.selectSentReviews(userNo);
+	public ReviewResultList getSentReviews(Long userNo) {
+		ReviewResultList sentReviews = reviewMapper.selectSentReviews(userNo);
 
 		return sentReviews;
 	}

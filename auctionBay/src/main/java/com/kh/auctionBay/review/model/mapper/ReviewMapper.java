@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.kh.auctionBay.review.model.dto.ReviewDTO;
+import com.kh.auctionBay.review.model.dto.ReviewResultList;
 
 @Mapper
 public interface ReviewMapper {

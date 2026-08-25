@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
+import com.kh.auctionBay.common.dto.PageInfo;
 import com.kh.auctionBay.review.model.dto.TxHistoryDTO;
+import com.kh.auctionBay.review.model.dto.TxHistoryResultList;
+import com.kh.auctionBay.review.model.dto.TxHistorySearchCondition;
 import com.kh.auctionBay.review.model.mapper.TxHistoryMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -16,13 +18,23 @@ import lombok.RequiredArgsConstructor;
 public class TxHistoryServiceImpl implements TxHistoryService {
 	/* Mapper DI 생성자 주입 */
 	private final TxHistoryMapper txHistoryMapper;
+	
 
 	@Override
-	public List<TxHistoryDTO> getTxHistories(Long userNo) {
-		// 전체 거래내역 조회
-		List<TxHistoryDTO> txHistories 
-				= txHistoryMapper.selectTxHistories(userNo);
+	public TxHistoryResultList getTxHistories(TxHistorySearchCondition condition) {
+		// 거래내역 개수 조회
+		int totalCount = txHistoryMapper.selectTxHistoriesCount(condition);
 		
+		// 페이징 정보 저장
+		int page = condition.getPage();
+		int size = condition.getSize();
+		PageInfo pageInfo = new PageInfo(page, size, totalCount);
+		// 검색 조건(condition)의 offset을 pageInfo에서 가져오기
+		condition.setOffset(pageInfo.getOffset());
+		
+		// 전체 거래내역 조회
+		TxHistoryResultList txHistories = new TxHistoryResultList(
+				txHistoryMapper.selectTxHistories(condition), pageInfo);
 		return txHistories;
 	}
 

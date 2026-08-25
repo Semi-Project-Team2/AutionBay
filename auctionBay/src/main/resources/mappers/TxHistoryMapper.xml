@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kh.auctionBay.review.model.mapper.TxHistoryMapper">
+	<!-- sql 태그: 검색 조건 정의 -->
+	<sql id="searchWhere">
+		<if test="keyword != null and keyword != ''">
+			and (U.NICKNAME like '%' || #{keyword} || '%'
+			or P.TITLE like '%' || #{keyword} || '%')
+		</if>
+	</sql>
 	
 	<!-- 거래내역 리스트 조회 -->
 	<select id="selectTxHistories" parameterType="long" resultType="TxHistoryDTO">
@@ -14,8 +21,22 @@
 		            when T.BUYER_NO = #{userNo} then T.SELLER_NO
 		            when T.SELLER_NO = #{userNo} then T.BUYER_NO
 		        end
-		where BUYER_NO = #{userNo} or SELLER_NO = #{userNo}
+		where (BUYER_NO = #{userNo} or SELLER_NO = #{userNo})
+		<include refid="searchWhere" />
 		order by COMPLETED_AT desc
+	</select>
+	
+	<!-- 거래내역 개수 조회 (페이징 계산용) -->
+	<select id="selectTxHistoriesCount" parameterType="long">
+		select count(*)
+		from TRANSACTION_HISTORY T
+		    join PRODUCTS P using (PRODUCT_ID)
+		    join USERS U on U.USER_NO = case
+		    		when T.BUYER_NO = #{userNo} then T.SELLER_NO
+		            when T.SELLER_NO = #{userNo} then T.BUYER_NO
+		        end
+		where (BUYER_NO = #{userNo} or SELLER_NO = #{userNo})
+		<include refid="searchWhere" />
 	</select>
 	
 	<!-- 거래내역 상세 조회 -->
