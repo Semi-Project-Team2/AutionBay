@@ -84,7 +84,7 @@ function startTimer(endTimeMs) {
 
 
 // ----------------------------------------------------
-// 모달 제어용
+// 입찰 기록 모달 제어용
 
 const btnBidHistory = document.getElementById('btnBidHistory');
 const bidModalOverlay = document.getElementById('bidModalOverlay');
@@ -105,6 +105,30 @@ btnCloseModal.addEventListener('click', function() {
 bidModalOverlay.addEventListener('click', function(e) {
     if (e.target === bidModalOverlay) {
         bidModalOverlay.style.display = 'none';
+    }
+});
+
+// 리뷰보기모달 제어용
+
+const btnReviewHistory = document.getElementById('btnReviewHistory');
+const reviewModalOverlay = document.getElementById('reviewModalOverlay');
+const btnCloseReviewModal = document.getElementById('btnCloseReviewModal');
+
+// [기록보기] 클릭 시 모달 열기
+btnReviewHistory.addEventListener('click', function(e) {
+    e.preventDefault();
+    reviewModalOverlay.style.display = 'flex';
+});
+
+// 닫기(X) 버튼 클릭 시 모달 닫기
+    btnCloseReviewModal.addEventListener('click', function() {
+    reviewModalOverlay.style.display = 'none';
+});
+
+// 모달 배경 어두운 곳 클릭 시 닫기
+reviewModalOverlay.addEventListener('click', function(e) {
+    if (e.target === reviewModalOverlay) {
+        reviewModalOverlay.style.display = 'none';
     }
 });
 

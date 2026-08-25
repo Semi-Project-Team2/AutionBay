@@ -9,393 +9,491 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>경매 상세 페이지</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Noto Sans KR', sans-serif;
-        }
+   /* ==========================================================
+   1. 공통 및 초기화 스타일
+   ========================================================== */
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: 'Noto Sans KR', sans-serif;
+    }
 
-        /* 전체 페이지 배경 및 기본 흐름 설정 수정 완료 */
-        body {
-            background-color: #f9f9f9;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
+    body {
+        background-color: #f4f6f8;
+        color: #333;
+    }
 
-        /* 경매 카드만 중앙에 예쁘게 오도록 감싸는 컨테이너 */
-        .page-container {
-            width: 1200px;
-            margin: 30px auto;
-            display: flex;
-            justify-content: center;
-        }
+    /* ==========================================================
+    2. 레이아웃 컨테이너
+    ========================================================== */
+    .page-container {
+        width: 1200px;
+        margin: 40px auto;
+        display: flex;
+        justify-content: center;
+    }
 
-        .auction-card {
-            width: 400px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
+    .auction-card {
+        width: 440px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    }
 
-        /* 현재가 영역 */
-        .price-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 4px;
-        }
+    /* ==========================================================
+    3. 경매 가격 헤더 영역
+    ========================================================== */
+    .price-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #f0f0f0;
+    }
 
-        .price-label {
-            font-size: 16px;
-            font-weight: bold;
-            color: #333;
-        }
+    .price-label {
+        font-size: 15px;
+        font-weight: 600;
+        color: #666;
+    }
 
-        .price-value {
-            font-size: 26px;
-            font-weight: bold;
-            color: #222;
-        }
+    .price-value {
+        font-size: 28px;
+        font-weight: 700;
+        color: #111;
+    }
 
-        /* 경매 정보 박스 */
-        .auction-info-box {
-            background-color: #f8f8f8;
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 16px;
-        }
+    /* ==========================================================
+    4. 경매 정보 박스
+    ========================================================== */
+    .auction-info-box {
+        background-color: #f9fafb;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 20px;
+        border: 1px solid #eee;
+    }
 
-        .info-row {
-            display: flex;
-            align-items: center;
-            margin-bottom: 12px;
-            font-size: 13px;
-        }
+    .info-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+        font-size: 13px;
+    }
 
-        .info-label {
-            width: 80px;
-            color: #888;
-            flex-shrink: 0;
-        }
+    .info-row:last-child {
+        margin-bottom: 0;
+    }
 
-        .info-content {
-            flex-grow: 1;
-            color: #333;
-        }
+    .info-label {
+        width: 85px;
+        color: #777;
+        font-weight: 500;
+        flex-shrink: 0;
+    }
 
-        /* 시작가 강조 스타일 */
-        .start-price-text {
-            font-weight: bold;
-            font-size: 14px;
-        }
+    .info-content {
+        flex-grow: 1;
+        color: #333;
+    }
 
-        .time-highlight {
-            font-weight: bold;
-            color: #222;
-        }
+    .start-price-text {
+        font-weight: 600;
+        font-size: 14px;
+        color: #444;
+    }
 
-        .time-sub {
-            color: #888;
-            font-size: 12px;
-            margin-top: 2px;
-        }
+    .time-highlight {
+        font-weight: 600;
+        color: #d9534f; /* 남은 시간 강조 색상 */
+    }
 
-        .history-link {
-            color: #999;
-            text-decoration: none;
-            margin-left: 4px;
-        }
+    .time-sub {
+        color: #888;
+        font-size: 11px;
+        margin-top: 2px;
+    }
 
-        .divider {
-            height: 1px;
-            background-color: #eaeaea;
-            margin: 12px 0;
-        }
+    .history-link {
+        color: #3182ce;
+        text-decoration: none;
+        font-weight: 500;
+        margin-left: 6px;
+    }
 
-        /* 희망 입찰가 입력창 */
-        .bid-input-group {
-            display: flex;
-            align-items: center;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            overflow: hidden;
-            background-color: #fff;
-            width: 180px;
-        }
+    .history-link:hover {
+        text-decoration: underline;
+    }
 
-        .btn-circle {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            border: 1px solid #e0e0e0;
-            background: #f5f5f5;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            color: #666;
-        }
+    .divider {
+        height: 1px;
+        background-color: #e5e7eb;
+        margin: 14px 0;
+    }
 
-        .bid-input-container {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+    /* ==========================================================
+    5. 입찰 입력 및 조절 영역
+    ========================================================== */
+    .bid-input-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
 
-        .bid-input {
-            width: 100px;
-            border: none;
-            text-align: right;
-            padding: 4px 6px;
-            font-size: 13px;
-            outline: none;
-        }
+    .btn-circle {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        font-weight: bold;
+        color: #475569;
+        transition: all 0.2s;
+    }
 
-        .input-unit {
-            font-size: 12px;
-            color: #333;
-            padding-right: 8px;
-        }
+    .btn-circle:hover {
+        background-color: #f1f5f9;
+        border-color: #94a3b8;
+    }
 
-        /* Description 본문 영역 */
-        .description-box {
-            background-color: #fff;
-            border-radius: 6px;
-            height: 120px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #333;
-            font-size: 18px;
-            margin-top: 16px;
-        }
+    .bid-input-group {
+        display: flex;
+        align-items: center;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        overflow: hidden;
+        background-color: #fff;
+        width: 150px;
+    }
 
-        /* 버튼 영역 */
-        .action-group {
-            display: flex;
-            gap: 8px;
-            margin-top: 16px;
-        }
+    .bid-input {
+        width: 110px;
+        border: none;
+        text-align: right;
+        padding: 6px 8px;
+        font-size: 14px;
+        outline: none;
+        color: #1e293b;
+    }
 
-        .btn-submit {
-            flex-grow: 1;
-            height: 42px;
-            background-color: #222;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+    .input-unit {
+        font-size: 13px;
+        color: #64748b;
+        padding-right: 8px;
+    }
 
-        .btn-wish {
-            width: 42px;
-            height: 42px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 16px;
-            color: #555;
-        }
+    /* ==========================================================
+    6. 상품 설명 본문 영역
+    ========================================================== */
+    .description-box {
+        background-color: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 16px;
+        min-height: 100px;
+        max-height: 150px;
+        overflow-y: auto;
+        color: #334155;
+        font-size: 14px;
+        line-height: 1.5;
+        margin-top: 16px;
+    }
 
-        /* 판매자 프로필 영역 */
-        .seller-card {
-            margin-top: 20px;
-            padding-top: 16px;
-            border-top: 1px solid #eee;
-        }
+    /* ==========================================================
+    7. 하단 액션 버튼 그룹 (입찰하기 + 찜하기)
+    ========================================================== */
+    .action-group {
+        display: flex;
+        gap: 8px;
+        margin-top: 16px;
+    }
 
-        .seller-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
+    .btn-submit {
+        flex-grow: 1;
+        height: 46px;
+        background-color: #0f172a;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
 
-        .seller-info {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+    .btn-submit:hover {
+        background-color: #1e293b;
+    }
 
-        .seller-name {
-            font-weight: bold;
-            font-size: 15px;
-            color: #222;
-        }
+    /* 찜 버튼 디자인 개선 */
+    #wishBtn {
+        width: 46px;
+        height: 46px;
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+    }
 
-        .btn-message {
-            background-color: #e0e0e0;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            color: #333;
-        }
+    #wishBtn:hover {
+        transform: scale(1.05);
+        background-color: #f8fafc;
+    }
 
-        .seller-stats {
-            display: flex;
-            background-color: #f9f9f9;
-            border-radius: 6px;
-            padding: 10px;
-            text-align: center;
-        }
+    #wishBtn .fa-regular.fa-heart {
+        color: #94a3b8;
+        transition: color 0.2s ease;
+    }
 
-        .stat-item {
-            flex: 1;
-        }
+    #wishBtn .fa-regular.fa-heart:hover {
+        color: #ef4444;
+    }
 
-        .stat-value {
-            font-weight: bold;
-            font-size: 14px;
-            color: #222;
-        }
+    #wishBtn .fa-solid.fa-heart {
+        color: #ef4444;
+    }
 
-        .review-count-text {
-            font-size: 11px;
-            color: #999;
-            font-weight: normal;
-        }
-		/* --- 입찰 기록 모달 내부 상세 스타일 --- */
-        .modal-overlay {
-            display: none; /* 평소에는 숨김 */
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;   /* 뷰포트 전체 너비 */
-            height: 100vh;  /* 뷰포트 전체 높이 */
-            background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
-            z-index: 9999;
-            justify-content: center; /* 가로 중앙 정렬 */
-            align-items: center;     /* 세로 중앙 정렬 */
-        }
+    /* ==========================================================
+    8. 판매자 프로필 영역
+    ========================================================== */
+    .seller-card {
+        margin-top: 20px;
+        padding-top: 16px;
+        border-top: 1px solid #e5e7eb;
+    }
 
-        .modal-container {
-            background-color: #fff;
-            width: 420px;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            max-height: 80vh;
-            display: flex;
-            flex-direction: column;
-        }
+    .seller-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
 
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 12px;
-            margin-bottom: 15px;
-        }
+    .seller-name {
+        font-weight: 600;
+        font-size: 14px;
+        color: #1e293b;
+    }
 
-        .modal-title {
-            font-size: 16px;
-            font-weight: bold;
-            color: #222;
-        }
+    .btn-message {
+        background-color: #f1f5f9;
+        border: 1px solid #cbd5e1;
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        color: #334155;
+        transition: background-color 0.2s;
+    }
 
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: #888;
-        }
-        .modal-close:hover {
-            color: #000;
-        }
+    .btn-message:hover {
+        background-color: #e2e8f0;
+    }
 
-        .bid-history-list {
-            overflow-y: auto;
-            max-height: 320px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            padding-right: 4px;
-        }
+    .seller-stats {
+        display: flex;
+        background-color: #f9fafb;
+        border: 1px solid #f0f0f0;
+        border-radius: 6px;
+        padding: 10px 12px;
+        align-items: center;
+    }
 
-        .bid-history-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 12px;
-            background-color: #f8f9fa;
-            border-radius: 6px;
-            font-size: 13px;
-        }
+    .stat-item {
+        width: 100%;
+    }
 
-        .bid-history-empty {
-            text-align: center;
-            padding: 40px 0;
-            color: #888;
-            font-size: 13px;
-        }
+    .stat-value {
+        font-size: 13px;
+        color: #475569;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
 
-        .bid-history-user-info {
-            display: flex;
-            align-items: center;
-        }
+    .review-count-text {
+        font-size: 12px;
+        color: #64748b;
+        margin-left: 6px;
+    }
 
-        .bid-history-username {
-            font-weight: bold;
-            margin-right: 10px;
-        }
+    /* ==========================================================
+    9. 공통 모달창 스타일 (입찰 기록 & 리뷰 기록)
+    ========================================================== */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.4);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+    }
 
-        .bid-history-date {
-            color: #888;
-            font-size: 11px;
-        }
+    .modal-container {
+        background-color: #fff;
+        width: 440px;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        max-height: 80vh;
+        display: flex;
+        flex-direction: column;
+    }
 
-        .bid-history-price {
-            font-weight: bold;
-            color: #111;
-        }
-		
-		/* 찜 버튼 전체 스타일 (테두리, 배경 제거 및 정렬) */
-		#wishBtn {
-		    background: transparent;
-		    border: none;
-		    cursor: pointer;
-		    font-size: 24px; /* 아이콘 크기 조절 */
-		    padding: 8px;
-		    display: flex;
-		    align-items: center;
-		    justify-content: center;
-		    transition: transform 0.2s ease; /* 부드러운 효과 */
-		}
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #e5e7eb;
+        padding-bottom: 12px;
+        margin-bottom: 12px;
+    }
 
-		/* 마우스 올렸을 때 살짝 커지는 효과 */
-		#wishBtn:hover {
-		    transform: scale(1.1);
-		}
+    .modal-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #1e293b;
+    }
 
-		/* 1. 빈 하트 (기본 상태) */
-		#wishBtn .fa-regular.fa-heart {
-		    color: #999; /* 평소에는 회색빛 */
-		    transition: color 0.2s ease;
-		}
+    .modal-close {
+        background: none;
+        border: none;
+        font-size: 22px;
+        cursor: pointer;
+        color: #94a3b8;
+        line-height: 1;
+    }
 
-		#wishBtn .fa-regular.fa-heart:hover {
-		    color: #ff4757; /* 마우스 올렸을 때 빨간색으로 미리보기 */
-		}
+    .modal-close:hover {
+        color: #0f172a;
+    }
+    /* --- 별점 UI 스타일 --- */
+    .star-rating {
+        position: relative;
+        unicode-bidi: bidi-override;
+        color: #ddd; /* 빈 별 색상 */
+        font-size: 14px; /* 별 크기 조절 */
+        font-family: Arial, sans-serif;
+        letter-spacing: 2px;
+    }
 
-		/* 2. 채워진 하트 (isLiked가 true일 때: fa-solid 클래스) */
-		#wishBtn .fa-solid.fa-heart {
-		    color: #ff4757; /* 선명한 빨간색 */
-		}
+    .star-rating-fill {
+        position: absolute;
+        top: 0;
+        left: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        color: #f59e0b; /* 채워진 별 색상 (노란색) */
+    }
+
+    /* 모달 내부 리스트 스크롤 영역 공통 */
+    .bid-history-list,
+    .review-list {
+        overflow-y: auto;
+        max-height: 350px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding-right: 4px;
+    }
+
+    /* 입찰/리뷰 아이템 카드 공통 스타일 */
+    .bid-history-item{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px;
+        background-color: #f8fafc;
+        border: 1px solid #f1f5f9;
+        border-radius: 8px;
+        font-size: 13px;
+    }
+
+    .review-list-item {
+        display: flex;
+        flex-direction: column; /* 위아래로 배치 */
+        align-items: flex-start;
+        padding: 14px;
+        background-color: #f8fafc;
+        border: 1px solid #f1f5f9;
+        border-radius: 8px;
+        font-size: 13px;
+        gap: 8px; /* 위쪽(정보)과 아래쪽(내용) 간격 */
+    }
+
+    .bid-history-user-info{
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .review-list-user-info {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+    .bid-history-username {
+        font-weight: 600;
+        color: #334155;
+    }
+
+    .review-list-userNickname {
+        font-weight: 600;
+        color: #334155;
+        white-space: nowrap; 
+    }
+
+    .bid-history-date {
+        color: #94a3b8;
+        font-size: 11px;
+    }
+
+    .review-list-date {
+        color: #94a3b8;
+        font-size: 11px;
+    }
+
+    .bid-history-price{
+        font-weight: 600;
+        color: #0f172a;
+    }
+
+    .review-list-content {
+        font-weight: normal;
+        color: #475569;
+        width: 100%;
+        word-break: break-all;
+        line-height: 1.4;
+    }
+
+    /* 데이터가 없을 때 엠티 박스 */
+    .bid-history-empty,
+    .review-list-empty {
+        text-align: center;
+        padding: 40px 0;
+        color: #94a3b8;
+        font-size: 13px;
+    }
         
     </style>
     <link rel="stylesheet" href="/css/common.css">
@@ -492,6 +590,7 @@
                         <div class="stat-value">
                             <span id="reviewAverage">리뷰 평균 : ${reviewSummary.reviewAvg}</span> 
                             <span id="reviewCount" class="review-count-text">리뷰개수 : ${reviewSummary.reviewCount}</span>
+                            <a href="#" id="btnReviewHistory" class="history-link">[기록보기]</a>
                         </div>
                     </div>
                 </div>
@@ -529,7 +628,45 @@
             </div>
         </div>
     </div>
-    
+    <!-- 리뷰 기록 모달 창 -->
+    <div class="modal-overlay" id="reviewModalOverlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <span class="modal-title">리뷰 기록</span>
+                <button type="button" class="modal-close" id="btnCloseReviewModal">&times;</button>
+            </div>
+            <div class="review-list">
+                <c:choose>
+                    <c:when test="${not empty reviewList}">
+                        <c:forEach var="review" items="${reviewList}">
+                            <div class="review-list-item">
+                                <div class="review-list-user-info">
+                                    <span class="review-list-userNickname">${review.reviewerNickname}</span>
+                                    <!-- 숫자 평점을 별점으로 변환하는 UI -->
+                                    <div class="star-rating" title="평점: ${review.rating}점">
+                                        ★★★★★
+                                        <div class="star-rating-fill" style="width: calc(${review.rating} * 10%);">
+                                            ★★★★★
+                                        </div>
+                                    </div>
+                                    <span class="review-list-date">${review.createdAtStr}</span>
+                                </div>
+                                <div class="review-list-content">
+                                    ${review.content}
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="review-list-empty">
+                            아직 리뷰 기록이 없습니다.
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+        </div>
+    </div>
+
     <script>
     <c:if test="${not empty message}">
         alert("${message}");

@@ -21,6 +21,7 @@ import com.kh.auctionBay.common.SessionConst;
 import com.kh.auctionBay.common.dto.ApiResponse;
 import com.kh.auctionBay.product.model.dto.ProductDTO;
 import com.kh.auctionBay.product.service.ProductService;
+import com.kh.auctionBay.review.model.dto.ReviewDTO;
 import com.kh.auctionBay.review.model.dto.ReviewSummaryDTO;
 import com.kh.auctionBay.review.service.ReviewService;
 import com.kh.auctionBay.user.model.dto.UserDTO;
@@ -55,8 +56,11 @@ public class AuctionController {
 		// 상품정보 조회용
 		ProductDTO product = productService.getProductByProductId(productId);
 		
-		// 게시물 등록자의 받은 리뷰 조회용(ReviewSummaryDTO에는 reviewAvg, reviewCount 필드 저장되어있음
+		// 게시물 등록자의 받은 리뷰요약 조회용(ReviewSummaryDTO에는 reviewAvg, reviewCount 필드 저장되어있음
 		ReviewSummaryDTO rs = reviewService.getAvgAndCountReview(product.getWriterNo());
+		
+		// 게시물 등록자의 받은 리뷰 보여주기용 리스트
+		List<ReviewDTO> reviewList = reviewService.getReceivedReviews(product.getWriterNo());
 		
 		// 찜 여부 조회
 		boolean isLiked = false;
@@ -69,6 +73,7 @@ public class AuctionController {
 		model.addAttribute("bids", bids);
 		model.addAttribute("reviewSummary", rs);
 		model.addAttribute("isLiked", isLiked);
+		model.addAttribute("reviewList", reviewList);
 		
 		return "auction/detail";
 	}
@@ -87,11 +92,6 @@ public class AuctionController {
 
 		// 로그인한 유저의 UserNo 세팅 
 		bidDTO.setBidderNo(loginUser.getUserNo());
-
-//		test용 코드
-//		UserDTO testUser = new UserDTO();
-//		testUser.setUserNo(9L);
-//		bidDTO.setBidderNo(testUser.getUserNo());
 		
 	    // 서비스 호출 (비즈니스 로직 처리 후 결과 문자열 리턴 받기)
 	    String message = service.processBid(bidDTO);
