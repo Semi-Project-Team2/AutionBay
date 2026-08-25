@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.auctionBay.message.model.dto.MessageDTO;
 import com.kh.auctionBay.message.service.MessageService;
@@ -73,11 +74,27 @@ public class MessageController {
 		
 	}
 	
+	@GetMapping("/write")
+	public String writeForm(@RequestParam Long productId,
+							@RequestParam Long receiverNo,
+							@RequestParam(required = false) String redirectURL,
+							Model model) {
+		
+		model.addAttribute("productId", productId);
+		model.addAttribute("receiverNo", receiverNo);
+		model.addAttribute("redirectURL", redirectURL);
+		
+		return "message/write";
+		
+	}
+	
 	@PostMapping("/send")
 	public String send(@RequestParam Long receiverNo, 
 						@RequestParam Long productId, 
-						@RequestParam String content, 
-						HttpSession session) {
+						@RequestParam String content,
+						@RequestParam(required = false) String redirectURL,
+						HttpSession session,
+						RedirectAttributes ra) {
 		
 		UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
 		
@@ -85,9 +102,16 @@ public class MessageController {
 		
 		Long newMessageId =  service.sendMessage(myNo, receiverNo, productId, content);
 		
+		if (redirectURL != null && !redirectURL.isBlank()) {
+			
+		}
+		
+		
 		return "redirect:/message/detail/" + newMessageId;
 		
 	}
+	
+	
 	
 	
 	
