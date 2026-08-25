@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.kh.auctionBay.user.model.dto.UserDTO;
 import com.kh.auctionBay.user.service.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 import com.kh.auctionBay.common.SessionConst;
@@ -80,6 +81,16 @@ public class UserContoller {
 			return "redirect:" + redirectURL;
 		}
 
+		return "redirect:/";
+	}
+	
+	@GetMapping("/logout")
+	public String logout(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		if(session != null) {
+			session.invalidate();
+		}
+		
 		return "redirect:/";
 	}
 
