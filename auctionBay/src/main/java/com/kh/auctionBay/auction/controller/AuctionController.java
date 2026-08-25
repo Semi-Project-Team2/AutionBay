@@ -50,6 +50,9 @@ public class AuctionController {
 		// 세션 영역에서 로그인된 유저 가져오기
 		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
 		
+		// 상품 조회수 증가 처리
+		productService.increaseViewCount(productId);
+		
 		// 경매 입찰 내역 조회용
 		List<BidsDTO> bids = service.getBidsByProductId(productId);
 		
