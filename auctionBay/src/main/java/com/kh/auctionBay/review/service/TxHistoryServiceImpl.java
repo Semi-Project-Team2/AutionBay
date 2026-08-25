@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.kh.auctionBay.common.dto.PageInfo;
 import com.kh.auctionBay.review.model.dto.TxHistoryDTO;
 import com.kh.auctionBay.review.model.dto.TxHistoryResultList;
-import com.kh.auctionBay.review.model.dto.TxHistorySearchCondition;
+import com.kh.auctionBay.review.model.dto.SearchCondition;
 import com.kh.auctionBay.review.model.mapper.TxHistoryMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class TxHistoryServiceImpl implements TxHistoryService {
 	
 
 	@Override
-	public TxHistoryResultList getTxHistories(TxHistorySearchCondition condition) {
+	public TxHistoryResultList getTxHistories(SearchCondition condition) {
 		// 거래내역 개수 조회
 		int totalCount = txHistoryMapper.selectTxHistoriesCount(condition);
 		

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.kh.auctionBay.review.model.dto.ReviewDTO;
 import com.kh.auctionBay.review.model.dto.ReviewResultList;
+import com.kh.auctionBay.review.model.dto.SearchCondition;
 
 public interface ReviewService {
 

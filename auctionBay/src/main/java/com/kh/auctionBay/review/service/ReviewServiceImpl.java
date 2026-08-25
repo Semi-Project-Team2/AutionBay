@@ -1,11 +1,11 @@
 package com.kh.auctionBay.review.service;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 
+import com.kh.auctionBay.common.dto.PageInfo;
 import com.kh.auctionBay.review.model.dto.ReviewDTO;
 import com.kh.auctionBay.review.model.dto.ReviewResultList;
+import com.kh.auctionBay.review.model.dto.SearchCondition;
 import com.kh.auctionBay.review.model.mapper.ReviewMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,18 @@ public class ReviewServiceImpl implements ReviewService {
 	 */
 	@Override
 	public ReviewResultList getReceivedReviews(Long userNo) {
-		ReviewResultList receivedReviews = reviewMapper.selectReceivedReviews(userNo);
+		// 받은 후기 개수 조회
+		int totalCount = reviewMapper.selectReceivedReviewsCount(userNo);
+		
+		// 페이징 정보 저장
+		int page = 1;	// 페이지 번호 1로 초기화
+		int size = 5;	// 한 페이지 당 5개씩 보이도록 초기화
+		PageInfo pageInfo = new PageInfo(page, size, totalCount);
+		
+		// 받은 후기 리스트 조회 및 저장
+		ReviewResultList receivedReviews = new ReviewResultList(
+				 reviewMapper.selectReceivedReviews(userNo),
+				 pageInfo);
 		
 		return receivedReviews;
 	}
@@ -31,7 +42,18 @@ public class ReviewServiceImpl implements ReviewService {
 	 */
 	@Override
 	public ReviewResultList getSentReviews(Long userNo) {
-		ReviewResultList sentReviews = reviewMapper.selectSentReviews(userNo);
+		// 보낸 후기 개수 조회
+		int totalCount = reviewMapper.selectSentReviewsCount(userNo);
+		
+		// 페이징 정보 저장
+		int page = 1;
+		int size = 5;
+		PageInfo pageInfo = new PageInfo(page, size, totalCount);
+		
+		// 보낸 후기 리스트 조회 및 저장
+		ReviewResultList sentReviews = new ReviewResultList(
+				reviewMapper.selectSentReviews(userNo),
+				pageInfo);
 
 		return sentReviews;
 	}

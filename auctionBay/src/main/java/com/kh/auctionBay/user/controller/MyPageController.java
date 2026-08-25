@@ -16,7 +16,7 @@ import com.kh.auctionBay.review.model.dto.ReviewDTO;
 import com.kh.auctionBay.review.model.dto.ReviewResultList;
 import com.kh.auctionBay.review.model.dto.TxHistoryDTO;
 import com.kh.auctionBay.review.model.dto.TxHistoryResultList;
-import com.kh.auctionBay.review.model.dto.TxHistorySearchCondition;
+import com.kh.auctionBay.review.model.dto.SearchCondition;
 import com.kh.auctionBay.review.service.ReviewService;
 import com.kh.auctionBay.review.service.TxHistoryService;
 import com.kh.auctionBay.user.model.dto.UserDTO;
@@ -39,14 +39,14 @@ public class MyPageController {
 	/* ------------- 화면 이동 요청 --------------- */
 	
 	/**
- 	 * 거래 목록 화면 (마이페이지 기본화면)
+ 	 * 거래 목록 화면
 	 * @param session
 	 * @param model
 	 * @return
 	 */
 	@GetMapping("/txHistories")
 	public String txHistories(HttpSession session, Model model,
-				@ModelAttribute TxHistorySearchCondition condition) {
+				@ModelAttribute SearchCondition condition) {
 		
 		// 로그인한 사용자 정보를 loginUser로 백엔드에 저장
 		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
@@ -61,17 +61,16 @@ public class MyPageController {
 		condition.setUserNo(userNo);
 		
 		// DB에서 데이터 조회 후 변수에 저장
-		TxHistoryResultList txHistories = txService.getTxHistories(condition);
+		TxHistoryResultList list = txService.getTxHistories(condition);
 		
+		// 브라우저에서 "list"로 요청 시 컨트롤러 클래스에 list라고 저장된 데이터 전달
+		model.addAttribute("list", list);
 		// 브라우저에서 "txHistories"로 요청 시 컨트롤러 클래스에 txHistories라고 저장된 데이터를 전달
-		model.addAttribute("txHistories", txHistories);
+		model.addAttribute("txHistories", list.getTxHistories());
 		// 검색 상태 유지를 위해 condition 저장
 		model.addAttribute("condition", condition);
 		// 페이지 정보 저장
-		model.addAttribute("pageInfo", txHistories.getPageInfo());
-		
-		System.out.println(condition.getPage());
-		System.out.println(condition.getKeyword());
+		model.addAttribute("pageInfo", list.getPageInfo());
 		
 		return "mypage/txHistories";
 	}
@@ -102,7 +101,13 @@ public class MyPageController {
 		
 		// 로그인한 사용자 정보를 loginUser로 백엔드에 저장
 		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
-		// userNo(PK)에 로그인한 사용자의 userNo값 저장
+		
+		// 로그인 진행 X(또는 로그인 세션 만료) 시 로그인 페이지로 리다이렉트
+		if (loginUser == null) {
+			return "redirect:/user/login";
+		}
+		
+		// userNo에 로그인한 사용자의 userNo값 저장
 		Long userNo = loginUser.getUserNo();
 		
 		// DB에서 데이터 조회 후 변수에 저장
@@ -110,9 +115,13 @@ public class MyPageController {
 		ReviewResultList sentReviews = reviewService.getSentReviews(userNo);
 		
 		// 브라우저에서 "receivedReviews"로 요청 시 컨트롤러 클래스의 receivedReviews 전달
-		// 브라우저에서 "sentReviews"로 요청 시 컨트롤러 클래스의 sentReviews 전달
 		model.addAttribute("receivedReviews", receivedReviews);
+		// 브라우저에서 "sentReviews"로 요청 시 컨트롤러 클래스의 sentReviews 전달
 		model.addAttribute("sentReviews", sentReviews);
+		// 페이징 정보 저장 (받은 후기: receivedPageInfo, 보낸 후기: sentPageInfo)
+		model.addAttribute("receivedPageInfo", receivedReviews.getPageInfo());
+		model.addAttribute("sentPageInfo", sentReviews.getPageInfo());
+		
 		
 		return "mypage/reviews";
 	}

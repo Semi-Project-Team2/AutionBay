@@ -4,11 +4,11 @@ import java.io.IOException;
 
 import com.kh.auctionBay.review.model.dto.TxHistoryDTO;
 import com.kh.auctionBay.review.model.dto.TxHistoryResultList;
-import com.kh.auctionBay.review.model.dto.TxHistorySearchCondition;
+import com.kh.auctionBay.review.model.dto.SearchCondition;
 
 public interface TxHistoryService {
 	// 거래 내역 목록 조회
-	TxHistoryResultList getTxHistories(TxHistorySearchCondition condition);
+	TxHistoryResultList getTxHistories(SearchCondition condition);
 	
 	// 거래 내역 상세 조회
 	TxHistoryDTO getTxHistoryDetail(Long historyId);

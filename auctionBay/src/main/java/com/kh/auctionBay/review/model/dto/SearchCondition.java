@@ -6,7 +6,7 @@ import lombok.Setter;
 /* 검색 조건(설정) 및 페이징 정보를 담을 객체 */
 @Getter
 @Setter
-public class TxHistorySearchCondition {
+public class SearchCondition {
 	private Long userNo;	// 로그인한 사용자 PK
 	
 	private String keyword;		// 검색 키워드
