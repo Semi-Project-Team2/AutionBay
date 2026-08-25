@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.auctionBay.common.SessionConst;
 import com.kh.auctionBay.review.model.dto.ReviewDTO;
@@ -46,6 +47,11 @@ public class MyPageController {
 		
 		// 로그인한 사용자 정보를 loginUser로 백엔드에 저장
 		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		
+		if (loginUser == null) {
+			return "redirect:/user/login";
+		}
+		
 		// userNo(PK)에 로그인한 사용자의 userNo값 저장
 		Long userNo = loginUser.getUserNo();
 		
@@ -74,15 +80,6 @@ public class MyPageController {
 	}
 	
 	/**
-	 * 거래내역 중 후기 작성 버튼
-	 * @return
-	 */
-	@GetMapping("/reviewForm")
-	public String reviewForm() {	
-		return "review/form";
-	}
-	
-	/**
 	 * 후기 목록 화면
 	 * @param session
 	 * @param model
@@ -106,23 +103,58 @@ public class MyPageController {
 		model.addAttribute("sentReviews", sentReviews);
 		
 		return "mypage/reviews";
-	}	
-		
+	}
+	
+	
+	/**
+	 * 거래내역 중 후기 작성 버튼
+	 * @return
+	 */
+	@GetMapping("/review/writeForm")
+	public String reviewForm() {	
+		return "mypage/review/writeForm";
+	}
+	
+	/**
+	 * 마이페이지 회원 정보 수정 버튼
+	 * @return
+	 */
+	@GetMapping("/profile/editForm")
+	public String editProfile() {
+		return "mypage/profile/editForm";
+	}
+	
 	/* ----------------------------------------- */
 
 	/**
 	 * 후기 작성 폼
 	 */
-	@PostMapping("/form")
-	public String writeReview(@ModelAttribute ReviewDTO review, HttpSession session) 
+	@PostMapping("/writeReview")
+	public String writeReview(@RequestParam("historyId") Long historyId,
+			@ModelAttribute ReviewDTO review, 
+			Model model, HttpSession session) 
 				throws IllegalStateException, IOException {
 		// MessageController에서 불러오게 될 것 같긴 함
 		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
-		Long userNo = loginUser.getUserNo();
+		
+		// DB에서 거래내역 조회 후 변수에 저장
+		TxHistoryDTO txHistory = txService.getTxHistoryDetail(historyId);
+				
+		// 브라우저에서 "txHistory"로 요청 시 txHistory 전달
+		model.addAttribute("txHistory", txHistory);
 		
 		int result = reviewService.writeReview(review);
-		review.setReviewerNo(userNo);
 		
-		return "redirect:/mypage/review";
+		return "redirect:/mypage/reviews";
 	}
+	
+	@PostMapping("/user/edit")
+	public String editProfile(@ModelAttribute UserDTO user, HttpSession session)
+				throws IllegalStateException, IOException {
+		
+		
+		return "redirect:/mypage/txHistories";
+	}
+	
+	
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.kh.auctionBay.review.model.dto.ReviewDTO;
+import com.kh.auctionBay.review.model.dto.ReviewSummaryDTO;
 import com.kh.auctionBay.review.model.mapper.ReviewMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class ReviewServiceImpl implements ReviewService {
 	public List<ReviewDTO> getSentReviews(Long userNo) {
 		List<ReviewDTO> sentReviews = reviewMapper.selectSentReviews(userNo);
 
-		return null;
+		return sentReviews;
 	}
 
 	/**
@@ -46,5 +47,13 @@ public class ReviewServiceImpl implements ReviewService {
 		int result = reviewMapper.insertReview(review);
 		return result;
 	}
+
+	@Override
+	public ReviewSummaryDTO getAvgAndCountReview(Long revieweeNo) {
+		
+		return reviewMapper.selectAvgAndCountReview(revieweeNo);
+	}
+	
+	
 
 }

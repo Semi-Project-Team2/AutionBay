@@ -126,5 +126,11 @@
 	FETCH NEXT #{size} ROWS ONLY
 </select>
 
+<update id="updateViewCount">
+	UPDATE PRODUCTS
+	SET VIEW_COUNT = VIEW_COUNT + 1
+	WHERE PRODUCT_ID = #{productId}
+</update>
+
 
 </mapper>

@@ -4,10 +4,16 @@
 	
 	<!-- 거래내역 리스트 조회 -->
 	<select id="selectTxHistories" parameterType="long" resultType="TxHistoryDTO">
-		select HISTORY_ID, PRODUCT_ID, TRADE_TYPE,
-				SELLER_NO, BUYER_NO, FINAL_PRICE,
-				to_char(COMPLETED_AT, 'YYYY-MM-DD HH24:MI') as "CREATED_AT_STR"
-		from TRANSACTION_HISTORY
+		select HISTORY_ID, PRODUCT_ID, T.TRADE_TYPE,
+		        SELLER_NO, BUYER_NO, FINAL_PRICE,
+		        to_char(COMPLETED_AT, 'YYYY-MM-DD HH24:MI') as "COMPLETED_AT_STR",
+		        COMPLETED_AT, P.TITLE, U.NICKNAME as "PARTNER_NICKNAME"
+		from TRANSACTION_HISTORY T
+		    join PRODUCTS P using (PRODUCT_ID)
+		    join USERS U on U.USER_NO = case
+		            when T.BUYER_NO = #{userNo} then T.SELLER_NO
+		            when T.SELLER_NO = #{userNo} then T.BUYER_NO
+		        end
 		where BUYER_NO = #{userNo} or SELLER_NO = #{userNo}
 		order by COMPLETED_AT desc
 	</select>

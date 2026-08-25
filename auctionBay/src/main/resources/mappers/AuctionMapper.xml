@@ -59,7 +59,7 @@
     
     <!-- 상태가 ONGOING 이지만 경매 마감시간이 지난 데이터 조회 -->
     <select id="selectExpiredOngoingProducts" resultType="ProductDTO">
-    	SELECT product_id, auction_start_price, auction_end_time, status, is_deleted
+    	SELECT product_id, writer_no, auction_start_price, auction_end_time, status, is_deleted
         FROM products
         WHERE status = 'ONGOING'
           AND auction_end_time &lt;= SYSDATE
@@ -95,6 +95,23 @@
     	(product_id, trade_type, seller_no, buyer_no, final_price)
     	VALUES
     	(#{productId}, #{tradeType}, #{sellerNo}, #{buyerNo}, #{finalPrice})
+    </insert>
+    
+    <!-- 찜 여부 조회 -->
+    <select id="checkIsLiked" resultType="int">
+    	SELECT COUNT(*)
+    	FROM WISHLISTS
+    	WHERE USER_NO = #{userNo} AND PRODUCT_ID = #{productId}
+    </select>
+    
+    <delete id="deleteWish">
+    	delete from wishlists
+    	where user_no = #{userNo} and product_id = #{productId}
+    </delete>
+    	
+    <insert id="insertWish">
+    	insert into wishlists
+    	(user_no, product_id ) values (#{userNo}, #{productId})
     </insert>
 
 </mapper>
