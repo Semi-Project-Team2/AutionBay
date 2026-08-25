@@ -103,7 +103,8 @@ public class MessageController {
 		Long newMessageId =  service.sendMessage(myNo, receiverNo, productId, content);
 		
 		if (redirectURL != null && !redirectURL.isBlank()) {
-			
+			ra.addFlashAttribute("message","쪽지를 보냈습니다");
+			return "redirect:" + redirectURL;
 		}
 		
 		
