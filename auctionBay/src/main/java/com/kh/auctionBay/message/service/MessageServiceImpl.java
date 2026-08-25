@@ -21,9 +21,46 @@ public class MessageServiceImpl implements MessageService {
 	}
 
 	@Override
-	public List<MessageDTO> fintSent(Long myNo) {
+	public List<MessageDTO> findSent(Long myNo) {
 		return mapper.findSent(myNo);
 	}
+
+	@Override
+	public List<MessageDTO> detail(Long myNo, Long messageId) {
+		
+		MessageDTO message = mapper.findById(messageId);
+		
+		// 상품이랑 상대방 조회
+		Long productId = message.getProductId();
+		Long opponentNo = message.getSenderNo().equals(myNo)
+						?message.getReceiverNo():message.getSenderNo();	
+		
+		// 쪽지 읽음 처리
+		mapper.markAsRead(myNo, opponentNo, productId);
+		
+		// 전체 대화 조회
+		return mapper.findAllMessage(myNo, opponentNo, productId);
+		
+	}
+
+	@Override
+	public Long sendMessage(Long senderNo, Long receiverNo, Long productId, String content) {
+		
+		MessageDTO message = new MessageDTO();
+		
+		message.setSenderNo(senderNo);
+		message.setReceiverNo(receiverNo);
+		message.setProductId(productId);
+		message.setContent(content);
+		
+		mapper.insertMessage(message);
+		
+		return message.getMessageId();
+		
+	}
+	
+	
+	
 	
 	
 	

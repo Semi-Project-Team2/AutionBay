@@ -16,4 +16,17 @@ public interface MessageMapper {
 	// 보낸 쪽지함
 	List<MessageDTO> findSent(Long myNo);
 	
+	// 쪽지함 목록
+	MessageDTO findById(Long messageId);
+	
+	// 쪽지함 전체
+	List<MessageDTO> findAllMessage(Long myNo, Long opponentNo, Long productId);
+	
+	// 쪽지 읽음 처리
+	int markAsRead(Long myNo, Long opponentNo, Long productId);
+	
+	// 쪽지 저장
+	int insertMessage(MessageDTO message);
+	
+	
 }

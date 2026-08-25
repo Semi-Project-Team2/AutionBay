@@ -5,7 +5,10 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.auctionBay.message.model.dto.MessageDTO;
 import com.kh.auctionBay.message.service.MessageService;
@@ -44,12 +47,50 @@ public class MessageController {
         Long myNo = loginUser.getUserNo();
 
         List<MessageDTO> messageList =
-                service.fintSent(myNo);
+                service.findSent(myNo);
 
         model.addAttribute("messageList", messageList);
 
         return "message/sent";
     }
+	
+	
+	@GetMapping("/detail/{messageId}")
+	public String detail(@PathVariable Long messageId, HttpSession session, Model model) {
+		
+		
+		UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+		
+		Long myNo = loginUser.getUserNo();
+		
+		List<MessageDTO> message = service.detail(myNo, messageId);
+		
+		model.addAttribute("message", message);
+		model.addAttribute("myNo", myNo);
+		
+		return "message/detail";
+		
+		
+	}
+	
+	@PostMapping("/send")
+	public String send(@RequestParam Long receiverNo, 
+						@RequestParam Long productId, 
+						@RequestParam String content, 
+						HttpSession session) {
+		
+		UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+		
+		Long myNo = loginUser.getUserNo();
+		
+		Long newMessageId =  service.sendMessage(myNo, receiverNo, productId, content);
+		
+		return "redirect:/message/detail/" + newMessageId;
+		
+	}
+	
+	
+	
 	
 	
 }
