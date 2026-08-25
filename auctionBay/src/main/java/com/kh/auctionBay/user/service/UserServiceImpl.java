@@ -80,14 +80,19 @@ public class UserServiceImpl implements UserService{
 	}
 
 
+	@Override
+	public int editProfile() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
 
+	@Override
+	public int withdraw(Long userNo) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
-
-	
-	
-	
-	
 	
 	
 }

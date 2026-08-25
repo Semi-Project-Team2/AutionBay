@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.auctionBay.common.SessionConst;
 import com.kh.auctionBay.review.model.dto.ReviewDTO;
@@ -153,7 +153,7 @@ public class MyPageController {
 	 * 후기 작성 폼
 	 */
 	@PostMapping("/writeReview")
-	public String writeReview(@RequestParam("historyId") Long historyId,
+	public String writeReview(Long historyId,
 			@ModelAttribute ReviewDTO review, 
 			Model model, HttpSession session) 
 				throws IllegalStateException, IOException {
@@ -172,9 +172,12 @@ public class MyPageController {
 	}
 	
 	@PostMapping("/user/edit")
-	public String editProfile(@ModelAttribute UserDTO user, HttpSession session)
+	public String editProfile(@ModelAttribute UserDTO user, HttpSession session, 
+			RedirectAttributes redirectAttr)
+	// addFlash어쩌고(자세한 내용은 실습코드를 참조하세요 ㅋ)
 				throws IllegalStateException, IOException {
 		
+		// 
 		
 		return "redirect:/mypage/txHistories";
 	}
