@@ -26,4 +26,9 @@ public class TxHistoryDTO {
 	private LocalDateTime completedAt;
 	
 	private String completedAtStr;
+	
+	// 거래내역 목록에서 보여줄 게시글 제목
+	private String title;
+	// 거래내역 목록에서 보여줄 거래상대 닉네임
+	private String partnerNickname;
 }
