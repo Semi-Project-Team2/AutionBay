@@ -1,9 +1,25 @@
 package com.kh.auctionBay.user.service;
 
+import java.io.IOException;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import com.kh.auctionBay.user.model.dto.UserDTO;
 
 public interface UserService {
+	// 회원가입
+	void join(UserDTO user, MultipartFile profileImg) throws IOException;
 	
-	void join(UserDTO user);
+	// 아이디 중복 체크
+	boolean isUserIdCheck(String userId);
+	
+	// 로그인
+	UserDTO login(String userId, String password);
+	
+	// 회원 정보 수정
+	int editProfile();
+	
+	// 회원 탈퇴
+	int withdraw(Long userNo);
 	
 }

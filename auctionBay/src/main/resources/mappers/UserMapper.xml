@@ -4,8 +4,32 @@
 
 	<insert id="insertUser" >
 		INSERT INTO USERS (user_id, password, email, nickname, phone_number, profile_img, region_address) 
-		VALUES ( #{userId}, #{password}, #{email}, #{nickname}, #{phoneNumber}, #{profileImg}, #{regionAddress} );
+		VALUES ( #{userId}, #{password}, #{email}, #{nickname}, #{phoneNumber}, #{profileImg}, #{regionAddress} )
 	</insert>
+	
+	<select id="countByUserId" parameterType="string" resultType="int">
+		SELECT COUNT(*) FROM users WHERE user_id = #{userId} AND is_deleted = 0
+	</select>
+	
+	<select id="selectByUserId" parameterType="string" resultType="UserDTO">
+		SELECT user_no, user_id, password, email, nickname, phone_number, profile_img, region_address, is_deleted
+    	FROM users
+    	WHERE user_id = #{userId}
+      	AND is_deleted = 0
+	</select>
+	
+	<update id="updateUser" parameterType="UserDTO">
+		update into USERS
+			set PROFILE_IMG = #{profileImg}, PASSWORD = #{password}, EMAIL = #{email}, 
+				NICKNAME = #{nickname},	PHONE_NUMBER = #{phoneNumber}
+		where USER_NO = #{userNo}
+	</update>
+	
+	<update id="updateUserWithdrawal" parameterType="long">
+		update into USERS
+			set IS_DELETED = #{isDeleted}, DELETED_AT = sysdate
+		where USER_NO = #{userNo}
+	</update>
 
 
 </mapper>

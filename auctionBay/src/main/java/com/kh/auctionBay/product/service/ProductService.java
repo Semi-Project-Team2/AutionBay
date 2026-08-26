@@ -18,4 +18,7 @@ public interface ProductService {
 	
 	// 카테고리 전부 조회하기
 	List<CategoryDTO> findAllCategories();
+	
+	// 조회수 증가
+	void increaseViewCount(Long productId);
 }

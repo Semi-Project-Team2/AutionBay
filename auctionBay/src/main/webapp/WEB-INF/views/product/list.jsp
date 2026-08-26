@@ -115,7 +115,7 @@
                 <a href="${pageContext.request.contextPath}/member/wishlist" class="quick-item">
                     <span>❤️</span>찜목록
                 </a>
-                <a href="${pageContext.request.contextPath}/message/list" class="quick-item">
+                <a href="${pageContext.request.contextPath}/message/received" class="quick-item">
                     <span>✉️</span>쪽지함
                 </a>
                 <a href="javascript:void(0);" class="quick-item" onclick="alert('최근 본 글 기능 준비중');">

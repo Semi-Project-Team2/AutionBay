@@ -49,6 +49,12 @@ public class ProductServiceImpl implements ProductService{
 	public List<CategoryDTO> findAllCategories() {
 		return mapper.selectCategories();
 	}
+
+	@Override
+	public void increaseViewCount(Long productId) {
+		mapper.updateViewCount(productId);
+	}
+	
 	
 	
 	

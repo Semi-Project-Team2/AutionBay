@@ -46,4 +46,11 @@ public interface AuctionMapper {
     // TxHistory테이블에 경매내역 INSERT
     void insertTxHistory(TxHistoryDTO txHistory);
     
+    // 찜 여부 조회
+    int checkIsLiked(Long userNo, Long productId);
+    
+    void deleteWish(Long userNo, Long productId);
+    
+    void insertWish(Long userNo, Long productId);
+    
 }
