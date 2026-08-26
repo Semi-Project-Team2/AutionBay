@@ -139,17 +139,15 @@
                 </c:choose>
             </div>
 
-            <!-- 페이징 바 -->
-            <div class="pagination">
-                <a class="page-btn" href="#">&lt; 이전</a>
-                <a class="page-btn active" href="#">1</a>
-                <a class="page-btn" href="#">2</a>
-                <a class="page-btn" href="#">3</a>
-                <a class="page-btn" href="#">4</a>
-                <a class="page-btn" href="#">5</a>
-                <a class="page-btn" href="#">다음 &gt;</a>
-            </div>
-        </div>
+			<!-- 페이징 바 (데이터가 있을 때만 보이거나 동적으로 처리) -->
+			<c:if test="${not empty recentList}">
+			    <div class="pagination">
+			        <!-- 만약 페이징 객체가 있다면 그 정보를 활용하고, 임시로 데이터가 적을 때 처리 -->
+			        <a href="#" class="page-btn">&lt; 이전</a>
+			        <a href="#" class="page-btn active">1</a>
+			        <a href="#" class="page-btn">다음 &gt;</a>
+			    </div>
+			</c:if>
 
     </div>
 </div>

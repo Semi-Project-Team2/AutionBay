@@ -114,38 +114,37 @@
                             <div class="no-data">최근 본 글이 없습니다.</div>
                         </c:when>
                         <c:otherwise>
-                            <c:forEach var="recent" items="${recentList}">
-                                <div class="board-card">
-                                    <div class="board-info">
-                                        <!-- 이미지 영역 (RecentViewDTO의 mainImage 필드 사용) -->
-                                        <c:choose>
-                                            <c:when test="${not empty recent.mainImage}">
-                                                <img src="${pageContext.request.contextPath}/resources/upload/${recent.mainImage}" class="board-thumb" alt="상품 이미지">
-                                            </c:when>
-                                            <c:otherwise>
-                                                <div class="board-thumb">img</div>
-                                            </c:otherwise>
-                                        </c:choose>
-                                        
-                                        <!-- 제목 링크 (RecentViewDTO의 title 및 productNo 필드 사용) -->
-                                        <a href="${pageContext.request.contextPath}/board/detail?no=${recent.productNo}" class="board-title">${recent.title}</a>
-                                    </div>
-                                </div>
-                            </c:forEach>
+							<c:forEach var="recent" items="${recentList}">
+							    <div class="board-card">
+							        <div class="board-info">
+							            <!-- 이미지 영역 (RecentViewDTO의 mainImage 필드 사용) -->
+							            <c:choose>
+							                <c:when test="${not empty recent.mainImage}">
+							                    <img src="${pageContext.request.contextPath}/resources/upload/${recent.mainImage}" class="board-thumb" alt="상품 이미지">
+							                </c:when>
+							                <c:otherwise>
+							                    <div class="board-thumb">img</div>
+							                </c:otherwise>
+							            </c:choose>
+							            
+							            <!-- 팀원이 만든 진짜 상세 주소(/auction/{id}/detail)로 수정 완료 -->
+							            <a href="${pageContext.request.contextPath}/auction/${recent.productNo}/detail" class="board-title">${recent.title}</a>
+							        </div>
+							    </div>
+							</c:forEach>
                         </c:otherwise>
                     </c:choose>
                 </div>
 
-                <!-- 페이징 바 -->
-                <div class="pagination">
-                    <a href="#" class="page-btn">&lt; 이전</a>
-                    <a href="#" class="page-btn active">1</a>
-                    <a href="#" class="page-btn">2</a>
-                    <a href="#" class="page-btn">3</a>
-                    <a href="#" class="page-btn">4</a>
-                    <a href="#" class="page-btn">5</a>
-                    <a href="#" class="page-btn">다음 &gt;</a>
-                </div>
+				<!-- 페이징 바 (데이터가 있을 때만 보이거나 동적으로 처리) -->
+				<c:if test="${not empty recentList}">
+				    <div class="pagination">
+				        <!-- 만약 페이징 객체가 있다면 그 정보를 활용하고, 임시로 데이터가 적을 때 처리 -->
+				        <a href="#" class="page-btn">&lt; 이전</a>
+				        <a href="#" class="page-btn active">1</a>
+				        <a href="#" class="page-btn">다음 &gt;</a>
+				    </div>
+				</c:if>
 
             </div>
         </div>

@@ -193,7 +193,7 @@ public class MyPageController {
 		return "redirect:/mypage/txHistories";
 	}
 	
-	
+
 	/* ========================================================================= */
 	/*  [내 파트: 마이페이지 활동 내역 및 상품/댓글/찜 관리 컨트롤러]               */
 	/* ========================================================================= */
@@ -237,6 +237,24 @@ public class MyPageController {
 		return "mypage/comments";
 	}
 
+	/**
+	 * [찜 목록 페이지 이동 및 데이터 조회]
+	 * - 요청 URL: GET /mypage/wishlist
+	 * - 처리 과정:
+	 *    1. 로그인한 회원의 번호를 바탕으로 찜 등록한 상품 목록을 조회합니다.
+	 *    2. 조회된 찜 목록 데이터를 Model에 담아 "mypage/wishlist" 뷰로 전달합니다.
+	 */
+	@GetMapping("/wishlist")
+	public String myWishlist(HttpSession session, Model model) {
+		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		if (loginUser == null) {
+			return "redirect:/user/login";
+		}
+
+		List<WishlistDTO> wishlist = activityService.selectMyWishlist(loginUser.getUserNo());
+		model.addAttribute("wishlist", wishlist);
+		return "mypage/wishlist"; 
+	}
 
 	/**
 	 * [최근 본 상품 목록 페이지 이동 및 데이터 조회]
@@ -310,5 +328,5 @@ public class MyPageController {
 		boolean isDeleted = activityService.deleteMyComment(commentNo, loginUser.getUserNo());
 		return isDeleted ? "SUCCESS" : "FAIL";
 	}
-	
+
 }

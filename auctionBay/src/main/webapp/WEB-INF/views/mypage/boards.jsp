@@ -38,8 +38,8 @@
 <body>
 
 <div class="container">
-	<jsp:include page="/WEB-INF/views/common/header.jsp" />
-	
+   <jsp:include page="/WEB-INF/views/common/header.jsp" />
+   
     <div class="profile-box">
         <div class="profile-info-wrap">
             <div class="profile-img"></div>
@@ -48,7 +48,7 @@
                 <p>${sessionScope.loginUser.email}</p>
             </div>
         </div>
-        <a href="${pageContext.request.contextPath}/mypage/edit" class="btn-edit">회원 정보 수정</a>
+        <a href="${pageContext.request.contextPath}/mypage/profile/editForm" class="btn-edit">회원 정보 수정</a>
     </div>
 
     <div class="mypage-content">
@@ -71,28 +71,28 @@
             <div class="board-list" id="boardListContainer">
                 <c:choose>
                     <c:when test="${not empty boardList}">
-                        <c:forEach var="board" items="${boardList}">
-                            <%-- ProductDTO의 필드명인 productId 사용 --%>
-                            <c:set var="pNo" value="${board.productId}" />
-                            
-                            <div class="board-card" id="board-card-${pNo}">
-                                <div class="board-info">
-                                    <c:choose>
-                                        <c:when test="${not empty board.mainImage}">
-                                            <img src="${board.mainImage}" alt="썸네일" class="board-thumb">
-                                        </c:when>
-                                        <c:otherwise>
-                                            <div class="board-thumb" style="display:flex; align-items:center; justify-content:center; font-size:10px; color:#555;">이미지없음</div>
-                                        </c:otherwise>
-                                    </c:choose>
-                                    <a href="${pageContext.request.contextPath}/board/detail?no=${pNo}" class="board-title">${board.title}</a>
-                                </div>
-                                <div class="board-actions">
-                                    <a href="${pageContext.request.contextPath}/board/update?no=${pNo}" class="btn-action">수정</a>
-                                    <button type="button" class="btn-action" style="color: #c92a2a;" data-product-no="${pNo}" onclick="deleteBoard(this);">삭제</button>
-                                </div>
-                            </div>
-                        </c:forEach>
+						<c:forEach var="board" items="${boardList}">
+						    <c:set var="pNo" value="${board.productId}" />
+						    
+						    <div class="board-card" id="board-card-${pNo}">
+						        <div class="board-info">
+						            <c:choose>
+						                <c:when test="${not empty board.mainImage}">
+						                    <img src="${board.mainImage}" alt="썸네일" class="board-thumb">
+						                </c:when>
+						                <c:otherwise>
+						                    <div class="board-thumb" style="display:flex; align-items:center; justify-content:center; font-size:10px; color:#555;">이미지없음</div>
+						                </c:otherwise>
+						            </c:choose>
+						            <%-- 팀원이 만든 진짜 상세 주소(/auction/{id}/detail)로 수정 완료 --%>
+						            <a href="${pageContext.request.contextPath}/auction/${pNo}/detail" class="board-title">${board.title}</a>
+						        </div>
+						        <div class="board-actions">
+						            <a href="${pageContext.request.contextPath}/board/update?no=${pNo}" class="btn-action">수정</a>
+						            <button type="button" class="btn-action" style="color: #c92a2a;" data-product-no="${pNo}" onclick="deleteBoard(this);">삭제</button>
+						        </div>
+						    </div>
+						</c:forEach>
                     </c:when>
                     <c:otherwise>
                         <div class="board-card">
@@ -103,6 +103,16 @@
                     </c:otherwise>
                 </c:choose>
             </div>
+			
+            <!-- 게시글이 있을 때만 노출되는 페이징 바 영역 -->
+            <c:if test="${not empty boardList}">
+                <div class="pagination" style="display: flex; justify-content: center; gap: 5px; margin-top: 20px;">
+                    <a href="#" class="btn-action">&lt; 이전</a>
+                    <a href="#" class="btn-action" style="background-color: #ddd; font-weight: bold;">1</a>
+                    <a href="#" class="btn-action">다음 &gt;</a>
+                </div>
+            </c:if>
+
         </div>
     </div>
 </div>
