@@ -94,7 +94,7 @@ public class AuctionServiceImpl implements AuctionService{
 		
 		// 1. 마감 시간이 지났지만 아직 ONGOING 상태인 상품 리스트 조회
 	    List<ProductDTO> expiredProducts = mapper.selectExpiredOngoingProducts();
-	    System.out.println("마감시간 지난 아직 ONGOING 상품"+expiredProducts);
+//	    System.out.println("마감시간 지난 아직 ONGOING 상품"+expiredProducts);
 	    if (expiredProducts == null || expiredProducts.isEmpty()) {
 	        return;
 	    }

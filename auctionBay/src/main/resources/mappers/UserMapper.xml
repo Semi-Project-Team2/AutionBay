@@ -20,13 +20,15 @@
 	
 	<update id="updateUser" parameterType="UserDTO">
 		update into USERS
-		set PROFILE_IMG = #{profileImg}, PASSWORD = #{password}, EMAIL = #{email}, 
-			NICKNAME = #{nickname},	PHONE_NUMBER = #{phoneNumber}
+			set PROFILE_IMG = #{profileImg}, PASSWORD = #{password}, EMAIL = #{email}, 
+				NICKNAME = #{nickname},	PHONE_NUMBER = #{phoneNumber}
 		where USER_NO = #{userNo}
 	</update>
 	
 	<update id="updateUserWithdrawal" parameterType="long">
-	
+		update into USERS
+			set IS_DELETED = #{isDeleted}, DELETED_AT = sysdate
+		where USER_NO = #{userNo}
 	</update>
 
 

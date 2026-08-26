@@ -16,4 +16,10 @@ public interface UserService {
 	// 로그인
 	UserDTO login(String userId, String password);
 	
+	// 회원 정보 수정
+	int editProfile();
+	
+	// 회원 탈퇴
+	int withdraw(Long userNo);
+	
 }

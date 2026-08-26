@@ -1,17 +1,15 @@
 package com.kh.auctionBay.review.service;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 
+import com.kh.auctionBay.common.dto.PageInfo;
 import com.kh.auctionBay.review.model.dto.ReviewDTO;
+import com.kh.auctionBay.review.model.dto.ReviewResultList;
+import com.kh.auctionBay.review.model.dto.SearchCondition;
 import com.kh.auctionBay.review.model.dto.ReviewSummaryDTO;
 import com.kh.auctionBay.review.model.mapper.ReviewMapper;
 
 import lombok.RequiredArgsConstructor;
-
-
-import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
@@ -23,8 +21,22 @@ public class ReviewServiceImpl implements ReviewService {
 	 * 받은 후기 목록 조회
 	 */
 	@Override
-	public List<ReviewDTO> getReceivedReviews(Long userNo) {
-		List<ReviewDTO> receivedReviews = reviewMapper.selectReceivedReviews(userNo);
+	public ReviewResultList getReceivedReviews(SearchCondition condition) {
+		// 받은 후기 개수 조회
+		int totalCount = reviewMapper.selectReceivedReviewsCount(condition);
+		
+		// 페이징 정보 저장
+		int page = condition.getPage();
+		int size = condition.getSize();
+		PageInfo pageInfo = new PageInfo(page, size, totalCount);
+		
+		// offset을 pageInfo에서 가져오기
+		condition.setOffset(pageInfo.getOffset());
+		
+		// 받은 후기 리스트 조회 및 저장
+		ReviewResultList receivedReviews = new ReviewResultList(
+				 reviewMapper.selectReceivedReviews(condition),
+				 pageInfo);
 		
 		return receivedReviews;
 	}
@@ -33,9 +45,23 @@ public class ReviewServiceImpl implements ReviewService {
 	 * 보낸 후기 목록 조회
 	 */
 	@Override
-	public List<ReviewDTO> getSentReviews(Long userNo) {
-		List<ReviewDTO> sentReviews = reviewMapper.selectSentReviews(userNo);
+	public ReviewResultList getSentReviews(SearchCondition condition) {
+		// 보낸 후기 개수 조회
+		int totalCount = reviewMapper.selectSentReviewsCount(condition);
+		
+		// 페이징 정보 저장
+		int page = condition.getPage();
+		int size = condition.getSize();
+		PageInfo pageInfo = new PageInfo(page, size, totalCount);
+		
+		// offset을 pageInfo에서 가져오기
+		condition.setOffset(pageInfo.getOffset());
 
+		// 보낸 후기 리스트 조회 및 저장
+		ReviewResultList sentReviews = new ReviewResultList(
+				reviewMapper.selectSentReviews(condition),
+				pageInfo);
+		
 		return sentReviews;
 	}
 
