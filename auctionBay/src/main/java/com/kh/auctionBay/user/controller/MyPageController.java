@@ -1,6 +1,7 @@
 package com.kh.auctionBay.user.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,9 +10,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kh.auctionBay.activity.model.dto.MyCommentDTO;
+import com.kh.auctionBay.activity.model.dto.RecentViewDTO;
+import com.kh.auctionBay.activity.model.dto.WishlistDTO;
+import com.kh.auctionBay.activity.service.ActivityService;
 import com.kh.auctionBay.common.SessionConst;
+import com.kh.auctionBay.product.model.dto.ProductDTO;
 import com.kh.auctionBay.review.model.dto.ReviewDTO;
 import com.kh.auctionBay.review.model.dto.ReviewResultList;
 import com.kh.auctionBay.review.model.dto.SearchCondition;
@@ -35,11 +43,14 @@ public class MyPageController {
 	private final UserService userService;
 //	private final ProductService productService;
 	
+	// 팀원 코드를 건드리지 않기 위해 맨 아래에 추가하는 내 파트용 서비스 주입
+	private final ActivityService activityService;
+	
 	
 	/* ------------- 화면 이동 요청 --------------- */
 	
 	/**
- 	 * 거래 목록 화면
+	 * 거래 목록 화면
 	 * @param session
 	 * @param model
 	 * @return
@@ -182,5 +193,166 @@ public class MyPageController {
 		return "redirect:/mypage/txHistories";
 	}
 	
-	
+	/* ========================================================================= */
+	/*  [내 파트: 마이페이지 활동 내역 및 상품/댓글 관리 컨트롤러]                    */
+	/* ========================================================================= */
+
+	/**
+	 * [내가 작성한 게시글 목록 페이지 이동 및 데이터 조회]
+	 * - 요청 URL: GET /mypage/boards
+	 * - 처리 과정: 
+	 *    1. 세션에서 로그인된 회원 정보를 가져옵니다. 비로그인 시 로그인 페이지로 리다이렉트합니다.
+	 *    2. ActivityService를 통해 현재 회원이 작성한 상품 게시글 리스트를 조회합니다.
+	 *    3. 조회한 데이터를 Model에 담아 "mypage/boards" 뷰로 전달합니다.
+	 */
+	@GetMapping("/boards")
+	public String myBoardList(HttpSession session, Model model) {
+		// 1. 세션에서 로그인 유저 정보 추출
+		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		if (loginUser == null) {
+			return "redirect:/user/login"; // 비로그인 시 로그인 페이지로 이동
+		}
+
+		// 2. 서비스 호출하여 내가 작성한 게시글 리스트 조회
+		List<ProductDTO> boardList = activityService.selectMyBoardList(loginUser.getUserNo());
+		
+		// 3. 모델에 데이터 담아서 뷰(JSP)로 전달
+		model.addAttribute("boardList", boardList);
+		return "mypage/boards";
+	}
+
+	/**
+	 * [내가 작성한 댓글 목록 페이지 이동 및 데이터 조회]
+	 * - 요청 URL: GET /mypage/comments
+	 * - 처리 과정:
+	 *    1. 로그인 여부를 확인하고, 로그인된 회원의 번호로 작성한 댓글 목록을 조회합니다.
+	 *    2. 조회된 댓글 리스트를 Model에 담아 "mypage/comments" 뷰로 전달합니다.
+	 */
+	@GetMapping("/comments")
+	public String myCommentList(HttpSession session, Model model) {
+		// 1. 로그인 유효성 검사
+		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		if (loginUser == null) {
+			return "redirect:/user/login";
+		}
+
+		// 2. 서비스 호출하여 댓글 목록 조회
+		List<MyCommentDTO> commentList = activityService.selectMyCommentList(loginUser.getUserNo());
+		
+		// 3. 모델에 담기
+		model.addAttribute("commentList", commentList);
+		return "mypage/comments";
+	}
+
+	/**
+	 * [찜 목록 페이지 이동 및 데이터 조회]
+	 * - 요청 URL: GET /mypage/wishlist
+	 * - 처리 과정:
+	 *    1. 로그인한 회원의 번호를 바탕으로 찜 등록한 상품 목록을 조회합니다.
+	 *    2. 조회된 찜 목록 데이터를 Model에 담아 "mypage/wishlist" 뷰로 전달합니다.
+	 */
+	@GetMapping("/wishlist")
+	public String myWishlist(HttpSession session, Model model) {
+		// 1. 로그인 유효성 검사
+		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		if (loginUser == null) {
+			return "redirect:/user/login";
+		}
+
+		// 2. 찜 목록 데이터 조회
+		List<WishlistDTO> wishlist = activityService.selectMyWishlist(loginUser.getUserNo());
+		
+		// 3. 뷰로 전달
+		model.addAttribute("wishlist", wishlist);
+		return "mypage/wishlist"; 
+	}
+
+	/**
+	 * [최근 본 상품 목록 페이지 이동 및 데이터 조회]
+	 * - 요청 URL: GET /mypage/recent
+	 * - 처리 과정:
+	 *    1. 로그인한 회원의 최근 조회 히스토리 목록을 서비스로부터 가져옵니다.
+	 *    2. 조회된 최근 본 글 리스트를 Model에 담아 "mypage/recent" 뷰로 전달합니다.
+	 */
+	@GetMapping("/recent")
+	public String recentViews(HttpSession session, Model model) {
+		// 1. 로그인 유효성 검사
+		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		if (loginUser == null) {
+			return "redirect:/user/login";
+		}
+
+		// 2. 최근 본 상품 목록 조회
+		List<RecentViewDTO> recentList = activityService.selectRecentViews(loginUser.getUserNo());
+		
+		// 3. 뷰로 전달
+		model.addAttribute("recentList", recentList);
+		return "mypage/recent";
+	}
+
+	/**
+	 * [후기 목록 경로 예외 방지용 매핑]
+	 * - 요청 URL: GET /mypage/review/list (간혹 기존 뷰에서 이 주소를 찾을 때 404 에러를 막기 위함)
+	 * - 처리 과정: 기존 reviews 메서드와 동일하게 후기 목록 페이지를 띄워줍니다.
+	 */
+	@GetMapping("/review/list")
+	public String reviewListRedirect(HttpSession session, Model model, @ModelAttribute SearchCondition condition) {
+		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		if (loginUser == null) {
+			return "redirect:/user/login";
+		}
+		
+		condition.setUserNo(loginUser.getUserNo());
+		ReviewResultList receivedReviews = reviewService.getReceivedReviews(condition);
+		ReviewResultList sentReviews = reviewService.getSentReviews(condition);
+
+		model.addAttribute("receivedReviews", receivedReviews.getReviews());
+		model.addAttribute("sentReviews", sentReviews.getReviews());
+		
+		return "mypage/reviews"; // 실제 후기 페이지로 연결
+	}
+
+	/**
+	 * [내가 작성한 게시글 삭제 처리 (AJAX 비동기 통신)]
+	 * - 요청 URL: GET /mypage/deleteBoard?productNo=상품번호
+	 * - 처리 과정:
+	 *    1. 비동기 요청 시 파라미터로 넘어온 상품 번호(productNo)와 로그인 유저 번호를 확인합니다.
+	 *    2. 소프트 딜리트(삭제 상태값 변경) 방식을 통해 게시글 삭제 처리를 수행합니다.
+	 * - 응답 데이터: 처리가 성공하면 "SUCCESS", 실패하거나 비로그인 시 "FAIL" 문자열을 반환합니다.
+	 */
+	@GetMapping("/deleteBoard")
+	@ResponseBody 
+	public String deleteMyBoard(@RequestParam("productNo") Long productNo, HttpSession session) {
+		// 1. 비로그인 체크 (AJAX 요청이므로 문자열 "FAIL" 반환)
+		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		if (loginUser == null) {
+			return "FAIL";
+		}
+
+		// 2. 서비스 통해 소프트 딜리트 수행
+		boolean isDeleted = activityService.deleteMyBoard(productNo, loginUser.getUserNo());
+		return isDeleted ? "SUCCESS" : "FAIL";
+	}
+
+	/**
+	 * [내가 작성한 댓글 삭제 처리 (AJAX 비동기 통신)]
+	 * - 요청 URL: GET /mypage/deleteComment?commentNo=댓글번호
+	 * - 처리 과정:
+	 *    1. 전달받은 댓글 번호와 로그인 유저 번호를 검증합니다.
+	 *    2. 해당 댓글의 내용을 마스킹 처리('삭제된 댓글입니다.')하는 소프트 삭제를 수행합니다.
+	 * - 응답 데이터: 성공 시 "SUCCESS", 실패 시 "FAIL" 문자열을 비동기로 반환합니다.
+	 */
+	@GetMapping("/deleteComment")
+	@ResponseBody 
+	public String deleteMyComment(@RequestParam("commentNo") Long commentNo, HttpSession session) {
+		// 1. 비로그인 체크
+		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		if (loginUser == null) {
+			return "FAIL";
+		}
+
+		// 2. 서비스 통해 댓글 마스킹 삭제 수행
+		boolean isDeleted = activityService.deleteMyComment(commentNo, loginUser.getUserNo());
+		return isDeleted ? "SUCCESS" : "FAIL";
+	}
 }

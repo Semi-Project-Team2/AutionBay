@@ -72,8 +72,8 @@
                 <c:choose>
                     <c:when test="${not empty boardList}">
                         <c:forEach var="board" items="${boardList}">
-                            <%-- 에러가 나지 않도록 productNo만 명시적으로 사용 --%>
-                            <c:set var="pNo" value="${board.productNo}" />
+                            <%-- ProductDTO의 필드명인 productId 사용 --%>
+                            <c:set var="pNo" value="${board.productId}" />
                             
                             <div class="board-card" id="board-card-${pNo}">
                                 <div class="board-info">

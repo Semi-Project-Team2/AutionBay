@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.kh.auctionBay.activity.model.dto.MyBoardDTO;
 import com.kh.auctionBay.activity.model.dto.MyCommentDTO;
 import com.kh.auctionBay.activity.model.dto.RecentViewDTO;
 import com.kh.auctionBay.activity.model.dto.WishlistDTO;
 import com.kh.auctionBay.activity.model.mapper.ActivityMapper;
+import com.kh.auctionBay.product.model.dto.ProductDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,10 +28,10 @@ public class ActivityServiceImpl implements ActivityService {
 	 * [1. 내가 작성한 게시글 목록 조회 로직]
 	 * - 요청 데이터: 로그인한 회원의 번호 (userNo)
 	 * - 처리 과정: Mapper를 호출하여 해당 회원이 작성한 게시글 리스트를 가져옵니다.
-	 * - 반환 데이터: List<MyBoardDTO> 형태의 게시글 목록
+	 * - 반환 데이터: List<ProductDTO> 형태의 게시글 목록
 	 */
 	@Override
-	public List<MyBoardDTO> selectMyBoardList(Long userNo) {
+	public List<ProductDTO> selectMyBoardList(Long userNo) {
 		return activityMapper.selectMyBoardList(userNo);
 	}
 	
