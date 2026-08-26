@@ -93,5 +93,19 @@ public class UserContoller {
 		
 		return "redirect:/";
 	}
+	
+	@GetMapping("/withdraw")
+	public String withdraw(HttpSession session, RedirectAttributes redirectAttr) {
+		// 세션에 저장된 사용자 정보 추출
+		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		
+		// 서비스에 비즈니스 로직 요청
+		service.withdraw(loginUser.getUserNo());
+		
+		// 세션 영역에서 모든 데이터 삭제 (세션 만료시키기)
+		session.invalidate();
+		
+		return "redirect:/";
+	}
 
 }

@@ -60,6 +60,36 @@
         .review-body p { font-size: 14px; color: #444; line-height: 1.4; }
         
         .no-data { background-color: #e2e2e2; padding: 40px; text-align: center; border-radius: 6px; color: #777; font-size: 14px; }
+
+        /* 페이징 바 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            margin-top: 20px;
+        }
+
+        .page-btn {
+            padding: 6px 12px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            color: #333;
+            text-decoration: none;
+            border-radius: 3px;
+            font-size: 13px;
+        }
+
+        .page-btn.active {
+            background-color: #222;
+            color: #fff;
+            border-color: #222;
+            font-weight: bold;
+        }
+
+        .page-btn:hover:not(.active) {
+            background-color: #f1f1f1;
+        }
     </style>
 </head>
 <body>
@@ -108,18 +138,41 @@
                 <div id="receivedSection" class="review-section active">
                     <c:choose>
                         <c:when test="${not empty receivedReviews}">
-                            <c:forEach var="r" items="${receivedReviews}">
+                            <c:forEach var="review" items="${receivedReviews}">
                                 <div class="review-item">
                                     <div class="review-header">
-                                        <span class="rating">⭐ ${r.rating}</span>
-                                        <span class="nickname">${r.reviewerNickname}</span>
-                                        <span class="time">${r.createdAtStr}</span>
+                                        <span class="rating">⭐ ${review.rating}</span>
+                                        <span class="nickname">${review.reviewerNickname}</span>
+                                        <span class="time">${review.createdAtStr}</span>
                                     </div>
                                     <div class="review-body">
-                                        <p>${r.content}</p>
+                                        <p>${review.content}</p>
                                     </div>
                                 </div>
                             </c:forEach>
+                            <div class="pagination">
+                                <%-- 페이징 바 --%>
+                                    <%-- 이전 페이지 그룹이 있을 경우 --%>
+                                    <c:if test="${receivedPageInfo.hasPrevGroup}">
+                                        <a class="page-btn"
+                                        href="/mypage/reviews?page=${receivedPageInfo.startPage - 1}">
+                                    &lt;&lt;</a>
+                                    </c:if>
+                                
+                                    <%-- 현재 페이지 그룹 표시 --%>
+                                    <c:forEach var="i" begin="${receivedPageInfo.startPage}"
+                                     end="${receivedPageInfo.endPage}">
+                                        <a class="page-btn"
+                                        href="/mypage/reviews?page=${i}">
+                                    ${i}</a>
+                                    </c:forEach>
+                                    <%-- 다음 페이지 그룹이 있을 경우 --%>
+                                    <c:if test="${receivedPageInfo.hasNextGroup}">
+                                        <a class="page-btn"
+                                        href="/mypage/reviews?page=${receivedPageInfo.endPage + 1}">
+                                    &gt;&gt;</a>
+                                    </c:if>
+                            </div>
                         </c:when>
                         <c:otherwise>
                             <div class="no-data">받은 후기가 없습니다.</div>
@@ -131,18 +184,41 @@
                 <div id="sentSection" class="review-section">
                     <c:choose>
                         <c:when test="${not empty sentReviews}">
-                            <c:forEach var="r" items="${sentReviews}">
+                            <c:forEach var="review" items="${sentReviews}">
                                 <div class="review-item">
                                     <div class="review-header">
-                                        <span class="rating">⭐ ${r.rating}</span>
-                                        <span class="nickname">${r.revieweeNickname}</span>
-                                        <span class="time">${r.createdAtStr}</span>
+                                        <span class="rating">⭐ ${review.rating}</span>
+                                        <span class="nickname">${review.revieweeNickname}</span>
+                                        <span class="time">${review.createdAtStr}</span>
                                     </div>
                                     <div class="review-body">
-                                        <p>${r.content}</p>
+                                        <p>${review.content}</p>
                                     </div>
                                 </div>
                             </c:forEach>
+                            <div class="pagination">
+                                <%-- 페이징 바 --%>
+                                    <%-- 이전 페이지 그룹이 있을 경우 --%>
+                                    <c:if test="${sentPageInfo.hasPrevGroup}">
+                                        <a class="page-btn"
+                                        href="/mypage/reviews?page=${sentPageInfo.startPage - 1}">
+                                    &lt;&lt;</a>
+                                    </c:if>
+                                
+                                    <%-- 현재 페이지 그룹 표시 --%>
+                                    <c:forEach var="i" begin="${sentPageInfo.startPage}"
+                                     end="${sentPageInfo.endPage}">
+                                        <a class="page-btn"
+                                        href="/mypage/reviews?page=${i}">
+                                    ${i}</a>
+                                    </c:forEach>
+                                    <%-- 다음 페이지 그룹이 있을 경우 --%>
+                                    <c:if test="${sentPageInfo.hasNextGroup}">
+                                        <a class="page-btn"
+                                        href="/mypage/reviews?page=${sentPageInfo.endPage + 1}">
+                                    &gt;&gt;</a>
+                                    </c:if>
+                            </div>
                         </c:when>
                         <c:otherwise>
                             <div class="no-data">보낸 후기가 없습니다.</div>

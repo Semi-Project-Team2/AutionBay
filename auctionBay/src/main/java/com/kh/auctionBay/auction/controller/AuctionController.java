@@ -22,7 +22,9 @@ import com.kh.auctionBay.common.dto.ApiResponse;
 import com.kh.auctionBay.product.model.dto.ProductDTO;
 import com.kh.auctionBay.product.service.ProductService;
 import com.kh.auctionBay.review.model.dto.ReviewDTO;
+import com.kh.auctionBay.review.model.dto.ReviewResultList;
 import com.kh.auctionBay.review.model.dto.ReviewSummaryDTO;
+import com.kh.auctionBay.review.model.dto.SearchCondition;
 import com.kh.auctionBay.review.service.ReviewService;
 import com.kh.auctionBay.user.model.dto.UserDTO;
 import com.kh.auctionBay.wish.model.dto.WishRequest;
@@ -45,7 +47,7 @@ public class AuctionController {
 	// 메인페이지에서 경매 관련 게시물을 클릭시
 	@GetMapping("/{productId}/detail")
 	public String auctionDetail(@PathVariable Long productId, 
-					HttpSession session, Model model) {
+					HttpSession session, Model model, SearchCondition condition) {
 		
 		// 세션 영역에서 로그인된 유저 가져오기
 		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
@@ -63,7 +65,9 @@ public class AuctionController {
 		ReviewSummaryDTO rs = reviewService.getAvgAndCountReview(product.getWriterNo());
 		
 		// 게시물 등록자의 받은 리뷰 보여주기용 리스트
-		List<ReviewDTO> reviewList = reviewService.getReceivedReviews(product.getWriterNo());
+		condition.setUserNo(product.getWriterNo());
+		List<ReviewDTO> reviewList = reviewService.getReceivedReviews(condition)
+									.getReviews();
 		
 		// 찜 여부 조회
 		boolean isLiked = false;
