@@ -193,8 +193,9 @@ public class MyPageController {
 		return "redirect:/mypage/txHistories";
 	}
 	
+	
 	/* ========================================================================= */
-	/*  [내 파트: 마이페이지 활동 내역 및 상품/댓글 관리 컨트롤러]                    */
+	/*  [내 파트: 마이페이지 활동 내역 및 상품/댓글/찜 관리 컨트롤러]               */
 	/* ========================================================================= */
 
 	/**
@@ -207,16 +208,12 @@ public class MyPageController {
 	 */
 	@GetMapping("/boards")
 	public String myBoardList(HttpSession session, Model model) {
-		// 1. 세션에서 로그인 유저 정보 추출
 		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
 		if (loginUser == null) {
-			return "redirect:/user/login"; // 비로그인 시 로그인 페이지로 이동
+			return "redirect:/user/login";
 		}
 
-		// 2. 서비스 호출하여 내가 작성한 게시글 리스트 조회
 		List<ProductDTO> boardList = activityService.selectMyBoardList(loginUser.getUserNo());
-		
-		// 3. 모델에 데이터 담아서 뷰(JSP)로 전달
 		model.addAttribute("boardList", boardList);
 		return "mypage/boards";
 	}
@@ -230,42 +227,16 @@ public class MyPageController {
 	 */
 	@GetMapping("/comments")
 	public String myCommentList(HttpSession session, Model model) {
-		// 1. 로그인 유효성 검사
 		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
 		if (loginUser == null) {
 			return "redirect:/user/login";
 		}
 
-		// 2. 서비스 호출하여 댓글 목록 조회
 		List<MyCommentDTO> commentList = activityService.selectMyCommentList(loginUser.getUserNo());
-		
-		// 3. 모델에 담기
 		model.addAttribute("commentList", commentList);
 		return "mypage/comments";
 	}
 
-	/**
-	 * [찜 목록 페이지 이동 및 데이터 조회]
-	 * - 요청 URL: GET /mypage/wishlist
-	 * - 처리 과정:
-	 *    1. 로그인한 회원의 번호를 바탕으로 찜 등록한 상품 목록을 조회합니다.
-	 *    2. 조회된 찜 목록 데이터를 Model에 담아 "mypage/wishlist" 뷰로 전달합니다.
-	 */
-	@GetMapping("/wishlist")
-	public String myWishlist(HttpSession session, Model model) {
-		// 1. 로그인 유효성 검사
-		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
-		if (loginUser == null) {
-			return "redirect:/user/login";
-		}
-
-		// 2. 찜 목록 데이터 조회
-		List<WishlistDTO> wishlist = activityService.selectMyWishlist(loginUser.getUserNo());
-		
-		// 3. 뷰로 전달
-		model.addAttribute("wishlist", wishlist);
-		return "mypage/wishlist"; 
-	}
 
 	/**
 	 * [최근 본 상품 목록 페이지 이동 및 데이터 조회]
@@ -276,40 +247,28 @@ public class MyPageController {
 	 */
 	@GetMapping("/recent")
 	public String recentViews(HttpSession session, Model model) {
-		// 1. 로그인 유효성 검사
 		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
 		if (loginUser == null) {
 			return "redirect:/user/login";
 		}
 
-		// 2. 최근 본 상품 목록 조회
 		List<RecentViewDTO> recentList = activityService.selectRecentViews(loginUser.getUserNo());
-		
-		// 3. 뷰로 전달
 		model.addAttribute("recentList", recentList);
 		return "mypage/recent";
 	}
 
 	/**
-	 * [후기 목록 경로 예외 방지용 매핑]
-	 * - 요청 URL: GET /mypage/review/list (간혹 기존 뷰에서 이 주소를 찾을 때 404 에러를 막기 위함)
-	 * - 처리 과정: 기존 reviews 메서드와 동일하게 후기 목록 페이지를 띄워줍니다.
+	 * [후기 목록 페이지 이동 (최근 본 글 등에서 접근 시)]
+	 * - 요청 URL: GET /mypage/review/list
+	 * - 처리 과정: 후기 관리 화면("mypage/reviews")으로 정상 연결합니다.
 	 */
 	@GetMapping("/review/list")
-	public String reviewListRedirect(HttpSession session, Model model, @ModelAttribute SearchCondition condition) {
+	public String reviewList(HttpSession session, Model model) {
 		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
 		if (loginUser == null) {
 			return "redirect:/user/login";
 		}
-		
-		condition.setUserNo(loginUser.getUserNo());
-		ReviewResultList receivedReviews = reviewService.getReceivedReviews(condition);
-		ReviewResultList sentReviews = reviewService.getSentReviews(condition);
-
-		model.addAttribute("receivedReviews", receivedReviews.getReviews());
-		model.addAttribute("sentReviews", sentReviews.getReviews());
-		
-		return "mypage/reviews"; // 실제 후기 페이지로 연결
+		return "mypage/reviews";
 	}
 
 	/**
@@ -323,13 +282,11 @@ public class MyPageController {
 	@GetMapping("/deleteBoard")
 	@ResponseBody 
 	public String deleteMyBoard(@RequestParam("productNo") Long productNo, HttpSession session) {
-		// 1. 비로그인 체크 (AJAX 요청이므로 문자열 "FAIL" 반환)
 		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
 		if (loginUser == null) {
 			return "FAIL";
 		}
 
-		// 2. 서비스 통해 소프트 딜리트 수행
 		boolean isDeleted = activityService.deleteMyBoard(productNo, loginUser.getUserNo());
 		return isDeleted ? "SUCCESS" : "FAIL";
 	}
@@ -345,14 +302,13 @@ public class MyPageController {
 	@GetMapping("/deleteComment")
 	@ResponseBody 
 	public String deleteMyComment(@RequestParam("commentNo") Long commentNo, HttpSession session) {
-		// 1. 비로그인 체크
 		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
 		if (loginUser == null) {
 			return "FAIL";
 		}
 
-		// 2. 서비스 통해 댓글 마스킹 삭제 수행
 		boolean isDeleted = activityService.deleteMyComment(commentNo, loginUser.getUserNo());
 		return isDeleted ? "SUCCESS" : "FAIL";
 	}
+	
 }
