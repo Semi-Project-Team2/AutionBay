@@ -168,8 +168,8 @@
             <c:choose>
                 <c:when test="${not empty wishlist}">
                     <c:forEach var="item" items="${wishlist}">
-                        <!-- 수정된 상세 페이지 이동 경로 -->
-                        <div class="product-card" onclick="location.href='${pageContext.request.contextPath}/board/detail?no=${item.productNo}'">
+                       
+                        <div class="product-card" onclick="location.href='${pageContext.request.contextPath}/auction/${item.productNo}/detail'">
                             <div class="product-img">
                                 <c:choose>
                                     <c:when test="${not empty item.mainImage}">

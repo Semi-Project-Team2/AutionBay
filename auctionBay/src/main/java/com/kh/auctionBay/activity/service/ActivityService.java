@@ -2,10 +2,10 @@ package com.kh.auctionBay.activity.service;
 
 import java.util.List;
 
-import com.kh.auctionBay.activity.dto.MyBoardDTO;
-import com.kh.auctionBay.activity.dto.MyCommentDTO;
-import com.kh.auctionBay.activity.dto.RecentViewDTO;
-import com.kh.auctionBay.activity.dto.WishlistDTO;
+import com.kh.auctionBay.activity.model.dto.MyBoardDTO;
+import com.kh.auctionBay.activity.model.dto.MyCommentDTO;
+import com.kh.auctionBay.activity.model.dto.RecentViewDTO;
+import com.kh.auctionBay.activity.model.dto.WishlistDTO;
 
 public interface ActivityService {
 

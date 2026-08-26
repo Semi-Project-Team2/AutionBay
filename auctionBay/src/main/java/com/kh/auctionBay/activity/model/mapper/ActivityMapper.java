@@ -1,14 +1,14 @@
-package com.kh.auctionBay.activity.mapper;
+package com.kh.auctionBay.activity.model.mapper;
 
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.kh.auctionBay.activity.dto.MyBoardDTO;
-import com.kh.auctionBay.activity.dto.MyCommentDTO;
-import com.kh.auctionBay.activity.dto.RecentViewDTO;
-import com.kh.auctionBay.activity.dto.WishlistDTO;
+import com.kh.auctionBay.activity.model.dto.MyBoardDTO;
+import com.kh.auctionBay.activity.model.dto.MyCommentDTO;
+import com.kh.auctionBay.activity.model.dto.RecentViewDTO;
+import com.kh.auctionBay.activity.model.dto.WishlistDTO;
 @Mapper
 public interface ActivityMapper {
 	List<MyBoardDTO> selectMyBoardList(Long userNo);
