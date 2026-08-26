@@ -1,8 +1,20 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-	
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>AuctionBay - 회원가입</title>
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/join.css">
+</head>
+<body>
+
+<div class="container">
+
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
-		
+
+<main class="container">
 
 			<h2 class="page-title">회원가입 </h2>
 
@@ -48,7 +60,9 @@
 
 			<div class="form-row">
 				<label>닉네임</label>
-				<input type="text" name="nickname" required>
+				<input type="text" name="nickname" id="nickname">
+				<button type="button" id="check-nickname-btn">중복확인</button>
+				<p id="check-nickname-result" class="form-tip"></p>
 			</div>
 
 			<div class="form-row">
@@ -73,6 +87,12 @@
 
 		</form>
 
-		
-<script src="/js/user.js"></script>	
+</main>
+
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
+
+</div>
+
+<script src="/js/user.js"></script>
+</body>
+</html>
