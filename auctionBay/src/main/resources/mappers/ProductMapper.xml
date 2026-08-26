@@ -122,15 +122,15 @@
 		OFFSET 건너뛸행수 ROWS
 		FETCH NEXT 조회할행수 ROWS ONLY
 	-->
-	OFFSET #{offset} ROWS
-	FETCH NEXT #{size} ROWS ONLY
-</select>
-
-<update id="updateViewCount">
-	UPDATE PRODUCTS
-	SET VIEW_COUNT = VIEW_COUNT + 1
-	WHERE PRODUCT_ID = #{productId}
-</update>
+		OFFSET #{offset} ROWS
+		FETCH NEXT #{size} ROWS ONLY
+	</select>
+	
+	<update id="updateViewCount">
+		UPDATE PRODUCTS
+		SET VIEW_COUNT = VIEW_COUNT + 1
+		WHERE PRODUCT_ID = #{productId}
+	</update>
 
 
 </mapper>
