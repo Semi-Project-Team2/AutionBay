@@ -16,6 +16,9 @@ public interface UserService {
 	// 닉네임 중복 체크
 	boolean isNicknameCheck(String nickname);
 	
+	// 이메일 중복 체크
+	boolean isEmailCheck(String email);
+	
 	// 로그인
 	UserDTO login(String userId, String password);
 	

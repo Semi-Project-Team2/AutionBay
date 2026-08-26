@@ -16,6 +16,9 @@ public interface UserMapper {
 	// 닉네임 중복 확인
 	int countByNickname(String nickname);
 	
+	// 이메일 중복 확인 
+	int countByEmail(String email);
+	
 	// 로그인
 	UserDTO selectByUserId(String userId);
 	

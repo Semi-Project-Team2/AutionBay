@@ -15,6 +15,10 @@
 		SELECT COUNT(*) FROM USERS WHERE NICKNAME = #{nickname} AND IS_DELETED = 0
 	</select>
 	
+	<select id="countByEmail" parameterType="string" resultType="int">
+		SELECT COUNT(*) FROM USERS WHERE EMAIL = #{email} AND IS_DELETED = 0
+	</select>
+	
 	<select id="selectByUserId" parameterType="string" resultType="UserDTO">
 		SELECT user_no, user_id, password, email, nickname, phone_number, profile_img, region_address, is_deleted
     	FROM users

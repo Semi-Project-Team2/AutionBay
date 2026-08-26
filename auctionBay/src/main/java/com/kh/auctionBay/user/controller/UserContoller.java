@@ -46,10 +46,14 @@ public class UserContoller {
 
 		try {
 			service.join(user, profileImage);
-		} catch (IOException e) {
+		} catch(IllegalStateException e){
+			redirectAttr.addFlashAttribute("error", "회원가입 실패");
+			return "redirect:/user/join";
+		} 
+		catch (IOException e) {
 			e.printStackTrace();
 			redirectAttr.addFlashAttribute("error", "회원가입 실패");
-			return "redirect:user/join";
+			return "redirect:/user/join";
 		}
 		redirectAttr.addFlashAttribute("joinSuccess", true);
 		return "redirect:/user/login";
@@ -77,6 +81,19 @@ public class UserContoller {
 		return ApiResponse.success(message, isDuplicate);
 		
 	}
+	
+	@GetMapping("/checkEmail")
+	@ResponseBody
+	public ApiResponse<Boolean> checkEmail(String email){
+		
+		boolean isDuplicate = service.isEmailCheck(email);
+		
+		String message = isDuplicate ? "이미 사용중인 이메일입니다." : "사용 가능한 이메일입니다.";
+		
+		return ApiResponse.success(message, isDuplicate);
+		
+	}
+	
 	
 
 	@PostMapping("/login")

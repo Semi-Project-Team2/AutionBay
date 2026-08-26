@@ -67,7 +67,9 @@
 
 			<div class="form-row">
 				<label>이메일</label>
-				<input type="email" name="email" required>
+				<input type="email" name="email" id="email">
+				<button type="button" id="check-email-btn">중복확인</button>
+				<p id="check-email-result" class="form-tip"></p>
 			</div>
 
 			<div class="form-row">

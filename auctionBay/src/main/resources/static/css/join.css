@@ -121,6 +121,38 @@
     background-color: #d1d1d1;
 }
 
+/* 이메일 입력칸 + 중복확인 버튼을 한 줄에 배치 */
+.form-row:has(#email) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.form-row:has(#email) label {
+    width: 100%;
+}
+
+.form-row:has(#email) #check-email-result {
+    width: 100%;
+}
+.form-row:has(#email) #email {
+    flex: 1;
+    margin-right: 6px;
+}
+.form-row #check-email-btn {
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #e2e2e2;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.form-row #check-email-btn:hover {
+    background-color: #d1d1d1;
+}
+
+
 /* 중복확인/비밀번호 확인 결과 메시지 */
 .form-tip {
     font-size: 12px;

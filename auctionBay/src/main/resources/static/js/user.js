@@ -55,8 +55,8 @@ nicknameInput.addEventListener("input", function(){
 const checkNicknameBtn = document.querySelector("#check-nickname-btn");
 checkNicknameBtn.addEventListener("click", async function() {
     const nickname = nicknameInput.value.trim();
-    // 아이디 값이 입력되지 않았을 경우, 요청 x
-    if (nickname.length === 0) {
+    
+	if (nickname.length === 0) {
         checkNicknameResult.textContent = "닉네임을 입력해주세요.";
         checkNicknameResult.className = "form-tip form-tip-error";
         checkNickname = null;
@@ -83,6 +83,47 @@ checkNicknameBtn.addEventListener("click", async function() {
         checkNicknameResult.className = "form-tip form-tip-error";
 
         checkNickname = null;
+    }
+});
+
+// 이메일 중복 체크
+let checkEmail = null;
+const checkEmailResult = document.querySelector("#check-email-result");
+const emailInput = document.querySelector("#email");
+emailInput.addEventListener("input", function(){
+	checkEmailResult.textContent = "";
+	checkEmail = null;
+});
+
+const checkEmailBtn = document.querySelector("#check-email-btn");
+checkEmailBtn.addEventListener("click", async function() {
+    const email = emailInput.value.trim();
+    
+	if (email.length === 0) {
+        checkEmailResult.textContent = "닉네임을 입력해주세요.";
+        checkEmailResult.className = "form-tip form-tip-error";
+        checkEmail = null;
+        return;
+    }
+    try {
+        const response = await fetch("/user/checkEmail?email=" + encodeURIComponent(email), {
+            method: "GET",
+            headers: { "X-Requested-With": "XMLHttpRequest" }
+        });
+
+        const result = await response.json();
+
+        checkEmailResult.textContent = result.message;
+        checkEmailResult.className = result.data ? "form-tip form-tip-error" : "form-tip form-tip-ok";
+
+        checkEmail = result.data ? null : email;
+    } catch (error) {
+        console.log(error);
+
+        checkEmailResult.textContent = "중복 확인 중 오류가 발생했습니다.";
+        checkEmailResult.className = "form-tip form-tip-error";
+
+        checkEmail = null;
     }
 });
 
@@ -134,4 +175,31 @@ function validatePwdConfirm(){
 password.addEventListener('input', validatePwdConfirm);
 passwordConfirm.addEventListener('input', validatePwdConfirm);
 
-
+const joinForm = document.querySelector("#join-form");
+joinForm.addEventListener("submit", function(e) {
+	
+	if (!checkId) {
+		e.preventDefault();
+		alert("아이디 중복확인을 진행해주세요.");
+		return;
+	}
+	
+	if (!checkNickname) {
+		e.preventDefault();
+		alert("닉네임 중복확인을 진행해주세요.");
+		return;
+	}
+	
+	if (!checkEmail) {
+		e.preventDefault();
+		alert("이메일 중복확인을 진행해주세요.");
+		return;
+	}
+	
+	if (!checkPwd) {
+		e.preventDefault();		// 기존 폼 제출 동작을 막기!
+		alert("비밀번호가 일치하지 않습니다.");
+		return;
+	}
+	
+});

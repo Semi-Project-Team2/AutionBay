@@ -20,6 +20,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
 
+
+
 	private final UserMapper mapper;
 	
 	private final PasswordEncoder passwordEncoder; // 비밀번호 암호화 인터페이스
@@ -70,6 +72,12 @@ public class UserServiceImpl implements UserService{
 		
 	}
 
+	@Override
+	public boolean isEmailCheck(String email) {
+
+		return mapper.countByEmail(email) > 0;
+		
+	}
 
 
 	@Override
