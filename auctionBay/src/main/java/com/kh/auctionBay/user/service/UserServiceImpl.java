@@ -81,17 +81,23 @@ public class UserServiceImpl implements UserService{
 
 
 	@Override
-	public int editProfile() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int editProfile(UserDTO loginUser) {
+		
+		return mapper.updateUser(loginUser);
 	}
 
+	@Override
+	public UserDTO getUserByUserNo(Long userNo) {
+		return mapper.selectByUserNo(userNo);
+	}
 
 	@Override
 	public int withdraw(Long userNo) {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return mapper.updateUserWithdrawal(userNo);
 	}
+
+
 
 	
 	

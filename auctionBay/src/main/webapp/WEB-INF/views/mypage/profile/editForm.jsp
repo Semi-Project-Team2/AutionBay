@@ -15,7 +15,10 @@
 
 
 
-		<form id="join-form" class="form form-flex" action="/user/join" method="post" enctype="multipart/form-data">
+		<form id="join-form" class="form form-flex"
+			action="${pageContext.request.contextPath}/mypage/profile/editForm"
+			method="post"
+			enctype="multipart/form-data">
 			<div class="form-row form-row-center">
 				<div class="profile-preview-wrap">
 					<div id="profile-preview-placeholder" class="profile-preview profile-preview-placeholder">사진없음
@@ -40,12 +43,12 @@
 
 			<div class="form-row">
 				<label>연락처</label>
-				<input type="text" name="phoneNumber" required>
+				<input type="text" name="phoneNumber" required value="${loginUser.phoneNumber}">
 			</div>
 
 			<div class="form-row">
 				<label>주소</label>
-				<input type="text" name="regionAddress" required>
+				<input type="text" name="regionAddress" required value="${loginUser.regionAddress}">
 			</div>
 
 

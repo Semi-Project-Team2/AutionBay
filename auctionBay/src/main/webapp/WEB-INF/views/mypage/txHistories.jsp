@@ -25,57 +25,23 @@
                     margin: 30px auto;
                 }
 
-                /* 1. 상단 프로필 영역 */
-                .profile-box {
-                    background-color: #e2e2e2;
-                    padding: 30px;
-                    border-radius: 6px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    margin-bottom: 30px;
-                }
-
-                .profile-info-wrap {
-                    display: flex;
-                    align-items: center;
-                    gap: 25px;
-                }
-
-                .profile-img {
-                    width: 80px;
-                    height: 80px;
-                    background-color: #222;
-                    border-radius: 50%;
-                }
-
-                .profile-text h2 {
-                    font-size: 22px;
-                    font-weight: bold;
-                    margin-bottom: 5px;
-                    color: #000;
-                }
-
-                .profile-text p {
-                    font-size: 14px;
-                    color: #555;
-                }
-
-                .btn-edit {
-                    background-color: #d4edda;
-                    border: 1px solid #c3e6cb;
-                    padding: 10px 20px;
-                    border-radius: 4px;
-                    text-decoration: none;
-                    color: #155724;
-                    font-weight: bold;
-                    font-size: 14px;
-                    cursor: pointer;
-                }
-
-                .btn-edit:hover {
-                    background-color: #c3e6cb;
-                }
+        /* 상단 프로필 영역 */
+        .profile-area {
+            background-color: #e2e2e2;
+            padding: 30px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        .profile-info { display: flex; align-items: center; gap: 20px; }
+        .profile-img { width: 70px; height: 70px; background-color: #333; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .profile-text h2 { font-size: 20px; font-weight: bold; margin-bottom: 5px; }
+        .profile-text p { font-size: 14px; color: #555; }
+        .profile-right { display: flex; gap: 10px; }
+        .btn-edit { background-color: #d4edda; border: 1px solid #c3e6cb; padding: 8px 15px; border-radius: 4px; font-weight: bold; color: #155724; cursor: pointer; text-decoration: none; font-size: 13px; }
+        .btn-withdraw { background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 8px 15px; border-radius: 4px; font-weight: bold; color: #721c24; cursor: pointer; text-decoration: none; font-size: 13px; }
 
                 /* 2. 메인 콘텐츠 영역 (사이드바 + 리스트) */
                 .mypage-content {
@@ -228,15 +194,18 @@
             <div class="container">
 
                 <!-- 1. 상단 프로필 영역 -->
-                <div class="profile-box">
-                    <div class="profile-info-wrap">
-                        <div class="profile-img"></div>
+                <div class="profile-area">
+                    <div class="profile-info">
+                        <div class="profile-img">IMG</div>
                         <div class="profile-text">
-                            <h2>${sessionScope.loginUser.nickname}</h2>
+                            <h2>${sessionScope.loginUser.nickname}님</h2>
                             <p>${sessionScope.loginUser.email}</p>
                         </div>
                     </div>
-                    <a href="${pageContext.request.contextPath}/mypage/profile/editForm" class="btn-edit">회원 정보 수정</a>
+                    <div class="profile-right">
+                        <a href="${pageContext.request.contextPath}/mypage/profile/editForm" class="btn-edit">회원 정보 수정</a>
+                        <a href="${pageContext.request.contextPath}/user/withdraw" class="btn-withdraw">회원 탈퇴</a>
+                    </div>
                 </div>
 
                 <!-- 2. 메인 콘텐츠 (사이드바 + 내용) -->
@@ -287,8 +256,19 @@
                                                 <span class="divider">|</span>
                                                 <span>${txHistory.completedAtStr}</span>
                                             </div>
-                                            <a href="${pageContext.request.contextPath}/mypage/review/writeForm?historyId=${txHistory.historyId}"
-                                                class="btn-review">후기 작성</a>
+                                            <c:choose>
+                                                <%-- 후기작성완료(reviewWrited값이 true)인 경우 작성 완료 --%>
+                                                <c:when test="${txHistory.reviewWrited == true}">
+                                                    <span class="review-completed">후기 작성 완료</span>
+                                                </c:when>
+                                                <%-- 후기 미작성(reviewWrited값이 false)인 경우 --%>
+                                                <c:when test="${txHistory.reviewWrited == false}">
+                                                    <a href="${pageContext.request.contextPath}/mypage/review/writeForm?historyId=${txHistory.historyId}"
+                                                    class="btn-review">
+                                                        후기작성
+                                                    </a>
+                                                </c:when>
+                                            </c:choose>
                                         </div>
                                     </c:forEach>
                                 </c:when>
@@ -310,7 +290,7 @@
                             </c:if>
                             <%-- 현재 페이지 그룹 표시 --%>
                             <c:forEach var="i" begin="${pageInfo.startPage}" end="${pageInfo.endPage}">
-                                <a class="page-btn"
+                                <a class="page-btn ${currentPage eq i  ? 'active' : ''}"
                                     href="/mypage/txHistories?page=${i}&keyword=${condition.keyword}">
                                     ${i}
                                 </a>
