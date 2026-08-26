@@ -300,3 +300,23 @@ wishBtn.addEventListener('click', async function() {
     }
 
 });
+
+// 쪽지 보내기
+const btnSendMessage = document.getElementById("btnSendMessage");
+
+if(btnSendMessage){
+	btnSendMessage.addEventListener('click', function (){
+		const productId = this.dataset.productId;
+		const receiverNo = this.dataset.receiverNo;
+		const redirectURL = this.dataset.redirectUrl;
+		
+		const url = '/message/write'
+					+ '?productId=' + productId
+					+ '&receiverNo=' + receiverNo
+					+ '&redirectURL=' + encodeURIComponent(redirectURL);
+					
+					location.href = url;
+	});
+}
+
+

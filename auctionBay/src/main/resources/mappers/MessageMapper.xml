@@ -39,8 +39,7 @@
             FROM MESSAGES m
             JOIN USERS u ON u.user_no = m.receiver_no
             JOIN PRODUCTS p ON p.product_id = m.product_id
-            WHERE m.sender_no = #{myNo}
-              AND m.sender_deleted = 0
+            WHERE m.sender_no = #{myNo} AND m.sender_deleted = 0
         )
         WHERE rn = 1
         ORDER BY created_at DESC

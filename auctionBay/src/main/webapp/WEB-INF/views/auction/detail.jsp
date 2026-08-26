@@ -583,7 +583,10 @@
                     <div class="seller-info">
                         <span class="seller-name" id="sellerNickname">유저 닉네임 : ${product.writerNickname}</span>
                     </div>
-                    <button type="button" class="btn-message" id="btnSendMessage">판매자에게 쪽지</button>
+                    <button type="button" class="btn-message" id="btnSendMessage" 
+							data-product-id="${product.productId}"
+							data-receiver-no="${product.writerNo}"
+							data-redirect-url="${pageContext.request.contextPath}/auction/${product.productId}/detail">판매자에게 쪽지</button>
                 </div>
                 <div class="seller-stats">
                     <div class="stat-item">
