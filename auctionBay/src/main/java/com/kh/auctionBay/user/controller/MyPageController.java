@@ -174,7 +174,7 @@ public class MyPageController {
 	@PostMapping("/user/edit")
 	public String editProfile(@ModelAttribute UserDTO user, HttpSession session, 
 			RedirectAttributes redirectAttr)
-	// addFlash어쩌고(자세한 내용은 실습코드를 참조하세요 ㅋ)
+	// addFlash어쩌고(자세한 내용은 실습코드를 참조하세요)
 				throws IllegalStateException, IOException {
 		
 		// 
