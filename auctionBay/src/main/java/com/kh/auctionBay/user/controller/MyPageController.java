@@ -204,7 +204,7 @@ public class MyPageController {
 	 *    2. ActivityService를 통해 현재 회원이 작성한 상품 게시글 리스트를 조회합니다.
 	 *    3. 조회한 데이터를 Model에 담아 "mypage/boards" 뷰로 전달합니다.
 	 */
-	@GetMapping("/boards")
+	@GetMapping("/products")
 	public String myBoardList(HttpSession session, Model model) {
 		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
 		if (loginUser == null) {
@@ -213,7 +213,7 @@ public class MyPageController {
 
 		List<ProductDTO> boardList = activityService.selectMyBoardList(loginUser.getUserNo());
 		model.addAttribute("boardList", boardList);
-		return "mypage/boards";
+		return "mypage/products";
 	}
 
 	/**
@@ -242,7 +242,7 @@ public class MyPageController {
 	 *    1. 로그인한 회원의 번호를 바탕으로 찜 등록한 상품 목록을 조회합니다.
 	 *    2. 조회된 찜 목록 데이터를 Model에 담아 "mypage/wishlist" 뷰로 전달합니다.
 	 */
-	@GetMapping("/wishlist")
+	@GetMapping("/wishlists")
 	public String myWishlist(HttpSession session, Model model) {
 		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
 		if (loginUser == null) {
@@ -251,7 +251,7 @@ public class MyPageController {
 
 		List<WishlistDTO> wishlist = activityService.selectMyWishlist(loginUser.getUserNo());
 		model.addAttribute("wishlist", wishlist);
-		return "mypage/wishlist"; 
+		return "mypage/wishlists"; 
 	}
 
 	/**
@@ -261,7 +261,7 @@ public class MyPageController {
 	 *    1. 로그인한 회원의 최근 조회 히스토리 목록을 서비스로부터 가져옵니다.
 	 *    2. 조회된 최근 본 글 리스트를 Model에 담아 "mypage/recent" 뷰로 전달합니다.
 	 */
-	@GetMapping("/recent")
+	@GetMapping("/recents")
 	public String recentViews(HttpSession session, Model model) {
 		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
 		if (loginUser == null) {
@@ -270,21 +270,7 @@ public class MyPageController {
 
 		List<RecentViewDTO> recentList = activityService.selectRecentViews(loginUser.getUserNo());
 		model.addAttribute("recentList", recentList);
-		return "mypage/recent";
-	}
-
-	/**
-	 * [후기 목록 페이지 이동 (최근 본 글 등에서 접근 시)]
-	 * - 요청 URL: GET /mypage/review/list
-	 * - 처리 과정: 후기 관리 화면("mypage/reviews")으로 정상 연결합니다.
-	 */
-	@GetMapping("/review/list")
-	public String reviewList(HttpSession session, Model model) {
-		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
-		if (loginUser == null) {
-			return "redirect:/user/login";
-		}
-		return "mypage/reviews";
+		return "mypage/recents";
 	}
 
 	/**
