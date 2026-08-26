@@ -65,6 +65,19 @@ public class UserContoller {
 
 		return ApiResponse.success(message, isDuplicate);
 	}
+	
+	@GetMapping("/checkNickname")
+	@ResponseBody
+	public ApiResponse<Boolean> checkNickname(String nickname){
+		
+		boolean isDuplicate = service.isNicknameCheck(nickname);
+		
+		String message = isDuplicate ? "이미 사용중인 닉네임입니다." : "사용 가능한 닉네임입니다.";
+		
+		return ApiResponse.success(message, isDuplicate);
+		
+	}
+	
 
 	@PostMapping("/login")
 	public String login(String userId, String password, @RequestParam(required = false) String redirectURL,

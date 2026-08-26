@@ -60,7 +60,15 @@ public class UserServiceImpl implements UserService{
 		return mapper.countByUserId(userId) > 0;
 		
 	}
+	
+	
 
+	@Override
+	public boolean isNicknameCheck(String nickname) {
+		
+		return mapper.countByNickname(nickname) > 0;
+		
+	}
 
 
 
