@@ -68,7 +68,7 @@ public class AuctionServiceImpl implements AuctionService{
 	    // 시퀀스를 안쓰면 useGeneratedKeys를 써야함
 	    int insertBidResult = mapper.insertBid(bidDTO);
 	    if (insertBidResult <= 0) {
-	        throw new RuntimeException("입찰 등록 중 오류가 발생했습니다.");
+	        return "입찰 등록 중 오류가 발생했습니다.";
 	    }
 	    Long generatedBidId = bidDTO.getBidId(); 
 
@@ -88,13 +88,12 @@ public class AuctionServiceImpl implements AuctionService{
 	}
 
 	@Scheduled(fixedDelay = 30000)
-	@Transactional
 	@Override
 	public void checkAndCloseAuctions() {
 		
 		// 1. 마감 시간이 지났지만 아직 ONGOING 상태인 상품 리스트 조회
 	    List<ProductDTO> expiredProducts = mapper.selectExpiredOngoingProducts();
-//	    System.out.println("마감시간 지난 아직 ONGOING 상품"+expiredProducts);
+	    System.out.println("마감시간 지난 아직 ONGOING 상품"+expiredProducts);
 	    if (expiredProducts == null || expiredProducts.isEmpty()) {
 	        return;
 	    }
