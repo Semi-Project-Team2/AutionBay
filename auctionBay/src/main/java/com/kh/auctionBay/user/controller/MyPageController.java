@@ -193,11 +193,9 @@ public class MyPageController {
 		return "redirect:/mypage/txHistories";
 	}
 	
-
 	/* ========================================================================= */
-	/*  [내 파트: 마이페이지 활동 내역 및 상품/댓글/찜 관리 컨트롤러]               */
+	/*   마이페이지 활동 내역 및 상품/댓글/찜 관리 컨트롤러            */
 	/* ========================================================================= */
-
 	/**
 	 * [내가 작성한 게시글 목록 페이지 이동 및 데이터 조회]
 	 * - 요청 URL: GET /mypage/boards
@@ -208,7 +206,7 @@ public class MyPageController {
 	 */
 	@GetMapping("/boards")
 	public String myBoardList(HttpSession session, Model model) {
-		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
 		if (loginUser == null) {
 			return "redirect:/user/login";
 		}
@@ -227,7 +225,7 @@ public class MyPageController {
 	 */
 	@GetMapping("/comments")
 	public String myCommentList(HttpSession session, Model model) {
-		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
 		if (loginUser == null) {
 			return "redirect:/user/login";
 		}
@@ -246,7 +244,7 @@ public class MyPageController {
 	 */
 	@GetMapping("/wishlist")
 	public String myWishlist(HttpSession session, Model model) {
-		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
 		if (loginUser == null) {
 			return "redirect:/user/login";
 		}
@@ -265,7 +263,7 @@ public class MyPageController {
 	 */
 	@GetMapping("/recent")
 	public String recentViews(HttpSession session, Model model) {
-		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
 		if (loginUser == null) {
 			return "redirect:/user/login";
 		}
@@ -282,7 +280,7 @@ public class MyPageController {
 	 */
 	@GetMapping("/review/list")
 	public String reviewList(HttpSession session, Model model) {
-		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
 		if (loginUser == null) {
 			return "redirect:/user/login";
 		}
@@ -300,7 +298,7 @@ public class MyPageController {
 	@GetMapping("/deleteBoard")
 	@ResponseBody 
 	public String deleteMyBoard(@RequestParam("productNo") Long productNo, HttpSession session) {
-		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
 		if (loginUser == null) {
 			return "FAIL";
 		}
@@ -320,7 +318,7 @@ public class MyPageController {
 	@GetMapping("/deleteComment")
 	@ResponseBody 
 	public String deleteMyComment(@RequestParam("commentNo") Long commentNo, HttpSession session) {
-		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
 		if (loginUser == null) {
 			return "FAIL";
 		}
@@ -328,5 +326,4 @@ public class MyPageController {
 		boolean isDeleted = activityService.deleteMyComment(commentNo, loginUser.getUserNo());
 		return isDeleted ? "SUCCESS" : "FAIL";
 	}
-
 }
