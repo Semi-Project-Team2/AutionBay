@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kh.auctionBay.board.model.mapper.BoardMapper">
+
+    <!-- ==================== 1. 게시글 관련 쿼리 ==================== -->
+
+    <!-- 게시글 상세 조회 (PRODUCTS + USERS 테이블 조인) -->
+    <select id="selectBoardDetail" parameterType="long" resultType="com.kh.auctionBay.board.model.dto.BoardDTO">
+        SELECT 
+            p.product_id AS boardId,
+            p.title AS title,
+            p.description AS content,
+            p.price AS price,
+            p.writer_no AS writerNo,
+            u.user_id AS memberId,
+            u.nickname AS nickname,
+            p.created_at AS createDate
+        FROM PRODUCTS p
+        LEFT JOIN USERS u ON p.writer_no = u.user_no
+        WHERE p.product_id = #{boardId}
+          AND p.is_deleted = 0
+    </select>
+
+    <!-- 게시글 미디어/이미지 목록 조회 (PRODUCT_MEDIA 테이블) -->
+    <select id="selectImagesByBoardId" parameterType="long" resultType="com.kh.auctionBay.board.model.dto.BoardImageDTO">
+        SELECT 
+            media_id AS imageId,
+            product_id AS boardId,
+            media_url AS imagePath,
+            thumbnail_url AS saveName,
+            media_type AS mediaType
+        FROM PRODUCT_MEDIA
+        WHERE product_id = #{boardId}
+        ORDER BY media_order ASC
+    </select>
+
+
+    <!-- ==================== 2. 댓글 관련 쿼리 ==================== -->
+
+    <!-- 댓글 목록 조회 (COMMENTS + USERS 테이블 조인) -->
+    <select id="selectCommentList" parameterType="long" resultType="com.kh.auctionBay.board.model.dto.CommentDTO">
+        SELECT 
+            c.comment_id AS commentId,
+            c.product_id AS boardId,
+            c.content,
+            c.created_at AS createDate,
+            c.writer_no AS memberId,
+            u.nickname AS nickname
+        FROM COMMENTS c
+        LEFT JOIN USERS u ON c.writer_no = u.user_no
+        WHERE c.product_id = #{boardId}
+        ORDER BY c.comment_id ASC
+    </select>
+
+    <!-- 댓글 작성 -->
+    <insert id="insertComment" parameterType="com.kh.auctionBay.board.model.dto.CommentDTO">
+        INSERT INTO COMMENTS (
+            product_id,
+            writer_no,
+            content,
+            created_at
+        ) VALUES (
+            #{boardId},
+            #{memberId},
+            #{content},
+            SYSDATE
+        )
+    </insert>
+
+    <!-- 댓글 작성자 번호 조회 (권한 검증용) -->
+    <select id="getCommentWriterNo" parameterType="long" resultType="java.lang.Long">
+        SELECT writer_no
+        FROM COMMENTS
+        WHERE comment_id = #{commentId}
+    </select>
+
+    <!-- 댓글 삭제 -->
+    <delete id="deleteComment" parameterType="long">
+        DELETE FROM COMMENTS
+        WHERE comment_id = #{commentId}
+    </delete>
+    
+    <!-- 게시글 수정 쿼리 -->
+	<update id="updateBoard" parameterType="com.kh.auctionBay.board.model.dto.BoardDTO">
+   		UPDATE PRODUCTS
+   		SET 
+        title = #{title},
+        description = #{content},
+        price = #{price}
+    	WHERE product_id = #{boardId}
+     	AND writer_no = #{writerNo} <!-- 본인 게시글 검증 -->
+	</update>
+	
+	<!-- 찜 여부 조회 -->
+    <select id="checkIsLiked" resultType="int">
+    	SELECT COUNT(*)
+    	FROM WISHLISTS
+    	WHERE USER_NO = #{userNo} AND PRODUCT_ID = #{productId}
+    </select>
+    
+    <delete id="deleteWish">
+    	delete from wishlists
+    	where user_no = #{userNo} and product_id = #{productId}
+    </delete>
+    	
+    <insert id="insertWish">
+    	insert into wishlists
+    	(user_no, product_id ) values (#{userNo}, #{productId})
+    </insert>
+
+</mapper>
