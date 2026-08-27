@@ -7,8 +7,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.auctionBay.product.model.dto.CategoryDTO;
+import com.kh.auctionBay.product.model.dto.ProductDTO;
 import com.kh.auctionBay.product.model.dto.ProductListResult;
 import com.kh.auctionBay.product.model.dto.ProductSearchCondition;
 import com.kh.auctionBay.product.service.ProductService;
@@ -34,4 +36,6 @@ public class ProductController {
         
         return "product/list"; // 메인 홈이자 상품 목록 뷰
     }
+    
+  
 }
