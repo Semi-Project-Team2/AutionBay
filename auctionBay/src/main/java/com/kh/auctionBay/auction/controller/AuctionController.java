@@ -17,12 +17,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.auctionBay.auction.model.dto.BidsDTO;
 import com.kh.auctionBay.auction.service.AuctionService;
+import com.kh.auctionBay.board.service.BoardService;
 import com.kh.auctionBay.common.SessionConst;
 import com.kh.auctionBay.common.dto.ApiResponse;
 import com.kh.auctionBay.product.model.dto.ProductDTO;
 import com.kh.auctionBay.product.service.ProductService;
 import com.kh.auctionBay.review.model.dto.ReviewDTO;
-import com.kh.auctionBay.review.model.dto.ReviewResultList;
 import com.kh.auctionBay.review.model.dto.ReviewSummaryDTO;
 import com.kh.auctionBay.review.model.dto.SearchCondition;
 import com.kh.auctionBay.review.service.ReviewService;
@@ -40,6 +40,7 @@ public class AuctionController {
 	private final AuctionService service;
 	private final ProductService productService;
 	private final ReviewService reviewService;
+	private final BoardService boardService;
 	
 	
 	// ------- 화면 이동 요청 ---------
@@ -72,7 +73,7 @@ public class AuctionController {
 		// 찜 여부 조회
 		boolean isLiked = false;
 		if(loginUser != null) {
-			isLiked = service.checkIsLiked(loginUser.getUserNo(),productId);
+			isLiked = boardService.checkIsLiked(loginUser.getUserNo(),productId);
 		}
 		
 		model.addAttribute("bidCount", bids.size());
@@ -108,25 +109,6 @@ public class AuctionController {
 		return "redirect:/auction/"+bidDTO.getProductId()+"/detail";
 	}
 	
-	@PostMapping("/wish")
-	@ResponseBody
-	public ResponseEntity<ApiResponse<Boolean>> wish(@RequestBody WishRequest wishRequest, HttpSession session){
-		
-		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
-		if(loginUser == null)
-			return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.fail("로그인이 필요합니다."));
-		
-		try {
-			boolean isLiked = service.toggleWish(loginUser.getUserNo(), wishRequest.getProductId());
-			
-			return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(isLiked));
-		
-		} catch (RuntimeException e) {
-			e.printStackTrace(); // 
-	        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.fail("찜 처리 중 문제가 발생했습니다. 다시 시도해주세요."));
-		}
-	}
-		
 	
 	
 }
