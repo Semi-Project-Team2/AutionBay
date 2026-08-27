@@ -97,21 +97,6 @@
     	(#{productId}, #{tradeType}, #{sellerNo}, #{buyerNo}, #{finalPrice})
     </insert>
     
-    <!-- 찜 여부 조회 -->
-    <select id="checkIsLiked" resultType="int">
-    	SELECT COUNT(*)
-    	FROM WISHLISTS
-    	WHERE USER_NO = #{userNo} AND PRODUCT_ID = #{productId}
-    </select>
     
-    <delete id="deleteWish">
-    	delete from wishlists
-    	where user_no = #{userNo} and product_id = #{productId}
-    </delete>
-    	
-    <insert id="insertWish">
-    	insert into wishlists
-    	(user_no, product_id ) values (#{userNo}, #{productId})
-    </insert>
 
 </mapper>
