@@ -14,4 +14,5 @@ import lombok.NoArgsConstructor;
 public class ReviewResultList {
 	private List<ReviewDTO> reviews;
 	private PageInfo pageInfo;
+	private String tab;		// 받은 후기 received, 보낸 후기 sent
 }

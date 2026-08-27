@@ -69,7 +69,10 @@
 </head>
 <body>
 
+	<jsp:include page="/WEB-INF/views/common/header.jsp"/>
 <div class="container">
+	
+	
   <h1>로그인</h1>
 
   <c:if test="${not empty error}">
@@ -101,6 +104,9 @@
   <div class="links">
     <a href="${pageContext.request.contextPath}/user/join">회원가입</a>
   </div>
+  
+  
+  <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 </div>
 
 </body>

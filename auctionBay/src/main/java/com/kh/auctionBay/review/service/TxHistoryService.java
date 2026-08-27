@@ -15,4 +15,7 @@ public interface TxHistoryService {
 	
 	// 거래 내역 추가
 	int addTxHistory(TxHistoryDTO tx) throws IllegalStateException, IOException;
+	
+	// 거래 후기 작성 여부 조회
+	boolean checkReviewWrited(Long historyId);
 }
