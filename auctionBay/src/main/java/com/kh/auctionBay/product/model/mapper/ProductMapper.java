@@ -3,6 +3,7 @@ package com.kh.auctionBay.product.model.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.kh.auctionBay.product.model.dto.CategoryDTO;
 import com.kh.auctionBay.product.model.dto.ProductDTO;
@@ -24,4 +25,12 @@ public interface ProductMapper {
     
     // 조회수 증가
     void updateViewCount(Long productId);
+    
+    int insertProduct(ProductDTO product);
+    
+    List<ProductDTO> selectProuctList();
+    
+    List<ProductDTO> selectProductByPrice(@Param("minPrice") Long minPrice, @Param("maxPrice") Long maxPrice);
+    
+   
 }

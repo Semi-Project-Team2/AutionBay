@@ -266,9 +266,9 @@ const wishBtn = document.getElementById('wishBtn');
 wishBtn.addEventListener('click', async function() {
     const productId = wishBtn.dataset.productId; // data-product-id 값을 가져옴
 
-    console.log("보낼 productId:", productId); // 👈 여기서 값이 콘솔에 잘 찍히는지 확인해보세요
+    
     try{
-        const response = await fetch('/auction/wish', {
+        const response = await fetch('/api/board/wish', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

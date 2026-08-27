@@ -122,15 +122,21 @@
 		OFFSET 건너뛸행수 ROWS
 		FETCH NEXT 조회할행수 ROWS ONLY
 	-->
-		OFFSET #{offset} ROWS
-		FETCH NEXT #{size} ROWS ONLY
-	</select>
-	
-	<update id="updateViewCount">
-		UPDATE PRODUCTS
-		SET VIEW_COUNT = VIEW_COUNT + 1
-		WHERE PRODUCT_ID = #{productId}
-	</update>
 
+	OFFSET #{offset} ROWS
+	FETCH NEXT #{size} ROWS ONLY
+</select>
+
+<update id="updateViewCount">
+	UPDATE PRODUCTS  
+	SET VIEW_COUNT = VIEW_COUNT + 1
+	WHERE PRODUCT_ID = #{productId}
+</update>
+>>>>>>> 0cf01d79352e45464d2a5a1e27f9ebd1a81ade89
+
+<insert id="insertProduct" >
+	INSERT INTO PRODUCTS (writer_no, category_id, trade_type, title, description, price, product_condition, auction_start_price, trade_location) 
+	VALUES (#{writerNo}, #{categoryId}, #{tradeType}, #{title}, #{description}, #{price}, #{productCondition}, #{auctionStartPrice}, #{tradeLocation})
+</insert>
 
 </mapper>
