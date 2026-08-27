@@ -92,21 +92,21 @@
             font-size: 15px;
         }
 
-        .right-quick-menu {
-            position: absolute;
-            top: 60px;
-            right: 0;
-            width: 75px;
-            background-color: #ffeef4;
-            border: 1px solid #ffccd5;
-            border-radius: 6px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 15px 0;
-            gap: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
+		.right-quick-menu {
+		    position: absolute;
+		    top: 120px;   /* 60px -> 120px로 조정, 필요하면 더 크게 */
+		    right: 0;
+		    width: 75px;
+		    background-color: #ffeef4;
+		    border: 1px solid #ffccd5;
+		    border-radius: 6px;
+		    display: flex;
+		    flex-direction: column;
+		    align-items: center;
+		    padding: 15px 0;
+		    gap: 20px;
+		    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+		}
         .quick-item {
             display: flex;
             flex-direction: column;
@@ -207,16 +207,18 @@
         </div>
 
         <aside class="right-quick-menu">
-            <a href="${pageContext.request.contextPath}/member/wishlist" class="quick-item">
+            <!-- 수정: /member/wishlist -> /mypage/wishlists (실제 매핑과 일치, 이 페이지 자기 자신) -->
+            <a href="${pageContext.request.contextPath}/mypage/wishlists" class="quick-item">
                 <span class="quick-icon">❤️</span>
                 <span>찜목록</span>
             </a>
-            <a href="${pageContext.request.contextPath}/message/list" class="quick-item">
+            <a href="${pageContext.request.contextPath}/message/received" class="quick-item">
                 <span class="quick-icon">✉️</span>
                 <span>쪽지함</span>
                 <span class="badge">1</span>
             </a>
-            <a href="${pageContext.request.contextPath}/mypage/recent" class="quick-item">
+            <!-- 수정: /mypage/recent -> /mypage/recents (실제 매핑과 일치) -->
+            <a href="${pageContext.request.contextPath}/mypage/recents" class="quick-item">
                 <span class="quick-icon">⏱️</span>
                 <span>최근 본 글</span>
             </a>

@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 public class MessageServiceImpl implements MessageService {
 	
 	private final MessageMapper mapper;
-
+	
 	@Override
 	public List<MessageDTO> findReceived(Long myNo) {
 		return mapper.findReceived(myNo);

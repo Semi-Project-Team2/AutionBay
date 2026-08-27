@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.kh.auctionBay.activity.model.dto.MyBoardDTO;
 import com.kh.auctionBay.activity.model.dto.MyCommentDTO;
 import com.kh.auctionBay.activity.model.dto.RecentViewDTO;
 import com.kh.auctionBay.activity.model.dto.WishlistDTO;
 import com.kh.auctionBay.activity.model.mapper.ActivityMapper;
+import com.kh.auctionBay.product.model.dto.ProductDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,11 +28,11 @@ public class ActivityServiceImpl implements ActivityService {
 	 * [1. 내가 작성한 게시글 목록 조회 로직]
 	 * - 요청 데이터: 로그인한 회원의 번호 (userNo)
 	 * - 처리 과정: Mapper를 호출하여 해당 회원이 작성한 게시글 리스트를 가져옵니다.
-	 * - 반환 데이터: List<MyBoardDTO> 형태의 게시글 목록
+	 * - 반환 데이터: List<ProductDTO> 형태의 게시글 목록
 	 */
 	@Override
-	public List<MyBoardDTO> selectMyBoardList(Long userNo) {
-		return activityMapper.selectMyBoardList(userNo);
+	public List<ProductDTO> selectMyProductList(Long userNo, String keyword) {
+	    return activityMapper.selectMyProductList(userNo, keyword);
 	}
 	
 	/**
@@ -75,8 +75,8 @@ public class ActivityServiceImpl implements ActivityService {
 	 * - 반환 데이터: 성공 시 true, 실패 시 false (boolean)
 	 */
 	@Override
-	public boolean deleteMyBoard(Long productNo, Long writerNo) {
-		int result = activityMapper.deleteMyBoard(productNo, writerNo);
+	public boolean deleteMyProduct(Long productNo, Long writerNo) {
+		int result = activityMapper.deleteMyProduct(productNo, writerNo);
 		return result > 0;
 	}
 
@@ -90,5 +90,15 @@ public class ActivityServiceImpl implements ActivityService {
 	public boolean deleteMyComment(Long commentNo, Long writerNo) {
 		int result = activityMapper.deleteMyComment(commentNo, writerNo);
 		return result > 0;
+	}
+	// ActivityServiceImpl.java
+	@Override
+	public boolean removeRecentView(long userNo, long productNo) {
+	    return activityMapper.deleteRecentView(userNo, productNo) > 0;
+	}
+
+	@Override
+	public boolean removeAllRecentViews(long userNo) {
+	    return activityMapper.deleteAllRecentViews(userNo) > 0;
 	}
 }
