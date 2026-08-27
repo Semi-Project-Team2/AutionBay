@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+<<<<<<< HEAD
 import org.springframework.web.multipart.MultipartFile;
+=======
+>>>>>>> 8cf98548894548fdb27aed648d58d46d3985c716
 
 import com.kh.auctionBay.product.model.dto.CategoryDTO;
 import com.kh.auctionBay.product.model.dto.ProductDTO;
@@ -43,6 +46,7 @@ public class ProductController {
         return "product/list"; // 메인 홈이자 상품 목록 뷰
     }
     
+<<<<<<< HEAD
 
     @GetMapping("/write")
     public String productWrite(Model model) {
@@ -71,3 +75,7 @@ public class ProductController {
   
 }
 
+=======
+  
+}
+>>>>>>> 8cf98548894548fdb27aed648d58d46d3985c716
