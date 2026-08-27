@@ -20,5 +20,8 @@ public interface TxHistoryMapper {
 	
 	// 거래 내역 추가
 	int insertTxHistory(TxHistoryDTO txHistory);
+	
+	// 거래 후기 작성 여부 조회
+	boolean selectReviewWrited(Long historyId);
 
 }

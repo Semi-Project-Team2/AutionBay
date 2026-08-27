@@ -31,4 +31,7 @@ public class TxHistoryDTO {
 	private String title;
 	// 거래내역 목록에서 보여줄 거래상대 닉네임
 	private String partnerNickname;
+	
+	// 거래 후기 작성 여부
+	private boolean reviewWrited;
 }

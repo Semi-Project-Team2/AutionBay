@@ -6,7 +6,7 @@ import com.kh.auctionBay.user.model.dto.UserDTO;
 
 @Mapper
 public interface UserMapper {
-	
+
 	// 회원가입
 	int insertUser(UserDTO user);	
 	
@@ -27,6 +27,9 @@ public interface UserMapper {
 	
 	// 회원 정보 수정
 	int updateUser(UserDTO user);
+	
+	// userNo로 회원 조회
+	UserDTO selectByUserNo(Long userNo);
 	
 	// 회원 탈퇴 (DB에는 남겨 두고 숨김 처리)
 	int updateUserWithdrawal(Long userNo);

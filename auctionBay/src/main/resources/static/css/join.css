@@ -225,6 +225,11 @@
     color: #999;
     font-size: 12px;
     text-align: center;
+
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
 }
 
 /* 프로필 버튼 그룹 정렬 */
