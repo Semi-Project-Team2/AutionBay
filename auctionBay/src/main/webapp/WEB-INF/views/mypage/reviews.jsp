@@ -99,21 +99,8 @@
     <jsp:include page="/WEB-INF/views/common/header.jsp" />
 
     <div class="container">
-        <!-- 상단 프로필 영역 -->
-        <div class="profile-area">
-            <div class="profile-info">
-                <div class="profile-img">IMG</div>
-                <div class="profile-text">
-                    <h2>${sessionScope.loginUser.nickname}님</h2>
-                    <p>${sessionScope.loginUser.email}</p>
-                </div>
-            </div>
-            <div class="profile-right">
-                <a href="${pageContext.request.contextPath}/mypage/profile/editForm" class="btn-edit">회원 정보 수정</a>
-                <a href="${pageContext.request.contextPath}/user/withdraw" class="btn-withdraw">회원 탈퇴</a>
-            </div>
-        </div>
-
+        <!-- 프로필 영역 포함 -->
+        <jsp:include page="/WEB-INF/views/mypage/profile/profile.jsp" />
         <!-- 메인 콘텐츠 영역 -->
         <div class="content-area">
             <!-- 사이드바 -->

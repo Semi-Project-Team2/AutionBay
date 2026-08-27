@@ -20,7 +20,7 @@ public interface UserService {
 	UserDTO login(String userId, String password);
 	
 	// 회원 정보 수정
-	int editProfile(UserDTO loginUser);
+	int editProfile(UserDTO loginUser, MultipartFile profileImg) throws IOException;
 	
 	// userNo로 user 정보 조회
 	UserDTO getUserByUserNo(Long userNo);

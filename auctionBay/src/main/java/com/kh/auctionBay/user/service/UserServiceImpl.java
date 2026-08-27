@@ -4,6 +4,7 @@ package com.kh.auctionBay.user.service;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -89,9 +90,23 @@ public class UserServiceImpl implements UserService{
 
 
 	@Override
-	public int editProfile(UserDTO loginUser) {
+	public int editProfile(UserDTO loginUser, MultipartFile profileImg)
+			throws IOException {
 		
-		return mapper.updateUser(loginUser);
+		SavedFile saved = uploadUtil.save(profileImg, profileUploadDir, "/uploads/profile");
+		if(saved != null) {
+			loginUser.setProfileImg(saved.getPath());
+		}
+		
+		try {
+			
+			return mapper.updateUser(loginUser);
+			
+		} catch (DataIntegrityViolationException e) {
+			
+			throw new RuntimeException("이미 사용중인 전화번호/이메입니다.");
+		}
+		
 	}
 
 	@Override

@@ -1,16 +1,17 @@
 package com.kh.auctionBay.user.controller;
 
 import java.io.IOException;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.auctionBay.common.SessionConst;
@@ -148,7 +149,22 @@ public class MyPageController {
 	 * @return
 	 */
 	@GetMapping("/profile/editForm")
-	public String editProfile() {
+	public String editProfile(HttpSession session, Model model) {
+		// 프로필 수정 페이지 진입 시 로그인된 사용자 정보 전달
+		// 아래 POST 메서드에서는 변경 실패 시 미리 수정했던 부분을 전달하기 위해 GET 메서드에서
+		// 따로 전달함
+		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		if (loginUser == null) {
+			return "redirect:/user/login";
+		}
+		
+		if (!model.containsAttribute("user")) {
+			// 처음 진입 시 세션정보(로그인 유저) 전달
+			// FlashAttribute가 전달한 값이 없으면 "user" 키에 loginUser를 담고,
+			// FlashAttribute가 전달한 값이 있으면 그 값을 유지
+			model.addAttribute("user", loginUser);
+		}
+		
 		return "mypage/profile/editForm";
 	}
 	
@@ -216,31 +232,38 @@ public class MyPageController {
 	 */
 	@PostMapping("/profile/editForm")
 	public String editProfile(@ModelAttribute UserDTO user, HttpSession session, 
-			RedirectAttributes redirectAttr)
-				throws IllegalStateException, IOException {
+			RedirectAttributes redirectAttr, 
+			@RequestParam(required=false) MultipartFile profileImage)
+				throws IllegalStateException, IOException,
+				SQLIntegrityConstraintViolationException {
 		
 		// 1. 로그인한 사용자 정보
 		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
 		if (loginUser == null) {
 			return "<script>alert('로그인이 필요합니다.'); location.href='/user/login';</script>";
 		}
+		
 		// 2. userNo를 로그인한 사용자의 것으로 set
 		user.setUserNo(loginUser.getUserNo());
 		
-		// 3. UserService 호출 후 저장된 값 업데이트
-		//		닉네임 중복 확인
-		int result = userService.editProfile(user);
-		
-		System.out.println(result);
-		
-		// 4. 로그인한 사용자 정보를 변경된 값으로 최신화
-		if (result > 0) {
-			UserDTO updatedUser = userService.getUserByUserNo(loginUser.getUserNo());
-			session.setAttribute(SessionConst.LOGIN_USER, updatedUser);
+		try {
+			// 3. UserService 호출 후 저장된 값 업데이트
+			//
+			int result = userService.editProfile(user, profileImage);
 			
-			redirectAttr.addAttribute("message", "프로필이 수정되었습니다.");
-		} else {
-			redirectAttr.addAttribute("message", "프로필 수정에 실패했습니다.");
+			if (result > 0) {
+				// 4. 로그인한 사용자 정보를 변경된 값으로 최신화
+				UserDTO updatedUser = userService.getUserByUserNo(loginUser.getUserNo());
+				session.setAttribute(SessionConst.LOGIN_USER, updatedUser);
+				redirectAttr.addFlashAttribute("message", "프로필이 수정되었습니다.");
+			}
+			
+		} catch (RuntimeException e) {
+			redirectAttr.addFlashAttribute("message", e.getMessage());
+			// 회원정보 수정에 실패하더라도 사용자가 입력했던 변경사항을 반영
+			redirectAttr.addFlashAttribute("user", user);
+			
+			return "redirect:/mypage/profile/editForm";
 		}
 		
 		return "redirect:/mypage/txHistories";
