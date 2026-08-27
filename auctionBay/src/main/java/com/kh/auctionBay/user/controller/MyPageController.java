@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -376,13 +377,13 @@ public class MyPageController {
 
 	/**
 	 * [내가 작성한 게시글 삭제 처리 (AJAX 비동기 통신)]
-	 * - 요청 URL: GET /mypage/deleteProduct?productNo=상품번호  (<- 수정)
+	 * - 요청 URL: DELETE /mypage/deleteProduct?productNo=상품번호
 	 * - 처리 과정:
 	 *    1. 비동기 요청 시 파라미터로 넘어온 상품 번호(productNo)와 로그인 유저 번호를 확인합니다.
 	 *    2. 소프트 딜리트(삭제 상태값 변경) 방식을 통해 게시글 삭제 처리를 수행합니다.
 	 * - 응답 데이터: 처리가 성공하면 "SUCCESS", 실패하거나 비로그인 시 "FAIL" 문자열을 반환합니다.
 	 */
-	@GetMapping("/deleteProduct")
+	@DeleteMapping("/deleteProduct") 
 	@ResponseBody 
 	public String deleteMyProduct(Long productNo, HttpSession session) {
 		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
@@ -396,15 +397,15 @@ public class MyPageController {
 
 	/**
 	 * [내가 작성한 댓글 삭제 처리 (AJAX 비동기 통신)]
-	 * - 요청 URL: GET /mypage/deleteComment?commentNo=댓글번호
+	 * - 요청 URL: DELETE /mypage/deleteComment?commentNo=댓글번호
 	 * - 처리 과정:
 	 *    1. 전달받은 댓글 번호와 로그인 유저 번호를 검증합니다.
 	 *    2. 해당 댓글의 내용을 마스킹 처리('삭제된 댓글입니다.')하는 소프트 삭제를 수행합니다.
 	 * - 응답 데이터: 성공 시 "SUCCESS", 실패 시 "FAIL" 문자열을 비동기로 반환합니다.
 	 */
-	@GetMapping("/deleteComment")
+	@DeleteMapping("/deleteComment")
 	@ResponseBody 
-	public String deleteMyComment( Long commentNo, HttpSession session) {
+	public String deleteMyComment(Long commentNo, HttpSession session) {
 		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
 		if (loginUser == null) {
 			return "FAIL";
@@ -416,19 +417,18 @@ public class MyPageController {
 	
 	/**
 	 * 최근 본 글 개별 삭제
-	 * 요청 URL: POST /mypage/recents/delete
+	 * 요청 URL: DELETE /mypage/recents/delete
 	 */
-	@PostMapping("/recents/delete")
+	@DeleteMapping("/recents/delete")
 	@ResponseBody
 	public ResponseEntity<String> deleteRecentView(
-			@RequestParam(value = "productNo", required = false) Long productNo, 
+			Long productNo, 
 			HttpSession session) {
 		
 		if (productNo == null) {
 			return ResponseEntity.badRequest().body("PRODUCT_NO_MISSING");
 		}
 
-		// SessionConst.LOGIN_USER로 세션키 통일
 		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
 		if (loginUser == null) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("LOGIN_REQUIRED");
@@ -440,12 +440,11 @@ public class MyPageController {
 
 	/**
 	 * 최근 본 글 전체 삭제
-	 * 요청 URL: POST /mypage/recents/clear
+	 * 요청 URL: DELETE /mypage/recents/clear
 	 */
-	@PostMapping("/recents/clear")
+	@DeleteMapping("/recents/clear")
 	@ResponseBody
 	public ResponseEntity<String> clearAllRecentViews(HttpSession session) {
-		// SessionConst.LOGIN_USER로 세션키 통일
 		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
 		if (loginUser == null) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("LOGIN_REQUIRED");

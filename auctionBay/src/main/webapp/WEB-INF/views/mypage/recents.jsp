@@ -181,62 +181,59 @@
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
 	<script>
-		// 개별 삭제
-		function deleteRecent(productNo, btnElement) {
-		    if (!confirm("해당 기록을 삭제하시겠습니까?")) return;
+			// 개별 삭제
+			function deleteRecent(productNo, btnElement) {
+			    if (!confirm("해당 기록을 삭제하시겠습니까?")) return;
 
-		    const params = new URLSearchParams();
-		    params.append('productNo', productNo);
+			    // URL 쿼리스트링으로 productNo 전달 및 method를 DELETE로 변경
+			    fetch('/mypage/recents/delete?productNo=' + productNo, {
+			        method: 'DELETE'
+			    })
+			    .then(res => {
+			        if (!res.ok) throw new Error("HTTP error " + res.status);
+			        return res.text();
+			    })
+			    .then(data => {
+			        if (data === 'SUCCESS') {
+			            const card = btnElement.closest('.board-card');
+			            card.remove();
 
-		    fetch('/mypage/recents/delete', {
-		        method: 'POST',
-		        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-		        body: params
-		    })
-		    .then(res => {
-		        if (!res.ok) throw new Error("HTTP error " + res.status);
-		        return res.text();
-		    })
-		    .then(data => {
-		        if (data === 'SUCCESS') {
-		            const card = btnElement.closest('.board-card');
-		            card.remove();
+			            const list = document.querySelector('.board-list');
+			            if (list.children.length === 0) {
+			                list.innerHTML = '<div class="no-data">최근 본 글이 없습니다.</div>';
+			                const pagination = document.querySelector('.pagination');
+			                const clearBtn = document.querySelector('.btn-clear-all');
+			                if (pagination) pagination.remove();
+			                if (clearBtn) clearBtn.remove();
+			            }
+			        } else {
+			            alert("삭제 실패: " + data);
+			        }
+			    })
+			    .catch(err => alert("오류 발생: " + err.message));
+			}
 
-		            const list = document.querySelector('.board-list');
-		            if (list.children.length === 0) {
-		                list.innerHTML = '<div class="no-data">최근 본 글이 없습니다.</div>';
-		                const pagination = document.querySelector('.pagination');
-		                const clearBtn = document.querySelector('.btn-clear-all');
-		                if (pagination) pagination.remove();
-		                if (clearBtn) clearBtn.remove();
-		            }
-		        } else {
-		            alert("삭제 실패: " + data);
-		        }
-		    })
-		    .catch(err => alert("오류 발생: " + err.message));
-		}
+			// 전체 삭제
+			function clearAllRecents() {
+			    if (!confirm("최근 본 글을 모두 삭제하시겠습니까?")) return;
 
-		// 전체 삭제
-		function clearAllRecents() {
-		    if (!confirm("최근 본 글을 모두 삭제하시겠습니까?")) return;
-
-		    fetch('/mypage/recents/clear', {
-		        method: 'POST'
-		    })
-		    .then(res => {
-		        if (!res.ok) throw new Error("HTTP error " + res.status);
-		        return res.text();
-		    })
-		    .then(data => {
-		        if (data === 'SUCCESS') {
-		            location.reload();
-		        } else {
-		            alert("삭제 실패: " + data);
-		        }
-		    })
-		    .catch(err => alert("오류 발생: " + err.message));
-		}
-	</script>
+			    // method를 DELETE로 변경
+			    fetch('/mypage/recents/clear', {
+			        method: 'DELETE'
+			    })
+			    .then(res => {
+			        if (!res.ok) throw new Error("HTTP error " + res.status);
+			        return res.text();
+			    })
+			    .then(data => {
+			        if (data === 'SUCCESS') {
+			            location.reload();
+			        } else {
+			            alert("삭제 실패: " + data);
+			        }
+			    })
+			    .catch(err => alert("오류 발생: " + err.message));
+			}
+		</script>
 </body>
 </html>

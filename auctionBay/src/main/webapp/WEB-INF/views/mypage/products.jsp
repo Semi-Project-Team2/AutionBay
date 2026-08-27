@@ -220,36 +220,39 @@
 
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
-    <script>
-    function deleteProduct(button) {
-        const productNo = button.getAttribute("data-product-no");
-        
-        if (!productNo || productNo === 'undefined' || productNo === '') {
-            alert("게시글 번호를 찾을 수 없습니다.");
-            return;
-        }
-        
-        if (!confirm("정말 이 게시글을 삭제하시겠습니까?")) {
-            return;
-        }
+	<script>
+	    function deleteProduct(button) {
+	        const productNo = button.getAttribute("data-product-no");
+	        
+	        if (!productNo || productNo === 'undefined' || productNo === '') {
+	            alert("게시글 번호를 찾을 수 없습니다.");
+	            return;
+	        }
+	        
+	        if (!confirm("정말 이 게시글을 삭제하시겠습니까?")) {
+	            return;
+	        }
 
-        fetch('${pageContext.request.contextPath}/mypage/deleteProduct?productNo=' + productNo)
-        .then(response => response.text())
-        .then(result => {
-            if (result.trim() === "SUCCESS") {
-                const card = document.getElementById('board-card-' + productNo);
-                if (card) card.remove();
-                alert("게시글이 성공적으로 삭제되었습니다.");
-            } else {
-                alert("게시글 삭제에 실패했습니다.");
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert("서버 통신 중 오류가 발생했습니다.");
-        });
-    }
-    </script>
+	        // fetch 요청 시 method: 'DELETE' 지정
+	        fetch('${pageContext.request.contextPath}/mypage/deleteProduct?productNo=' + productNo, {
+	            method: 'DELETE'
+	        })
+	        .then(response => response.text())
+	        .then(result => {
+	            if (result.trim() === "SUCCESS") {
+	                const card = document.getElementById('board-card-' + productNo);
+	                if (card) card.remove();
+	                alert("게시글이 성공적으로 삭제되었습니다.");
+	            } else {
+	                alert("게시글 삭제에 실패했습니다.");
+	            }
+	        })
+	        .catch(error => {
+	            console.error('Error:', error);
+	            alert("서버 통신 중 오류가 발생했습니다.");
+	        });
+	    }
+	    </script>
 
 </body>
 </html>s

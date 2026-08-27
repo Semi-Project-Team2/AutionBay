@@ -209,37 +209,41 @@
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
     <!-- 삭제 처리 JS -->
-    <script>
-    function deleteComment(button) {
-        const commentNo = button.getAttribute("data-comment-no");
-        
-        if (!confirm("정말 이 댓글을 삭제하시겠습니까?")) {
-            return;
-        }
+	<script>
+	    function deleteComment(button) {
+	        const commentNo = button.getAttribute("data-comment-no");
+	        
+	        if (!confirm("정말 이 댓글을 삭제하시겠습니까?")) {
+	            return;
+	        }
 
-        fetch('${pageContext.request.contextPath}/mypage/deleteComment?commentNo=' + commentNo)
-        .then(response => response.text())
-        .then(result => {
-            if (result.trim() === "SUCCESS") {
-                const card = document.getElementById('comment-card-' + commentNo);
-                if (card) {
-                    const contentSpan = card.querySelector('.comment-content');
-                    if (contentSpan) {
-                        contentSpan.innerText = '삭제된 댓글입니다.';
-                        contentSpan.classList.add('deleted');
-                    }
-                    button.remove();
-                }
-                alert("댓글이 성공적으로 삭제되었습니다.");
-            } else {
-                alert("댓글 삭제에 실패했습니다.");
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert("서버 통신 중 오류가 발생했습니다.");
-        });
-    }
+	        // fetch 요청 시 method: 'DELETE' 지정
+	        fetch('${pageContext.request.contextPath}/mypage/deleteComment?commentNo=' + commentNo, {
+	            method: 'DELETE'
+	        })
+	        .then(response => response.text())
+	        .then(result => {
+	            if (result.trim() === "SUCCESS") {
+	                const card = document.getElementById('comment-card-' + commentNo);
+	                if (card) {
+	                    const contentSpan = card.querySelector('.comment-content');
+	                    if (contentSpan) {
+	                        contentSpan.innerText = '삭제된 댓글입니다.';
+	                        contentSpan.classList.add('deleted');
+	                    }
+	                    button.remove();
+	                }
+	                alert("댓글이 성공적으로 삭제되었습니다.");
+	            } else {
+	                alert("댓글 삭제에 실패했습니다.");
+	            }
+	        })
+	        .catch(error => {
+	            console.error('Error:', error);
+	            alert("서버 통신 중 오류가 발생했습니다.");
+	        });
+	    }
+	    </script>
     </script>
 </body>
 </html>
