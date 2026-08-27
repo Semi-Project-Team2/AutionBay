@@ -3,6 +3,7 @@ package com.kh.auctionBay.product.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.auctionBay.common.dto.PageInfo;
 import com.kh.auctionBay.product.model.dto.CategoryDTO;
@@ -56,6 +57,44 @@ public class ProductServiceImpl implements ProductService{
 	}
 	
 	
+	@Override
+	public int createProduct(ProductDTO product, List<MultipartFile> images) {
+		
+		String tradeType = product.getTradeType();
+		
+		if("BUY".equals(tradeType)) {
+			product.setAuctionStartPrice(null);
+			product.setAuctionEndTime(null);
+		}
+		
+		else if("SELL".equals(tradeType)) {
+			product.setAuctionStartPrice(null);
+			product.setAuctionEndTime(null);
+		}
+		
+		else if("AUCTION".equals(tradeType)) {
+			product.setPrice(product.getAuctionStartPrice());
+		}
+		
+		else {
+			throw new IllegalArgumentException("잘못된 거래 방식입니다.");
+		}
+		
+		product.setStatus("ONGOING");
+		product.setViewCount(0L);
+		
+		int result = mapper.insertProduct(product);
+		
+		return result;
+	} 
 	
+	@Override
+	public List<ProductDTO> getProductList(){
+		return mapper.selectProuctList();
+	}
 	
+	@Override
+	public List<ProductDTO> getProductByPrice(Long minPrice, Long maxPrice){
+		return mapper.selectProductByPrice(minPrice, maxPrice);
+	}
 }

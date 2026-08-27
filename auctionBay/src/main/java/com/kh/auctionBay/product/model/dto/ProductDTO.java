@@ -5,10 +5,14 @@ import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class ProductDTO {
 //    product_id NUMBER(19) GENERATED ALWAYS AS IDENTITY,
 //    writer_no NUMBER(19) NOT NULL,
@@ -37,8 +41,8 @@ public class ProductDTO {
 	private String productCondition;
 	private Long auctionStartPrice;
 	private LocalDateTime auctionEndTime;
-	private int isDirect;
 	private String tradeLocation;
+	private int isDirect;
 	private String status;
 	private Long viewCount;
 	private LocalDateTime createdAt;

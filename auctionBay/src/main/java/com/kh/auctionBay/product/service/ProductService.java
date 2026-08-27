@@ -4,6 +4,8 @@ package com.kh.auctionBay.product.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.kh.auctionBay.product.model.dto.CategoryDTO;
 import com.kh.auctionBay.product.model.dto.ProductDTO;
 import com.kh.auctionBay.product.model.dto.ProductListResult;
@@ -21,4 +23,14 @@ public interface ProductService {
 	
 	// 조회수 증가
 	void increaseViewCount(Long productId);
+	
+	//게시글 작성
+	int createProduct(ProductDTO product, List<MultipartFile> images);
+	
+	//전체 게시물 조회
+	List<ProductDTO> getProductList();
+	
+	//가격 필터
+	List<ProductDTO> getProductByPrice(Long minPrice, Long maxPrice);
+	
 }

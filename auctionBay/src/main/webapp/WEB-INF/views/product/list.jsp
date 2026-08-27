@@ -40,6 +40,35 @@
 			        <c:forEach var="c" items="${categoryList}">
 			            <a class="filter-item ${condition.categoryId == c.categoryId ? 'active' : ''}" onclick="filterChange('categoryId', '${c.categoryId}')">${c.categoryName}</a>
 			        </c:forEach>
+			    </div>	
+			</div>
+			<div class="filter-row">
+			    <div class="filter-label">가격</div>
+
+			    <div class="filter-options price-filter">
+
+			        <input
+			            type="number"
+			            name="minPrice"
+			            id="minPrice"
+			            value="${condition.minPrice}"
+			            placeholder="최소 가격"
+			            min="0">
+
+			        <span>~</span>
+
+			        <input
+			            type="number"
+			            name="maxPrice"
+			            id="maxPrice"
+			            value="${condition.maxPrice}"
+			            placeholder="최대 가격"
+			            min="0">
+
+			        <button type="submit" class="price-search-btn">
+			            검색
+			        </button>
+
 			    </div>
 			</div>
         </div>
