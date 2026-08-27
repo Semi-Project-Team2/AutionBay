@@ -8,7 +8,11 @@
 	</insert>
 	
 	<select id="countByUserId" parameterType="string" resultType="int">
-		SELECT COUNT(*) FROM users WHERE user_id = #{userId} AND is_deleted = 0
+		SELECT COUNT(*) FROM USERS WHERE USER_ID = #{userId} AND IS_DELETED = 0
+	</select>
+	
+	<select id="countByNickname" parameterType="string" resultType="int">
+		SELECT COUNT(*) FROM USERS WHERE NICKNAME = #{nickname} AND IS_DELETED = 0
 	</select>
 	
 	<select id="selectByUserId" parameterType="string" resultType="UserDTO">
@@ -19,15 +23,23 @@
 	</select>
 	
 	<update id="updateUser" parameterType="UserDTO">
-		update into USERS
-			set PROFILE_IMG = #{profileImg}, PASSWORD = #{password}, EMAIL = #{email}, 
-				NICKNAME = #{nickname},	PHONE_NUMBER = #{phoneNumber}
+		update USERS
+			set PROFILE_IMG = #{profileImg}, EMAIL = #{email}, 
+				NICKNAME = #{nickname},	PHONE_NUMBER = #{phoneNumber},
+				REGION_ADDRESS = #{regionAddress}
 		where USER_NO = #{userNo}
 	</update>
 	
+	<select id="selectByUserNo" parameterType="long" resultType="UserDTO">
+		select user_no, user_id, password, email, nickname, phone_number, profile_img,
+				region_address, is_deleted
+		from USERS
+		where USER_NO = #{userNo}
+	</select>
+	
 	<update id="updateUserWithdrawal" parameterType="long">
-		update into USERS
-			set IS_DELETED = #{isDeleted}, DELETED_AT = sysdate
+		update USERS
+			set IS_DELETED = 1, DELETED_AT = sysdate
 		where USER_NO = #{userNo}
 	</update>
 

@@ -13,11 +13,17 @@ public interface UserService {
 	// 아이디 중복 체크
 	boolean isUserIdCheck(String userId);
 	
+	// 닉네임 중복 체크
+	boolean isNicknameCheck(String nickname);
+	
 	// 로그인
 	UserDTO login(String userId, String password);
 	
 	// 회원 정보 수정
-	int editProfile();
+	int editProfile(UserDTO loginUser, MultipartFile profileImg) throws IOException;
+	
+	// userNo로 user 정보 조회
+	UserDTO getUserByUserNo(Long userNo);
 	
 	// 회원 탈퇴
 	int withdraw(Long userNo);

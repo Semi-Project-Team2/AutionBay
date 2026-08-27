@@ -28,21 +28,19 @@
 		SELECT *
         FROM (
             SELECT M.MESSAGE_ID, M.SENDER_NO, M.RECEIVER_NO, M.PRODUCT_ID,
-                   m.content, m.is_read, m.created_at,
-                   u.nickname AS opponent_nickname,
-                   p.title AS product_title,
-                   p.status AS product_status,
-                   ROW_NUMBER() OVER (
-                       PARTITION BY m.product_id, m.receiver_no
-                       ORDER BY m.created_at DESC
-                   ) AS rn
-            FROM MESSAGES m
-            JOIN USERS u ON u.user_no = m.receiver_no
-            JOIN PRODUCTS p ON p.product_id = m.product_id
-            WHERE m.sender_no = #{myNo} AND m.sender_deleted = 0
+                   M.CONTENT, M.IS_READ, M.CREATED_AT,
+                   U.NICKNAME AS OPPONENT_NICKNAME,
+                   P.TITLE AS PRODUCT_TITLE,
+                   P.STATUS AS PRODUCT_STATUS,
+                   ROW_NUMBER() OVER (PARTITION BY M.PRODUCT_ID, M.RECEIVER_NO
+                   ORDER BY M.CREATED_AT DESC) AS RN
+            FROM MESSAGES M
+            JOIN USERS U ON U.USER_NO = M.RECEIVER_NO
+            JOIN PRODUCTS P ON P.PRODUCT_ID = M.PRODUCT_ID
+            WHERE M.SENDER_NO = #{myNo} AND M.SENDER_DELETED = 0
         )
-        WHERE rn = 1
-        ORDER BY created_at DESC
+        WHERE RN = 1
+        ORDER BY CREATED_AT DESC
 	</select>
 	
 	<!-- 쪽지 목록 -->

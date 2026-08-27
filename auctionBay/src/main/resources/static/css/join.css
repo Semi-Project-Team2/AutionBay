@@ -1,0 +1,206 @@
+/* 회원가입 페이지 전용 스타일 */
+
+.page-title {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* 에러 알림 */
+.alert {
+    padding: 10px 14px;
+    border-radius: 4px;
+    font-size: 13px;
+    margin-bottom: 16px;
+}
+.alert-error {
+    background-color: #fff0f0;
+    color: #d9364f;
+    border: 1px solid #f3c3c9;
+}
+
+/* 폼 전체 */
+.form {
+    max-width: 480px;
+	margin: 0 auto
+}
+
+.form-flex {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.form-row label {
+    font-size: 13px;
+    font-weight: bold;
+    color: #333;
+}
+
+.form-row input[type="text"],
+.form-row input[type="password"],
+.form-row input[type="email"] {
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    outline: none;
+    width: 100%;
+}
+.form-row input:focus {
+    border-color: #999;
+    background-color: #fff;
+}
+
+/* 아이디 입력칸 + 중복확인 버튼을 한 줄에 배치 */
+.form-row:has(#user-id) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.form-row:has(#user-id) label {
+    width: 100%;
+}
+
+.form-row:has(#user-id) #check-id-result {
+    width: 100%;
+}
+.form-row:has(#user-id) #user-id {
+    flex: 1;
+    margin-right: 6px;
+}
+.form-row #check-id-btn {
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #e2e2e2;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.form-row #check-id-btn:hover {
+    background-color: #d1d1d1;
+}
+
+/* 닉네임 입력칸 + 중복확인 버튼을 한 줄에 배치 */
+.form-row:has(#nickname) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.form-row:has(#nickname) label {
+    width: 100%;
+}
+
+.form-row:has(#nickname) #check-nickname-result {
+    width: 100%;
+}
+.form-row:has(#nickname) #nickname {
+    flex: 1;
+    margin-right: 6px;
+}
+.form-row #check-nickname-btn {
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #e2e2e2;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.form-row #check-nickname-btn:hover {
+    background-color: #d1d1d1;
+}
+
+/* 중복확인/비밀번호 확인 결과 메시지 */
+.form-tip {
+    font-size: 12px;
+    margin-top: 2px;
+}
+.form-tip.form-tip-ok {
+    color: #2b8a3e;
+}
+.form-tip.form-tip-error {
+    color: #d9364f;
+}
+
+/* 프로필 이미지 영역 */
+.form-row-center {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.profile-preview-wrap {
+    display: flex;
+    justify-content: center;
+}
+
+.profile-preview {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #ccc;
+}
+
+.profile-preview-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f1f3f5;
+    color: #999;
+    font-size: 12px;
+    text-align: center;
+
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+}
+
+.file-label {
+    display: inline-block;
+    padding: 8px 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #e2e2e2;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.file-label:hover {
+    background-color: #d1d1d1;
+}
+.file-label input[type="file"] {
+    display: none;
+}
+
+/* 가입 버튼 */
+.btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-primary {
+    width: 100%;
+    background-color: #333;
+    color: #fff;
+}
+.btn-primary:hover {
+    background-color: #000;
+}

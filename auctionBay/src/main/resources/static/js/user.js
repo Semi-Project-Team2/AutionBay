@@ -1,14 +1,17 @@
 // 아이디 중복 체크
 let checkId = null;		// 아이디 중복체크 값
 const checkIdResult = document.querySelector("#check-id-result");
-const memberIdInput = document.querySelector("#user-id");
-memberIdInput.addEventListener("input", function() {
+const userIdInput = document.querySelector("#user-id");
+userIdInput.addEventListener("input", function() {
     checkIdResult.textContent = "";
     checkId = null;
 });
+
+
+
 const checkIdBtn = document.querySelector("#check-id-btn");
 checkIdBtn.addEventListener("click", async function() {
-    const userId = memberIdInput.value.trim();
+    const userId = userIdInput.value.trim();
     // 아이디 값이 입력되지 않았을 경우, 요청 x
     if (userId.length === 0) {
         checkIdResult.textContent = "아이디를 입력해주세요.";
@@ -39,6 +42,50 @@ checkIdBtn.addEventListener("click", async function() {
         checkId = null;
     }
 });
+
+// 닉네임 중복 체크
+let checkNickname = null;
+const checkNicknameResult = document.querySelector("#check-nickname-result");
+const nicknameInput = document.querySelector("#nickname");
+nicknameInput.addEventListener("input", function(){
+	checkNicknameResult.textContent = "";
+	checkNickname = null;
+});
+
+const checkNicknameBtn = document.querySelector("#check-nickname-btn");
+checkNicknameBtn.addEventListener("click", async function() {
+    const nickname = nicknameInput.value.trim();
+    // 아이디 값이 입력되지 않았을 경우, 요청 x
+    if (nickname.length === 0) {
+        checkNicknameResult.textContent = "닉네임을 입력해주세요.";
+        checkNicknameResult.className = "form-tip form-tip-error";
+        checkNickname = null;
+        return;
+    }
+    try {
+        const response = await fetch("/user/checkNickname?nickname=" + encodeURIComponent(nickname), {
+            method: "GET",
+            headers: { "X-Requested-With": "XMLHttpRequest" }
+        });
+
+        // response.json() : json 응답을 자바스크립트 객체로 변경
+        const result = await response.json();
+
+        // console.log(result);
+        checkNicknameResult.textContent = result.message;
+        checkNicknameResult.className = result.data ? "form-tip form-tip-error" : "form-tip form-tip-ok";
+
+        checkNickname = result.data ? null : nickname;
+    } catch (error) {
+        console.log(error);
+
+        checkNicknameResult.textContent = "중복 확인 중 오류가 발생했습니다.";
+        checkNicknameResult.className = "form-tip form-tip-error";
+
+        checkNickname = null;
+    }
+});
+
 
 // 프로필 이미지 미리보기
 const profileImg = document.querySelector("#profile-image");
