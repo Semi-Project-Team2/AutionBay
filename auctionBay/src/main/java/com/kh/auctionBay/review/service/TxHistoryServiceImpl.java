@@ -50,6 +50,13 @@ public class TxHistoryServiceImpl implements TxHistoryService {
 		int result = txHistoryMapper.insertTxHistory(tx);
 		return result;
 	}
+
+	@Override
+	public boolean checkReviewWrited(Long historyId) {
+		return txHistoryMapper.selectReviewWrited(historyId);
+	}
+	
+	
 	
 	
 }
