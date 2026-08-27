@@ -204,16 +204,19 @@ public class MyPageController {
 	 *    2. ActivityService를 통해 현재 회원이 작성한 상품 게시글 리스트를 조회합니다.
 	 *    3. 조회한 데이터를 Model에 담아 "mypage/boards" 뷰로 전달합니다.
 	 */
+	
 	@GetMapping("/products")
-	public String myBoardList(HttpSession session, Model model) {
-		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
-		if (loginUser == null) {
-			return "redirect:/user/login";
-		}
+	public String MyProductList(String keyword, HttpSession session, Model model) {
+	    UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
+	    if (loginUser == null) {
+	        return "redirect:/user/login";
+	    }
 
-		List<ProductDTO> boardList = activityService.selectMyBoardList(loginUser.getUserNo());
-		model.addAttribute("boardList", boardList);
-		return "mypage/products";
+	    List<ProductDTO> productList = activityService.selectMyProductList(loginUser.getUserNo(), keyword); 
+	    model.addAttribute("productList", productList);
+	    model.addAttribute("keyword", keyword);
+
+	    return "mypage/products";
 	}
 
 	/**
@@ -281,15 +284,15 @@ public class MyPageController {
 	 *    2. 소프트 딜리트(삭제 상태값 변경) 방식을 통해 게시글 삭제 처리를 수행합니다.
 	 * - 응답 데이터: 처리가 성공하면 "SUCCESS", 실패하거나 비로그인 시 "FAIL" 문자열을 반환합니다.
 	 */
-	@GetMapping("/deleteBoard")
+	@GetMapping("/deleteProduct")
 	@ResponseBody 
-	public String deleteMyBoard(@RequestParam("productNo") Long productNo, HttpSession session) {
+	public String deleteMyProduct(Long productNo, HttpSession session) {
 		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
 		if (loginUser == null) {
 			return "FAIL";
 		}
 
-		boolean isDeleted = activityService.deleteMyBoard(productNo, loginUser.getUserNo());
+		boolean isDeleted = activityService.deleteMyProduct(productNo, loginUser.getUserNo());
 		return isDeleted ? "SUCCESS" : "FAIL";
 	}
 
@@ -303,7 +306,7 @@ public class MyPageController {
 	 */
 	@GetMapping("/deleteComment")
 	@ResponseBody 
-	public String deleteMyComment(@RequestParam("commentNo") Long commentNo, HttpSession session) {
+	public String deleteMyComment( Long commentNo, HttpSession session) {
 		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
 		if (loginUser == null) {
 			return "FAIL";

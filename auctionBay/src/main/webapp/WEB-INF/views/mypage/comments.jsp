@@ -62,6 +62,12 @@
     .comment-title:hover { text-decoration: underline; }
     .divider { color: #999; }
     .comment-content { color: #555; }
+    
+    /* 이미 삭제된 댓글 스타일 */
+    .comment-content.deleted {
+        color: #888;
+        font-style: italic;
+    }
 
     .btn-delete {
         background-color: #fff; border: 1px solid #ccc; padding: 6px 12px;
@@ -91,7 +97,7 @@
                 <p>${sessionScope.loginUser.email}</p>
             </div>
         </div>
-        <a href="${pageContext.request.contextPath}/mypage/edit" class="btn-edit">회원 정보 수정</a>
+        <a href="${pageContext.request.contextPath}/mypage/profile/editForm" class="btn-edit">회원 정보 수정</a>
     </div>
 
     <!-- 메인 콘텐츠 -->
@@ -100,11 +106,11 @@
 		<!-- 사이드바 -->
 		<nav class="sidebar">
 		    <ul>
-		        <li><a href="${pageContext.request.contextPath}/mypage/boards">게시글 관리</a></li>
+		        <li><a href="${pageContext.request.contextPath}/mypage/products">게시글 관리</a></li>
 		        <li><a href="${pageContext.request.contextPath}/mypage/comments" class="active">댓글 관리</a></li>
 		        <li><a href="${pageContext.request.contextPath}/mypage/txHistories">거래 내역</a></li>
-		        <li><a href="${pageContext.request.contextPath}/mypage/review/list">후기</a></li>
-		        <li><a href="${pageContext.request.contextPath}/mypage/recent">최근 본 글</a></li>
+		        <li><a href="${pageContext.request.contextPath}/mypage/reviews">후기</a></li>
+		        <li><a href="${pageContext.request.contextPath}/mypage/recents">최근 본 글</a></li>
 		    </ul>
 		</nav>
 
@@ -121,11 +127,17 @@
                         <c:forEach var="comment" items="${commentList}">
                             <div class="comment-card" id="comment-card-${comment.commentNo}">
                                 <div class="comment-info">
-                                    <a href="${pageContext.request.contextPath}/board/detail?no=${comment.productNo}" class="comment-title">${comment.productTitle}</a>
+                                    <a href="${pageContext.request.contextPath}/auction/${comment.productNo}/detail" class="comment-title">${comment.productTitle}</a>
                                     <span class="divider">|</span>
-                                    <span class="comment-content">${comment.content}</span>
+                                    
+                                    <!-- 내용이 '삭제된 댓글입니다.'인 경우 스타일 적용 클래스 추가 -->
+                                    <span class="comment-content ${comment.content eq '삭제된 댓글입니다.' ? 'deleted' : ''}">${comment.content}</span>
                                 </div>
-                                <a href="#" onclick="deleteComment(${comment.commentNo}); return false;" class="btn-delete">삭제</a>
+                                
+								<!-- 댓글 내용이 삭제 상태가 아닐 때만 삭제 버튼 출력 -->
+								<c:if test="${comment.content ne '삭제된 댓글입니다.'}">
+								    <a href="#" class="btn-delete" data-comment-no="${comment.commentNo}" onclick="deleteComment(this); return false;">삭제</a>
+								</c:if>
                             </div>
                         </c:forEach>
                     </c:when>
@@ -139,29 +151,26 @@
                 </c:choose>
             </div>
 
-			<!-- 페이징 바 (데이터가 있을 때만 보이거나 동적으로 처리) -->
-			<c:if test="${not empty recentList}">
+			<!-- 페이징 바 -->
+			<c:if test="${not empty commentList}">
 			    <div class="pagination">
-			        <!-- 만약 페이징 객체가 있다면 그 정보를 활용하고, 임시로 데이터가 적을 때 처리 -->
 			        <a href="#" class="page-btn">&lt; 이전</a>
 			        <a href="#" class="page-btn active">1</a>
 			        <a href="#" class="page-btn">다음 &gt;</a>
 			    </div>
 			</c:if>
 
+        </div>
     </div>
 </div>
 
 <!-- 공통 푸터 포함 -->
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
-<!-- 삭제 처리를 위한 자바스크립트 함수 추가 -->
+<!-- 삭제 처리를 위한 자바스크립트 함수 -->
 <script>
-function deleteComment(commentNo) {
-    if (!commentNo) {
-        alert("댓글 번호를 찾을 수 없습니다.");
-        return;
-    }
+function deleteComment(button) {
+    const commentNo = button.getAttribute("data-comment-no");
     
     if (!confirm("정말 이 댓글을 삭제하시겠습니까?")) {
         return;
@@ -171,8 +180,16 @@ function deleteComment(commentNo) {
     .then(response => response.text())
     .then(result => {
         if (result.trim() === "SUCCESS") {
+            const card = document.getElementById('comment-card-' + commentNo);
+            if (card) {
+                const contentSpan = card.querySelector('.comment-content');
+                if (contentSpan) {
+                    contentSpan.innerText = '삭제된 댓글입니다.';
+                    contentSpan.classList.add('deleted'); // 회색조 및 이탤릭체 적용
+                }
+                button.remove(); // 삭제 버튼 즉시 제거
+            }
             alert("댓글이 성공적으로 삭제되었습니다.");
-            location.reload(); // 새로고침하여 목록 반영
         } else {
             alert("댓글 삭제에 실패했습니다.");
         }

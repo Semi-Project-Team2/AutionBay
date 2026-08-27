@@ -118,11 +118,11 @@
             <!-- 사이드바 -->
             <nav class="sidebar">
                 <ul>
-                    <li><a href="${pageContext.request.contextPath}/mypage/boards">게시글 관리</a></li>
+                    <li><a href="${pageContext.request.contextPath}/mypage/products">게시글 관리</a></li>
                     <li><a href="${pageContext.request.contextPath}/mypage/comments">댓글 관리</a></li>
                     <li><a href="${pageContext.request.contextPath}/mypage/txHistories">거래 내역</a></li>
                     <li><a href="${pageContext.request.contextPath}/mypage/review/list" class="active">후기</a></li>
-                    <li><a href="${pageContext.request.contextPath}/mypage/recent">최근 본 글</a></li>
+                    <li><a href="${pageContext.request.contextPath}/mypage/recents">최근 본 글</a></li>
                 </ul>
             </nav>
 

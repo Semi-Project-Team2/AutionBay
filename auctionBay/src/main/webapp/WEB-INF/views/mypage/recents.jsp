@@ -12,7 +12,6 @@
         
         .container { width: 1200px; margin: 30px auto; }
 
-        /* 상단 프로필 영역 */
         .profile-box {
             background-color: #e2e2e2;
             padding: 30px;
@@ -32,10 +31,8 @@
         }
         .btn-edit:hover { background-color: #c3e6cb; }
 
-        /* 메인 콘텐츠 영역 (사이드바 + 리스트) */
         .mypage-content { display: flex; gap: 30px; align-items: flex-start; }
 
-        /* 사이드바 */
         .mypage-sidebar {
             width: 200px; background-color: #e2e2e2; border-radius: 6px;
             padding: 15px 0; display: flex; flex-direction: column; gap: 5px;
@@ -46,12 +43,10 @@
         .sidebar-item:hover { background-color: #d1d1d1; color: #000; }
         .sidebar-item.active { background-color: #c5c5c5; color: #000; font-weight: bold; }
 
-        /* 우측 리스트 섹션 */
         .mypage-main { flex: 1; min-width: 0; }
         .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .content-title { font-size: 18px; font-weight: bold; }
 
-        /* 게시글 리스트 카드 */
         .board-list { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
         .board-card {
             background-color: #e2e2e2; padding: 15px 20px; border-radius: 6px;
@@ -64,7 +59,6 @@
         
         .no-data { text-align: center; padding: 40px; color: #777; background-color: #e2e2e2; border-radius: 6px; }
 
-        /* 페이징 바 */
         .pagination { display: flex; justify-content: center; align-items: center; gap: 5px; margin-top: 20px; }
         .page-btn { padding: 6px 12px; border: 1px solid #ddd; background-color: #fff; color: #333; text-decoration: none; border-radius: 3px; font-size: 13px; }
         .page-btn.active { background-color: #222; color: #fff; border-color: #222; font-weight: bold; }
@@ -74,10 +68,8 @@
 <body>
 
     <div class="container">
-		<!-- 공통 헤더 포함 -->
 		<jsp:include page="/WEB-INF/views/common/header.jsp" />
         
-        <!-- 상단 프로필 영역 -->
         <div class="profile-box">
             <div class="profile-info-wrap">
                 <div class="profile-img"></div>
@@ -86,28 +78,24 @@
                     <p>${sessionScope.loginUser.email}</p>
                 </div>
             </div>
-            <a href="${pageContext.request.contextPath}/mypage/edit" class="btn-edit">회원 정보 수정</a>
+            <a href="${pageContext.request.contextPath}/mypage/profile/editForm" class="btn-edit">회원 정보 수정</a>
         </div>
 
-        <!-- 메인 콘텐츠 영역 (사이드바 + 리스트) -->
         <div class="mypage-content">
             
-            <!-- 사이드바 -->
 			<div class="mypage-sidebar">
-			    <a href="${pageContext.request.contextPath}/mypage/boards" class="sidebar-item">게시글 관리</a>
+			    <a href="${pageContext.request.contextPath}/mypage/products" class="sidebar-item">게시글 관리</a>
 			    <a href="${pageContext.request.contextPath}/mypage/comments" class="sidebar-item">댓글 관리</a>
 			    <a href="${pageContext.request.contextPath}/mypage/txHistories" class="sidebar-item">거래 내역</a>
-			    <a href="${pageContext.request.contextPath}/mypage/review/list" class="sidebar-item">후기</a>
-			    <a href="${pageContext.request.contextPath}/mypage/recent" class="sidebar-item active">최근 본 글</a>
+			    <a href="${pageContext.request.contextPath}/mypage/reviews" class="sidebar-item">후기</a>
+			    <a href="${pageContext.request.contextPath}/mypage/recents" class="sidebar-item active">최근 본 글</a>
 			</div>
 
-            <!-- 우측 리스트 섹션 -->
             <div class="mypage-main">
                 <div class="content-header">
                     <div class="content-title">마이페이지(최근 본 글)</div>
                 </div>
 
-                <!-- 최근 본 글 리스트 -->
                 <div class="board-list">
                     <c:choose>
                         <c:when test="${empty recentList}">
@@ -117,7 +105,6 @@
 							<c:forEach var="recent" items="${recentList}">
 							    <div class="board-card">
 							        <div class="board-info">
-							            <!-- 이미지 영역 (RecentViewDTO의 mainImage 필드 사용) -->
 							            <c:choose>
 							                <c:when test="${not empty recent.mainImage}">
 							                    <img src="${pageContext.request.contextPath}/resources/upload/${recent.mainImage}" class="board-thumb" alt="상품 이미지">
@@ -127,7 +114,6 @@
 							                </c:otherwise>
 							            </c:choose>
 							            
-							            <!-- 팀원이 만든 진짜 상세 주소(/auction/{id}/detail)로 수정 완료 -->
 							            <a href="${pageContext.request.contextPath}/auction/${recent.productNo}/detail" class="board-title">${recent.title}</a>
 							        </div>
 							    </div>
@@ -136,10 +122,8 @@
                     </c:choose>
                 </div>
 
-				<!-- 페이징 바 (데이터가 있을 때만 보이거나 동적으로 처리) -->
 				<c:if test="${not empty recentList}">
 				    <div class="pagination">
-				        <!-- 만약 페이징 객체가 있다면 그 정보를 활용하고, 임시로 데이터가 적을 때 처리 -->
 				        <a href="#" class="page-btn">&lt; 이전</a>
 				        <a href="#" class="page-btn active">1</a>
 				        <a href="#" class="page-btn">다음 &gt;</a>
@@ -150,9 +134,7 @@
         </div>
     </div>
 
-	<!-- 공통 푸터 포함 -->
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />
-	<!-- 공통 자바스크립트 포함 -->
 	<script src="${pageContext.request.contextPath}/js/mypage.js"></script>
 </body>
 </html>

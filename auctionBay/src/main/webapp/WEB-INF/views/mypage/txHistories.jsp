@@ -244,12 +244,12 @@
 
                     <!-- 사이드바 -->
                     <div class="mypage-sidebar">
-                        <a href="${pageContext.request.contextPath}/mypage/boards" class="sidebar-item">게시글 관리</a>
+                        <a href="${pageContext.request.contextPath}/mypage/products" class="sidebar-item">게시글 관리</a>
                         <a href="${pageContext.request.contextPath}/mypage/comments" class="sidebar-item">댓글 관리</a>
                         <a href="${pageContext.request.contextPath}/mypage/txHistories" class="sidebar-item active">거래
                             내역</a>
                         <a href="${pageContext.request.contextPath}/mypage/reviews" class="sidebar-item">후기</a>
-                        <a href="${pageContext.request.contextPath}/mypage/recent" class="sidebar-item">최근 본 글</a>
+                        <a href="${pageContext.request.contextPath}/mypage/recents" class="sidebar-item">최근 본 글</a>
                     </div>
 
                     <!-- 우측 거래 내역 리스트 -->

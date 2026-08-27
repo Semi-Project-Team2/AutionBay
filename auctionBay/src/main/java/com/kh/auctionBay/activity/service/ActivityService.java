@@ -9,8 +9,8 @@ import com.kh.auctionBay.product.model.dto.ProductDTO;
 
 public interface ActivityService {
 
-	// 1. 내가 작성한 게시글 목록 조회
-	List<ProductDTO> selectMyBoardList(Long userNo);
+	// 1. 내가 작성한 게시글 목록 조회 (검색어 파라미터 추가)
+	List<ProductDTO> selectMyProductList(Long userNo, String keyword);	
 
 	// 2. 내가 작성한 댓글 목록 조회
 	List<MyCommentDTO> selectMyCommentList(Long userNo);
@@ -22,7 +22,7 @@ public interface ActivityService {
 	List<RecentViewDTO> selectRecentViews(Long userNo);
 	
 	// 5. 내가 작성한 게시글 삭제
-	boolean deleteMyBoard(Long productNo, Long writerNo);
+	boolean deleteMyProduct(Long productNo, Long writerNo);
 
 	// 6. 내가 작성한 댓글 삭제
 	boolean deleteMyComment(Long commentNo, Long writerNo);

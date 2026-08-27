@@ -14,7 +14,7 @@ import com.kh.auctionBay.product.model.dto.ProductDTO;
 public interface ActivityMapper {
 	
 	// 1. 회원 번호(userNo)를 받아 해당 회원이 작성한 게시글 목록을 조회하는 메서드
-	List<ProductDTO> selectMyBoardList(Long userNo);
+	List<ProductDTO> selectMyProductList(Long userNo, String keyword);
 	
 	// 2. 회원 번호(userNo)를 받아 해당 회원이 작성한 댓글 목록을 조회하는 메서드
 	List<MyCommentDTO> selectMyCommentList(Long userNo);
@@ -26,8 +26,8 @@ public interface ActivityMapper {
 	List<RecentViewDTO> selectRecentViews(Long userNo);
 	
 	// 5. 내가 작성한 게시글 삭제 (성공 시 변경된 행 수 반환)
-	int deleteMyBoard(@Param("productNo") Long productNo, @Param("writerNo") Long writerNo);
+	int deleteMyProduct(Long productNo, Long writerNo);
 
 	// 6. 내가 작성한 댓글 삭제
-	int deleteMyComment(@Param("commentNo") Long commentNo, @Param("writerNo") Long writerNo);
+	int deleteMyComment(Long commentNo, Long writerNo);
 }

@@ -112,13 +112,13 @@
             <a href="${pageContext.request.contextPath}/product/write" class="btn-write">게시글 작성</a>
             
             <div class="quick-box">
-                <a href="${pageContext.request.contextPath}/member/wishlist" class="quick-item">
+                <a href="${pageContext.request.contextPath}/mypage/wishlists" class="quick-item">
                     <span>❤️</span>찜목록
                 </a>
                 <a href="${pageContext.request.contextPath}/message/received" class="quick-item">
                     <span>✉️</span>쪽지함
                 </a>
-                <a href="javascript:void(0);" class="quick-item" onclick="alert('최근 본 글 기능 준비중');">
+                <a href="${pageContext.request.contextPath}/mypage/recents"class="quick-item">
                     <span>👁️</span>최근 본 글
                 </a>
             </div>

@@ -31,8 +31,8 @@ public class ActivityServiceImpl implements ActivityService {
 	 * - 반환 데이터: List<ProductDTO> 형태의 게시글 목록
 	 */
 	@Override
-	public List<ProductDTO> selectMyBoardList(Long userNo) {
-		return activityMapper.selectMyBoardList(userNo);
+	public List<ProductDTO> selectMyProductList(Long userNo, String keyword) {
+	    return activityMapper.selectMyProductList(userNo, keyword);
 	}
 	
 	/**
@@ -75,8 +75,8 @@ public class ActivityServiceImpl implements ActivityService {
 	 * - 반환 데이터: 성공 시 true, 실패 시 false (boolean)
 	 */
 	@Override
-	public boolean deleteMyBoard(Long productNo, Long writerNo) {
-		int result = activityMapper.deleteMyBoard(productNo, writerNo);
+	public boolean deleteMyProduct(Long productNo, Long writerNo) {
+		int result = activityMapper.deleteMyProduct(productNo, writerNo);
 		return result > 0;
 	}
 

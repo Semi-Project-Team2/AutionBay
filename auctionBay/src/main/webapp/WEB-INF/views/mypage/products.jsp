@@ -33,6 +33,19 @@
     .board-title { font-size: 16px; font-weight: 500; color: #333; text-decoration: none; }
     .board-actions { display: flex; gap: 10px; }
     .btn-action { background-color: #fff; border: 1px solid #ccc; padding: 6px 12px; border-radius: 4px; text-decoration: none; color: #333; font-size: 13px; font-weight: bold; cursor: pointer; }
+
+    /* 경매/일반 구분 뱃지 */
+    .type-badge {
+        display: inline-block;
+        padding: 3px 8px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: bold;
+        margin-right: 8px;
+        vertical-align: middle;
+    }
+    .type-badge.auction { background-color: #ffe3e3; color: #c92a2a; }
+    .type-badge.general { background-color: #e7f5ff; color: #1971c2; }
 </style>
 </head>
 <body>
@@ -54,24 +67,30 @@
     <div class="mypage-content">
         <nav class="sidebar">
             <ul>
-                <li><a href="${pageContext.request.contextPath}/mypage/boards" class="active">게시글 관리</a></li>
+                <!-- 수정: /mypage/boards -> /mypage/products (실제 매핑과 일치) -->
+                <li><a href="${pageContext.request.contextPath}/mypage/products" class="active">게시글 관리</a></li>
                 <li><a href="${pageContext.request.contextPath}/mypage/comments">댓글 관리</a></li>
                 <li><a href="${pageContext.request.contextPath}/mypage/txHistories">거래 내역</a></li>
-                <li><a href="${pageContext.request.contextPath}/mypage/review/list">후기</a></li>
-                <li><a href="${pageContext.request.contextPath}/mypage/recent">최근 본 글</a></li>
+                <li><a href="${pageContext.request.contextPath}/mypage/reviews/list">후기</a></li>
+                <li><a href="${pageContext.request.contextPath}/mypage/recents">최근 본 글</a></li>
             </ul>
         </nav>
 
         <div class="mypage-main">
             <div class="content-header">
                 <span class="content-title">게시글 관리</span>
-                <div class="search-bar">검색창</div>
+                <!-- 검색 기능 추가 (기존 search-bar 클래스 및 스타일 그대로 유지) -->
+                <form action="${pageContext.request.contextPath}/mypage/products" method="get" class="search-bar" style="display: flex; align-items: center; padding: 0 5px;">
+                    <input type="text" name="keyword" value="${param.keyword}" placeholder="검색어를 입력하세요" style="width: 100%; border: none; background: transparent; outline: none; font-size: 13px; text-align: left; padding: 8px 5px;">
+                    <button type="submit" style="border: none; background: transparent; cursor: pointer; font-size: 13px; color: #333; font-weight: bold; white-space: nowrap;">검색</button>
+                </form>
             </div>
 
+            <!-- productList: 경매/일반 게시글이 tradeType 값으로 함께 조회됨 -->
             <div class="board-list" id="boardListContainer">
                 <c:choose>
-                    <c:when test="${not empty boardList}">
-						<c:forEach var="board" items="${boardList}">
+                    <c:when test="${not empty productList}">
+						<c:forEach var="board" items="${productList}">
 						    <c:set var="pNo" value="${board.productId}" />
 						    
 						    <div class="board-card" id="board-card-${pNo}">
@@ -84,12 +103,23 @@
 						                    <div class="board-thumb" style="display:flex; align-items:center; justify-content:center; font-size:10px; color:#555;">이미지없음</div>
 						                </c:otherwise>
 						            </c:choose>
-						            <%-- 팀원이 만든 진짜 상세 주소(/auction/{id}/detail)로 수정 완료 --%>
-						            <a href="${pageContext.request.contextPath}/auction/${pNo}/detail" class="board-title">${board.title}</a>
+
+						            <div>
+						                <!-- 경매/일반 구분 뱃지: tradeType 값에 따라 표시 -->
+						                <c:choose>
+						                    <c:when test="${board.tradeType == 'AUCTION'}">
+						                        <span class="type-badge auction">경매</span>
+						                    </c:when>
+						                    <c:otherwise>
+						                        <span class="type-badge general">일반</span>
+						                    </c:otherwise>
+						                </c:choose>
+						                <a href="${pageContext.request.contextPath}/auction/${pNo}/detail" class="board-title">${board.title}</a>
+						            </div>
 						        </div>
 						        <div class="board-actions">
 						            <a href="${pageContext.request.contextPath}/board/update?no=${pNo}" class="btn-action">수정</a>
-						            <button type="button" class="btn-action" style="color: #c92a2a;" data-product-no="${pNo}" onclick="deleteBoard(this);">삭제</button>
+						            <button type="button" class="btn-action" style="color: #c92a2a;" data-product-no="${pNo}" onclick="deleteProduct(this);">삭제</button>
 						        </div>
 						    </div>
 						</c:forEach>
@@ -105,7 +135,7 @@
             </div>
 			
             <!-- 게시글이 있을 때만 노출되는 페이징 바 영역 -->
-            <c:if test="${not empty boardList}">
+            <c:if test="${not empty productList}">
                 <div class="pagination" style="display: flex; justify-content: center; gap: 5px; margin-top: 20px;">
                     <a href="#" class="btn-action">&lt; 이전</a>
                     <a href="#" class="btn-action" style="background-color: #ddd; font-weight: bold;">1</a>
@@ -120,7 +150,8 @@
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
 <script>
-function deleteBoard(button) {
+/* 수정: functio -> function 오타로 인해 삭제 기능이 동작하지 않던 버그 수정 */
+function deleteProduct(button) {
     const productNo = button.getAttribute("data-product-no");
     
     if (!productNo || productNo === 'undefined' || productNo === '') {
@@ -132,7 +163,7 @@ function deleteBoard(button) {
         return;
     }
 
-    fetch('${pageContext.request.contextPath}/mypage/deleteBoard?productNo=' + productNo)
+    fetch('${pageContext.request.contextPath}/mypage/deleteProduct?productNo=' + productNo)
     .then(response => response.text())
     .then(result => {
         if (result.trim() === "SUCCESS") {

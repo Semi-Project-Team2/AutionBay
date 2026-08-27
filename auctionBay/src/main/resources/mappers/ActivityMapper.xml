@@ -13,27 +13,30 @@
 		             PRODUCT_MEDIA 테이블과 조인하여 대표 이미지(MEDIA_ORDER = 1)를 함께 가져옵니다. 최신순 정렬.
 		- 응답(Result): ProductDTO 객체로 매핑하여 반환
 	-->
-	<select id="selectMyBoardList" parameterType="long" resultType="ProductDTO">
-		SELECT P.PRODUCT_ID AS productId, 
-		       P.WRITER_NO AS writerNo, 
-		       P.CATEGORY_ID AS categoryId, 
-		       P.TRADE_TYPE AS tradeType, 
-		       P.TITLE, 
-		       P.DESCRIPTION, 
-		       P.PRICE, 
-		       P.PRODUCT_CONDITION AS productCondition, 
-		       P.STATUS, 
-		       P.VIEW_COUNT AS viewCount, 
-		       P.CREATED_AT AS createdAt,
-		       TO_CHAR(P.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS createdAtStr,
-		       PM.THUMBNAIL_URL AS mainImage
-		  FROM PRODUCTS P
-		    LEFT JOIN PRODUCT_MEDIA PM 
-		           ON P.PRODUCT_ID = PM.PRODUCT_ID AND PM.MEDIA_ORDER = 1
-		 WHERE P.WRITER_NO = #{userNo}
-		   AND (P.IS_DELETED = 0 OR P.IS_DELETED IS NULL)
-		 ORDER BY P.CREATED_AT DESC
-	</select> 
+	<select id="selectMyProductList" parameterType="map" resultType="ProductDTO">
+    SELECT P.PRODUCT_ID AS productId, 
+           P.WRITER_NO AS writerNo, 
+           P.CATEGORY_ID AS categoryId, 
+           P.TRADE_TYPE AS tradeType, 
+           P.TITLE, 
+           P.DESCRIPTION, 
+           P.PRICE, 
+           P.PRODUCT_CONDITION AS productCondition, 
+           P.STATUS, 
+           P.VIEW_COUNT AS viewCount, 
+           P.CREATED_AT AS createdAt,
+           TO_CHAR(P.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS createdAtStr,
+           NVL(PM.THUMBNAIL_URL, '/images/no-image.png') AS mainImage
+      FROM PRODUCTS P
+        LEFT JOIN PRODUCT_MEDIA PM 
+               ON P.PRODUCT_ID = PM.PRODUCT_ID AND PM.MEDIA_ORDER = 1
+     WHERE P.WRITER_NO = #{userNo}
+       AND (P.IS_DELETED = 0 OR P.IS_DELETED IS NULL)
+       <if test="keyword != null and keyword != ''">
+         AND (P.TITLE LIKE '%' || #{keyword} || '%' OR P.DESCRIPTION LIKE '%' || #{keyword} || '%')
+       </if>
+     ORDER BY P.CREATED_AT DESC
+</select>
 
 	<!-- 
 		[2. 내가 작성한 댓글 조회]
@@ -64,16 +67,16 @@
 		- 응답(Result): WishlistDTO 객체로 매핑하여 반환
 	-->
 	<select id="selectMyWishlist" parameterType="long" resultType="WishlistDTO">
-		SELECT W.WISHLIST_ID, W.USER_NO, W.PRODUCT_ID AS productNo, W.CREATED_AT,
-		       P.TITLE, P.PRICE, P.TRADE_TYPE, P.STATUS,
-		       PM.THUMBNAIL_URL AS MAIN_IMAGE,
-		       TO_CHAR(W.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS WISHED_AT_STR
-		  FROM WISHLISTS W
-		    JOIN PRODUCTS P ON W.PRODUCT_ID = P.PRODUCT_ID
-		    LEFT JOIN PRODUCT_MEDIA PM 
-		           ON P.PRODUCT_ID = PM.PRODUCT_ID AND PM.MEDIA_ORDER = 1
-		 WHERE W.USER_NO = #{userNo}
-		 ORDER BY W.CREATED_AT DESC
+    SELECT W.WISHLIST_ID, W.USER_NO, W.PRODUCT_ID AS productNo, W.CREATED_AT,
+           P.TITLE, P.PRICE, P.TRADE_TYPE, P.STATUS,
+           NVL(PM.THUMBNAIL_URL, '/images/no-image.png') AS MAIN_IMAGE,
+           TO_CHAR(W.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS WISHED_AT_STR
+      FROM WISHLISTS W
+        JOIN PRODUCTS P ON W.PRODUCT_ID = P.PRODUCT_ID
+        LEFT JOIN PRODUCT_MEDIA PM 
+               ON P.PRODUCT_ID = PM.PRODUCT_ID AND PM.MEDIA_ORDER = 1
+     WHERE W.USER_NO = #{userNo}
+     ORDER BY W.CREATED_AT DESC
 	</select>
 
 	<!-- 
@@ -84,16 +87,16 @@
 		- 응답(Result): RecentViewDTO 객체로 매핑하여 반환
 	-->
 	<select id="selectRecentViews" parameterType="long" resultType="RecentViewDTO">
-		SELECT RV.VIEW_ID, RV.USER_NO, RV.PRODUCT_ID AS productNo, RV.VIEWED_AT,
-		       P.TITLE, P.PRICE, P.STATUS,
-		       PM.THUMBNAIL_URL AS MAIN_IMAGE,
-		       TO_CHAR(RV.VIEWED_AT, 'YYYY-MM-DD HH24:MI') AS VIEWED_AT_STR
-		  FROM RECENT_VIEWS RV
-		    JOIN PRODUCTS P ON RV.PRODUCT_ID = P.PRODUCT_ID
-		    LEFT JOIN PRODUCT_MEDIA PM 
-		           ON P.PRODUCT_ID = PM.PRODUCT_ID AND PM.MEDIA_ORDER = 1
-		 WHERE RV.USER_NO = #{userNo}
-		 ORDER BY RV.VIEWED_AT DESC
+    SELECT RV.VIEW_ID, RV.USER_NO, RV.PRODUCT_ID AS productNo, RV.VIEWED_AT,
+           P.TITLE, P.PRICE, P.STATUS,
+           NVL(PM.THUMBNAIL_URL, '/images/no-image.png') AS MAIN_IMAGE,
+           TO_CHAR(RV.VIEWED_AT, 'YYYY-MM-DD HH24:MI') AS VIEWED_AT_STR
+      FROM RECENT_VIEWS RV
+        JOIN PRODUCTS P ON RV.PRODUCT_ID = P.PRODUCT_ID
+        LEFT JOIN PRODUCT_MEDIA PM 
+               ON P.PRODUCT_ID = PM.PRODUCT_ID AND PM.MEDIA_ORDER = 1
+     WHERE RV.USER_NO = #{userNo}
+     ORDER BY RV.VIEWED_AT DESC
 	</select>
 
 	<!-- 
@@ -102,7 +105,7 @@
 		- 처리 과정: PRODUCTS 테이블에서 해당 상품의 IS_DELETED 컬럼을 1로 변경하고, 수정 일시(UPDATED_AT)를 현재 시간으로 업데이트합니다.
 		- 응답(Result): 업데이트된 행의 개수 (int, 생략 가능)
 	-->
-	<update id="deleteMyBoard">
+	<update id="deleteMyProduct">
 		UPDATE PRODUCTS
 		   SET IS_DELETED = 1,
 		       UPDATED_AT = SYSDATE
