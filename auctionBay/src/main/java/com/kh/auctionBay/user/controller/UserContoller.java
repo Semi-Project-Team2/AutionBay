@@ -94,6 +94,18 @@ public class UserContoller {
 		
 	}
 	
+	@GetMapping("/checkPhoneNumber")
+	@ResponseBody
+	public ApiResponse<Boolean> checkPhoneNumber(String phoneNumber){
+		
+		boolean isDuplicate = service.isPhoneNumberCheck(phoneNumber);
+		
+		String message = isDuplicate ? "이미 사용중인 전화번호입니다." : "사용 가능한 전화번호입니다.";
+		
+		return ApiResponse.success(message, isDuplicate);
+		
+	}
+	
 	
 
 	@PostMapping("/login")

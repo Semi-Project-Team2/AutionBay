@@ -74,7 +74,9 @@
 
 			<div class="form-row">
 				<label>연락처</label>
-				<input type="text" name="phoneNumber" required>
+				<input type="text" name="phoneNumber" id="phoneNumber">
+				<button type="button" id="check-phoneNumber-btn">중복확인</button>
+				<p id="check-phoneNumber-result" class="form-tip"></p>
 			</div>
 
 			<div class="form-row">

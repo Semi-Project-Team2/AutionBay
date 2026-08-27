@@ -152,6 +152,37 @@
     background-color: #d1d1d1;
 }
 
+/* 전화번호 입력칸 + 중복확인 버튼을 한 줄에 배치 */
+.form-row:has(#phoneNumber) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.form-row:has(#phoneNumber) label {
+    width: 100%;
+}
+
+.form-row:has(#phoneNumber) #check-phoneNumber-result {
+    width: 100%;
+}
+.form-row:has(#phoneNumber) #phoneNumber {
+    flex: 1;
+    margin-right: 6px;
+}
+.form-row #check-phoneNumber-btn {
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #e2e2e2;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.form-row #check-phoneNumber-btn:hover {
+    background-color: #d1d1d1;
+}
+
 
 /* 중복확인/비밀번호 확인 결과 메시지 */
 .form-tip {

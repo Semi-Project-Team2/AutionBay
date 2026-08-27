@@ -127,6 +127,47 @@ checkEmailBtn.addEventListener("click", async function() {
     }
 });
 
+// 이메일 중복 체크
+let checkPhoneNumber = null;
+const checkPhoneNumberResult = document.querySelector("#check-phoneNumber-result");
+const phoneNumberInput = document.querySelector("#phoneNumber");
+phoneNumberInput.addEventListener("input", function(){
+	checkPhoneNumberResult.textContent = "";
+	checkPhoneNumber = null;
+});
+
+const checkPhoneNumberBtn = document.querySelector("#check-phoneNumber-btn");
+checkPhoneNumberBtn.addEventListener("click", async function() {
+    const phoneNumber = phoneNumberInput.value.trim();
+    
+	if (phoneNumber.length === 0) {
+        checkPhoneNumberResult.textContent = "번호를 입력해주세요.";
+        checkPhoneNumberResult.className = "form-tip form-tip-error";
+        checkPhoneNumber = null;
+        return;
+    }
+    try {
+        const response = await fetch("/user/checkPhoneNumber?phoneNumber=" + encodeURIComponent(phoneNumber), {
+            method: "GET",
+            headers: { "X-Requested-With": "XMLHttpRequest" }
+        });
+
+        const result = await response.json();
+
+        checkPhoneNumberResult.textContent = result.message;
+        checkPhoneNumberResult.className = result.data ? "form-tip form-tip-error" : "form-tip form-tip-ok";
+
+        checkPhoneNumber = result.data ? null : phoneNumber;
+    } catch (error) {
+        console.log(error);
+
+        checkPhoneNumberResult.textContent = "중복 확인 중 오류가 발생했습니다.";
+        checkPhoneNumberResult.className = "form-tip form-tip-error";
+
+        checkPhoneNumber = null;
+    }
+});
+
 
 // 프로필 이미지 미리보기
 const profileImg = document.querySelector("#profile-image");

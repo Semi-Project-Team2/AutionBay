@@ -6,9 +6,9 @@ import com.kh.auctionBay.user.model.dto.UserDTO;
 
 @Mapper
 public interface UserMapper {
-	// 회원가입
-	int insertUser(UserDTO user);
 	
+	// 회원가입
+	int insertUser(UserDTO user);	
 	
 	// 아이디 중복 확인
 	int countByUserId(String userId);
@@ -18,6 +18,9 @@ public interface UserMapper {
 	
 	// 이메일 중복 확인 
 	int countByEmail(String email);
+	
+	// 전화번호 중복 확인
+	int countByPhoneNumber(String phoneNumber);
 	
 	// 로그인
 	UserDTO selectByUserId(String userId);

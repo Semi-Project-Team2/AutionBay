@@ -8,16 +8,21 @@
 	</insert>
 	
 	<select id="countByUserId" parameterType="string" resultType="int">
-		SELECT COUNT(*) FROM USERS WHERE USER_ID = #{userId} AND IS_DELETED = 0
+		SELECT COUNT(*) FROM USERS WHERE USER_ID = #{userId}
 	</select>
 	
 	<select id="countByNickname" parameterType="string" resultType="int">
-		SELECT COUNT(*) FROM USERS WHERE NICKNAME = #{nickname} AND IS_DELETED = 0
+		SELECT COUNT(*) FROM USERS WHERE NICKNAME = #{nickname}
 	</select>
 	
 	<select id="countByEmail" parameterType="string" resultType="int">
-		SELECT COUNT(*) FROM USERS WHERE EMAIL = #{email} AND IS_DELETED = 0
+		SELECT COUNT(*) FROM USERS WHERE EMAIL = #{email}
 	</select>
+	
+	<select id="countByPhoneNumber" parameterType="string" resultType="int">
+		SELECT COUNT(*) FROM USERS WHERE PHONE_NUMBER = #{phoneNumber}
+	</select>
+	
 	
 	<select id="selectByUserId" parameterType="string" resultType="UserDTO">
 		SELECT user_no, user_id, password, email, nickname, phone_number, profile_img, region_address, is_deleted

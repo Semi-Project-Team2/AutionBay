@@ -63,7 +63,6 @@ public class UserServiceImpl implements UserService{
 		
 	}
 	
-	
 
 	@Override
 	public boolean isNicknameCheck(String nickname) {
@@ -78,6 +77,14 @@ public class UserServiceImpl implements UserService{
 		return mapper.countByEmail(email) > 0;
 		
 	}
+	
+	@Override
+	public boolean isPhoneNumberCheck(String phoneNumber) {
+		
+		return mapper.countByPhoneNumber(phoneNumber) > 0;
+	
+	}
+	
 
 
 	@Override
@@ -108,6 +115,8 @@ public class UserServiceImpl implements UserService{
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+
 
 
 
