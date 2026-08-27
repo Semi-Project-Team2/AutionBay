@@ -121,6 +121,69 @@
     background-color: #d1d1d1;
 }
 
+/* 이메일 입력칸 + 중복확인 버튼을 한 줄에 배치 */
+.form-row:has(#email) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.form-row:has(#email) label {
+    width: 100%;
+}
+
+.form-row:has(#email) #check-email-result {
+    width: 100%;
+}
+.form-row:has(#email) #email {
+    flex: 1;
+    margin-right: 6px;
+}
+.form-row #check-email-btn {
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #e2e2e2;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.form-row #check-email-btn:hover {
+    background-color: #d1d1d1;
+}
+
+/* 전화번호 입력칸 + 중복확인 버튼을 한 줄에 배치 */
+.form-row:has(#phoneNumber) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.form-row:has(#phoneNumber) label {
+    width: 100%;
+}
+
+.form-row:has(#phoneNumber) #check-phoneNumber-result {
+    width: 100%;
+}
+.form-row:has(#phoneNumber) #phoneNumber {
+    flex: 1;
+    margin-right: 6px;
+}
+.form-row #check-phoneNumber-btn {
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #e2e2e2;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.form-row #check-phoneNumber-btn:hover {
+    background-color: #d1d1d1;
+}
+
+
 /* 중복확인/비밀번호 확인 결과 메시지 */
 .form-tip {
     font-size: 12px;
@@ -169,22 +232,43 @@
     border: 1px solid #ccc;
 }
 
+/* 프로필 버튼 그룹 정렬 */
+.profile-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 이미지 선택 & 초기화 버튼 동일 스타일 */
 .file-label {
-    display: inline-block;
-    padding: 8px 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;                 /* 높이 강제 통일 */
+    padding: 0 14px;              /* 좌우 패딩만 부여 */
     border: 1px solid #ccc;
     border-radius: 4px;
     background-color: #e2e2e2;
+    color: #333;
     font-size: 13px;
     font-weight: bold;
+    font-family: inherit;
     cursor: pointer;
+    box-sizing: border-box;
+    user-select: none;
+    margin: 0;
 }
+
 .file-label:hover {
     background-color: #d1d1d1;
 }
+
 .file-label input[type="file"] {
     display: none;
 }
+
+
 
 /* 가입 버튼 */
 .btn {

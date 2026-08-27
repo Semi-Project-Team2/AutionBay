@@ -21,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
 
+
+
 	private final UserMapper mapper;
 	
 	private final PasswordEncoder passwordEncoder; // 비밀번호 암호화 인터페이스
@@ -43,12 +45,23 @@ public class UserServiceImpl implements UserService{
 		String encodePWd = passwordEncoder.encode(user.getPassword());
 		user.setPassword(encodePWd); // 비밀번호 암호화
 		
-		SavedFile saved = uploadUtil.save(profileImg, profileUploadDir, "/uploads/profile");
-		if(saved != null) {
-			user.setProfileImg(saved.getPath());
-		}
-		
-		mapper.insertUser(user);
+		// 프로필 이미지 처리
+	    if(profileImg == null || profileImg.isEmpty()) {
+
+	        // 기본 프로필 이미지
+	        user.setProfileImg("/uploads/profile/default-profile.png");
+
+	    } else {
+
+	        // 사용자가 선택한 이미지 저장
+	        SavedFile saved = uploadUtil.save(profileImg, profileUploadDir, "/uploads/profile");
+
+	        if(saved != null) {
+	            user.setProfileImg(saved.getPath());
+	        }
+	    }
+
+	    mapper.insertUser(user);
 		
 		
 		
@@ -62,7 +75,6 @@ public class UserServiceImpl implements UserService{
 		
 	}
 	
-	
 
 	@Override
 	public boolean isNicknameCheck(String nickname) {
@@ -71,6 +83,20 @@ public class UserServiceImpl implements UserService{
 		
 	}
 
+	@Override
+	public boolean isEmailCheck(String email) {
+
+		return mapper.countByEmail(email) > 0;
+		
+	}
+	
+	@Override
+	public boolean isPhoneNumberCheck(String phoneNumber) {
+		
+		return mapper.countByPhoneNumber(phoneNumber) > 0;
+	
+	}
+	
 
 
 	@Override
@@ -119,6 +145,8 @@ public class UserServiceImpl implements UserService{
 		
 		return mapper.updateUserWithdrawal(userNo);
 	}
+
+
 
 
 
