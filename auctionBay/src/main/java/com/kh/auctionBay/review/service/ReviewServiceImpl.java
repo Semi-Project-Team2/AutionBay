@@ -36,7 +36,7 @@ public class ReviewServiceImpl implements ReviewService {
 		// 받은 후기 리스트 조회 및 저장
 		ReviewResultList receivedReviews = new ReviewResultList(
 				 reviewMapper.selectReceivedReviews(condition),
-				 pageInfo);
+				 pageInfo, "received");
 		
 		return receivedReviews;
 	}
@@ -60,7 +60,7 @@ public class ReviewServiceImpl implements ReviewService {
 		// 보낸 후기 리스트 조회 및 저장
 		ReviewResultList sentReviews = new ReviewResultList(
 				reviewMapper.selectSentReviews(condition),
-				pageInfo);
+				pageInfo, "sent");
 		
 		return sentReviews;
 	}
