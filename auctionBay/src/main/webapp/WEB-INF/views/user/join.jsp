@@ -1,8 +1,20 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-	
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>AuctionBay - 회원가입</title>
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/join.css">
+</head>
+<body>
+
+<div class="container">
+
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
-		
+
+<main class="container">
 
 			<h2 class="page-title">회원가입 </h2>
 
@@ -18,14 +30,23 @@
 		<form id="join-form" class="form form-flex" action="/user/join" method="post" enctype="multipart/form-data">
 			<div class="form-row form-row-center">
 				<div class="profile-preview-wrap">
-					<div id="profile-preview-placeholder" class="profile-preview profile-preview-placeholder">사진없음
-					</div>
-					<img id="profile-preview" class="profile-preview" alt="프로필 미리보기" style="display:none;">
+					<img id="profile-preview"
+					     class="profile-preview"
+					     src="/uploads/profile/default-profile.png"
+					     alt="프로필 미리보기">
 				</div>
-					<label class="file-label">
-					프로필 이미지 선택
-					<input type="file" id="profile-image" name="profileImage" accept="image/*">
-				</label>
+				<div class="profile-buttons">
+				    <label class="file-label">
+				        프로필 이미지 선택
+				        <input type="file"
+				               id="profile-image"
+				               name="profileImage"
+				               accept="image/*">
+				    </label>
+				    <label id="reset-profile-btn" class="file-label">
+						프로필 초기화
+					</label>
+				</div>
 			</div>
 
 
@@ -48,17 +69,23 @@
 
 			<div class="form-row">
 				<label>닉네임</label>
-				<input type="text" name="nickname" required>
+				<input type="text" name="nickname" id="nickname">
+				<button type="button" id="check-nickname-btn">중복확인</button>
+				<p id="check-nickname-result" class="form-tip"></p>
 			</div>
 
 			<div class="form-row">
 				<label>이메일</label>
-				<input type="email" name="email" required>
+				<input type="email" name="email" id="email">
+				<button type="button" id="check-email-btn">중복확인</button>
+				<p id="check-email-result" class="form-tip"></p>
 			</div>
 
 			<div class="form-row">
 				<label>연락처</label>
-				<input type="text" name="phoneNumber" required>
+				<input type="text" name="phoneNumber" id="phoneNumber">
+				<button type="button" id="check-phoneNumber-btn">중복확인</button>
+				<p id="check-phoneNumber-result" class="form-tip"></p>
 			</div>
 
 			<div class="form-row">
@@ -73,6 +100,12 @@
 
 		</form>
 
-		
-<script src="/js/user.js"></script>	
+</main>
+
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
+
+</div>
+
+<script src="/js/user.js"></script>
+</body>
+</html>

@@ -2,16 +2,37 @@ package com.kh.auctionBay.user.controller;
 
 import java.io.IOException;
 
+import java.util.List;
+
+import java.sql.SQLIntegrityConstraintViolationException;
+
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kh.auctionBay.activity.model.dto.MyCommentDTO;
+import com.kh.auctionBay.activity.model.dto.RecentViewDTO;
+import com.kh.auctionBay.activity.model.dto.WishlistDTO;
+import com.kh.auctionBay.activity.service.ActivityService;
 import com.kh.auctionBay.common.SessionConst;
+
+import com.kh.auctionBay.product.model.dto.ProductDTO;
+
+import com.kh.auctionBay.common.util.FileUploadUtil;
+
 import com.kh.auctionBay.review.model.dto.ReviewDTO;
 import com.kh.auctionBay.review.model.dto.ReviewResultList;
 import com.kh.auctionBay.review.model.dto.SearchCondition;
@@ -29,17 +50,23 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/mypage")
 public class MyPageController {
+	private final FileUploadUtil fileUploadUtil;
 	// service DI (생성자 주입)
 	private final TxHistoryService txService;
 	private final ReviewService reviewService;
 	private final UserService userService;
 //	private final ProductService productService;
 	
+
+	// 팀원 코드를 건드리지 않기 위해 맨 아래에 추가하는 내 파트용 서비스 주입
+	private final ActivityService activityService;
 	
+	
+
 	/* ------------- 화면 이동 요청 --------------- */
 	
 	/**
- 	 * 거래 목록 화면
+	 * 거래 목록 화면
 	 * @param session
 	 * @param model
 	 * @return
@@ -62,6 +89,10 @@ public class MyPageController {
 		
 		// DB에서 데이터 조회 후 변수에 저장
 		TxHistoryResultList list = txService.getTxHistories(condition);
+		// 거래 후기 작성여부 확인
+		for (TxHistoryDTO tx : list.getTxHistories()) {
+			tx.setReviewWrited(txService.checkReviewWrited(tx.getHistoryId()));
+		}
 		
 		// 브라우저에서 "list"로 요청 시 컨트롤러 클래스에 list라고 저장된 데이터 전달
 		model.addAttribute("list", list);
@@ -69,26 +100,14 @@ public class MyPageController {
 		model.addAttribute("txHistories", list.getTxHistories());
 		// 검색 상태 유지를 위해 condition 저장
 		model.addAttribute("condition", condition);
-		// 페이지 정보 저장
+		// 페이지 정보 전달
 		model.addAttribute("pageInfo", list.getPageInfo());
+		// 현재 페이지 정보 전달
+		model.addAttribute("currentPage", condition.getPage());
 		
 		return "mypage/txHistories";
 	}
-	
-	/**
-	 * 거래내역 상세 화면
-	 */
-	@GetMapping("/txHistory/{historyId}")
-	public String txHistoryDetail(@PathVariable Long historyId,	Model model) {
-		
-		// DB에서 거래내역 조회 후 변수에 저장
-		TxHistoryDTO txHistory = txService.getTxHistoryDetail(historyId);
-		
-		// 브라우저에서 "txHistory"로 요청 시 txHistory 전달
-		model.addAttribute("txHistory", txHistory);
-		
-		return "mypage/txHistory/detail";
-	}
+
 	
 	/**
 	 * 후기 목록 화면
@@ -98,7 +117,9 @@ public class MyPageController {
 	 */
 	@GetMapping("/reviews")
 	public String reviews(HttpSession session, Model model,
-				@ModelAttribute SearchCondition condition) {
+				@ModelAttribute SearchCondition condition,
+				@RequestParam(defaultValue = "received") String tab
+				/* jsp에서 tab의 기본값을 received로 지정하여 기본적으로 받은 후기탭으로 보내기 */) {
 		
 		// 로그인한 사용자 정보를 loginUser로 백엔드에 저장
 		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
@@ -124,6 +145,11 @@ public class MyPageController {
 		model.addAttribute("receivedPageInfo", receivedReviews.getPageInfo());
 		model.addAttribute("sentPageInfo", sentReviews.getPageInfo());
 		
+		// 현재 활성화된 탭 정보를 브라우저로 전달
+		model.addAttribute("activeTab", tab);
+		
+		// 현재 클릭한 페이지 번호 전달
+		model.addAttribute("currentPage", condition.getPage());
 		
 		return "mypage/reviews";
 	}
@@ -134,7 +160,10 @@ public class MyPageController {
 	 * @return
 	 */
 	@GetMapping("/review/writeForm")
-	public String reviewForm() {	
+	public String reviewForm(Long historyId, Model model) {
+		TxHistoryDTO txHistory = txService.getTxHistoryDetail(historyId);
+		model.addAttribute("txHistory", txHistory);
+		
 		return "mypage/review/writeForm";
 	}
 	
@@ -143,7 +172,22 @@ public class MyPageController {
 	 * @return
 	 */
 	@GetMapping("/profile/editForm")
-	public String editProfile() {
+	public String editProfile(HttpSession session, Model model) {
+		// 프로필 수정 페이지 진입 시 로그인된 사용자 정보 전달
+		// 아래 POST 메서드에서는 변경 실패 시 미리 수정했던 부분을 전달하기 위해 GET 메서드에서
+		// 따로 전달함
+		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		if (loginUser == null) {
+			return "redirect:/user/login";
+		}
+		
+		if (!model.containsAttribute("user")) {
+			// 처음 진입 시 세션정보(로그인 유저) 전달
+			// FlashAttribute가 전달한 값이 없으면 "user" 키에 loginUser를 담고,
+			// FlashAttribute가 전달한 값이 있으면 그 값을 유지
+			model.addAttribute("user", loginUser);
+		}
+		
 		return "mypage/profile/editForm";
 	}
 	
@@ -152,35 +196,261 @@ public class MyPageController {
 	/**
 	 * 후기 작성 폼
 	 */
-	@PostMapping("/writeReview")
+	@ResponseBody	// 뷰리졸버를 타지 않고 문자열을 그대로 브라우저에 보내도록 처리
+	@PostMapping("/review/writeForm")
 	public String writeReview(Long historyId,
 			@ModelAttribute ReviewDTO review, 
 			Model model, HttpSession session) 
 				throws IllegalStateException, IOException {
-		// MessageController에서 불러오게 될 것 같긴 함
+		// 1. 로그인한 사용자 정보 가져오기
 		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		if (loginUser == null) {
+			return "<script>alert('로그인이 필요합니다.'); location.href='/user/login';</script>";
+		}
 		
-		// DB에서 거래내역 조회 후 변수에 저장
+		// 2. DB에서 거래내역 조회 후 변수에 저장
 		TxHistoryDTO txHistory = txService.getTxHistoryDetail(historyId);
-				
+	    if (txHistory == null) {
+	        return "<script>alert('잘못된 접근입니다.'); window.close();</script>";
+	    }
+	    
 		// 브라우저에서 "txHistory"로 요청 시 txHistory 전달
 		model.addAttribute("txHistory", txHistory);
 		
+		// 3. review 객체에 누락된 필수 정보(productId 등) set
+		review.setProductId(txHistory.getProductId());
+		review.setReviewerNo(loginUser.getUserNo());
+		if (loginUser.getUserNo().equals(txHistory.getBuyerNo())) {
+			review.setRevieweeNo(txHistory.getSellerNo());
+		} else if (loginUser.getUserNo().equals(txHistory.getSellerNo())) {
+			review.setRevieweeNo(txHistory.getBuyerNo());
+		}
+		
+		// 4. DB에 후기 저장
 		int result = reviewService.writeReview(review);
 		
-		return "redirect:/mypage/reviews";
+		// 5. 후기 작성 여부 true로 변경
+		txHistory.setReviewWrited(true);
+
+		if (result > 0) {
+			return "<script>" +
+		               "  alert('후기가 성공적으로 등록되었습니다.');" +
+		               "  window.opener.location.href = '/mypage/txHistories';" +
+		               // 원래 창으로 이동
+		               "  window.close();" + // 팝업창 닫기
+		               "</script>";
+		    } else {
+		        return "<script>alert('후기 등록에 실패했습니다.'); history.back();</script>";
+		    }
 	}
 	
-	@PostMapping("/user/edit")
+	/**
+	 * 프로필 변경 폼
+	 * @param user
+	 * @param session
+	 * @param redirectAttr
+	 * @return
+	 * @throws IllegalStateException
+	 * @throws IOException
+	 */
+	@PostMapping("/profile/editForm")
 	public String editProfile(@ModelAttribute UserDTO user, HttpSession session, 
-			RedirectAttributes redirectAttr)
-	// addFlash어쩌고(자세한 내용은 실습코드를 참조하세요 ㅋ)
-				throws IllegalStateException, IOException {
+			RedirectAttributes redirectAttr, 
+			@RequestParam(required=false) MultipartFile profileImage)
+				throws IllegalStateException, IOException,
+				SQLIntegrityConstraintViolationException {
 		
-		// 
+		// 1. 로그인한 사용자 정보
+		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		if (loginUser == null) {
+			return "<script>alert('로그인이 필요합니다.'); location.href='/user/login';</script>";
+		}
+		
+		// 2. userNo를 로그인한 사용자의 것으로 set
+		user.setUserNo(loginUser.getUserNo());
+		
+		try {
+			// 3. UserService 호출 후 저장된 값 업데이트
+			//
+			int result = userService.editProfile(user, profileImage);
+			
+			if (result > 0) {
+				// 4. 로그인한 사용자 정보를 변경된 값으로 최신화
+				UserDTO updatedUser = userService.getUserByUserNo(loginUser.getUserNo());
+				session.setAttribute(SessionConst.LOGIN_USER, updatedUser);
+				redirectAttr.addFlashAttribute("message", "프로필이 수정되었습니다.");
+			}
+			
+		} catch (RuntimeException e) {
+			redirectAttr.addFlashAttribute("message", e.getMessage());
+			// 회원정보 수정에 실패하더라도 사용자가 입력했던 변경사항을 반영
+			redirectAttr.addFlashAttribute("user", user);
+			
+			return "redirect:/mypage/profile/editForm";
+		}
 		
 		return "redirect:/mypage/txHistories";
 	}
 	
+	/* ========================================================================= */
+	/*   마이페이지 활동 내역 및 상품/댓글/찜 관리 컨트롤러            */
+	/* ========================================================================= */
+	/**
+	 * [내가 작성한 게시글 목록 페이지 이동 및 데이터 조회]
+	 * - 요청 URL: GET /mypage/products
+	 * - 처리 과정: 
+	 *    1. 세션에서 로그인된 회원 정보를 가져옵니다. 비로그인 시 로그인 페이지로 리다이렉트합니다.
+	 *    2. ActivityService를 통해 현재 회원이 작성한 상품 게시글 리스트를 조회합니다.
+	 *    3. 조회한 데이터를 Model에 담아 "mypage/products" 뷰로 전달합니다.
+	 */
 	
+	@GetMapping("/products")
+	public String MyProductList(String keyword, HttpSession session, Model model) {
+	    UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
+	    if (loginUser == null) {
+	        return "redirect:/user/login";
+	    }
+
+	    List<ProductDTO> productList = activityService.selectMyProductList(loginUser.getUserNo(), keyword); 
+	    model.addAttribute("productList", productList);
+	    model.addAttribute("keyword", keyword);
+
+	    return "mypage/products";
+	}
+
+	/**
+	 * [내가 작성한 댓글 목록 페이지 이동 및 데이터 조회]
+	 * - 요청 URL: GET /mypage/comments
+	 * - 처리 과정:
+	 *    1. 로그인 여부를 확인하고, 로그인된 회원의 번호로 작성한 댓글 목록을 조회합니다.
+	 *    2. 조회된 댓글 리스트를 Model에 담아 "mypage/comments" 뷰로 전달합니다.
+	 */
+	@GetMapping("/comments")
+	public String myCommentList(HttpSession session, Model model) {
+		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
+		if (loginUser == null) {
+			return "redirect:/user/login";
+		}
+
+		List<MyCommentDTO> commentList = activityService.selectMyCommentList(loginUser.getUserNo());
+		model.addAttribute("commentList", commentList);
+		return "mypage/comments";
+	}
+
+	/**
+	 * [찜 목록 페이지 이동 및 데이터 조회]
+	 * - 요청 URL: GET /mypage/wishlists
+	 * - 처리 과정:
+	 *    1. 로그인한 회원의 번호를 바탕으로 찜 등록한 상품 목록을 조회합니다.
+	 *    2. 조회된 찜 목록 데이터를 Model에 담아 "mypage/wishlists" 뷰로 전달합니다.
+	 */
+	@GetMapping("/wishlists")
+	public String myWishlist(HttpSession session, Model model) {
+		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
+		if (loginUser == null) {
+			return "redirect:/user/login";
+		}
+
+		List<WishlistDTO> wishlist = activityService.selectMyWishlist(loginUser.getUserNo());
+		model.addAttribute("wishlist", wishlist);
+		return "mypage/wishlists"; 
+	}
+
+	/**
+	 * [최근 본 상품 목록 페이지 이동 및 데이터 조회]
+	 * - 요청 URL: GET /mypage/recents
+	 * - 처리 과정:
+	 *    1. 로그인한 회원의 최근 조회 히스토리 목록을 서비스로부터 가져옵니다.
+	 *    2. 조회된 최근 본 글 리스트를 Model에 담아 "mypage/recents" 뷰로 전달합니다.
+	 */
+	@GetMapping("/recents")
+	public String recentViews(HttpSession session, Model model) {
+		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
+		if (loginUser == null) {
+			return "redirect:/user/login";
+		}
+
+		List<RecentViewDTO> recentList = activityService.selectRecentViews(loginUser.getUserNo());
+		model.addAttribute("recentList", recentList);
+		return "mypage/recents";
+	}
+
+	/**
+	 * [내가 작성한 게시글 삭제 처리 (AJAX 비동기 통신)]
+	 * - 요청 URL: DELETE /mypage/deleteProduct?productNo=상품번호
+	 * - 처리 과정:
+	 *    1. 비동기 요청 시 파라미터로 넘어온 상품 번호(productNo)와 로그인 유저 번호를 확인합니다.
+	 *    2. 소프트 딜리트(삭제 상태값 변경) 방식을 통해 게시글 삭제 처리를 수행합니다.
+	 * - 응답 데이터: 처리가 성공하면 "SUCCESS", 실패하거나 비로그인 시 "FAIL" 문자열을 반환합니다.
+	 */
+	@DeleteMapping("/deleteProduct") 
+	@ResponseBody 
+	public String deleteMyProduct(Long productNo, HttpSession session) {
+		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
+		if (loginUser == null) {
+			return "FAIL";
+		}
+
+		boolean isDeleted = activityService.deleteMyProduct(productNo, loginUser.getUserNo());
+		return isDeleted ? "SUCCESS" : "FAIL";
+	}
+
+	/**
+	 * [내가 작성한 댓글 삭제 처리 (AJAX 비동기 통신)]
+	 * - 요청 URL: DELETE /mypage/deleteComment?commentNo=댓글번호
+	 * - 처리 과정:
+	 *    1. 전달받은 댓글 번호와 로그인 유저 번호를 검증합니다.
+	 *    2. 해당 댓글의 내용을 마스킹 처리('삭제된 댓글입니다.')하는 소프트 삭제를 수행합니다.
+	 * - 응답 데이터: 성공 시 "SUCCESS", 실패 시 "FAIL" 문자열을 비동기로 반환합니다.
+	 */
+	@DeleteMapping("/deleteComment")
+	@ResponseBody 
+	public String deleteMyComment(Long commentNo, HttpSession session) {
+		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
+		if (loginUser == null) {
+			return "FAIL";
+		}
+
+		boolean isDeleted = activityService.deleteMyComment(commentNo, loginUser.getUserNo());
+		return isDeleted ? "SUCCESS" : "FAIL";
+	}
+	
+	/**
+	 * 최근 본 글 개별 삭제
+	 * 요청 URL: DELETE /mypage/recents/delete
+	 */
+	@DeleteMapping("/recents/delete")
+	@ResponseBody
+	public ResponseEntity<String> deleteRecentView(
+			Long productNo, 
+			HttpSession session) {
+		
+		if (productNo == null) {
+			return ResponseEntity.badRequest().body("PRODUCT_NO_MISSING");
+		}
+
+		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
+		if (loginUser == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("LOGIN_REQUIRED");
+		}
+
+		boolean result = activityService.removeRecentView(loginUser.getUserNo(), productNo);
+		return result ? ResponseEntity.ok("SUCCESS") : ResponseEntity.badRequest().body("FAIL");
+	}
+
+	/**
+	 * 최근 본 글 전체 삭제
+	 * 요청 URL: DELETE /mypage/recents/clear
+	 */
+	@DeleteMapping("/recents/clear")
+	@ResponseBody
+	public ResponseEntity<String> clearAllRecentViews(HttpSession session) {
+		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
+		if (loginUser == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("LOGIN_REQUIRED");
+		}
+
+		activityService.removeAllRecentViews(loginUser.getUserNo());
+		return ResponseEntity.ok("SUCCESS");
+	}
 }

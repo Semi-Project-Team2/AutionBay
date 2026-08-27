@@ -4,11 +4,13 @@
 
 	<!-- 받은 후기 목록 조회 -->
 	<select id="selectReceivedReviews" parameterType="SearchCondition" resultType="ReviewDTO">
-		select REVIEW_ID, PRODUCT_ID, REVIEWER_NO, REVIEWEE_NO, RATING, CONTENT,
+		select REVIEW_ID, R.PRODUCT_ID, REVIEWER_NO, REVIEWEE_NO, RATING, CONTENT,
 		    to_char(R.CREATED_AT, 'YYYY-MM-DD HH24:MI') as "CREATED_AT_STR",
-		    R.CREATED_AT, nvl(U.NICKNAME, '탈퇴한 회원') as "REVIEWER_NICKNAME"
+		    R.CREATED_AT, nvl(U.NICKNAME, '탈퇴한 회원') as "REVIEWER_NICKNAME",
+		    P.TITLE
 		from REVIEWS R
 		    join USERS U on R.REVIEWER_NO = U.USER_NO
+		    join PRODUCTS P on R.PRODUCT_ID = P.PRODUCT_ID 
 		where REVIEWEE_NO = #{userNo}
 		order by CREATED_AT desc
 		
@@ -25,11 +27,13 @@
 
 	<!-- 보낸 후기 목록 조회 -->
 	<select id="selectSentReviews" parameterType="SearchCondition" resultType="ReviewDTO">
-		select REVIEW_ID, PRODUCT_ID, REVIEWER_NO, REVIEWEE_NO, RATING, CONTENT,
+		select REVIEW_ID, R.PRODUCT_ID, REVIEWER_NO, REVIEWEE_NO, RATING, CONTENT,
 		    to_char(R.CREATED_AT, 'YYYY-MM-DD HH24:MI') as "CREATED_AT_STR",
-		    R.CREATED_AT, nvl(U.NICKNAME, '탈퇴한 회원') as "REVIEWEE_NICKNAME"
+		    R.CREATED_AT, nvl(U.NICKNAME, '탈퇴한 회원') as "REVIEWEE_NICKNAME",
+		    P.TITLE
 		from REVIEWS R
 		    join USERS U on R.REVIEWEE_NO = U.USER_NO
+		    join PRODUCTS P on R.PRODUCT_ID = P.PRODUCT_ID 
 		where REVIEWER_NO = #{userNo}
 		order by CREATED_AT desc
 		

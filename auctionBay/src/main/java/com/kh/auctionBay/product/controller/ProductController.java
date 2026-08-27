@@ -6,16 +6,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import com.kh.auctionBay.product.model.dto.CategoryDTO;
+import com.kh.auctionBay.product.model.dto.ProductDTO;
 import com.kh.auctionBay.product.model.dto.ProductListResult;
 import com.kh.auctionBay.product.model.dto.ProductSearchCondition;
 import com.kh.auctionBay.product.service.ProductService;
-import com.kh.auctionBay.product.model.dto.ProductDTO;
 import com.kh.auctionBay.user.model.dto.UserDTO;
 import com.kh.auctionBay.common.SessionConst;
 
@@ -43,6 +43,7 @@ public class ProductController {
         return "product/list"; // 메인 홈이자 상품 목록 뷰
     }
     
+
     @GetMapping("/write")
     public String productWrite(Model model) {
     	
@@ -65,4 +66,8 @@ public class ProductController {
     	return "redirect:/product/list";
     }
     
+
+
+  
 }
+
