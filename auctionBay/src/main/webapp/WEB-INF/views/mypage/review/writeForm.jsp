@@ -19,7 +19,9 @@
         </div>
 
         <!-- 후기 입력 폼 -->
-        <form action="${pageContext.request.contextPath}/mypage/review/writeForm" method="post" class="popup-form">
+        <form id="review-form" 
+            action="${pageContext.request.contextPath}/mypage/review/writeForm" 
+            method="post" class="popup-form">
             
             <!-- Hidden 데이터 전달 영역 (productId, reviewerNo, revieweeNo) -->
             <input type="hidden" name="historyId" value="${txHistory.historyId}">
@@ -57,6 +59,6 @@
         </form>
 
     </div>
-
+<script src="/js/review.js"></script>
 </body>
 </html>

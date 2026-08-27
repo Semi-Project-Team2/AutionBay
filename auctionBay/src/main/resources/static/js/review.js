@@ -14,3 +14,43 @@ reviewBtns.forEach(btn => {
 
     });
 });
+
+const reviewForm = document.querySelector("#review-form");
+
+if (reviewForm) {
+    reviewForm.addEventListener("submit", async function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(reviewForm);
+
+        try {
+            const response = await fetch(reviewForm.action, {
+                method: "POST",
+                body: formData,
+                headers: {"X-Requested-With" : "XMLHttpRequest"}
+            });
+
+            const result = await response.json();
+
+            if (result.message) {
+                alert(result.message);
+            }
+
+            if (result.success) {
+                if (window.opener) {
+                    window.opener.location.href='/mypage/txHistories';
+                }
+
+                window.close();
+            } else {
+                if (result.message && result.message.includes("로그인")) {
+                    window.opener.location.href = '/user/login';
+                    window.close();
+                }
+            }
+        } catch (error) {
+            console.error("후기 등록 오류: ", error);
+            alert("후기 등록 중 오류가 발생했습니다.");
+        }
+    });
+}

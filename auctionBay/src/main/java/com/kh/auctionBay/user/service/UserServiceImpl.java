@@ -147,6 +147,45 @@ public class UserServiceImpl implements UserService{
 	}
 
 
+	// 회원 정보 수정용
+	@Override
+	public boolean checkNickname(String nicknameInput, Long userNo) {
+		String currentNickname = mapper.nicknameCheck(userNo);
+		if (nicknameInput.equals(currentNickname)) {
+			return false;	// 중복이 아니므로 isDuplicate = false
+		}
+		
+		int count = mapper.countByNickname(nicknameInput);
+		return count > 0;
+	}
+
+
+	@Override
+	public boolean checkEmail(String emailInput, Long userNo) {
+		String currentEmail = mapper.emailCheck(userNo);
+		if (emailInput.equals(currentEmail)) {
+			return false;	// 중복이 아니므로 isDuplicate = false
+		}
+		
+		int count = mapper.countByEmail(emailInput);
+		return count > 0;
+	}
+
+
+	@Override
+	public boolean checkPhoneNumber(String phoneNumberInput, Long userNo) {
+		String currentPhoneNumber = mapper.phoneNumberCheck(userNo);
+		if (phoneNumberInput.equals(currentPhoneNumber)) {
+			return false;	// 중복이 아니므로 isDuplicate = false
+		}
+		
+		int count = mapper.countByPhoneNumber(phoneNumberInput);
+		return count > 0;
+	}
+	
+	
+
+
 
 
 

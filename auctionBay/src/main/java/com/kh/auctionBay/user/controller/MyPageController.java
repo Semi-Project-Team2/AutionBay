@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.auctionBay.common.SessionConst;
+import com.kh.auctionBay.common.dto.ApiResponse;
 import com.kh.auctionBay.common.util.FileUploadUtil;
 import com.kh.auctionBay.review.model.dto.ReviewDTO;
 import com.kh.auctionBay.review.model.dto.ReviewResultList;
@@ -81,6 +82,8 @@ public class MyPageController {
 		model.addAttribute("pageInfo", list.getPageInfo());
 		// 현재 페이지 정보 전달
 		model.addAttribute("currentPage", condition.getPage());
+		// 로그인한 유저 정보 전달
+		model.addAttribute("user", loginUser);
 		
 		return "mypage/txHistories";
 	}
@@ -121,6 +124,8 @@ public class MyPageController {
 		// 페이징 정보 저장 (받은 후기: receivedPageInfo, 보낸 후기: sentPageInfo)
 		model.addAttribute("receivedPageInfo", receivedReviews.getPageInfo());
 		model.addAttribute("sentPageInfo", sentReviews.getPageInfo());
+		// 로그인한 유저 정보 전달 (이거 없으면 profileImg 표시 불가)
+		model.addAttribute("user", loginUser);
 		
 		// 현재 활성화된 탭 정보를 브라우저로 전달
 		model.addAttribute("activeTab", tab);
@@ -175,28 +180,25 @@ public class MyPageController {
 	 */
 	@ResponseBody	// 뷰리졸버를 타지 않고 문자열을 그대로 브라우저에 보내도록 처리
 	@PostMapping("/review/writeForm")
-	public String writeReview(Long historyId,
-			@ModelAttribute ReviewDTO review, 
+	public ApiResponse<Void> writeReview(Long historyId, @ModelAttribute ReviewDTO review, 
 			Model model, HttpSession session) 
 				throws IllegalStateException, IOException {
 		// 1. 로그인한 사용자 정보 가져오기
 		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
 		if (loginUser == null) {
-			return "<script>alert('로그인이 필요합니다.'); location.href='/user/login';</script>";
+			return ApiResponse.fail("로그인이 필요합니다.");
 		}
 		
 		// 2. DB에서 거래내역 조회 후 변수에 저장
 		TxHistoryDTO txHistory = txService.getTxHistoryDetail(historyId);
 	    if (txHistory == null) {
-	        return "<script>alert('잘못된 접근입니다.'); window.close();</script>";
+	        return ApiResponse.fail("잘못된 접근입니다.");
 	    }
-	    
-		// 브라우저에서 "txHistory"로 요청 시 txHistory 전달
-		model.addAttribute("txHistory", txHistory);
 		
 		// 3. review 객체에 누락된 필수 정보(productId 등) set
 		review.setProductId(txHistory.getProductId());
 		review.setReviewerNo(loginUser.getUserNo());
+		
 		if (loginUser.getUserNo().equals(txHistory.getBuyerNo())) {
 			review.setRevieweeNo(txHistory.getSellerNo());
 		} else if (loginUser.getUserNo().equals(txHistory.getSellerNo())) {
@@ -210,15 +212,10 @@ public class MyPageController {
 		txHistory.setReviewWrited(true);
 
 		if (result > 0) {
-			return "<script>" +
-		               "  alert('후기가 성공적으로 등록되었습니다.');" +
-		               "  window.opener.location.href = '/mypage/txHistories';" +
-		               // 원래 창으로 이동
-		               "  window.close();" + // 팝업창 닫기
-		               "</script>";
-		    } else {
-		        return "<script>alert('후기 등록에 실패했습니다.'); history.back();</script>";
-		    }
+			return ApiResponse.success("후기가 등록되었습니다.", null);
+	    } else {
+	        return ApiResponse.fail("후기 등록에 실패하였습니다.");
+	    }
 	}
 	
 	/**
@@ -230,9 +227,11 @@ public class MyPageController {
 	 * @throws IllegalStateException
 	 * @throws IOException
 	 */
+	@ResponseBody
 	@PostMapping("/profile/editForm")
-	public String editProfile(@ModelAttribute UserDTO user, HttpSession session, 
-			RedirectAttributes redirectAttr, 
+	public ApiResponse<Void> editProfile(@ModelAttribute UserDTO user, 
+	// 성공/실패 여부와 메시지 외에 전달할 데이터가 없기 때문에 Void
+			HttpSession session, boolean deleteProfileImg,
 			@RequestParam(required=false) MultipartFile profileImage)
 				throws IllegalStateException, IOException,
 				SQLIntegrityConstraintViolationException {
@@ -240,7 +239,7 @@ public class MyPageController {
 		// 1. 로그인한 사용자 정보
 		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
 		if (loginUser == null) {
-			return "<script>alert('로그인이 필요합니다.'); location.href='/user/login';</script>";
+			return ApiResponse.fail("로그인이 필요합니다.");
 		}
 		
 		// 2. userNo를 로그인한 사용자의 것으로 set
@@ -248,26 +247,83 @@ public class MyPageController {
 		
 		try {
 			// 3. UserService 호출 후 저장된 값 업데이트
-			//
 			int result = userService.editProfile(user, profileImage);
 			
 			if (result > 0) {
 				// 4. 로그인한 사용자 정보를 변경된 값으로 최신화
 				UserDTO updatedUser = userService.getUserByUserNo(loginUser.getUserNo());
+				
+				if (deleteProfileImg) {	
+					// 프로필 사진 삭제 시 프사 경로를 기본 이미지로
+					updatedUser.setProfileImg("/uploads/profile/default-profile.png");
+				} else if (profileImage != null && !profileImage.isEmpty()) {
+					// 새로운 프로필 사진 업로드 시 DB에 이미 새로운 경로가 저장됨
+					// updatedUser의 프사 경로를 그대로 사용
+					// 분기를 안 나누면 프사 업로드한 경우까지 아래 else문에 잡히므로 분기를 나누고
+					// 로직은 추가하지 않음
+				} else {
+					// 프로필 사진 업로드도 안 했고 삭제도 안 한 경우 -> 기존 프사 유지
+					updatedUser.setProfileImg(loginUser.getProfileImg());
+				}
 				session.setAttribute(SessionConst.LOGIN_USER, updatedUser);
-				redirectAttr.addFlashAttribute("message", "프로필이 수정되었습니다.");
+				
+				// message 반환 (전달할 데이터 없어서 data 부분은 null)
+				return ApiResponse.success("프로필이 수정되었습니다.", null);
+			} else {
+				// 수정 실패 시 실패 응답 반환
+				return ApiResponse.fail("프로필을 수정할 수 없습니다.");
 			}
 			
 		} catch (RuntimeException e) {
-			redirectAttr.addFlashAttribute("message", e.getMessage());
-			// 회원정보 수정에 실패하더라도 사용자가 입력했던 변경사항을 반영
-			redirectAttr.addFlashAttribute("user", user);
-			
-			return "redirect:/mypage/profile/editForm";
+			// 예외 발생 시 해당 예외 메시지를 담아 실패 응답 반환		
+			return ApiResponse.fail(e.getMessage());
 		}
-		
-		return "redirect:/mypage/txHistories";
 	}
 	
+	@GetMapping("/checkNickname")
+	@ResponseBody
+	public ApiResponse<Boolean> checkNickname(HttpSession session, String nickname) {
+		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		if (loginUser == null) {
+			return ApiResponse.fail("로그인이 필요합니다.");
+		}
+		
+		// 로그인한 사용자의 userNo를 서비스에 함께 전달
+		boolean isDuplicate = userService.checkNickname(nickname, loginUser.getUserNo());
+		
+		String message = isDuplicate ? "이미 사용중인 닉네임입니다." : "사용 가능한 닉네임입니다.";
+		
+		return ApiResponse.success(message, isDuplicate);
+	}
+	
+	@GetMapping("/checkPhoneNumber")
+	@ResponseBody
+	public ApiResponse<Boolean> checkPhoneNumber(HttpSession session, String phoneNumber) {
+		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		if (loginUser == null) {
+			return ApiResponse.fail("로그인이 필요합니다.");
+		}
+		// 로그인한 사용자의 userNo를 서비스에 함께 전달
+		boolean isDuplicate = userService.checkPhoneNumber(phoneNumber, loginUser.getUserNo());
+		
+		String message = isDuplicate ? "이미 사용중인 전화번호입니다." : "사용 가능한 전화번호입니다.";
+		
+		return ApiResponse.success(message, isDuplicate);
+	}
+	
+	@GetMapping("/checkEmail")
+	@ResponseBody
+	public ApiResponse<Boolean> checkEmail(HttpSession session, String email) {
+		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		if (loginUser == null) {
+			return ApiResponse.fail("로그인이 필요합니다.");
+		}
+		// 로그인한 사용자의 userNo를 서비스에 함께 전달
+		boolean isDuplicate = userService.checkEmail(email, loginUser.getUserNo());
+		
+		String message = isDuplicate ? "이미 사용중인 이메일입니다." : "사용 가능한 이메일입니다.";
+		
+		return ApiResponse.success(message, isDuplicate);
+	}
 	
 }
