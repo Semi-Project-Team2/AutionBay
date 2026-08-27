@@ -40,6 +40,35 @@
 			        <c:forEach var="c" items="${categoryList}">
 			            <a class="filter-item ${condition.categoryId == c.categoryId ? 'active' : ''}" onclick="filterChange('categoryId', '${c.categoryId}')">${c.categoryName}</a>
 			        </c:forEach>
+			    </div>	
+			</div>
+			<div class="filter-row">
+			    <div class="filter-label">가격</div>
+
+			    <div class="filter-options price-filter">
+
+			        <input
+			            type="number"
+			            name="minPrice"
+			            id="minPrice"
+			            value="${condition.minPrice}"
+			            placeholder="최소 가격"
+			            min="0">
+
+			        <span>~</span>
+
+			        <input
+			            type="number"
+			            name="maxPrice"
+			            id="maxPrice"
+			            value="${condition.maxPrice}"
+			            placeholder="최대 가격"
+			            min="0">
+
+			        <button type="submit" class="price-search-btn">
+			            검색
+			        </button>
+
 			    </div>
 			</div>
         </div>
@@ -112,13 +141,13 @@
             <a href="${pageContext.request.contextPath}/product/write" class="btn-write">게시글 작성</a>
             
             <div class="quick-box">
-                <a href="${pageContext.request.contextPath}/member/wishlist" class="quick-item">
+                <a href="${pageContext.request.contextPath}/mypage/wishlists" class="quick-item">
                     <span>❤️</span>찜목록
                 </a>
                 <a href="${pageContext.request.contextPath}/message/received" class="quick-item">
                     <span>✉️</span>쪽지함
                 </a>
-                <a href="javascript:void(0);" class="quick-item" onclick="alert('최근 본 글 기능 준비중');">
+                <a href="${pageContext.request.contextPath}/mypage/recents"class="quick-item">
                     <span>👁️</span>최근 본 글
                 </a>
             </div>
