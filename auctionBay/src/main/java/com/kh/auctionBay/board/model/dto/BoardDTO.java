@@ -29,4 +29,5 @@ public class BoardDTO {
     
     // 첨부 이미지 목록
     private List<BoardImageDTO> images;
+   
 }
