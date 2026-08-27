@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>마이페이지 - 최근 본 글</title>
-	<link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/common.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Malgun Gothic', sans-serif; background-color: #f8f9fa; color: #333; }
@@ -47,6 +47,18 @@
         .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .content-title { font-size: 18px; font-weight: bold; }
 
+        .btn-clear-all {
+            background-color: #ff8b94;
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .btn-clear-all:hover { background-color: #ff6b7b; }
+
         .board-list { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
         .board-card {
             background-color: #e2e2e2; padding: 15px 20px; border-radius: 6px;
@@ -57,6 +69,17 @@
         .board-title { font-size: 16px; font-weight: 500; color: #333; text-decoration: none; }
         .board-title:hover { text-decoration: underline; }
         
+        .btn-delete-item {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: #888;
+            cursor: pointer;
+            padding: 5px;
+            line-height: 1;
+        }
+        .btn-delete-item:hover { color: #ff0000; }
+
         .no-data { text-align: center; padding: 40px; color: #777; background-color: #e2e2e2; border-radius: 6px; }
 
         .pagination { display: flex; justify-content: center; align-items: center; gap: 5px; margin-top: 20px; }
@@ -68,7 +91,7 @@
 <body>
 
     <div class="container">
-		<jsp:include page="/WEB-INF/views/common/header.jsp" />
+        <jsp:include page="/WEB-INF/views/common/header.jsp" />
         
         <div class="profile-box">
             <div class="profile-info-wrap">
@@ -83,17 +106,20 @@
 
         <div class="mypage-content">
             
-			<div class="mypage-sidebar">
-			    <a href="${pageContext.request.contextPath}/mypage/products" class="sidebar-item">게시글 관리</a>
-			    <a href="${pageContext.request.contextPath}/mypage/comments" class="sidebar-item">댓글 관리</a>
-			    <a href="${pageContext.request.contextPath}/mypage/txHistories" class="sidebar-item">거래 내역</a>
-			    <a href="${pageContext.request.contextPath}/mypage/reviews" class="sidebar-item">후기</a>
-			    <a href="${pageContext.request.contextPath}/mypage/recents" class="sidebar-item active">최근 본 글</a>
-			</div>
+            <div class="mypage-sidebar">
+                <a href="${pageContext.request.contextPath}/mypage/products" class="sidebar-item">게시글 관리</a>
+                <a href="${pageContext.request.contextPath}/mypage/comments" class="sidebar-item">댓글 관리</a>
+                <a href="${pageContext.request.contextPath}/mypage/txHistories" class="sidebar-item">거래 내역</a>
+                <a href="${pageContext.request.contextPath}/mypage/reviews" class="sidebar-item">후기</a>
+                <a href="${pageContext.request.contextPath}/mypage/recents" class="sidebar-item active">최근 본 글</a>
+            </div>
 
             <div class="mypage-main">
                 <div class="content-header">
                     <div class="content-title">마이페이지(최근 본 글)</div>
+                    <c:if test="${not empty recentList}">
+                        <button type="button" class="btn-clear-all" onclick="clearAllRecents()">전체 삭제</button>
+                    </c:if>
                 </div>
 
                 <div class="board-list">
@@ -102,39 +128,98 @@
                             <div class="no-data">최근 본 글이 없습니다.</div>
                         </c:when>
                         <c:otherwise>
-							<c:forEach var="recent" items="${recentList}">
-							    <div class="board-card">
-							        <div class="board-info">
-							            <c:choose>
-							                <c:when test="${not empty recent.mainImage}">
-							                    <img src="${pageContext.request.contextPath}/resources/upload/${recent.mainImage}" class="board-thumb" alt="상품 이미지">
-							                </c:when>
-							                <c:otherwise>
-							                    <div class="board-thumb">img</div>
-							                </c:otherwise>
-							            </c:choose>
-							            
-							            <a href="${pageContext.request.contextPath}/auction/${recent.productNo}/detail" class="board-title">${recent.title}</a>
-							        </div>
-							    </div>
-							</c:forEach>
+                            <c:forEach var="recent" items="${recentList}">
+                                <div class="board-card" data-product-no="${recent.productNo}">
+                                    <div class="board-info">
+                                        <c:choose>
+                                            <c:when test="${not empty recent.mainImage}">
+                                                <img src="${pageContext.request.contextPath}/resources/upload/${recent.mainImage}" class="board-thumb" alt="상품 이미지">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <div class="board-thumb">img</div>
+                                            </c:otherwise>
+                                        </c:choose>
+                                        
+                                        <a href="${pageContext.request.contextPath}/auction/${recent.productNo}/detail" class="board-title">${recent.title}</a>
+                                    </div>
+                                    <button type="button" class="btn-delete-item" onclick="deleteRecent(${recent.productNo}, this)" title="삭제">✕</button>
+                                </div>
+                            </c:forEach>
                         </c:otherwise>
                     </c:choose>
                 </div>
 
-				<c:if test="${not empty recentList}">
-				    <div class="pagination">
-				        <a href="#" class="page-btn">&lt; 이전</a>
-				        <a href="#" class="page-btn active">1</a>
-				        <a href="#" class="page-btn">다음 &gt;</a>
-				    </div>
-				</c:if>
+                <c:if test="${not empty recentList}">
+                    <div class="pagination">
+                        <a href="#" class="page-btn">&lt; 이전</a>
+                        <a href="#" class="page-btn active">1</a>
+                        <a href="#" class="page-btn">다음 &gt;</a>
+                    </div>
+                </c:if>
 
             </div>
         </div>
     </div>
 
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />
-	<script src="${pageContext.request.contextPath}/js/mypage.js"></script>
+
+	<script>
+		// 개별 삭제
+		function deleteRecent(productNo, btnElement) {
+		    if (!confirm("해당 기록을 삭제하시겠습니까?")) return;
+
+		    const params = new URLSearchParams();
+		    params.append('productNo', productNo);
+
+		    fetch('/mypage/recents/delete', {
+		        method: 'POST',
+		        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+		        body: params
+		    })
+		    .then(res => {
+		        if (!res.ok) throw new Error("HTTP error " + res.status);
+		        return res.text();
+		    })
+		    .then(data => {
+		        if (data === 'SUCCESS') {
+		            const card = btnElement.closest('.board-card');
+		            card.remove();
+
+		            const list = document.querySelector('.board-list');
+		            if (list.children.length === 0) {
+		                list.innerHTML = '<div class="no-data">최근 본 글이 없습니다.</div>';
+		                const pagination = document.querySelector('.pagination');
+		                const clearBtn = document.querySelector('.btn-clear-all');
+		                if (pagination) pagination.remove();
+		                if (clearBtn) clearBtn.remove();
+		            }
+		        } else {
+		            alert("삭제 실패: " + data);
+		        }
+		    })
+		    .catch(err => alert("오류 발생: " + err.message));
+		}
+
+		// 전체 삭제
+		function clearAllRecents() {
+		    if (!confirm("최근 본 글을 모두 삭제하시겠습니까?")) return;
+
+		    fetch('/mypage/recents/clear', {
+		        method: 'POST'
+		    })
+		    .then(res => {
+		        if (!res.ok) throw new Error("HTTP error " + res.status);
+		        return res.text();
+		    })
+		    .then(data => {
+		        if (data === 'SUCCESS') {
+		            location.reload();
+		        } else {
+		            alert("삭제 실패: " + data);
+		        }
+		    })
+		    .catch(err => alert("오류 발생: " + err.message));
+		}
+	</script>
 </body>
 </html>

@@ -123,5 +123,17 @@
 		   SET CONTENT = '삭제된 댓글입니다.'
 		 WHERE COMMENT_ID = #{commentNo}
 	</update>
+	<!-- 최근 본 글 개별 삭제 -->
+<delete id="deleteRecentView" parameterType="map">
+    DELETE FROM RECENT_VIEWS
+     WHERE USER_NO = #{userNo}
+       AND PRODUCT_ID = #{productNo}
+</delete>
+
+<!-- 최근 본 글 전체 삭제 -->
+<delete id="deleteAllRecentViews" parameterType="long">
+    DELETE FROM RECENT_VIEWS
+     WHERE USER_NO = #{userNo}
+</delete>
 
 </mapper>

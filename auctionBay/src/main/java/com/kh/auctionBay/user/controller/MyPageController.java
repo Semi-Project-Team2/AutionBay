@@ -3,6 +3,8 @@ package com.kh.auctionBay.user.controller;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -198,11 +200,11 @@ public class MyPageController {
 	/* ========================================================================= */
 	/**
 	 * [내가 작성한 게시글 목록 페이지 이동 및 데이터 조회]
-	 * - 요청 URL: GET /mypage/boards
+	 * - 요청 URL: GET /mypage/products
 	 * - 처리 과정: 
 	 *    1. 세션에서 로그인된 회원 정보를 가져옵니다. 비로그인 시 로그인 페이지로 리다이렉트합니다.
 	 *    2. ActivityService를 통해 현재 회원이 작성한 상품 게시글 리스트를 조회합니다.
-	 *    3. 조회한 데이터를 Model에 담아 "mypage/boards" 뷰로 전달합니다.
+	 *    3. 조회한 데이터를 Model에 담아 "mypage/products" 뷰로 전달합니다.
 	 */
 	
 	@GetMapping("/products")
@@ -240,10 +242,10 @@ public class MyPageController {
 
 	/**
 	 * [찜 목록 페이지 이동 및 데이터 조회]
-	 * - 요청 URL: GET /mypage/wishlist
+	 * - 요청 URL: GET /mypage/wishlists
 	 * - 처리 과정:
 	 *    1. 로그인한 회원의 번호를 바탕으로 찜 등록한 상품 목록을 조회합니다.
-	 *    2. 조회된 찜 목록 데이터를 Model에 담아 "mypage/wishlist" 뷰로 전달합니다.
+	 *    2. 조회된 찜 목록 데이터를 Model에 담아 "mypage/wishlists" 뷰로 전달합니다.
 	 */
 	@GetMapping("/wishlists")
 	public String myWishlist(HttpSession session, Model model) {
@@ -259,10 +261,10 @@ public class MyPageController {
 
 	/**
 	 * [최근 본 상품 목록 페이지 이동 및 데이터 조회]
-	 * - 요청 URL: GET /mypage/recent
+	 * - 요청 URL: GET /mypage/recents
 	 * - 처리 과정:
 	 *    1. 로그인한 회원의 최근 조회 히스토리 목록을 서비스로부터 가져옵니다.
-	 *    2. 조회된 최근 본 글 리스트를 Model에 담아 "mypage/recent" 뷰로 전달합니다.
+	 *    2. 조회된 최근 본 글 리스트를 Model에 담아 "mypage/recents" 뷰로 전달합니다.
 	 */
 	@GetMapping("/recents")
 	public String recentViews(HttpSession session, Model model) {
@@ -278,7 +280,7 @@ public class MyPageController {
 
 	/**
 	 * [내가 작성한 게시글 삭제 처리 (AJAX 비동기 통신)]
-	 * - 요청 URL: GET /mypage/deleteBoard?productNo=상품번호
+	 * - 요청 URL: GET /mypage/deleteProduct?productNo=상품번호  (<- 수정)
 	 * - 처리 과정:
 	 *    1. 비동기 요청 시 파라미터로 넘어온 상품 번호(productNo)와 로그인 유저 번호를 확인합니다.
 	 *    2. 소프트 딜리트(삭제 상태값 변경) 방식을 통해 게시글 삭제 처리를 수행합니다.
@@ -314,5 +316,46 @@ public class MyPageController {
 
 		boolean isDeleted = activityService.deleteMyComment(commentNo, loginUser.getUserNo());
 		return isDeleted ? "SUCCESS" : "FAIL";
+	}
+	
+	/**
+	 * 최근 본 글 개별 삭제
+	 * 요청 URL: POST /mypage/recents/delete
+	 */
+	@PostMapping("/recents/delete")
+	@ResponseBody
+	public ResponseEntity<String> deleteRecentView(
+			@RequestParam(value = "productNo", required = false) Long productNo, 
+			HttpSession session) {
+		
+		if (productNo == null) {
+			return ResponseEntity.badRequest().body("PRODUCT_NO_MISSING");
+		}
+
+		// SessionConst.LOGIN_USER로 세션키 통일
+		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
+		if (loginUser == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("LOGIN_REQUIRED");
+		}
+
+		boolean result = activityService.removeRecentView(loginUser.getUserNo(), productNo);
+		return result ? ResponseEntity.ok("SUCCESS") : ResponseEntity.badRequest().body("FAIL");
+	}
+
+	/**
+	 * 최근 본 글 전체 삭제
+	 * 요청 URL: POST /mypage/recents/clear
+	 */
+	@PostMapping("/recents/clear")
+	@ResponseBody
+	public ResponseEntity<String> clearAllRecentViews(HttpSession session) {
+		// SessionConst.LOGIN_USER로 세션키 통일
+		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
+		if (loginUser == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("LOGIN_REQUIRED");
+		}
+
+		activityService.removeAllRecentViews(loginUser.getUserNo());
+		return ResponseEntity.ok("SUCCESS");
 	}
 }

@@ -91,4 +91,14 @@ public class ActivityServiceImpl implements ActivityService {
 		int result = activityMapper.deleteMyComment(commentNo, writerNo);
 		return result > 0;
 	}
+	// ActivityServiceImpl.java
+	@Override
+	public boolean removeRecentView(long userNo, long productNo) {
+	    return activityMapper.deleteRecentView(userNo, productNo) > 0;
+	}
+
+	@Override
+	public boolean removeAllRecentViews(long userNo) {
+	    return activityMapper.deleteAllRecentViews(userNo) > 0;
+	}
 }

@@ -26,4 +26,7 @@ public interface ActivityService {
 
 	// 6. 내가 작성한 댓글 삭제
 	boolean deleteMyComment(Long commentNo, Long writerNo);
+	
+	boolean removeRecentView(long userNo, long productNo);
+	boolean removeAllRecentViews(long userNo);
 }
