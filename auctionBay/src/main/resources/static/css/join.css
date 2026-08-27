@@ -227,22 +227,43 @@
     text-align: center;
 }
 
+/* 프로필 버튼 그룹 정렬 */
+.profile-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 이미지 선택 & 초기화 버튼 동일 스타일 */
 .file-label {
-    display: inline-block;
-    padding: 8px 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;                 /* 높이 강제 통일 */
+    padding: 0 14px;              /* 좌우 패딩만 부여 */
     border: 1px solid #ccc;
     border-radius: 4px;
     background-color: #e2e2e2;
+    color: #333;
     font-size: 13px;
     font-weight: bold;
+    font-family: inherit;
     cursor: pointer;
+    box-sizing: border-box;
+    user-select: none;
+    margin: 0;
 }
+
 .file-label:hover {
     background-color: #d1d1d1;
 }
+
 .file-label input[type="file"] {
     display: none;
 }
+
+
 
 /* 가입 버튼 */
 .btn {

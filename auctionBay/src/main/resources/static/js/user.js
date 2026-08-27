@@ -170,26 +170,44 @@ checkPhoneNumberBtn.addEventListener("click", async function() {
 
 
 // 프로필 이미지 미리보기
+
 const profileImg = document.querySelector("#profile-image");
-profileImg.addEventListener('change', function(e) {
-	const file = e.target.files[0];
-	if(!file){
-		return;
-	}
-	
-	const reader = new FileReader();
-	reader.onload = function(e){
-		const profilePreview = document.querySelector("#profile-preview");
-		profilePreview.src = e.target.result;
-		profilePreview.style.display = "block";
-		
-		document.querySelector("#profile-preview-placeholder").style.display = "none";
-	}
-	
-	reader.readAsDataURL(file);
-	
+const profilePreview = document.querySelector("#profile-preview");
+
+profileImg.addEventListener("change", function(e) {
+
+    const file = e.target.files[0];
+
+    // 파일을 선택하지 않은 경우 기본 이미지
+    if (!file) {
+        profilePreview.src =  "/uploads/profile/default-profile.png";
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+        profilePreview.src = e.target.result;
+    };
+
+    reader.readAsDataURL(file);
 
 });
+
+// 프로필 이미지 초기화
+
+const resetProfileBtn = document.querySelector("#reset-profile-btn");
+
+resetProfileBtn.addEventListener("click", function() {
+
+    // 선택한 파일 초기화
+    profileImg.value = "";
+
+    // 기본 프로필 이미지로 변경
+    profilePreview.src = "/uploads/profile/default-profile.png";
+
+});
+
 
 // 비밀번호 체크
 const password = document.querySelector("#user-pwd");

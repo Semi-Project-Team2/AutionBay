@@ -30,14 +30,23 @@
 		<form id="join-form" class="form form-flex" action="/user/join" method="post" enctype="multipart/form-data">
 			<div class="form-row form-row-center">
 				<div class="profile-preview-wrap">
-					<div id="profile-preview-placeholder" class="profile-preview profile-preview-placeholder">사진없음
-					</div>
-					<img id="profile-preview" class="profile-preview" alt="프로필 미리보기" style="display:none;">
+					<img id="profile-preview"
+					     class="profile-preview"
+					     src="/uploads/profile/default-profile.png"
+					     alt="프로필 미리보기">
 				</div>
-					<label class="file-label">
-					프로필 이미지 선택
-					<input type="file" id="profile-image" name="profileImage" accept="image/*">
-				</label>
+				<div class="profile-buttons">
+				    <label class="file-label">
+				        프로필 이미지 선택
+				        <input type="file"
+				               id="profile-image"
+				               name="profileImage"
+				               accept="image/*">
+				    </label>
+				    <label id="reset-profile-btn" class="file-label">
+						프로필 초기화
+					</label>
+				</div>
 			</div>
 
 

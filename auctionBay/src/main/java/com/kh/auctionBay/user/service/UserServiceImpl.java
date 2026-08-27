@@ -44,12 +44,23 @@ public class UserServiceImpl implements UserService{
 		String encodePWd = passwordEncoder.encode(user.getPassword());
 		user.setPassword(encodePWd); // 비밀번호 암호화
 		
-		SavedFile saved = uploadUtil.save(profileImg, profileUploadDir, "/uploads/profile");
-		if(saved != null) {
-			user.setProfileImg(saved.getPath());
-		}
-		
-		mapper.insertUser(user);
+		// 프로필 이미지 처리
+	    if(profileImg == null || profileImg.isEmpty()) {
+
+	        // 기본 프로필 이미지
+	        user.setProfileImg("/uploads/profile/default-profile.png");
+
+	    } else {
+
+	        // 사용자가 선택한 이미지 저장
+	        SavedFile saved = uploadUtil.save(profileImg, profileUploadDir, "/uploads/profile");
+
+	        if(saved != null) {
+	            user.setProfileImg(saved.getPath());
+	        }
+	    }
+
+	    mapper.insertUser(user);
 		
 		
 		
