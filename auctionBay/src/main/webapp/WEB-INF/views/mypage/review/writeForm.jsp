@@ -22,10 +22,8 @@
         <form action="${pageContext.request.contextPath}/mypage/review/writeForm" method="post" class="popup-form">
             
             <!-- Hidden 데이터 전달 영역 (productId, reviewerNo, revieweeNo) -->
-
+            <input type="hidden" name="historyId" value="${txHistory.historyId}">
             <input type="hidden" name="productId" value="${txHistory.productId}">
-            <input type="hidden" name="reviewerNo" value="${txHistory.reviewerNo}">
-            <input type="hidden" name="revieweeNo" value="${txHistory.revieweeNo}">
 
             <!-- 평점 입력 영역 (드롭박스, 1~10, required) -->
             <div class="form-group">

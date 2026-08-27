@@ -4,6 +4,7 @@ package com.kh.auctionBay.user.service;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +20,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
+
+
 
 	private final UserMapper mapper;
 	
@@ -42,12 +45,23 @@ public class UserServiceImpl implements UserService{
 		String encodePWd = passwordEncoder.encode(user.getPassword());
 		user.setPassword(encodePWd); // 비밀번호 암호화
 		
-		SavedFile saved = uploadUtil.save(profileImg, profileUploadDir, "/uploads/profile");
-		if(saved != null) {
-			user.setProfileImg(saved.getPath());
-		}
-		
-		mapper.insertUser(user);
+		// 프로필 이미지 처리
+	    if(profileImg == null || profileImg.isEmpty()) {
+
+	        // 기본 프로필 이미지
+	        user.setProfileImg("/uploads/profile/default-profile.png");
+
+	    } else {
+
+	        // 사용자가 선택한 이미지 저장
+	        SavedFile saved = uploadUtil.save(profileImg, profileUploadDir, "/uploads/profile");
+
+	        if(saved != null) {
+	            user.setProfileImg(saved.getPath());
+	        }
+	    }
+
+	    mapper.insertUser(user);
 		
 		
 		
@@ -60,8 +74,29 @@ public class UserServiceImpl implements UserService{
 		return mapper.countByUserId(userId) > 0;
 		
 	}
+	
 
+	@Override
+	public boolean isNicknameCheck(String nickname) {
+		
+		return mapper.countByNickname(nickname) > 0;
+		
+	}
 
+	@Override
+	public boolean isEmailCheck(String email) {
+
+		return mapper.countByEmail(email) > 0;
+		
+	}
+	
+	@Override
+	public boolean isPhoneNumberCheck(String phoneNumber) {
+		
+		return mapper.countByPhoneNumber(phoneNumber) > 0;
+	
+	}
+	
 
 
 	@Override
@@ -81,17 +116,39 @@ public class UserServiceImpl implements UserService{
 
 
 	@Override
-	public int editProfile() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int editProfile(UserDTO loginUser, MultipartFile profileImg)
+			throws IOException {
+		
+		SavedFile saved = uploadUtil.save(profileImg, profileUploadDir, "/uploads/profile");
+		if(saved != null) {
+			loginUser.setProfileImg(saved.getPath());
+		}
+		
+		try {
+			
+			return mapper.updateUser(loginUser);
+			
+		} catch (DataIntegrityViolationException e) {
+			
+			throw new RuntimeException("이미 사용중인 전화번호/이메입니다.");
+		}
+		
 	}
 
+	@Override
+	public UserDTO getUserByUserNo(Long userNo) {
+		return mapper.selectByUserNo(userNo);
+	}
 
 	@Override
 	public int withdraw(Long userNo) {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return mapper.updateUserWithdrawal(userNo);
 	}
+
+
+
+
 
 	
 	

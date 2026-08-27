@@ -60,7 +60,7 @@ public class ProductDTO {
 	private String categoryName;
 	
 	// 상세보기 화면에서 보여줄 이미지 목록
-	
+	private String mainImage;
 	// 경매 종료 시간 확인용 임시 필드(시간 마감시 "Y", 아닐시 "N" 저장용)
 	private String isClosed;
 	
