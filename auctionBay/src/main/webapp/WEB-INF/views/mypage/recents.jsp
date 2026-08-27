@@ -7,43 +7,68 @@
     <title>마이페이지 - 최근 본 글</title>
     <link rel="stylesheet" href="/css/common.css">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Malgun Gothic', sans-serif; background-color: #f8f9fa; color: #333; }
-        
-        .container { width: 1200px; margin: 30px auto; }
+		/* 전체 컨테이너: 세로 플렉스로 잡아 프로필이 위, 사이드바+메인이 아래로 오게 고정 */
+				    .container { 
+				        width: 1200px; 
+				        margin: 30px auto; 
+				        display: flex; 
+				        flex-direction: column; 
+				        gap: 30px; 
+				    }
 
-        .profile-box {
-            background-color: #e2e2e2;
-            padding: 30px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 30px;
+				    /* 팀원 원본 프로필 영역이 가로 전체를 채우도록 설정 */
+				    .container > *:nth-child(2) {
+				        width: 100%;
+				    }
+
+				    /* 상단 프로필 영역 */
+				    .profile-area {
+				        background-color: #e2e2e2;
+				        padding: 30px;
+				        border-radius: 6px;
+				        display: flex;
+				        align-items: center;
+				        justify-content: space-between;
+				    }
+				    .profile-info { display: flex; align-items: center; gap: 20px; }
+				    .profile-img { width: 70px; height: 70px; background-color: #333; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+				    .profile-text h2 { font-size: 20px; font-weight: bold; margin-bottom: 5px; }
+				    .profile-text p { font-size: 14px; color: #555; }
+				    .profile-right { display: flex; gap: 10px; }
+				    .btn-edit { background-color: #d4edda; border: 1px solid #c3e6cb; padding: 8px 15px; border-radius: 4px; font-weight: bold; color: #155724; cursor: pointer; text-decoration: none; font-size: 13px; }
+				    .btn-withdraw { background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 8px 15px; border-radius: 4px; font-weight: bold; color: #721c24; cursor: pointer; text-decoration: none; font-size: 13px; }
+        /* [핵심] 사이드바와 메인 컨텐츠를 좌우로 나란히 정렬 */
+        .mypage-content { 
+            display: flex !important; 
+            flex-direction: row !important;
+            gap: 30px !important; 
+            align-items: flex-start !important; 
+            width: 100% !important; 
         }
-        .profile-info-wrap { display: flex; align-items: center; gap: 25px; }
-        .profile-img { width: 80px; height: 80px; background-color: #222; border-radius: 50%; }
-        .profile-text h2 { font-size: 22px; font-weight: bold; margin-bottom: 5px; color: #000; }
-        .profile-text p { font-size: 14px; color: #555; }
-        .btn-edit {
-            background-color: #d4edda; border: 1px solid #c3e6cb; padding: 10px 20px;
-            border-radius: 4px; text-decoration: none; color: #155724; font-weight: bold; font-size: 14px; cursor: pointer;
-        }
-        .btn-edit:hover { background-color: #c3e6cb; }
 
-        .mypage-content { display: flex; gap: 30px; align-items: flex-start; }
-
+        /* 사이드바 고정 */
         .mypage-sidebar {
-            width: 200px; background-color: #e2e2e2; border-radius: 6px;
-            padding: 15px 0; display: flex; flex-direction: column; gap: 5px;
+            width: 200px !important; 
+            background-color: #e2e2e2; 
+            border-radius: 6px;
+            padding: 15px 0; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 5px;
+            flex-shrink: 0 !important; 
         }
         .sidebar-item {
             padding: 12px 20px; text-decoration: none; color: #555; font-size: 15px; font-weight: 500; display: block;
         }
         .sidebar-item:hover { background-color: #d1d1d1; color: #000; }
-        .sidebar-item.active { background-color: #c5c5c5; color: #000; font-weight: bold; }
+        .sidebar-item.active { background-color: #d1d1d1; color: #000; font-weight: bold; }
 
-        .mypage-main { flex: 1; min-width: 0; }
+        /* 우측 메인 영역 확장 */
+        .mypage-main { 
+            flex: 1 !important; 
+            min-width: 0 !important; 
+        }
+        
         .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .content-title { font-size: 18px; font-weight: bold; }
 
@@ -93,16 +118,8 @@
     <div class="container">
         <jsp:include page="/WEB-INF/views/common/header.jsp" />
         
-        <div class="profile-box">
-            <div class="profile-info-wrap">
-                <div class="profile-img"></div>
-                <div class="profile-text">
-                    <h2>${sessionScope.loginUser.nickname}</h2>
-                    <p>${sessionScope.loginUser.email}</p>
-                </div>
-            </div>
-            <a href="${pageContext.request.contextPath}/mypage/profile/editForm" class="btn-edit">회원 정보 수정</a>
-        </div>
+		<!-- 프로필 영역 포함 -->
+		<jsp:include page="/WEB-INF/views/mypage/profile/profile.jsp" />
 
         <div class="mypage-content">
             

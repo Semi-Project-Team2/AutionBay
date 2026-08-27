@@ -1,11 +1,11 @@
 package com.kh.auctionBay.user.controller;
 
 import java.io.IOException;
-<<<<<<< HEAD
+
 import java.util.List;
-=======
+
 import java.sql.SQLIntegrityConstraintViolationException;
->>>>>>> origin/main
+
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-<<<<<<< HEAD
-=======
+
 import org.springframework.web.multipart.MultipartFile;
->>>>>>> origin/main
+
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.auctionBay.activity.model.dto.MyCommentDTO;
@@ -28,11 +27,11 @@ import com.kh.auctionBay.activity.model.dto.RecentViewDTO;
 import com.kh.auctionBay.activity.model.dto.WishlistDTO;
 import com.kh.auctionBay.activity.service.ActivityService;
 import com.kh.auctionBay.common.SessionConst;
-<<<<<<< HEAD
+
 import com.kh.auctionBay.product.model.dto.ProductDTO;
-=======
+
 import com.kh.auctionBay.common.util.FileUploadUtil;
->>>>>>> origin/main
+
 import com.kh.auctionBay.review.model.dto.ReviewDTO;
 import com.kh.auctionBay.review.model.dto.ReviewResultList;
 import com.kh.auctionBay.review.model.dto.SearchCondition;
@@ -57,13 +56,12 @@ public class MyPageController {
 	private final UserService userService;
 //	private final ProductService productService;
 	
-<<<<<<< HEAD
+
 	// 팀원 코드를 건드리지 않기 위해 맨 아래에 추가하는 내 파트용 서비스 주입
 	private final ActivityService activityService;
 	
 	
-=======
->>>>>>> origin/main
+
 	/* ------------- 화면 이동 요청 --------------- */
 	
 	/**

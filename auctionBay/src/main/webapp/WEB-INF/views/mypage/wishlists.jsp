@@ -4,250 +4,214 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>AuctionBay - 찜목록</title>
+    <title>AuctionBay - 마이페이지(최근 본 글)</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
-	<link rel="stylesheet" href="/css/common.css">
-	<style>
-	    * { box-sizing: border-box; margin: 0; padding: 0; }
-	    body { font-family: 'Malgun Gothic', sans-serif; background-color: #f8f9fa; color: #333; }
-	    
-	    .container { width: 1200px; margin: 30px auto; position: relative; }
+    <link rel="stylesheet" href="/css/common.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Malgun Gothic', sans-serif; background-color: #f8f9fa; color: #333; }
+        
+        .container { width: 1200px; margin: 30px auto; position: relative; }
 
-	    .wishlist-header-title {
-	        font-size: 28px;
-	        font-weight: bold;
-	        font-style: italic;
-	        text-transform: uppercase;
-	        letter-spacing: 1px;
-	        margin-bottom: 25px;
-	        color: #000;
-	    }
+        /* 찜목록 페이지와 동일한 마이페이지 상단 프로필 박스 스타일 적용 */
+        .profile-box, .profile-area {
+            background-color: #e2e2e2;
+            padding: 30px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            width: 100%;
+            position: relative;
+            z-index: 10; /* 버튼 클릭이 가려지지 않도록 앞으로 당김 */
+        }
 
-	    .wishlist-grid {
-	        display: grid;
-	        grid-template-columns: repeat(5, 1fr);
-	        gap: 15px;
-	        margin-bottom: 40px;
-	        padding-right: 90px; /* 우측 퀵메뉴 공간 확보 */
-	    }
+        .mypage-content { display: flex; gap: 30px; align-items: flex-start; }
 
-	    .product-card {
-	        background-color: #fff;
-	        border-radius: 4px;
-	        overflow: hidden;
-	        display: flex;
-	        flex-direction: column;
-	        cursor: pointer;
-	    }
-	    
-	    .product-img {
-	        width: 100%;
-	        height: 150px;
-	        background-color: #d1d1d1;
-	        display: flex;
-	        align-items: center;
-	        justify-content: center;
-	        color: #777;
-	        font-size: 12px;
-	    }
+        .mypage-sidebar {
+            width: 200px; background-color: #e2e2e2; border-radius: 6px;
+            padding: 15px 0; display: flex; flex-direction: column; gap: 5px;
+            flex-shrink: 0;
+        }
+        .sidebar-item {
+            padding: 12px 20px; text-decoration: none; color: #555; font-size: 15px; font-weight: 500; display: block;
+        }
+        .sidebar-item:hover { background-color: #d1d1d1; color: #000; }
+        .sidebar-item.active { background-color: #c5c5c5; color: #000; font-weight: bold; }
 
-	    .product-info {
-	        padding: 10px;
-	        display: flex;
-	        flex-direction: column;
-	        gap: 4px;
-	    }
-	    .product-title-row {
-	        display: flex;
-	        justify-content: space-between;
-	        align-items: center;
-	        font-size: 13px;
-	    }
-	    .product-title {
-	        font-weight: normal;
-	        color: #333;
-	        overflow: hidden;
-	        text-overflow: ellipsis;
-	        white-space: nowrap;
-	        max-width: 100px;
-	    }
-	    .trade-type {
-	        font-size: 11px;
-	        color: #666;
-	    }
-	    .product-price {
-	        font-size: 14px;
-	        font-weight: bold;
-	        color: #000;
-	        margin-top: 2px;
-	    }
+        .mypage-main { flex: 1; min-width: 0; position: relative; }
+        .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .content-title { font-size: 18px; font-weight: bold; }
 
-	    .empty-wishlist {
-	        grid-column: span 5;
-	        text-align: center;
-	        padding: 60px;
-	        background-color: #e2e2e2;
-	        border-radius: 6px;
-	        color: #666;
-	        font-size: 15px;
-	    }
+        .btn-clear-all {
+            background-color: #ff8b94;
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .btn-clear-all:hover { background-color: #ff6b7b; }
 
-	    /* ================= 우측 사이드바 (기준점 조정 및 강제 위치 지정) ================= */
-	    .right-quick-menu {
-	        position: absolute !important;
-	        top: 0 !important; /* main 기준으로 맨 위에 위치 (WISHLISTS 타이틀 높이에 맞춰짐) */
-	        right: 0 !important;
-	        width: 75px;
-	        background-color: #ffeef4;
-	        border: 1px solid #ffccd5;
-	        border-radius: 6px;
-	        display: flex;
-	        flex-direction: column;
-	        align-items: center;
-	        padding: 20px 0;
-	        gap: 30px; /* 버튼 간 세로 여백 30px */
-	        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-	        z-index: 100;
-	    }
+        .board-list { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
+        .board-card {
+            background-color: #e2e2e2; padding: 15px 20px; border-radius: 6px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .board-info { display: flex; align-items: center; gap: 20px; }
+        .board-thumb { width: 80px; height: 80px; background-color: #b5b5b5; border-radius: 4px; object-fit: cover; display: flex; align-items: center; justify-content: center; color: #555; font-weight: bold; }
+        .board-title { font-size: 16px; font-weight: 500; color: #333; text-decoration: none; }
+        .board-title:hover { text-decoration: underline; }
+        
+        .btn-delete-item {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: #888;
+            cursor: pointer;
+            padding: 5px;
+            line-height: 1;
+            z-index: 5;
+        }
+        .btn-delete-item:hover { color: #ff0000; }
 
-	    .quick-item {
-	        display: flex;
-	        flex-direction: column;
-	        align-items: center;
-	        text-decoration: none;
-	        color: #333;
-	        font-size: 11px;
-	        font-weight: bold;
-	        gap: 6px;
-	        position: relative;
-	        width: 100%;
-	    }
+        .no-data { text-align: center; padding: 40px; color: #777; background-color: #e2e2e2; border-radius: 6px; }
 
-	    .quick-icon { 
-	        font-size: 20px; 
-	        line-height: 1;
-	    } 
-
-	    .badge {
-	        position: absolute;
-	        top: -4px;
-	        right: 12px;
-	        background-color: #000;
-	        color: #fff;
-	        font-size: 9px;
-	        padding: 2px 5px;
-	        border-radius: 10px;
-	        line-height: 1;
-	    }
-	    /* ============================================================== */
-
-	    .pagination {
-	        display: flex;
-	        justify-content: center;
-	        align-items: center;
-	        gap: 5px;
-	        margin-top: 30px;
-	        padding-right: 90px;
-	    }
-	    .page-btn {
-	        padding: 5px 10px;
-	        border: 1px solid #ddd;
-	        background-color: #fff;
-	        color: #333;
-	        text-decoration: none;
-	        border-radius: 3px;
-	        font-size: 12px;
-	    }
-	    .page-btn.active {
-	        background-color: #000;
-	        color: #fff;
-	        border-color: #000;
-	        font-weight: bold;
-	    }
-	    .page-btn:hover:not(.active) { background-color: #f1f1f1; }
-	</style>
+        .pagination { display: flex; justify-content: center; align-items: center; gap: 5px; margin-top: 20px; }
+        .page-btn { padding: 6px 12px; border: 1px solid #ddd; background-color: #fff; color: #333; text-decoration: none; border-radius: 3px; font-size: 13px; }
+        .page-btn.active { background-color: #222; color: #fff; border-color: #222; font-weight: bold; }
+        .page-btn:hover:not(.active) { background-color: #f1f1f1; }
+    </style>
 </head>
 <body>
 
 <div class="container">
-	<jsp:include page="/WEB-INF/views/common/header.jsp" />
+    <jsp:include page="/WEB-INF/views/common/header.jsp" />
     
-    <!-- main 태그에 position: relative 추가하여 기준점 변경 -->
-    <main style="margin-top: 30px; position: relative;">
-        <div class="wishlist-header-title">WISHLISTS</div>
+    <!-- 프로필 영역 포함 -->
+    <jsp:include page="/WEB-INF/views/mypage/profile/profile.jsp" />
 
-        <div class="wishlist-grid">
-            <c:choose>
-                <c:when test="${not empty wishlist}">
-                    <c:forEach var="item" items="${wishlist}">
-                       
-                        <div class="product-card" onclick="location.href='${pageContext.request.contextPath}/auction/${item.productNo}/detail'">
-                            <div class="product-img">
-                                <c:choose>
-                                    <c:when test="${not empty item.mainImage}">
-                                        <img src="${item.mainImage}" alt="상품 이미지" style="width:100%; height:100%; object-fit:cover;">
-                                    </c:when>
-                                    <c:otherwise>
-                                        <span>[이미지 영역]</span>
-                                    </c:otherwise>
-                                </c:choose>
-                            </div>
-                            <div class="product-info">
-                                <div class="product-title-row">
-                                    <span class="product-title">${item.title}</span>
-                                    <span class="trade-type">
-                                        <c:choose>
-                                            <c:when test="${item.tradeType == 'BUY'}">구매</c:when>
-                                            <c:when test="${item.tradeType == 'SELL'}">판매</c:when>
-                                            <c:otherwise>경매</c:otherwise>
-                                        </c:choose>
-                                    </span>
-                                </div>
-                                <div class="product-price">
-                                    ${item.price}원
-                                </div>
-                            </div>
-                        </div>
-                    </c:forEach>
-                </c:when>
-                <c:otherwise>
-                    <div class="empty-wishlist">
-                        찜한 상품이 없습니다.
-                    </div>
-                </c:otherwise>
-            </c:choose>
+    <div class="mypage-content">
+        
+        <div class="mypage-sidebar">
+            <a href="${pageContext.request.contextPath}/mypage/products" class="sidebar-item">게시글 관리</a>
+            <a href="${pageContext.request.contextPath}/mypage/comments" class="sidebar-item">댓글 관리</a>
+            <a href="${pageContext.request.contextPath}/mypage/txHistories" class="sidebar-item">거래 내역</a>
+            <a href="${pageContext.request.contextPath}/mypage/reviews" class="sidebar-item">후기</a>
+            <a href="${pageContext.request.contextPath}/mypage/recents" class="sidebar-item active">최근 본 글</a>
         </div>
 
-        <aside class="right-quick-menu">
-            <a href="${pageContext.request.contextPath}/mypage/wishlists" class="quick-item">
-                <span class="quick-icon">❤️</span>
-                <span>찜목록</span>
-            </a>
-            <a href="${pageContext.request.contextPath}/message/received" class="quick-item">
-                <span class="quick-icon">✉️</span>
-                <span>쪽지함</span>
-                <span class="badge">1</span>
-            </a>
-            <a href="${pageContext.request.contextPath}/mypage/recents" class="quick-item">
-                <span class="quick-icon">⏱️</span>
-                <span>최근 본 글</span>
-            </a>
-        </aside>
-
-        <!-- 페이징 바 (찜 목록이 있을 때만 노출) -->
-        <c:if test="${not empty wishlist}">
-            <div class="pagination">
-                <a href="#" class="page-btn">&lt; 이전</a>
-                <a href="#" class="page-btn active">1</a>
-                <a href="#" class="page-btn">다음 &gt;</a>
+        <div class="mypage-main">
+            <div class="content-header">
+                <div class="content-title">마이페이지(최근 본 글)</div>
+                <c:if test="${not empty recentList}">
+                    <button type="button" class="btn-clear-all" onclick="clearAllRecents()">전체 삭제</button>
+                </c:if>
             </div>
-        </c:if>
-    </main>
+
+            <div class="board-list">
+                <c:choose>
+                    <c:when test="${empty recentList}">
+                        <div class="no-data">최근 본 글이 없습니다.</div>
+                    </c:when>
+                    <c:otherwise>
+                        <c:forEach var="recent" items="${recentList}">
+                            <div class="board-card" data-product-no="${recent.productNo}">
+                                <div class="board-info">
+                                    <c:choose>
+                                        <c:when test="${not empty recent.mainImage}">
+                                            <img src="${pageContext.request.contextPath}/resources/upload/${recent.mainImage}" class="board-thumb" alt="상품 이미지">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <div class="board-thumb">img</div>
+                                        </c:otherwise>
+                                    </c:choose>
+                                    
+                                    <a href="${pageContext.request.contextPath}/auction/${recent.productNo}/detail" class="board-title">${recent.title}</a>
+                                </div>
+                                <button type="button" class="btn-delete-item" onclick="deleteRecent(${recent.productNo}, this)" title="삭제">✕</button>
+                            </div>
+                        </c:forEach>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+
+            <c:if test="${not empty recentList}">
+                <div class="pagination">
+                    <a href="#" class="page-btn">&lt; 이전</a>
+                    <a href="#" class="page-btn active">1</a>
+                    <a href="#" class="page-btn">다음 &gt;</a>
+                </div>
+            </c:if>
+
+        </div>
+    </div>
 
     <div style="margin-top: 50px;">
         <jsp:include page="/WEB-INF/views/common/footer.jsp" />
     </div>
 </div>
 
+<script>
+    // 개별 삭제
+    function deleteRecent(productNo, btnElement) {
+        if (!confirm("해당 기록을 삭제하시겠습니까?")) return;
+
+        const params = new URLSearchParams();
+        params.append('productNo', productNo);
+
+        fetch('/mypage/recents/delete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params
+        })
+        .then(res => {
+            if (!res.ok) throw new Error("HTTP error " + res.status);
+            return res.text();
+        })
+        .then(data => {
+            if (data.trim() === 'SUCCESS') {
+                const card = btnElement.closest('.board-card');
+                card.remove();
+
+                const list = document.querySelector('.board-list');
+                if (list.children.length === 0) {
+                    list.innerHTML = '<div class="no-data">최근 본 글이 없습니다.</div>';
+                    const pagination = document.querySelector('.pagination');
+                    const clearBtn = document.querySelector('.btn-clear-all');
+                    if (pagination) pagination.remove();
+                    if (clearBtn) clearBtn.remove();
+                }
+            } else {
+                alert("삭제 실패: " + data);
+            }
+        })
+        .catch(err => alert("오류 발생: " + err.message));
+    }
+
+    // 전체 삭제
+    function clearAllRecents() {
+        if (!confirm("최근 본 글을 모두 삭제하시겠습니까?")) return;
+
+        fetch('/mypage/recents/clear', {
+            method: 'POST'
+        })
+        .then(res => {
+            if (!res.ok) throw new Error("HTTP error " + res.status);
+            return res.text();
+        })
+        .then(data => {
+            if (data.trim() === 'SUCCESS') {
+                location.reload();
+            } else {
+                alert("삭제 실패: " + data);
+            }
+        })
+        .catch(err => alert("오류 발생: " + err.message));
+    }
+</script>
 </body>
 </html>
