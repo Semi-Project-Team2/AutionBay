@@ -121,6 +121,7 @@
             text-decoration: none;
             border-radius: 3px;
             font-size: 13px;
+            cursor: pointer;
         }
 
         .page-btn.active {
@@ -159,9 +160,10 @@
             <main class="main-content">
                 <div class="content-header">
                     <span class="content-title">게시글 관리</span>
-                    <form action="${pageContext.request.contextPath}/mypage/products" method="get" class="search-bar">
-                        <input type="text" name="keyword" value="${param.keyword}" placeholder="검색어를 입력하세요">
-                        <button type="submit">검색</button>
+                    <!-- 마이페이지 전용 name 부여 -->
+                    <form action="${pageContext.request.contextPath}/mypage/products" method="get" class="search-bar" onsubmit="return false;">
+                        <input type="text" id="mypageKeywordInput" name="mypageSearchKeyword" placeholder="검색어를 입력하세요">
+                        <button type="button" onclick="searchMypageProducts()">검색</button>
                     </form>
                 </div>
 
@@ -193,7 +195,6 @@
 													<a href="${pageContext.request.contextPath}/board/${pNo}/detail" class="board-title">${board.title}</a>
                                                 </c:otherwise>
                                             </c:choose>
-                                          
                                         </div>
                                     </div>
                                     <div class="board-actions">
@@ -209,13 +210,8 @@
                     </c:choose>
                 </div>
                 
-                <c:if test="${not empty productList}">
-                    <div class="pagination">
-                        <a href="#" class="page-btn">&lt; 이전</a>
-                        <a href="#" class="page-btn active">1</a>
-                        <a href="#" class="page-btn">다음 &gt;</a>
-                    </div>
-                </c:if>
+                <!-- 자바스크립트가 동적으로 채워줄 페이징 바 영역 -->
+                <div class="pagination" id="paginationContainer"></div>
             </main>
         </div>
     </div>
@@ -223,6 +219,115 @@
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
 	<script>
+        // 한 페이지당 5개씩 설정
+        const itemsPerPage = 5;
+        let currentPage = 1;
+        const cards = document.querySelectorAll('.board-card');
+        const totalItems = cards.length;
+
+        function showPage(page) {
+            currentPage = page;
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+
+            cards.forEach((card, index) => {
+                if (index >= start && index < end) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            renderPagination();
+        }
+
+        function renderPagination() {
+            const paginationContainer = document.getElementById('paginationContainer');
+            paginationContainer.innerHTML = '';
+
+            if (totalItems === 0) return;
+
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            if (totalPages <= 1) return; // 1페이지 이하면 페이징 바 숨김
+
+            // 이전 버튼
+            const prevBtn = document.createElement('a');
+            prevBtn.className = 'page-btn';
+            prevBtn.innerHTML = '&lt; 이전';
+            if (currentPage > 1) {
+                prevBtn.onclick = () => showPage(currentPage - 1);
+            } else {
+                prevBtn.style.opacity = '0.4';
+                prevBtn.style.cursor = 'default';
+            }
+            paginationContainer.appendChild(prevBtn);
+
+            // 페이지 번호 버튼
+            for (let i = 1; i <= totalPages; i++) {
+                const pageBtn = document.createElement('a');
+                pageBtn.className = 'page-btn' + (i === currentPage ? ' active' : '');
+                pageBtn.innerText = i;
+                pageBtn.onclick = () => showPage(i);
+                paginationContainer.appendChild(pageBtn);
+            }
+
+            // 다음 버튼
+            const nextBtn = document.createElement('a');
+            nextBtn.className = 'page-btn';
+            nextBtn.innerHTML = '다음 &gt;';
+            if (currentPage < totalPages) {
+                nextBtn.onclick = () => showPage(currentPage + 1);
+            } else {
+                nextBtn.style.opacity = '0.4';
+                nextBtn.style.cursor = 'default';
+            }
+            paginationContainer.appendChild(nextBtn);
+        }
+
+        // 페이지 최초 로드 시 1페이지 실행
+        if (totalItems > 0) {
+            showPage(1);
+        }
+
+        // 페이지 로드 시 처리
+        document.addEventListener("DOMContentLoaded", function() {
+            // 1. [핵심] 상단 헤더 검색창이 주소창의 keyword 파라미터를 오인하여 채워넣지 못하도록 헤더 검색 input의 name을 강제 제거(또는 변경)
+            const headerInputs = document.querySelectorAll('header input[name="keyword"], .header input[name="keyword"], input[name="keyword"]');
+            headerInputs.forEach(input => {
+                // 마이페이지 검색창이 아닌 다른 검색창들의 name 속성을 해제
+                if (input.id !== 'mypageKeywordInput') {
+                    input.removeAttribute('name');
+                }
+            });
+
+            // 2. 주소창의 keyword 값을 읽어와서 마이페이지 검색창에만 쏙 넣어주기
+            const urlParams = new URLSearchParams(window.location.search);
+            const keywordParam = urlParams.get('keyword');
+            const mypageInput = document.getElementById('mypageKeywordInput');
+            
+            if (keywordParam && mypageInput) {
+                mypageInput.value = keywordParam;
+            }
+
+            // 3. 엔터키 감지 이벤트
+            if (mypageInput) {
+                mypageInput.addEventListener('keydown', function(event) {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        searchMypageProducts();
+                    }
+                });
+            }
+        });
+
+        // 마이페이지 검색 실행 시 컨트롤러가 받는 'keyword' 파라미터명으로 전송
+        function searchMypageProducts() {
+            const input = document.getElementById('mypageKeywordInput');
+            const keyword = input ? input.value.trim() : '';
+            location.href = '${pageContext.request.contextPath}/mypage/products?keyword=' + encodeURIComponent(keyword);
+        }
+
+        // 게시글 삭제 함수
 	    function deleteProduct(button) {
 	        const productNo = button.getAttribute("data-product-no");
 	        
@@ -235,16 +340,13 @@
 	            return;
 	        }
 
-	        // fetch 요청 시 method: 'DELETE' 지정
 	        fetch('${pageContext.request.contextPath}/mypage/deleteProduct?productNo=' + productNo, {
 	            method: 'DELETE'
 	        })
 	        .then(response => response.text())
 	        .then(result => {
 	            if (result.trim() === "SUCCESS") {
-	                const card = document.getElementById('board-card-' + productNo);
-	                if (card) card.remove();
-	                alert("게시글이 성공적으로 삭제되었습니다.");
+	                location.reload(); // 삭제 후 새로고침하여 5개 단위 페이징 재정렬
 	            } else {
 	                alert("게시글 삭제에 실패했습니다.");
 	            }
@@ -254,7 +356,6 @@
 	            alert("서버 통신 중 오류가 발생했습니다.");
 	        });
 	    }
-	    </script>
-
+	</script>
 </body>
 </html>
