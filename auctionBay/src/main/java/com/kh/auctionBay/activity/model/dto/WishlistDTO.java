@@ -1,7 +1,6 @@
 package com.kh.auctionBay.activity.model.dto;
 
 import java.time.LocalDateTime;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,4 +25,5 @@ public class WishlistDTO {
 	private String status;              // 상품 거래 상태
 	private String mainImage;           // 대표 썸네일 이미지 URL
 	private String wishedAtStr;         // 찜 등록일시 포맷팅
+
 }

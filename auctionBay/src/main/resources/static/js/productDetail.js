@@ -1,3 +1,5 @@
+const isOwner = document.querySelector("#is-Owner-value").value === "true"; // 문자열을 boolean으로 변환
+
 // 댓글 기능
 const commentForm = document.querySelector("#comment-form");
 const productId = document.querySelector("#product-id-value").value;
@@ -137,7 +139,10 @@ reviewModalOverlay.addEventListener('click', function(e) {
 const wishBtn = document.getElementById('wishBtn');
 wishBtn.addEventListener('click', async function() {
     const productId = wishBtn.dataset.productId; // data-product-id 값을 가져옴
-
+	if(isOwner){
+        alert("본인이 등록한 상품은 찜목록에 추가할 수 없습니다.");
+        return;
+    }
     
     try{
         const response = await fetch('/api/board/wish', {
@@ -179,6 +184,10 @@ const btnSendMessage = document.getElementById("btnSendMessage");
 
 if(btnSendMessage){
 	btnSendMessage.addEventListener('click', function (){
+		if(isOwner){
+			alert("본인에게는 쪽지를 보낼 수 없습니다.");
+			return;
+		}
 		const productId = this.dataset.productId;
 		const receiverNo = this.dataset.receiverNo;
 		const redirectURL = this.dataset.redirectUrl;

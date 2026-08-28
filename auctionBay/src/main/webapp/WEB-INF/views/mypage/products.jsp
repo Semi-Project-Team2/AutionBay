@@ -186,12 +186,14 @@
                                             <c:choose>
                                                 <c:when test="${board.tradeType == 'AUCTION'}">
                                                     <span class="type-badge auction">경매</span>
+													<a href="${pageContext.request.contextPath}/auction/${pNo}/detail" class="board-title">${board.title}</a>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <span class="type-badge general">일반</span>
+													<a href="${pageContext.request.contextPath}/board/${pNo}/detail" class="board-title">${board.title}</a>
                                                 </c:otherwise>
                                             </c:choose>
-                                            <a href="${pageContext.request.contextPath}/auction/${pNo}/detail" class="board-title">${board.title}</a>
+                                          
                                         </div>
                                     </div>
                                     <div class="board-actions">

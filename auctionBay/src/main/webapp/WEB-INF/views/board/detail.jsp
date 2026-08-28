@@ -443,7 +443,8 @@
     <!-- 공통 헤더 -->
     <jsp:include page="/WEB-INF/views/common/header.jsp" />
 	<input type="hidden" id="product-id-value" value="${product.productId}">
-    <div class="page-container">
+	<input type="hidden" id="is-Owner-value" value="${isOwner}">
+	<div class="page-container">
         <div class="product-card">
          
             <!-- 1. 상품 제목 -->

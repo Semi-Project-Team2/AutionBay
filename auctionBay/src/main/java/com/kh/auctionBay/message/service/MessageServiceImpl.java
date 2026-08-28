@@ -65,7 +65,44 @@ public class MessageServiceImpl implements MessageService {
 		return message.getMessageId();
 		
 	}
+	
+	// 판매자만 가능하게 
+	@Override
+	@Transactional
+	public void acceptTrade(Long productId, Long myNo, Long opponentNo) {
+	    
+	    ProductDTO product = productMapper.selectProductById(productId);
+	    
+	    if (product == null) {
+	        throw new IllegalArgumentException("존재하지 않는 게시글입니다.");
+	    }
+	    
+	    if (!"ONGOING".equals(product.getStatus())) {
+	        throw new IllegalStateException("판매중인 게시글만 예약할 수 있습니다.");
+	    }
+	    
+	    // 판매자만 수락 가능
+	    Long sellerNo;
+	    if ("SELL".equals(product.getTradeType())) {
+	        sellerNo = product.getWriterNo();
+	    } 
+	    else { // BUY 글인 경우
+	        sellerNo = opponentNo; // 대화 상대가 판매자
+	    }
+	    
+	    if (!sellerNo.equals(myNo)) {
+	        throw new IllegalStateException("판매자만 거래를 수락할 수 있습니다.");
+	    }
+	    
+	    // 예약 처리 (상대방을 예약 구매자로 지정)
+	    int result = productMapper.updateToReserved(productId, opponentNo);
+	    
+	    if (result == 0) {
+	        throw new IllegalStateException("예약 처리에 실패했습니다.");
+	    }
+	}
 
+	// 예약된 구매자만 가능하게
 	@Override
 	@Transactional
 	public void completeTrade(Long productId, Long myNo, Long opponentNo) {
@@ -76,32 +113,34 @@ public class MessageServiceImpl implements MessageService {
 			throw new IllegalArgumentException("존재하지 않는 게시글입니다.");
 		}
 		
-		if(!"ONGOING".equals(product.getStatus())) {
-			throw new IllegalStateException("판매완료된 게시글입니다.");
-		}
+		if (!"RESERVED".equals(product.getStatus())) {
+	        throw new IllegalStateException("예약된 거래만 완료할 수 있습니다.");
+	    }
+		
+		// 예약된 구매글만 완료 가능
+		if (product.getReservedUserNo() == null || !product.getReservedUserNo().equals(myNo)) {
+	        throw new IllegalStateException("예약된 거래만 완료할 수 있습니다.");
+	    }
 		
 		Long sellerNo;
-		Long buyerNo;
+		Long buyerNo = product.getReservedUserNo();
 		
 		if("SELL".equals(product.getTradeType())) {
 			// 판매글일 경우 글쓴 사람이 판매자
 			sellerNo = product.getWriterNo();
-			buyerNo = myNo;
 		}
 		else {
 			// 구매글인 경우 대화상대가 판매자
 			sellerNo = opponentNo;
-			buyerNo = product.getWriterNo();
 		}
 		
-		//TODO
-		// 구매자만 거래완료 가능
-		if(!buyerNo.equals(myNo)) {
-			throw new IllegalStateException("구매자만 거래완료 할수 있습니다.");
-		}
+		// 상품 상태 변경
+	    int result = productMapper.updateToCompleted(productId);
 		
-		// 상품 거래 상태 변경
-		productMapper.updateProductStatus(productId, "COMPLETED");
+	    if (result == 0) {
+	    	throw new IllegalStateException("거래 완료 실패");
+	    }
+		
 		
 		
 		// 거래내역 TXHISTORY에 저장

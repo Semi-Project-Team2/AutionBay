@@ -15,5 +15,6 @@ public interface AuctionService {
 	// 스케쥴링 메서드
 	void checkAndCloseAuctions();
 	
+	
 
 }

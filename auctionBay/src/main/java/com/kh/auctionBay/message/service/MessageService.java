@@ -20,4 +20,7 @@ public interface MessageService {
 	
 	// 쪽지함에서 거래완료 처리
 	void completeTrade(Long productId, Long myNo, Long opponentNo);
+
+	// 거래 수락 기능
+	void acceptTrade(Long productId, Long myNo, Long opponentNo);
 }
