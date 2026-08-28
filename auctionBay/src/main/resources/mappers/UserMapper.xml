@@ -15,12 +15,30 @@
 		SELECT COUNT(*) FROM USERS WHERE NICKNAME = #{nickname}
 	</select>
 	
+	<select id="nicknameCheck" parameterType="long" resultType="string">
+		select NICKNAME
+		from USERS
+		where USER_NO = #{userNo}
+	</select>
+	
 	<select id="countByEmail" parameterType="string" resultType="int">
 		SELECT COUNT(*) FROM USERS WHERE EMAIL = #{email}
 	</select>
 	
+	<select id="emailCheck" parameterType="long" resultType="string">
+		select EMAIL
+		from USERS
+		where USER_NO = #{userNo}
+	</select>
+	
 	<select id="countByPhoneNumber" parameterType="string" resultType="int">
 		SELECT COUNT(*) FROM USERS WHERE PHONE_NUMBER = #{phoneNumber}
+	</select>
+	
+	<select id="phoneNumberCheck" parameterType="long" resultType="string">
+		select PHONE_NUMBER
+		from USERS
+		where USER_NO = #{userNo}
 	</select>
 	
 	

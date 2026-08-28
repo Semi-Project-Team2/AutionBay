@@ -25,4 +25,6 @@ public class RecentViewDTO {
 	private String status;              // 상품 거래 상태
 	private String mainImage;           // 대표 썸네일 이미지 URL
 	private String viewedAtStr;         // 조회일시 포맷팅
+	
+	private String tradeType;
 }

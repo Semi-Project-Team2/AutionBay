@@ -127,7 +127,7 @@ checkEmailBtn.addEventListener("click", async function() {
     }
 });
 
-// 이메일 중복 체크
+// 연락처 중복 체크
 let checkPhoneNumber = null;
 const checkPhoneNumberResult = document.querySelector("#check-phoneNumber-result");
 const phoneNumberInput = document.querySelector("#phoneNumber");
