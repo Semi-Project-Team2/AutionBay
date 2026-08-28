@@ -16,7 +16,7 @@ public interface BoardService {
 	BoardListResult getBoardList(BoardSearchCondition condition);
 
 	// 게시글 작성
-	Long writeBoard() throws IllegalStateException, IOException;
+	Long writeBoard(BoardDTO board, List<MultipartFile> images) throws IllegalStateException, IOException;
 
 	// 게시글 상세 조회
 	BoardDTO getBoardDetail(Long boardId);
