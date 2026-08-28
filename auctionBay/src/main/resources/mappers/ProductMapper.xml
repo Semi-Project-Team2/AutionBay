@@ -137,4 +137,14 @@
 	VALUES (#{writerNo}, #{categoryId}, #{tradeType}, #{title}, #{description}, #{price}, #{productCondition}, #{auctionStartPrice}, #{tradeLocation})
 </insert>
 
+
+<!-- 상품 거래 상태 변경 -->
+<update id="updateProductStatus">
+	UPDATE PRODUCTS SET STATUS =#{status}, UPDATED_AT = SYSDATE
+	WHERE PRODUCT_ID = #{productId}
+</update>
+
+
+
+
 </mapper>

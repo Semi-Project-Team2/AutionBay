@@ -213,3 +213,57 @@
 .reply-submit:hover {
     background-color: #000;
 }
+
+/* 거래완료 배지 */
+.trade-status-badge {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+.trade-status-badge.done {
+    background-color: #eef7ee;
+    color: #2e8b46;
+}
+
+/* 거래완료 버튼 */
+.complete-trade-form {
+    margin-bottom: 12px;
+}
+
+.complete-trade-btn {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 4px;
+    background-color: #2e8b46;
+    color: #fff;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.complete-trade-btn:hover {
+    background-color: #256e38;
+}
+
+/* 알림 메시지 */
+.alert {
+    padding: 10px 14px;
+    border-radius: 4px;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+.alert-success {
+    background-color: #eef7ee;
+    color: #2e8b46;
+}
+
+.alert-error {
+    background-color: #fdeeee;
+    color: #c0392b;
+}

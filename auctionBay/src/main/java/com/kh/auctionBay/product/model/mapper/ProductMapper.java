@@ -33,4 +33,6 @@ public interface ProductMapper {
     List<ProductDTO> selectProductByPrice(@Param("minPrice") Long minPrice, @Param("maxPrice") Long maxPrice);
     
    
+    // 상품 거래 상태 변경 
+    int updateProductStatus(@Param("productId") Long productId, @Param("status") String status);
 }

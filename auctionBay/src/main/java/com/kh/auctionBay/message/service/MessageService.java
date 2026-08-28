@@ -18,5 +18,6 @@ public interface MessageService {
 	// 메세지 보내기
 	Long sendMessage(Long senderNo, Long receiverNo, Long productId, String content);
 	
-	
+	// 쪽지함에서 거래완료 처리
+	void completeTrade(Long productId, Long myNo, Long opponentNo);
 }

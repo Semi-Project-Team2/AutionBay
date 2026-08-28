@@ -13,6 +13,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.auctionBay.message.model.dto.MessageDTO;
 import com.kh.auctionBay.message.service.MessageService;
+import com.kh.auctionBay.product.model.dto.ProductDTO;
+import com.kh.auctionBay.product.service.ProductService;
 import com.kh.auctionBay.user.model.dto.UserDTO;
 
 import jakarta.servlet.http.HttpSession;
@@ -24,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class MessageController {
 	
 	private final MessageService service;
+	private final ProductService productService;
 	
 	@GetMapping("/received")
 	public String received(HttpSession session, Model model) {
@@ -69,8 +72,54 @@ public class MessageController {
 		model.addAttribute("message", message);
 		model.addAttribute("myNo", myNo);
 		
+		if (!message.isEmpty()) {
+			
+			MessageDTO messageDTO = message.get(0);
+			Long productId = messageDTO.getProductId();
+			Long opponentNo = messageDTO.getSenderNo().equals(myNo) ? messageDTO.getReceiverNo() : messageDTO.getSenderNo();
+			
+			ProductDTO product = productService.getProductByProductId(productId);
+			boolean canComplete = false;
+			if(product != null && "ONGOING".equals(product.getStatus())) {
+				if("SELL".equals(product.getTradeType())) {
+					canComplete = !myNo.equals(product.getWriterNo());
+				}
+				else if ("BUY".equals(product.getTradeType())) {
+					canComplete = myNo.equals(product.getWriterNo());
+				}
+			}
+			
+			model.addAttribute("product", product);
+			model.addAttribute("opponentNo", opponentNo);
+			model.addAttribute("canComplete", canComplete);
+		}
+		
+		
+		
 		return "message/detail";
 		
+		
+	}
+	
+	@PostMapping("/completeTrade")
+	public String completeTrade(@RequestParam Long productId,
+								@RequestParam Long opponentNo,
+								@RequestParam Long messageId,
+								HttpSession session,
+								RedirectAttributes ra) {
+		
+		UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+		
+		Long myNo = loginUser.getUserNo();
+		
+		try {
+			service.completeTrade(productId, myNo, opponentNo);
+			ra.addFlashAttribute("completeMessage", "거래가 완료되었습니다");
+		} catch (IllegalStateException | IllegalArgumentException e) {
+			ra.addFlashAttribute("completeError", e.getMessage());
+		}
+		
+		return "redirect:/message/detail/" + messageId;
 		
 	}
 	
