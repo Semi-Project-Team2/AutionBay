@@ -1,3 +1,4 @@
+/* 거래 내역 목록 페이지의 후기 작성 버튼 클릭 시 팝업 창 열기 */
 const reviewBtns = document.querySelectorAll(".btn-review");
 
 reviewBtns.forEach(btn => {
@@ -15,6 +16,7 @@ reviewBtns.forEach(btn => {
     });
 });
 
+/* 후기 작성 버튼 제출 (팝업창 닫기 포함) */
 const reviewForm = document.querySelector("#review-form");
 
 if (reviewForm) {
@@ -54,3 +56,30 @@ if (reviewForm) {
         }
     });
 }
+
+/* 후기 목록 페이지 받은/보낸 후기 탭 전환 */
+function switchTab(type, event) {
+    // 자바스크립트로 숨기기/보내기 처리하는 대신, 
+    // 아예 해당 탭의 1페이지로 페이지를 이동(새로고침)시킵니다!
+    if (type === 'received') {
+        location.href = '/mypage/reviews?tab=received&page=1';
+    } else if (type === 'sent') {
+        location.href = '/mypage/reviews?tab=sent&page=1';
+    }
+}
+
+// DOM이 완전히 로드된 후 실행
+document.addEventListener('DOMContentLoaded', function() {
+    const tabBtns = document.querySelectorAll(".tab-btn");
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            // 각 버튼에 표시되는 텍스트로 구분
+            if (this.textContent.includes('받은 후기')) {
+                switchTab('received');
+            } else if (this.textContent.includes('보낸 후기')) {
+                switchTab('sent');
+            }
+        });
+    });
+});

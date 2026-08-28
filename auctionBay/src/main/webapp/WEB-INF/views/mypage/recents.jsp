@@ -118,8 +118,8 @@
     <div class="container">
         <jsp:include page="/WEB-INF/views/common/header.jsp" />
         
-		<!-- 프로필 영역 포함 -->
-		<jsp:include page="/WEB-INF/views/mypage/profile/profile.jsp" />
+        <!-- 프로필 영역 포함 -->
+        <jsp:include page="/WEB-INF/views/mypage/profile/profile.jsp" />
 
         <div class="mypage-content">
             

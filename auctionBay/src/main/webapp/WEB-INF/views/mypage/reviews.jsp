@@ -118,8 +118,8 @@
             <main class="main-content">
                 <!-- 탭 메뉴 -->
                 <div class="review-tabs">
-                    <button class="tab-btn ${activeTab eq 'received' ? 'active' : ''}" onclick="switchTab('received', event)">받은 후기</button>
-                    <button class="tab-btn ${activeTab eq 'sent' ? 'active' : ''}" onclick="switchTab('sent', event)">보낸 후기</button>
+                    <button class="tab-btn ${activeTab eq 'received' ? 'active' : ''}">받은 후기</button>
+                    <button class="tab-btn ${activeTab eq 'sent' ? 'active' : ''}">보낸 후기</button>
                 </div>
 
                 <!-- 1. 받은 후기 섹션 -->
@@ -222,17 +222,6 @@
     <!-- 공통 푸터 포함 -->
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
-    <script>
-        // 받은 후기 / 보낸 후기 탭 전환 함수
-        function switchTab(type, event) {
-            // 자바스크립트로 숨기기/보내기 처리하는 대신, 
-            // 아예 해당 탭의 1페이지로 페이지를 이동(새로고침)시킵니다!
-            if (type === 'received') {
-                location.href = '/mypage/reviews?tab=received&page=1';
-            } else if (type === 'sent') {
-                location.href = '/mypage/reviews?tab=sent&page=1';
-            }
-        }
-    </script>
+    <script src="/js/review.js"></script>
 </body>
 </html>
