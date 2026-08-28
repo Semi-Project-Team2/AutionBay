@@ -181,6 +181,15 @@ header {
 	overflow: hidden;
 	
     cursor: pointer;
+	
+	position: relative;
+}
+
+#imagePlaceholder {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 #imagePreview {
@@ -204,6 +213,50 @@ header {
     object-fit: cover;
 	
 	border-radius: 8px;
+}
+
+/* 이전/다음 버튼 */
+.media-navigation {
+    width: 400px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+	
+	margin-top: 10px;
+}
+
+.media-button {
+    width: 40px;
+    height: 40px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: #888;
+
+    color: white;
+    font-size: 30px;
+
+    cursor: pointer;
+}
+
+/* 사진/동영상 추가 버튼 */
+.media-add-btn {
+    display: block;
+    margin: 20px auto 0;
+
+    padding: 8px 20px;
+
+    border: 1px solid #ccc;
+    background: #eee;
+
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.media-add-btn:hover {
+    background: #ddd;
 }
 
 
@@ -448,8 +501,7 @@ header {
                     </div>
 
                 </label>
-
-
+				
                 <!-- 최대 5개 이미지 -->
                 <input
                     type="file"
@@ -458,16 +510,41 @@ header {
                     multiple
                     accept="image/*, video/*">
 
+				
+				<div class="media-navigation">
 
-                <!-- 이미지 개수 -->
-                <div
-                    class="image-count"
-                    id="imageCount">
+				    <button
+				        type="button"
+				        id="prevMedia"
+				        class="media-button"
+				        onclick="showPreviousMedia(event)">
+				        ‹
+				    </button>
+					
+					<!-- 이미지 개수 -->
+					<div
+					    class="image-count"
+					    id="imageCount">
 
-                    (0/5)
+					    (0/5)
 
-                </div>
+					</div>
 
+				    <button
+				        type="button"
+				        id="nextMedia"
+				        class="media-button"
+				        onclick="showNextMedia(event)">
+				        ›
+				    </button>
+
+				</div>
+				
+				<button type="button" class="media-add-btn" onclick="document.getElementById('imageInput').click();">
+				    사진/동영상 추가
+				</button>
+
+				
             </div>
 
 
@@ -713,12 +790,9 @@ header {
 
 
             <!-- 등록 -->
-            <button
-                type="submit">
-
-                등록하기
-
-            </button>
+			<button type="submit" onclick="return checkFirstMedia();">
+			    등록하기
+			</button>
 
         </div>
 
@@ -765,6 +839,7 @@ function changeTradeType(type) {
 
 	// 이미지 초기화
 	selectedFiles = new DataTransfer();
+	currentMediaIndex = 0;
 	imageInput.value = "";
 	imagePreview.innerHTML = "";
 	imagePlaceholder.style.display = "block";
@@ -961,6 +1036,7 @@ const imageCount =
 
 // 선택한 파일을 계속 저장할 곳
 let selectedFiles = new DataTransfer();
+let currentMediaIndex = 0;
 
 
 imageInput.addEventListener("change", function () {
@@ -1034,7 +1110,7 @@ function renderPreview() {
     imagePlaceholder.style.display = "none";
 
 
-	const file = selectedFiles.files[0];
+	const file = selectedFiles.files[currentMediaIndex];
 
 	const url = URL.createObjectURL(file);
 
@@ -1067,6 +1143,97 @@ function renderPreview() {
     imageCount.innerText =
         "(" + selectedFiles.files.length + "/5)";
 }
+
+function showPreviousMedia(event) {
+
+    /*
+     * label 클릭 방지
+     */
+    event.preventDefault();
+
+    event.stopPropagation();
+
+
+    if (selectedFiles.files.length === 0) {
+        return;
+    }
+
+
+    currentMediaIndex--;
+
+
+    if (currentMediaIndex < 0) {
+
+        currentMediaIndex =
+            selectedFiles.files.length - 1;
+    }
+
+
+    renderPreview();
+}
+
+
+function showNextMedia(event) {
+
+    /*
+     * label 클릭 방지
+     */
+    event.preventDefault();
+
+    event.stopPropagation();
+
+
+    if (selectedFiles.files.length === 0) {
+        return;
+    }
+
+
+    currentMediaIndex++;
+
+
+    if (
+        currentMediaIndex >=
+        selectedFiles.files.length
+    ) {
+
+        currentMediaIndex = 0;
+    }
+
+
+    renderPreview();
+}
+
+function checkFirstMedia() {
+
+	// 등록한 미디어가 없으면 그대로 등록
+	if (selectedFiles.files.length === 0) {
+	    return true;
+	}
+
+	// 첫 번째 미디어
+	const firstFile = selectedFiles.files[0];
+
+	// 첫 번째가 동영상이면
+	if (firstFile.type.startsWith("video/")) {
+
+	    const result = confirm(
+	        "첫 번째 등록 미디어가 동영상입니다.\n" +
+	        "목록 화면에서는 기본 이미지로 표시됩니다.\n\n" +
+	        "등록하시겠습니까?"
+	    );
+
+	    // 예
+	    if (result) {
+	        return true;
+	    }
+
+	    // 아니요
+	    return false;
+	}
+
+	return true;
+}
+
 
 /*
  * 임시저장
