@@ -8,7 +8,10 @@
 		FROM (
 			SELECT M.MESSAGE_ID, M.SENDER_NO, M.RECEIVER_NO, M.PRODUCT_ID,
 				M.CONTENT, M.IS_READ, M.CREATED_AT,
-				U.NICKNAME AS OPPONENT_NICKNAME,
+				case
+			    	when U.IS_DELETED = 1 then '탈퇴한 회원'
+			    	else U.NICKNAME
+		    	end as OPPONENT_NICKNAME,
 				P.TITLE AS PRODUCT_TITLE,
 				P.STATUS AS PRODUCT_STATUS,
 				ROW_NUMBER() OVER (PARTITION BY M.PRODUCT_ID, M.SENDER_NO
@@ -29,7 +32,10 @@
         FROM (
             SELECT M.MESSAGE_ID, M.SENDER_NO, M.RECEIVER_NO, M.PRODUCT_ID,
                    M.CONTENT, M.IS_READ, M.CREATED_AT,
-                   U.NICKNAME AS OPPONENT_NICKNAME,
+                   case
+				    	when U.IS_DELETED = 1 then '탈퇴한 회원'
+				    	else U.NICKNAME
+		    	   end as OPPONENT_NICKNAME,
                    P.TITLE AS PRODUCT_TITLE,
                    P.STATUS AS PRODUCT_STATUS,
                    ROW_NUMBER() OVER (PARTITION BY M.PRODUCT_ID, M.RECEIVER_NO
@@ -53,7 +59,10 @@
 	<!-- 쪽지함 전체 -->
 	<select id="findAllMessage" resultType="MessageDTO">
 		SELECT M.MESSAGE_ID, M.SENDER_NO, M.RECEIVER_NO, M.PRODUCT_ID, M.CONTENT, M.IS_READ, M.CREATED_AT,
-        U.NICKNAME AS OPPONENT_NICKNAME
+        case
+	    	when U.IS_DELETED = 1 then '탈퇴한 회원'
+	    	else U.NICKNAME
+    	end as OPPONENT_NICKNAME
 		FROM MESSAGES M
 		JOIN USERS U ON U.USER_NO = #{opponentNo}
 		WHERE M.PRODUCT_ID = #{productId}

@@ -32,7 +32,7 @@
                     <span>
                         ${sessionScope.loginUser.nickname}님 환영합니다!
                     </span>
-                    <a href="${pageContext.request.contextPath}/mypage/txHistories" class="auth-btn">마이페이지</a>
+                    <a href="${pageContext.request.contextPath}/mypage/products" class="auth-btn">마이페이지</a>
                     <a href="${pageContext.request.contextPath}/user/logout" class="auth-btn">로그아웃</a>
                 </c:otherwise>
             </c:choose>
