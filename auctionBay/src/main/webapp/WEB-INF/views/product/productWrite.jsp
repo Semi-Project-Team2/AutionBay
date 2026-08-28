@@ -315,36 +315,10 @@ header {
      HEADER
      ========================= -->
 
-<header>
-
 	<!-- 공통 헤더 포함 -->
 	<jsp:include page="/WEB-INF/views/common/header.jsp" />
 
 
-    <!-- 검색창 -->
-    <div class="search">
-        상품을 검색해주세요.
-    </div>
-
-
-    <!-- 메뉴 -->
-    <div class="header-menu">
-
-        <button>
-            찜목록
-        </button>
-
-        <button>
-            마이페이지
-        </button>
-
-        <button>
-            로그아웃
-        </button>
-
-    </div>
-
-</header>
 
 
 

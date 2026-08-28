@@ -7,6 +7,7 @@
     <title>마이페이지 - 최근 본 글</title>
     <link rel="stylesheet" href="/css/common.css">
     <style>
+    
 		/* 전체 컨테이너: 세로 플렉스로 잡아 프로필이 위, 사이드바+메인이 아래로 오게 고정 */
 				    .container { 
 				        width: 1200px; 
@@ -118,18 +119,21 @@
     <div class="container">
         <jsp:include page="/WEB-INF/views/common/header.jsp" />
         
-		<!-- 프로필 영역 포함 -->
-		<jsp:include page="/WEB-INF/views/mypage/profile/profile.jsp" />
+        <!-- 프로필 영역 포함 -->
+        <jsp:include page="/WEB-INF/views/mypage/profile/profile.jsp" />
 
         <div class="mypage-content">
             
-            <div class="mypage-sidebar">
-                <a href="${pageContext.request.contextPath}/mypage/products" class="sidebar-item">게시글 관리</a>
-                <a href="${pageContext.request.contextPath}/mypage/comments" class="sidebar-item">댓글 관리</a>
-                <a href="${pageContext.request.contextPath}/mypage/txHistories" class="sidebar-item">거래 내역</a>
-                <a href="${pageContext.request.contextPath}/mypage/reviews" class="sidebar-item">후기</a>
-                <a href="${pageContext.request.contextPath}/mypage/recents" class="sidebar-item active">최근 본 글</a>
-            </div>
+        <!-- 사이드바 -->
+        <div class="mypage-sidebar">
+            <a href="${pageContext.request.contextPath}/mypage/products" class="sidebar-item">게시글 관리</a>
+            <a href="${pageContext.request.contextPath}/mypage/comments" class="sidebar-item">댓글 관리</a>
+            <a href="${pageContext.request.contextPath}/mypage/txHistories" class="sidebar-item">거래내역</a>
+            <a href="${pageContext.request.contextPath}/mypage/reviews" class="sidebar-item">후기</a>
+            <a href="${pageContext.request.contextPath}/mypage/recents" class="sidebar-item active">최근 본 글</a>
+            <a href="${pageContext.request.contextPath}/mypage/wishlists" class="sidebar-item">찜 목록</a>
+            <a href="${pageContext.request.contextPath}/message/received" class="sidebar-item">쪽지함</a>
+        </div>
 
             <div class="mypage-main">
                 <div class="content-header">
