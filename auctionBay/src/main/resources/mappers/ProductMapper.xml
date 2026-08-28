@@ -122,6 +122,7 @@
 		OFFSET 건너뛸행수 ROWS
 		FETCH NEXT 조회할행수 ROWS ONLY
 	-->
+
 	OFFSET #{offset} ROWS
 	FETCH NEXT #{size} ROWS ONLY
 </select>

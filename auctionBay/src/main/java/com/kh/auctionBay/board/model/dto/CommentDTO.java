@@ -21,8 +21,8 @@ public class CommentDTO {
 	private Long writerNo;
 	private Long paredtNo;
 	private String content;
-	private LocalDateTime createAt;
+	private LocalDateTime createdAt;
 	
 	private String writerNickname; // 작성자 닉네임
-	private String createAtStr;    // 날짜 포맷팅 문자열
+	private String createdAtStr;    // 날짜 포맷팅 문자열
 }
