@@ -165,7 +165,7 @@ public class UserServiceImpl implements UserService{
 			if (oldProfileImg != null && !oldProfileImg.contains("default-profile.png")) {
 				// 기존 파일이 기본 프로필 사진이 아닌 경우에만 삭제
 				// 기본 프로필 이미지 삭제 방지
-				uploadUtil.delete(uploadPath, oldProfileImg);
+				uploadUtil.delete(oldProfileImg, uploadPath);
 			}
 			
 			// 새로운 프로필 사진으로 저장 후 반환된 SavedFile 객체 이용
