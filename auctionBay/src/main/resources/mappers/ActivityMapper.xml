@@ -68,17 +68,25 @@
 		- 응답(Result): WishlistDTO 객체로 매핑하여 반환
 	-->
 	<select id="selectMyWishlist" parameterType="long" resultType="WishlistDTO">
-    SELECT W.WISHLIST_ID, W.USER_NO, W.PRODUCT_ID AS productNo, W.CREATED_AT,
-           P.TITLE, P.PRICE, P.TRADE_TYPE, P.STATUS,
+    SELECT W.WISHLIST_ID, 
+           W.USER_NO, 
+           W.PRODUCT_ID AS productNo, 
+           W.CREATED_AT,
+           P.TITLE, 
+           P.PRICE, 
+           P.TRADE_TYPE, 
+           P.STATUS,
            NVL(PM.THUMBNAIL_URL, '/images/no-image.png') AS MAIN_IMAGE,
            TO_CHAR(W.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS WISHED_AT_STR
       FROM WISHLISTS W
-        JOIN PRODUCTS P ON W.PRODUCT_ID = P.PRODUCT_ID
-        LEFT JOIN PRODUCT_MEDIA PM 
-               ON P.PRODUCT_ID = PM.PRODUCT_ID AND PM.MEDIA_ORDER = 1
+      JOIN PRODUCTS P ON W.PRODUCT_ID = P.PRODUCT_ID
+      LEFT JOIN PRODUCT_MEDIA PM 
+             ON P.PRODUCT_ID = PM.PRODUCT_ID AND PM.MEDIA_ORDER = 1
      WHERE W.USER_NO = #{userNo}
      ORDER BY W.CREATED_AT DESC
-	</select>
+</select>
+
+
 
 	<!-- 
 		[4. 최근 본 글 조회]

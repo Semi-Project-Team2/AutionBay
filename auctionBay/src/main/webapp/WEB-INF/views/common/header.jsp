@@ -12,10 +12,10 @@
             <span class="bay">Bay</span>
         </a>
 
-		<!-- 2. 검색창 영역 (마이페이지와 충돌을 막기 위해 name을 searchKeyword로 변경) -->
+		<!-- 2. 검색창 영역 (독립된 form 태그 적용) -->
         <div class="header-search">
             <form action="${pageContext.request.contextPath}/product/list" method="get" style="width: 100%;">
-                <input type="text" name="searchKeyword" value="${param.searchKeyword}" placeholder="제목 또는 작성자 검색">
+                <input type="text" name="keyword" value="${param.keyword}" placeholder="제목 또는 작성자 검색">
             </form>
         </div>
 
