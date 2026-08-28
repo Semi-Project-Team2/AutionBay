@@ -80,7 +80,7 @@
             padding: 6px 12px;
             border-radius: 4px;
             text-decoration: none;
-            color: #d9534f; /* 삭제 버튼이라 은은한 붉은빛 텍스트 컬러 (원하시면 #333으로 변경 가능) */
+            color: #d9534f;
             font-size: 13px;
             font-weight: bold;
             cursor: pointer;
@@ -169,19 +169,28 @@
                 <div class="comment-list">
                     <c:choose>
                         <c:when test="${not empty commentList}">
-                            <c:forEach var="comment" items="${commentList}">
-                                <div class="comment-card" id="comment-card-${comment.commentNo}">
-                                    <div class="comment-info">
-                                        <a href="${pageContext.request.contextPath}/auction/${comment.productNo}/detail" class="comment-title">${comment.productTitle}</a>
-                                        <span class="divider">|</span>
-                                        <span class="comment-content ${comment.content eq '삭제된 댓글입니다.' ? 'deleted' : ''}">${comment.content}</span>
-                                    </div>
-                                    
-                                    <c:if test="${comment.content ne '삭제된 댓글입니다.'}">
-                                        <a href="#" class="btn-delete" data-comment-no="${comment.commentNo}" onclick="deleteComment(this); return false;">삭제</a>
-                                    </c:if>
-                                </div>
-                            </c:forEach>
+							<c:forEach var="comment" items="${commentList}">
+							    <div class="comment-card" id="comment-card-${comment.commentNo}">
+							        <div class="comment-info">
+							            <%-- tradeType 값에 따라 링크 동적 분기 --%>
+							            <c:choose>
+							                <c:when test="${comment.tradeType == 'AUCTION'}">
+							                    <a href="${pageContext.request.contextPath}/auction/${comment.productNo}/detail" class="comment-title">${comment.productTitle}</a>
+							                </c:when>
+							                <c:otherwise>
+							                    <a href="${pageContext.request.contextPath}/board/${comment.productNo}/detail" class="comment-title">${comment.productTitle}</a>
+							                </c:otherwise>
+							            </c:choose>
+							            
+							            <span class="divider">|</span>
+							            <span class="comment-content ${comment.content eq '삭제된 댓글입니다.' ? 'deleted' : ''}">${comment.content}</span>
+							        </div>
+							        
+							        <c:if test="${comment.content ne '삭제된 댓글입니다.'}">
+							            <a href="#" class="btn-delete" data-comment-no="${comment.commentNo}" onclick="deleteComment(this); return false;">삭제</a>
+							        </c:if>
+							    </div>
+							</c:forEach>
                         </c:when>
                         <c:otherwise>
                             <div class="comment-card">
@@ -243,7 +252,6 @@
 	            alert("서버 통신 중 오류가 발생했습니다.");
 	        });
 	    }
-	    </script>
-    </script>
+	</script>
 </body>
 </html>
