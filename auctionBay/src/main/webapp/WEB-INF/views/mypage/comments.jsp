@@ -111,6 +111,7 @@
             text-decoration: none;
             border-radius: 3px;
             font-size: 13px;
+            cursor: pointer;
         }
 
         .page-btn.active {
@@ -166,7 +167,7 @@
                     <span class="content-title">댓글 관리</span>
                 </div>
 
-                <div class="comment-list">
+                <div class="comment-list" id="commentListContainer">
                     <c:choose>
                         <c:when test="${not empty commentList}">
 							<c:forEach var="comment" items="${commentList}">
@@ -202,14 +203,8 @@
                     </c:choose>
                 </div>
 
-                <!-- 페이징 바 -->
-                <c:if test="${not empty commentList}">
-                    <div class="pagination">
-                        <a href="#" class="page-btn">&lt; 이전</a>
-                        <a href="#" class="page-btn active">1</a>
-                        <a href="#" class="page-btn">다음 &gt;</a>
-                    </div>
-                </c:if>
+                <!-- 자바스크립트가 동적으로 생성할 페이징 바 영역 -->
+                <div class="pagination" id="paginationContainer"></div>
             </main>
         </div>
     </div>
@@ -217,8 +212,78 @@
     <!-- 공통 푸터 포함 -->
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
-    <!-- 삭제 처리 JS -->
+    <!-- 삭제 처리 및 5개씩 페이징 JS -->
 	<script>
+        // 한 페이지당 5개씩 설정
+        const itemsPerPage = 5;
+        let currentPage = 1;
+        const cards = document.querySelectorAll('.comment-card');
+        const totalItems = cards.length;
+
+        function showPage(page) {
+            currentPage = page;
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+
+            cards.forEach((card, index) => {
+                if (index >= start && index < end) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            renderPagination();
+        }
+
+        function renderPagination() {
+            const paginationContainer = document.getElementById('paginationContainer');
+            paginationContainer.innerHTML = '';
+
+            if (totalItems === 0) return;
+
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            if (totalPages <= 1) return; // 1페이지 이하면 페이징 바 숨김
+
+            // 이전 버튼
+            const prevBtn = document.createElement('a');
+            prevBtn.className = 'page-btn';
+            prevBtn.innerHTML = '&lt; 이전';
+            if (currentPage > 1) {
+                prevBtn.onclick = () => showPage(currentPage - 1);
+            } else {
+                prevBtn.style.opacity = '0.4';
+                prevBtn.style.cursor = 'default';
+            }
+            paginationContainer.appendChild(prevBtn);
+
+            // 페이지 번호 버튼
+            for (let i = 1; i <= totalPages; i++) {
+                const pageBtn = document.createElement('a');
+                pageBtn.className = 'page-btn' + (i === currentPage ? ' active' : '');
+                pageBtn.innerText = i;
+                pageBtn.onclick = () => showPage(i);
+                paginationContainer.appendChild(pageBtn);
+            }
+
+            // 다음 버튼
+            const nextBtn = document.createElement('a');
+            nextBtn.className = 'page-btn';
+            nextBtn.innerHTML = '다음 &gt;';
+            if (currentPage < totalPages) {
+                nextBtn.onclick = () => showPage(currentPage + 1);
+            } else {
+                nextBtn.style.opacity = '0.4';
+                nextBtn.style.cursor = 'default';
+            }
+            paginationContainer.appendChild(nextBtn);
+        }
+
+        // 페이지 최초 로드 시 1페이지 실행
+        if (totalItems > 0) {
+            showPage(1);
+        }
+
 	    function deleteComment(button) {
 	        const commentNo = button.getAttribute("data-comment-no");
 	        
@@ -226,23 +291,13 @@
 	            return;
 	        }
 
-	        // fetch 요청 시 method: 'DELETE' 지정
 	        fetch('${pageContext.request.contextPath}/mypage/deleteComment?commentNo=' + commentNo, {
 	            method: 'DELETE'
 	        })
 	        .then(response => response.text())
 	        .then(result => {
 	            if (result.trim() === "SUCCESS") {
-	                const card = document.getElementById('comment-card-' + commentNo);
-	                if (card) {
-	                    const contentSpan = card.querySelector('.comment-content');
-	                    if (contentSpan) {
-	                        contentSpan.innerText = '삭제된 댓글입니다.';
-	                        contentSpan.classList.add('deleted');
-	                    }
-	                    button.remove();
-	                }
-	                alert("댓글이 성공적으로 삭제되었습니다.");
+	                location.reload(); // 삭제 후 새로고침하여 5개 단위 페이징 재정렬
 	            } else {
 	                alert("댓글 삭제에 실패했습니다.");
 	            }

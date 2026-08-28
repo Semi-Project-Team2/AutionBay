@@ -117,5 +117,7 @@ public class ActivityServiceImpl implements ActivityService {
 	@Override
 	public void addRecentView(long userNo, long productNo) {
 		activityMapper.upsertRecentView(userNo, productNo);
+		activityMapper.trimRecentViews(userNo);
 	}
+	
 }

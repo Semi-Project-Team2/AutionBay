@@ -30,10 +30,16 @@ public interface ActivityMapper {
 
 	// 6. 내가 작성한 댓글 삭제
 	int deleteMyComment(Long commentNo, Long writerNo);
+	
 	// 7. 최근 본 게시글 삭제
 	int deleteRecentView( long userNo, long productNo);
-	//8. 최근 본 글 게시글 전체 삭제
+	
+	//8. 최근 본 게시글 전체 삭제
 	int deleteAllRecentViews(long userNo);
-	//9.최근 본글 불러오기
+	
+	//9. 최근 본 게시글 개수 제한(삭제)
+	void trimRecentViews(long userNo);
+	
+	//10.최근 본글 불러오기
 	void upsertRecentView( long userNo, long productNo);
 }

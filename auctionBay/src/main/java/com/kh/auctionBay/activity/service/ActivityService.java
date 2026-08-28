@@ -32,5 +32,5 @@ public interface ActivityService {
 	// 8. 최근 본 글 전체 삭제
 	boolean removeAllRecentViews(long userNo);
 	// 9. 최근 본 글 추가 
-		void addRecentView(long userNo, long productNo);
+	void addRecentView(long userNo, long productNo);
 }
