@@ -60,6 +60,10 @@ public class ProductController {
     	
     	UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
     	
+    	if(loginUser == null) {
+    		return "redirect:/user/login";
+    	}
+    	
     	product.setWriterNo(loginUser.getUserNo());
     	
     	service.createProduct(product, images);

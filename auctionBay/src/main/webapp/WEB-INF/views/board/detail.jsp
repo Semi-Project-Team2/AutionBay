@@ -442,7 +442,10 @@
 <body>
     <!-- 공통 헤더 -->
     <jsp:include page="/WEB-INF/views/common/header.jsp" />
-	<input type="hidden" id="product-id-value" value="${product.productId}">
+	<!-- 상품 ID, 작성자 여부를 숨겨서 자바스크립트에서 접근 가능하게 함 -->
+    <input type="hidden" id="product-id-value" value="${product.productId}">
+    <input type="hidden" id="is-Owner-value" value="${isOwner}">
+    
     <div class="page-container">
         <div class="product-card">
          

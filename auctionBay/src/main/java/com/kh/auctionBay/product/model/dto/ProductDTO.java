@@ -1,14 +1,13 @@
 package com.kh.auctionBay.product.model.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-import com.kh.auctionBay.board.model.dto.BoardImageDTO;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Data
@@ -43,6 +42,7 @@ public class ProductDTO {
 	private Long price;
 	private String productCondition;
 	private Long auctionStartPrice;
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private LocalDateTime auctionEndTime;
 	private String tradeLocation;
 	private int isDirect;
