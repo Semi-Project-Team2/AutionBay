@@ -113,4 +113,9 @@ public class ActivityServiceImpl implements ActivityService {
 	public boolean removeAllRecentViews(long userNo) {
 	    return activityMapper.deleteAllRecentViews(userNo) > 0;
 	}
+	
+	@Override
+	public void addRecentView(long userNo, long productNo) {
+		activityMapper.upsertRecentView(userNo, productNo);
+	}
 }

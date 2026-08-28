@@ -34,4 +34,6 @@ public interface ActivityMapper {
 	int deleteRecentView( long userNo, long productNo);
 	//8. 최근 본 글 게시글 전체 삭제
 	int deleteAllRecentViews(long userNo);
+	//9.최근 본글 불러오기
+	void upsertRecentView( long userNo, long productNo);
 }

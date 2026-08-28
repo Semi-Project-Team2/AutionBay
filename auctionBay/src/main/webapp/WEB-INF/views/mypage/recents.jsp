@@ -153,11 +153,11 @@
                                 <div class="board-card" data-product-no="${recent.productNo}">
                                     <div class="board-info">
                                         <c:choose>
-                                            <c:when test="${not empty recent.mainImage}">
+                                            <c:when test="${not empty recent.mainImage and recent.mainImage != '/images/no-image.png'}">
                                                 <img src="${pageContext.request.contextPath}/resources/upload/${recent.mainImage}" class="board-thumb" alt="상품 이미지">
                                             </c:when>
                                             <c:otherwise>
-                                                <div class="board-thumb">img</div>
+                                                <img src="${pageContext.request.contextPath}${empty recent.mainImage ? '/images/no-image.png' : recent.mainImage}" class="board-thumb" alt="기본 이미지">
                                             </c:otherwise>
                                         </c:choose>
                                         
