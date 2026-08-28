@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kh.auctionBay.activity.service.ActivityService;
 import com.kh.auctionBay.auction.model.dto.BidsDTO;
 import com.kh.auctionBay.auction.service.AuctionService;
 import com.kh.auctionBay.board.model.dto.CommentDTO;
@@ -40,28 +41,36 @@ public class AuctionController {
 	private final CommentService commentService;
 	
 	
+	private final ActivityService activityService;
+
+
 	// ------- 화면 이동 요청 ---------
-	
+
 	// 메인페이지에서 경매 관련 게시물을 클릭시
 	@GetMapping("/{productId}/detail")
-	public String auctionDetail(@PathVariable Long productId, 
+	public String auctionDetail(@PathVariable Long productId,
 					HttpSession session, Model model, SearchCondition condition) {
-		
+
 		// 세션 영역에서 로그인된 유저 가져오기
 		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
-		
+
 		// 상품 조회수 증가 처리
 		productService.increaseViewCount(productId);
-		
+
+		// 최근본글 테이블 인서트 (로그인한 회원만)
+		if (loginUser != null) {
+			activityService.addRecentView(loginUser.getUserNo(), productId);
+		}
+
 		// 경매 입찰 내역 조회용
 		List<BidsDTO> bids = service.getBidsByProductId(productId);
-		
+
 		// 상품정보 조회용
 		ProductDTO product = productService.getProductByProductId(productId);
-		
+
 		// 게시물 등록자의 받은 리뷰요약 조회용(ReviewSummaryDTO에는 reviewAvg, reviewCount 필드 저장되어있음
 		ReviewSummaryDTO rs = reviewService.getAvgAndCountReview(product.getWriterNo());
-		
+
 		// 게시물 등록자의 받은 리뷰 보여주기용 리스트
 		condition.setUserNo(product.getWriterNo());
 		List<ReviewDTO> reviewList = reviewService.getReceivedReviews(condition)
@@ -92,23 +101,23 @@ public class AuctionController {
 		model.addAttribute("reviewSummary", rs);
 		model.addAttribute("isLiked", isLiked);
 		model.addAttribute("reviewList", reviewList);
-		
+
 		return "auction/detail";
 	}
-	
-	
+
+
 	// -----------------------------------------------
 	@PostMapping("/bid")
 	public String auctionBid(@ModelAttribute BidsDTO bidDTO,
 			HttpSession session, RedirectAttributes rttr) {
-		
+
 		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
 		if (loginUser == null) {
 	        rttr.addFlashAttribute("message", "로그인 후 이용해주세요.");
 	        return "redirect:/user/login";
 	    }
 
-		// 로그인한 유저의 UserNo 세팅 
+		// 로그인한 유저의 UserNo 세팅
 		bidDTO.setBidderNo(loginUser.getUserNo());
 		
 		// 입찰자가 작성자인지 체크 후 같을시 거부
@@ -119,12 +128,10 @@ public class AuctionController {
 		
 	    // 서비스 호출 (비즈니스 로직 처리 후 결과 문자열 리턴 받기)
 	    String message = service.processBid(bidDTO);
-	    
+
 	    rttr.addFlashAttribute("message", message);
-		
+
 		return "redirect:/auction/"+bidDTO.getProductId()+"/detail";
 	}
-	
-	
-	
+
 }

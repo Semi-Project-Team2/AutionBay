@@ -149,15 +149,24 @@
                                 <div class="board-card" data-product-no="${recent.productNo}">
                                     <div class="board-info">
                                         <c:choose>
-                                            <c:when test="${not empty recent.mainImage}">
+                                            <c:when test="${not empty recent.mainImage and recent.mainImage != '/images/no-image.png'}">
                                                 <img src="${pageContext.request.contextPath}/resources/upload/${recent.mainImage}" class="board-thumb" alt="상품 이미지">
                                             </c:when>
                                             <c:otherwise>
-                                                <div class="board-thumb">img</div>
+                                                <img src="${pageContext.request.contextPath}${empty recent.mainImage ? '/images/no-image.png' : recent.mainImage}" class="board-thumb" alt="기본 이미지">
                                             </c:otherwise>
                                         </c:choose>
                                         
-                                        <a href="${pageContext.request.contextPath}/auction/${recent.productNo}/detail" class="board-title">${recent.title}</a>
+										<c:choose>
+										    <c:when test="${recent.tradeType == 'AUCTION'}">
+										        <span class="type-badge auction">경매</span>
+										        <a href="${pageContext.request.contextPath}/auction/${recent.productNo}/detail" class="board-title">${recent.title}</a>
+										    </c:when>
+										    <c:otherwise>
+										        <span class="type-badge general">일반</span>
+										        <a href="${pageContext.request.contextPath}/board/${recent.productNo}/detail" class="board-title">${recent.title}</a>
+										    </c:otherwise>
+										</c:choose>
                                     </div>
                                     <button type="button" class="btn-delete-item" onclick="deleteRecent(${recent.productNo}, this)" title="삭제">✕</button>
                                 </div>
