@@ -99,7 +99,7 @@ public class ActivityServiceImpl implements ActivityService {
 	 * - 반환 데이터: 성공 시 true, 실패 시 false (boolean)
 	 */
 	@Override
-	public boolean removeRecentView(long userNo, long productNo) {
+	public boolean removeRecentView(Long userNo, Long productNo) {
 	    return activityMapper.deleteRecentView(userNo, productNo) > 0;
 	}
 	
@@ -110,12 +110,12 @@ public class ActivityServiceImpl implements ActivityService {
 	 * - 반환 데이터: 성공 시 true, 실패 시 false (boolean)
 	 */
 	@Override
-	public boolean removeAllRecentViews(long userNo) {
+	public boolean removeAllRecentViews(Long userNo) {
 	    return activityMapper.deleteAllRecentViews(userNo) > 0;
 	}
 	
 	@Override
-	public void addRecentView(long userNo, long productNo) {
+	public void addRecentView(Long userNo, Long productNo) {
 		activityMapper.upsertRecentView(userNo, productNo);
 		activityMapper.trimRecentViews(userNo);
 	}
