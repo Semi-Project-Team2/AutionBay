@@ -160,7 +160,6 @@
             <main class="main-content">
                 <div class="content-header">
                     <span class="content-title">게시글 관리</span>
-                    <!-- 마이페이지 전용 name 부여 -->
                     <form action="${pageContext.request.contextPath}/mypage/products" method="get" class="search-bar" onsubmit="return false;">
                         <input type="text" id="mypageKeywordInput" name="mypageSearchKeyword" placeholder="검색어를 입력하세요">
                         <button type="button" onclick="searchMypageProducts()">검색</button>
@@ -188,11 +187,11 @@
                                             <c:choose>
                                                 <c:when test="${board.tradeType == 'AUCTION'}">
                                                     <span class="type-badge auction">경매</span>
-													<a href="${pageContext.request.contextPath}/auction/${pNo}/detail" class="board-title">${board.title}</a>
+                                                    <a href="${pageContext.request.contextPath}/auction/${pNo}/detail" class="board-title">${board.title}</a>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <span class="type-badge general">일반</span>
-													<a href="${pageContext.request.contextPath}/board/${pNo}/detail" class="board-title">${board.title}</a>
+                                                    <a href="${pageContext.request.contextPath}/board/${pNo}/detail" class="board-title">${board.title}</a>
                                                 </c:otherwise>
                                             </c:choose>
                                         </div>
@@ -218,7 +217,7 @@
 
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
-	<script>
+    <script>
         // 한 페이지당 5개씩 설정
         const itemsPerPage = 5;
         let currentPage = 1;
@@ -291,25 +290,23 @@
 
         // 페이지 로드 시 처리
         document.addEventListener("DOMContentLoaded", function() {
-            // 1. [핵심] 상단 헤더 검색창이 주소창의 keyword 파라미터를 오인하여 채워넣지 못하도록 헤더 검색 input의 name을 강제 제거(또는 변경)
-            const headerInputs = document.querySelectorAll('header input[name="keyword"], .header input[name="keyword"], input[name="keyword"]');
-            headerInputs.forEach(input => {
-                // 마이페이지 검색창이 아닌 다른 검색창들의 name 속성을 해제
-                if (input.id !== 'mypageKeywordInput') {
-                    input.removeAttribute('name');
-                }
-            });
-
-            // 2. 주소창의 keyword 값을 읽어와서 마이페이지 검색창에만 쏙 넣어주기
+            // 1. 주소창의 keyword 파라미터 값 가져오기
             const urlParams = new URLSearchParams(window.location.search);
             const keywordParam = urlParams.get('keyword');
             const mypageInput = document.getElementById('mypageKeywordInput');
             
+            // 2. 마이페이지 검색창에만 검색어 쏙 넣기
             if (keywordParam && mypageInput) {
                 mypageInput.value = keywordParam;
             }
 
-            // 3. 엔터키 감지 이벤트
+            // 3. 헤더 검색창의 name 속성은 건드리지 않고, 'value' 값만 깨끗하게 비우기 (핵심!)
+            const headerInput = document.querySelector('header input[name="keyword"], .header input[name="keyword"]');
+            if (headerInput) {
+                headerInput.value = '';
+            }
+
+            // 4. 엔터키 감지 이벤트
             if (mypageInput) {
                 mypageInput.addEventListener('keydown', function(event) {
                     if (event.key === 'Enter') {
@@ -320,7 +317,7 @@
             }
         });
 
-        // 마이페이지 검색 실행 시 컨트롤러가 받는 'keyword' 파라미터명으로 전송
+        // 마이페이지 검색 실행 함수
         function searchMypageProducts() {
             const input = document.getElementById('mypageKeywordInput');
             const keyword = input ? input.value.trim() : '';
@@ -328,34 +325,34 @@
         }
 
         // 게시글 삭제 함수
-	    function deleteProduct(button) {
-	        const productNo = button.getAttribute("data-product-no");
-	        
-	        if (!productNo || productNo === 'undefined' || productNo === '') {
-	            alert("게시글 번호를 찾을 수 없습니다.");
-	            return;
-	        }
-	        
-	        if (!confirm("정말 이 게시글을 삭제하시겠습니까?")) {
-	            return;
-	        }
+        function deleteProduct(button) {
+            const productNo = button.getAttribute("data-product-no");
+            
+            if (!productNo || productNo === 'undefined' || productNo === '') {
+                alert("게시글 번호를 찾을 수 없습니다.");
+                return;
+            }
+            
+            if (!confirm("정말 이 게시글을 삭제하시겠습니까?")) {
+                return;
+            }
 
-	        fetch('${pageContext.request.contextPath}/mypage/deleteProduct?productNo=' + productNo, {
-	            method: 'DELETE'
-	        })
-	        .then(response => response.text())
-	        .then(result => {
-	            if (result.trim() === "SUCCESS") {
-	                location.reload(); // 삭제 후 새로고침하여 5개 단위 페이징 재정렬
-	            } else {
-	                alert("게시글 삭제에 실패했습니다.");
-	            }
-	        })
-	        .catch(error => {
-	            console.error('Error:', error);
-	            alert("서버 통신 중 오류가 발생했습니다.");
-	        });
-	    }
-	</script>
+            fetch('${pageContext.request.contextPath}/mypage/deleteProduct?productNo=' + productNo, {
+                method: 'DELETE'
+            })
+            .then(response => response.text())
+            .then(result => {
+                if (result.trim() === "SUCCESS") {
+                    location.reload();
+                } else {
+                    alert("게시글 삭제에 실패했습니다.");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("서버 통신 중 오류가 발생했습니다.");
+            });
+        }
+    </script>
 </body>
 </html>
