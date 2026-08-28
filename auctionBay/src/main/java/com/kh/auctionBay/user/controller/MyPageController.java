@@ -97,7 +97,7 @@ public class MyPageController {
 		model.addAttribute("pageInfo", list.getPageInfo());
 		// 현재 페이지 정보 전달
 		model.addAttribute("currentPage", condition.getPage());
-		// 로그인한 유저 정보 전달
+		// 로그인한 유저 정보 전달 (프로필 영역에 설정한 프로필 이미지 표시용)
 		model.addAttribute("user", loginUser);
 		
 		return "mypage/txHistories";
@@ -139,7 +139,7 @@ public class MyPageController {
 		// 페이징 정보 저장 (받은 후기: receivedPageInfo, 보낸 후기: sentPageInfo)
 		model.addAttribute("receivedPageInfo", receivedReviews.getPageInfo());
 		model.addAttribute("sentPageInfo", sentReviews.getPageInfo());
-		// 로그인한 유저 정보 전달 (이거 없으면 profileImg 표시 불가)
+		// 로그인한 유저 정보 전달 (프로필 영역에 설정한 프로필 이미지 표시용)
 		model.addAttribute("user", loginUser);
 		
 		// 현재 활성화된 탭 정보를 브라우저로 전달
@@ -246,10 +246,12 @@ public class MyPageController {
 	@PostMapping("/profile/editForm")
 	public ApiResponse<Void> editProfile(@ModelAttribute UserDTO user, 
 	// 성공/실패 여부와 메시지 외에 전달할 데이터가 없기 때문에 Void
-			HttpSession session, boolean deleteProfileImg,
+			HttpSession session, String deleteProfileImg,
 			@RequestParam(required=false) MultipartFile profileImage)
 				throws IllegalStateException, IOException,
 				SQLIntegrityConstraintViolationException {
+		
+		boolean isDelete = "true".equals(deleteProfileImg);
 		
 		// 1. 로그인한 사용자 정보
 		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
@@ -262,24 +264,12 @@ public class MyPageController {
 		
 		try {
 			// 3. UserService 호출 후 저장된 값 업데이트
-			int result = userService.editProfile(user, profileImage);
+			int result = userService.editProfile(user, profileImage, isDelete);
 			
 			if (result > 0) {
 				// 4. 로그인한 사용자 정보를 변경된 값으로 최신화
-				UserDTO updatedUser = userService.getUserByUserNo(loginUser.getUserNo());
-				
-				if (deleteProfileImg) {	
-					// 프로필 사진 삭제 시 프사 경로를 기본 이미지로
-					updatedUser.setProfileImg("/uploads/profile/default-profile.png");
-				} else if (profileImage != null && !profileImage.isEmpty()) {
-					// 새로운 프로필 사진 업로드 시 DB에 이미 새로운 경로가 저장됨
-					// updatedUser의 프사 경로를 그대로 사용
-					// 분기를 안 나누면 프사 업로드한 경우까지 아래 else문에 잡히므로 분기를 나누고
-					// 로직은 추가하지 않음
-				} else {
-					// 프로필 사진 업로드도 안 했고 삭제도 안 한 경우 -> 기존 프사 유지
-					updatedUser.setProfileImg(loginUser.getProfileImg());
-				}
+				UserDTO updatedUser 
+					= userService.getUserByUserNo(loginUser.getUserNo());
 				session.setAttribute(SessionConst.LOGIN_USER, updatedUser);
 				
 				// message 반환 (전달할 데이터 없어서 data 부분은 null)
@@ -363,6 +353,8 @@ public class MyPageController {
 	    List<ProductDTO> productList = activityService.selectMyProductList(loginUser.getUserNo(), keyword); 
 	    model.addAttribute("productList", productList);
 	    model.addAttribute("keyword", keyword);
+		// 로그인한 유저 정보 전달 (프로필 영역에 설정한 프로필 이미지 표시용)
+		model.addAttribute("user", loginUser);
 
 	    return "mypage/products";
 	}
@@ -383,6 +375,8 @@ public class MyPageController {
 
 		List<MyCommentDTO> commentList = activityService.selectMyCommentList(loginUser.getUserNo());
 		model.addAttribute("commentList", commentList);
+		// 로그인한 유저 정보 전달 (프로필 영역에 설정한 프로필 이미지 표시용)
+		model.addAttribute("user", loginUser);
 		return "mypage/comments";
 	}
 
@@ -402,6 +396,8 @@ public class MyPageController {
 
 		List<WishlistDTO> wishlist = activityService.selectMyWishlist(loginUser.getUserNo());
 		model.addAttribute("wishlist", wishlist);
+		// 로그인한 유저 정보 전달 (프로필 영역에 설정한 프로필 이미지 표시용)
+		model.addAttribute("user", loginUser);
 		return "mypage/wishlists"; 
 	}
 
@@ -421,6 +417,8 @@ public class MyPageController {
 
 		List<RecentViewDTO> recentList = activityService.selectRecentViews(loginUser.getUserNo());
 		model.addAttribute("recentList", recentList);
+		// 로그인한 유저 정보 전달 (프로필 영역에 설정한 프로필 이미지 표시용)
+		model.addAttribute("user", loginUser);
 		return "mypage/recents";
 	}
 

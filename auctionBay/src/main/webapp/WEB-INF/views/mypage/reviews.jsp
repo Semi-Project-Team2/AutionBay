@@ -34,11 +34,35 @@
         .content-area { display: flex; gap: 30px; align-items: flex-start; }
         
         /* 사이드바 */
-        .sidebar { width: 200px; background-color: #e2e2e2; border-radius: 6px; padding: 15px 0; }
-        .sidebar ul { list-style: none; }
-        .sidebar li a { display: block; padding: 12px 20px; text-decoration: none; color: #555; font-size: 15px; font-weight: 500; }
-        .sidebar li a:hover, .sidebar li a.active { background-color: #d1d1d1; color: #000; font-weight: bold; }
+        .mypage-sidebar {
+            width: 200px;
+            background-color: #e2e2e2;
+            border-radius: 6px;
+            padding: 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
 
+        .sidebar-item {
+            padding: 12px 20px;
+            text-decoration: none;
+            color: #555;
+            font-size: 15px;
+            font-weight: 500;
+            display: block;
+        }
+
+        .sidebar-item:hover {
+            background-color: #d1d1d1;
+            color: #000;
+        }
+
+        .sidebar-item.active {
+            background-color: #c5c5c5;
+            color: #000;
+            font-weight: bold;
+        }
         /* 후기 메인 콘텐츠 */
         .main-content { flex: 1; min-width: 0; }
         
@@ -103,16 +127,16 @@
         <jsp:include page="/WEB-INF/views/mypage/profile/profile.jsp" />
         <!-- 메인 콘텐츠 영역 -->
         <div class="content-area">
-            <!-- 사이드바 -->
-            <nav class="sidebar">
-                <ul>
-                    <li><a href="${pageContext.request.contextPath}/mypage/products">게시글 관리</a></li>
-                    <li><a href="${pageContext.request.contextPath}/mypage/comments">댓글 관리</a></li>
-                    <li><a href="${pageContext.request.contextPath}/mypage/txHistories">거래 내역</a></li>
-                    <li><a href="${pageContext.request.contextPath}/mypage/reviews" class="active">후기</a></li>
-                    <li><a href="${pageContext.request.contextPath}/mypage/recents">최근 본 글</a></li>
-                </ul>
-            </nav>
+        <!-- 3. 사이드바 -->
+        <div class="mypage-sidebar">
+            <a href="${pageContext.request.contextPath}/mypage/products" class="sidebar-item">게시글 관리</a>
+            <a href="${pageContext.request.contextPath}/mypage/comments" class="sidebar-item">댓글 관리</a>
+            <a href="${pageContext.request.contextPath}/mypage/txHistories" class="sidebar-item">거래내역</a>
+            <a href="${pageContext.request.contextPath}/mypage/reviews" class="sidebar-item active">후기</a>
+            <a href="${pageContext.request.contextPath}/mypage/recents" class="sidebar-item">최근 본 글</a>
+            <a href="${pageContext.request.contextPath}/mypage/wishlists" class="sidebar-item">찜 목록</a>
+            <a href="${pageContext.request.contextPath}/message/received" class="sidebar-item">쪽지함</a>
+        </div>
 
             <!-- 후기 콘텐츠 영역 -->
             <main class="main-content">
@@ -130,7 +154,16 @@
                                 <div class="review-item">
                                     <div class="review-header">
                                         <span class="rating">⭐ ${review.rating}</span>
-                                        <span class="title">${review.title}</span>
+                                        <c:choose>
+                                            <c:when test="${review.tradeType == '경매'}">
+                                                <a href="${pageContext.request.contextPath}/auction/${review.productId}/detail"
+                                                    class="title">${review.title}</a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="${pageContext.request.contextPath}/board/${review.productId}/detail"
+                                                    class="title">${review.title}</a>
+                                            </c:otherwise>
+                                        </c:choose>
                                         <span class="nickname">${review.reviewerNickname}</span>
                                         <span class="time">${review.createdAtStr}</span>
                                     </div>

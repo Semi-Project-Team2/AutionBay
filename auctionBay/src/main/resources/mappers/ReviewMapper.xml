@@ -7,6 +7,11 @@
 		select REVIEW_ID, R.PRODUCT_ID, REVIEWER_NO, REVIEWEE_NO, RATING, CONTENT,
 		    to_char(R.CREATED_AT, 'YYYY-MM-DD HH24:MI') as "CREATED_AT_STR",
 		    R.CREATED_AT, P.TITLE,
+			case 
+	            when P.TRADE_TYPE = 'SELL'then '판매'
+	            when P.TRADE_TYPE = 'BUY' then '구매'
+	            else '경매'
+	        end as "TRADE_TYPE",
 		    case
 		    	when U.IS_DELETED = 1 then '탈퇴한 회원'
 		    	else U.NICKNAME
@@ -33,6 +38,11 @@
 		select REVIEW_ID, R.PRODUCT_ID, REVIEWER_NO, REVIEWEE_NO, RATING, CONTENT,
 		    to_char(R.CREATED_AT, 'YYYY-MM-DD HH24:MI') as "CREATED_AT_STR",
 		    R.CREATED_AT, P.TITLE,
+			case 
+	            when P.TRADE_TYPE = 'SELL'then '판매'
+	            when P.TRADE_TYPE = 'BUY' then '구매'
+	            else '경매'
+	        end as "TRADE_TYPE",
 		    case
 		    	when U.IS_DELETED = 1 then '탈퇴한 회원'
 		    	else U.NICKNAME
