@@ -32,7 +32,7 @@ public interface ActivityMapper {
 	int deleteMyComment(Long commentNo, Long writerNo);
 	
 	// 7. 최근 본 게시글 삭제
-	int deleteRecentView( Long userNo, Long productNo);
+	int deleteRecentView(Long userNo, Long productNo);
 	
 	//8. 최근 본 게시글 전체 삭제
 	int deleteAllRecentViews(Long userNo);
