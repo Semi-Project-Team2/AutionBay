@@ -465,8 +465,13 @@ public class MyPageController {
 	}
 	
 	/**
-	 * 최근 본 글 개별 삭제
-	 * 요청 URL: DELETE /mypage/recents/delete
+	 * [최근 본 글 개별 삭제 처리 (AJAX 비동기 통신)]
+	 * - 요청 URL: DELETE /mypage/recents/delete
+	 * - 처리 과정:
+	 *    1. 전달받은 상품 번호(productNo) 누락 여부를 확인합니다. (누락 시 400 Bad Request)
+	 *    2. 세션에서 로그인된 유저 정보를 확인합니다. (비로그인 시 401 Unauthorized)
+	 *    3. 서비스(activityService)를 통해 해당 회원의 특정 최근 본 글 기록을 삭제합니다.
+	 * - 응답 데이터: 성공 시 "SUCCESS", 실패 시 "FAIL" 혹은 에러 메시지를 ResponseEntity로 반환합니다.
 	 */
 	@DeleteMapping("/recents/delete")
 	@ResponseBody
@@ -488,8 +493,12 @@ public class MyPageController {
 	}
 
 	/**
-	 * 최근 본 글 전체 삭제
-	 * 요청 URL: DELETE /mypage/recents/clear
+	 * [최근 본 글 전체 삭제 처리 (AJAX 비동기 통신)]
+	 * - 요청 URL: DELETE /mypage/recents/clear
+	 * - 처리 과정:
+	 *    1. 세션에서 로그인된 유저 정보를 확인합니다. (비로그인 시 401 Unauthorized)
+	 *    2. 서비스(activityService)를 통해 해당 회원의 모든 최근 본 글 기록을 일괄 삭제합니다.
+	 * - 응답 데이터: 성공 시 "SUCCESS"를 ResponseEntity로 반환합니다.
 	 */
 	@DeleteMapping("/recents/clear")
 	@ResponseBody
