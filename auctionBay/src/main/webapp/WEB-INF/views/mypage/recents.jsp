@@ -157,7 +157,16 @@
                                             </c:otherwise>
                                         </c:choose>
                                         
-                                        <a href="${pageContext.request.contextPath}/auction/${recent.productNo}/detail" class="board-title">${recent.title}</a>
+										<c:choose>
+										    <c:when test="${recent.tradeType == 'AUCTION'}">
+										        <span class="type-badge auction">경매</span>
+										        <a href="${pageContext.request.contextPath}/auction/${recent.productNo}/detail" class="board-title">${recent.title}</a>
+										    </c:when>
+										    <c:otherwise>
+										        <span class="type-badge general">일반</span>
+										        <a href="${pageContext.request.contextPath}/board/${recent.productNo}/detail" class="board-title">${recent.title}</a>
+										    </c:otherwise>
+										</c:choose>
                                     </div>
                                     <button type="button" class="btn-delete-item" onclick="deleteRecent(${recent.productNo}, this)" title="삭제">✕</button>
                                 </div>

@@ -20,6 +20,7 @@ public class MyCommentDTO {
 	private Long parentNo;              // 부모 댓글 ID (대댓글용)
 	private String content;             // 댓글 내용
 	private LocalDateTime createdAt;    // 작성 일시
+	private String tradeType;
 	
 	// 화면 표시용 가공 필드
 	private String createdAtStr;        // 작성일시 포맷팅 (YYYY-MM-DD HH:mm)
