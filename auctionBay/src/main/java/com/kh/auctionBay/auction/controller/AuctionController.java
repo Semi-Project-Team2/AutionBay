@@ -2,24 +2,21 @@ package com.kh.auctionBay.auction.controller;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.auctionBay.auction.model.dto.BidsDTO;
 import com.kh.auctionBay.auction.service.AuctionService;
+import com.kh.auctionBay.board.model.dto.CommentDTO;
 import com.kh.auctionBay.board.service.BoardService;
+import com.kh.auctionBay.board.service.CommentService;
 import com.kh.auctionBay.common.SessionConst;
-import com.kh.auctionBay.common.dto.ApiResponse;
 import com.kh.auctionBay.product.model.dto.ProductDTO;
 import com.kh.auctionBay.product.service.ProductService;
 import com.kh.auctionBay.review.model.dto.ReviewDTO;
@@ -27,7 +24,6 @@ import com.kh.auctionBay.review.model.dto.ReviewSummaryDTO;
 import com.kh.auctionBay.review.model.dto.SearchCondition;
 import com.kh.auctionBay.review.service.ReviewService;
 import com.kh.auctionBay.user.model.dto.UserDTO;
-import com.kh.auctionBay.wish.model.dto.WishRequest;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +37,7 @@ public class AuctionController {
 	private final ProductService productService;
 	private final ReviewService reviewService;
 	private final BoardService boardService;
+	private final CommentService commentService;
 	
 	
 	// ------- 화면 이동 요청 ---------
@@ -70,12 +67,25 @@ public class AuctionController {
 		List<ReviewDTO> reviewList = reviewService.getReceivedReviews(condition)
 									.getReviews();
 		
+		// 작성자인지 여부
+		boolean isOwner = false;
+		    if (loginUser != null && product != null) {
+		        if (loginUser.getUserNo() != null && loginUser.getUserNo().equals(product.getWriterNo())) {
+		            isOwner = true;
+		        }
+		    }
+		
 		// 찜 여부 조회
 		boolean isLiked = false;
 		if(loginUser != null) {
 			isLiked = boardService.checkIsLiked(loginUser.getUserNo(),productId);
 		}
 		
+		// 댓글 목록 가져오기
+		List<CommentDTO> comments = commentService.getComments(productId);
+
+		model.addAttribute("comments", comments);
+		model.addAttribute("isOwner", isOwner);
 		model.addAttribute("bidCount", bids.size());
 		model.addAttribute("product", product);
 		model.addAttribute("bids", bids);
@@ -100,6 +110,12 @@ public class AuctionController {
 
 		// 로그인한 유저의 UserNo 세팅 
 		bidDTO.setBidderNo(loginUser.getUserNo());
+		
+		// 입찰자가 작성자인지 체크 후 같을시 거부
+		if(bidDTO.getBidderNo().equals(loginUser.getUserNo())) {
+			rttr.addFlashAttribute("message", "작성자는 입찰 할 수 없습니다.");
+			return "redirect:/auction/"+bidDTO.getProductId()+"/detail";
+		}
 		
 	    // 서비스 호출 (비즈니스 로직 처리 후 결과 문자열 리턴 받기)
 	    String message = service.processBid(bidDTO);

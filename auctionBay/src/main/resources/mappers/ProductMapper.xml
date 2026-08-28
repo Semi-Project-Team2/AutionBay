@@ -132,7 +132,6 @@
 	SET VIEW_COUNT = VIEW_COUNT + 1
 	WHERE PRODUCT_ID = #{productId}
 </update>
->>>>>>> 0cf01d79352e45464d2a5a1e27f9ebd1a81ade89
 
 <insert id="insertProduct" >
 	INSERT INTO PRODUCTS (writer_no, category_id, trade_type, title, description, price, product_condition, auction_start_price, trade_location) 
