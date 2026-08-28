@@ -28,8 +28,10 @@ public interface BoardMapper {
     
     // 찜 여부 조회
     int checkIsLiked(Long userNo, Long productId);
+    
     // 찜 제거
     void deleteWish(Long userNo, Long productId);
+    
     // 찜 추가
     void insertWish(Long userNo, Long productId);
     

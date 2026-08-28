@@ -67,6 +67,7 @@
             SYSDATE
         )
     </insert>
+    
 
     <!-- 댓글 작성자 번호 조회 (권한 검증용) -->
     <select id="getCommentWriterNo" parameterType="long" resultType="java.lang.Long">
@@ -81,16 +82,8 @@
         WHERE comment_id = #{commentId}
     </delete>
     
-    <!-- 게시글 수정 쿼리 -->
-	<update id="updateBoard" parameterType="com.kh.auctionBay.board.model.dto.BoardDTO">
-   		UPDATE PRODUCTS
-   		SET 
-        title = #{title},
-        description = #{content},
-        price = #{price}
-    	WHERE product_id = #{boardId}
-     	AND writer_no = #{writerNo} <!-- 본인 게시글 검증 -->
-	</update>
+    <!-- 게시글 수정, 삭제 -->
+
 	
 	<!-- 찜 여부 조회 -->
     <select id="checkIsLiked" resultType="int">

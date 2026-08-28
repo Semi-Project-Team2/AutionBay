@@ -20,4 +20,7 @@ public interface CommentMapper {
 	
 	// 댓글 삭제
 	int deleteComment(Long commentId);
+
+	// 
+	List<CommentDTO> selectCommentsByProductId(Long productId);
 }

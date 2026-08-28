@@ -58,7 +58,7 @@ function appendComment(comment) {
 	
 	cloneComment.querySelector(".comment-list_writer").textContent = comment.writerNickname;
 	cloneComment.querySelector(".comment-list_content").textContent = comment.content;
-	cloneComment.querySelector(".comment-list_date").textContent = comment.createAtStr;
+	cloneComment.querySelector(".comment-list_date").textContent = comment.createdAtStr;
 	
 	cloneComment.querySelector(".comment-delete-btn").dataset.commentId = comment.commentId;
 	// => dataset 을 사용하면 data-* 속성으로 추가될 것임.

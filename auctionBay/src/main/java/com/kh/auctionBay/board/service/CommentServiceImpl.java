@@ -16,14 +16,14 @@ public class CommentServiceImpl implements CommentService {
 	private final CommentMapper mapper;
 	
 	@Override
-	public CommentDTO addComment(Long boardId, String content, Long writerNo) {
+	public CommentDTO addComment(Long productId, String content, Long writerNo) {
 		// 댓글 내용 검토
 		if (content == null || content.isBlank()) {
 			throw new IllegalArgumentException("댓글 내용을 입력해주세요.");
 		}
 		
 		CommentDTO comment = new CommentDTO();
-		comment.setProductId(boardId);
+		comment.setProductId(productId);
 		comment.setContent(content);
 		comment.setWriterNo(writerNo);
 		
@@ -33,32 +33,32 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public List<CommentDTO> getComments(Long boardId) {
-		return null;
+	public List<CommentDTO> getComments(Long productId) {
+		
+		return mapper.selectCommentsByProductId(productId); // 댓글 새로고침 시 
 	}
-
+	
 	@Override
 	public void deleteComment(Long commentId, Long writerNo) {
 		
 		// 댓글id 기준으로 댓글 조회
-				CommentDTO comment = mapper.selectCommentById(commentId);
-				
-				// 조회된 댓글이 없으면 예외 발생
-				if (comment == null) {
-					throw new IllegalArgumentException("존재하지 않는 댓글입니다.");
-				}
-				
-				// 작성자와 요청자가 다를 경우 예외 발생
-				if (comment.getWriterNo() == null || !comment.getWriterNo().equals(writerNo)) {
-					throw new SecurityException("본인이 작성한 댓글만 삭제할 수 있습니다.");
-				}
-				
-				// 댓글 삭제
-				mapper.deleteComment(commentId);
+		CommentDTO comment = mapper.selectCommentById(commentId);
+		
+		// 조회된 댓글이 없으면 예외 발생
+		if (comment == null) {
+			throw new IllegalArgumentException("존재하지 않는 댓글입니다.");
+		}
+		
+		// 작성자와 요청자가 다를 경우 예외 발생
+		if (comment.getWriterNo() == null || !comment.getWriterNo().equals(writerNo)) {
+			throw new SecurityException("본인이 작성한 댓글만 삭제할 수 있습니다.");
+		}
+		
+		// 댓글 삭제
+		mapper.deleteComment(commentId);
 		
 	}
-	
-	
+
+
 		
 }
-

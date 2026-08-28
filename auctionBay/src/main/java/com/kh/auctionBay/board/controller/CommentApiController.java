@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.auctionBay.board.model.dto.CommentDTO;
+import com.kh.auctionBay.board.model.dto.CommentRequest;
 import com.kh.auctionBay.board.service.CommentService;
 import com.kh.auctionBay.common.SessionConst;
 import com.kh.auctionBay.common.dto.ApiResponse;
