@@ -35,7 +35,9 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	public List<CommentDTO> getComments(Long productId) {
 		
-		return mapper.selectCommentsByProductId(productId); // 댓글 새로고침 시 
+		List<CommentDTO> comments =  mapper.selectCommentsByProductId(productId); // 댓글 새로고침 시
+		System.out.println(comments);
+		return comments;
 	}
 	
 	@Override

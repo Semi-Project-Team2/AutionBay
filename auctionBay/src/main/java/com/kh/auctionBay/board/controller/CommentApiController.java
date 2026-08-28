@@ -27,6 +27,8 @@ public class CommentApiController {
 	
 	private final CommentService service;
 
+	
+	// 댓글 추가
 	@PostMapping("/board/{boardId}/comment")
 	public ResponseEntity<ApiResponse<CommentDTO>> addComment(@PathVariable Long boardId,
 															  @RequestBody CommentRequest commentRequest,
@@ -38,6 +40,7 @@ public class CommentApiController {
 		try {
 			
 			CommentDTO comment = service.addComment(boardId, commentRequest.getContent(), loginMember.getUserNo());
+			System.out.println(comment);
 			return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(comment));
 		
 		} catch (RuntimeException e) {

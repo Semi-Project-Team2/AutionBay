@@ -91,14 +91,33 @@ public class ActivityServiceImpl implements ActivityService {
 		int result = activityMapper.deleteMyComment(commentNo, writerNo);
 		return result > 0;
 	}
-	// ActivityServiceImpl.java
+	
+	/**
+	 * [7. 최근 본 글 개별 삭제 로직]
+	 * - 요청 데이터: 회원 번호(userNo), 상품 번호(productNo)
+	 * - 처리 과정: Mapper를 통해 특정 회원의 특정 최근 본 글 기록을 삭제하고, 삭제된 행의 수가 0보다 큰지 확인합니다.
+	 * - 반환 데이터: 성공 시 true, 실패 시 false (boolean)
+	 */
 	@Override
-	public boolean removeRecentView(long userNo, long productNo) {
+	public boolean removeRecentView(Long userNo, Long productNo) {
 	    return activityMapper.deleteRecentView(userNo, productNo) > 0;
 	}
-
+	
+	/**
+	 * [8. 최근 본 글 전체 삭제 로직]
+	 * - 요청 데이터: 회원 번호(userNo)
+	 * - 처리 과정: Mapper를 통해 해당 회원의 모든 최근 본 글 기록을 삭제하고, 삭제된 행의 수가 0 이상인지 확인합니다.
+	 * - 반환 데이터: 성공 시 true, 실패 시 false (boolean)
+	 */
 	@Override
-	public boolean removeAllRecentViews(long userNo) {
+	public boolean removeAllRecentViews(Long userNo) {
 	    return activityMapper.deleteAllRecentViews(userNo) > 0;
 	}
+	
+	@Override
+	public void addRecentView(Long userNo, Long productNo) {
+		activityMapper.upsertRecentView(userNo, productNo);
+		activityMapper.trimRecentViews(userNo);
+	}
+	
 }

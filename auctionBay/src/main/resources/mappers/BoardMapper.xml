@@ -14,7 +14,10 @@
             p.price AS price,
             p.writer_no AS writerNo,
             u.user_id AS memberId,
-            u.nickname AS nickname,
+            case
+		    	when U.IS_DELETED = 1 then '탈퇴한 회원'
+		    	else U.NICKNAME
+	    	end as nickname,
             p.created_at AS createDate
         FROM PRODUCTS p
         LEFT JOIN USERS u ON p.writer_no = u.user_no
@@ -46,7 +49,10 @@
             c.content,
             c.created_at AS createDate,
             c.writer_no AS memberId,
-            u.nickname AS nickname
+            case
+		    	when U.IS_DELETED = 1 then '탈퇴한 회원'
+		    	else U.NICKNAME
+	    	end as AS nickname
         FROM COMMENTS c
         LEFT JOIN USERS u ON c.writer_no = u.user_no
         WHERE c.product_id = #{boardId}

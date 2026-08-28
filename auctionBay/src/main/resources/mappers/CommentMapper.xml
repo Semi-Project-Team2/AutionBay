@@ -12,7 +12,10 @@
 	<select id="selectCommentById" parameterType="long" resultType="CommentDTO">
 		SELECT C.COMMENT_ID, C.PRODUCT_ID, C.WRITER_NO, C.CONTENT, C.CREATED_AT,
 			   TO_CHAR(C.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS CREATED_AT_STR,
-			   NVL(U.NICKNAME, '탈퇴한 회원') AS WRITER_NICKNAME
+			   case
+			    	when U.IS_DELETED = 1 then '탈퇴한 회원'
+			    	else U.NICKNAME
+		    	end as WRITER_NICKNAME
 		  FROM  COMMENTS C
 		  	LEFT JOIN USERS U ON C.WRITER_NO = U.USER_NO
 		 WHERE C.COMMENT_ID = #{commentId}
@@ -25,12 +28,14 @@
 	<select id="selectCommentsByProductId" parameterType="long" resultType="CommentDTO">
 		SELECT C.COMMENT_ID, C.PRODUCT_ID, C.WRITER_NO, C.CONTENT, C.CREATED_AT,
 			   TO_CHAR(C.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS CREATED_AT_STR,
-			   NVL(U.NICKNAME, '탈퇴한 회원') AS WRITER_NICKNAME
+			   case
+			    	when U.IS_DELETED = 1 then '탈퇴한 회원'
+			    	else U.NICKNAME
+		    	end as WRITER_NICKNAME
 		  FROM COMMENTS C
 		  	LEFT JOIN USERS U ON C.WRITER_NO = U.USER_NO
 		 WHERE C.PRODUCT_ID = #{productId}
-		 ORDER BY C.COMMENT_ID ASC
+		 ORDER BY C.COMMENT_ID ASC	
 	</select>
-	
 	
 </mapper>

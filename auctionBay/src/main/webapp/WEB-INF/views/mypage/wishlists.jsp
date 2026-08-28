@@ -94,7 +94,7 @@
 
 		.right-quick-menu {
 		    position: absolute;
-		    top: 120px;   /* 60px -> 120px로 조정, 필요하면 더 크게 */
+		    top: 120px;
 		    right: 0;
 		    width: 75px;
 		    background-color: #ffeef4;
@@ -168,8 +168,8 @@
             <c:choose>
                 <c:when test="${not empty wishlist}">
                     <c:forEach var="item" items="${wishlist}">
-                       
-                        <div class="product-card" onclick="location.href='${pageContext.request.contextPath}/auction/${item.productNo}/detail'">
+                        
+                        <div class="product-card" onclick="location.href='${pageContext.request.contextPath}/${item.tradeType == 'AUCTION' ? 'auction' : 'board'}/${item.productNo}/detail'">
                             <div class="product-img">
                                 <c:choose>
                                     <c:when test="${not empty item.mainImage}">
@@ -191,8 +191,17 @@
                                         </c:choose>
                                     </span>
                                 </div>
-                                <div class="product-price">
-                                    ${item.price}원
+                                <div class="product-price" id="price-${item.productNo}">
+                                    <c:choose>
+                                        <c:when test="${item.tradeType == 'AUCTION'}">
+                                            <!-- 경매 상품: JS로 가격 동적 조회 -->
+                                            <span class="auction-price-loading" data-pno="${item.productNo}">조회중...</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <!-- 일반 상품: DTO price 출력 -->
+                                            ${item.price}원
+                                        </c:otherwise>
+                                    </c:choose>
                                 </div>
                             </div>
                         </div>
@@ -207,7 +216,6 @@
         </div>
 
         <aside class="right-quick-menu">
-            <!-- 수정: /member/wishlist -> /mypage/wishlists (실제 매핑과 일치, 이 페이지 자기 자신) -->
             <a href="${pageContext.request.contextPath}/mypage/wishlists" class="quick-item">
                 <span class="quick-icon">❤️</span>
                 <span>찜목록</span>
@@ -217,7 +225,6 @@
                 <span>쪽지함</span>
                 <span class="badge">1</span>
             </a>
-            <!-- 수정: /mypage/recent -> /mypage/recents (실제 매핑과 일치) -->
             <a href="${pageContext.request.contextPath}/mypage/recents" class="quick-item">
                 <span class="quick-icon">⏱️</span>
                 <span>최근 본 글</span>
@@ -239,6 +246,40 @@
         <jsp:include page="/WEB-INF/views/common/footer.jsp" />
     </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const contextPath = "${pageContext.request.contextPath}";
+    const auctionElements = document.querySelectorAll('.auction-price-loading');
+
+    auctionElements.forEach(el => {
+        const productNo = el.getAttribute('data-pno');
+        
+        // 경매 상세 페이지 HTML/JSON에서 가격 파싱
+        fetch(contextPath + '/auction/' + productNo + '/detail')
+            .then(response => response.text())
+            .then(htmlStr => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(htmlStr, 'text/html');
+                
+                // 상세페이지 내 가격 엘리먼트 추출 (클래스/ID에 맞게 선택자 자동 매칭)
+                const priceTarget = doc.querySelector('.price, .current-price, .start-price, #price, [class*="price"]');
+                
+                if (priceTarget && priceTarget.textContent.trim() !== '') {
+                    const priceText = priceTarget.textContent.replace(/[^0-9]/g, '');
+                    if (priceText) {
+                        document.getElementById('price-' + productNo).innerText = Number(priceText).toLocaleString() + '원';
+                        return;
+                    }
+                }
+                document.getElementById('price-' + productNo).innerText = '경매 진행중';
+            })
+            .catch(err => {
+                document.getElementById('price-' + productNo).innerText = '경매 진행중';
+            });
+    });
+});
+</script>
 
 </body>
 </html>
