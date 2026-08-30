@@ -36,6 +36,6 @@ public interface UserService {
 	UserDTO getUserByUserNo(Long userNo);
 	
 	// 회원 탈퇴
-	int withdraw(Long userNo);
+	int withdraw(Long userNo, String pwInput);
 	
 }

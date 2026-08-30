@@ -188,14 +188,28 @@ public class UserServiceImpl implements UserService{
 		return mapper.selectByUserNo(userNo);
 	}
 
+	/**
+	 * 회원 탈퇴
+	 */
 	@Override
-	public int withdraw(Long userNo) {
+	@Transactional
+	public int withdraw(Long userNo, String pwInput) {
 		UserDTO loginUser = mapper.selectByUserNo(userNo);
+		
+		if (loginUser == null) {
+			throw new IllegalArgumentException("존재하지 않는 회원입니다.");
+		}
+				
+		String currentPw = loginUser.getPassword();
+		if (!passwordEncoder.matches(pwInput, currentPw)) {
+			return 0;
+		}
 		
 		int result = mapper.updateUserWithdrawal(userNo);
 		
+		// 프로필 이미지가 존재할 경우 삭제
 		String profile = loginUser.getProfileImg();
-		if (profile != null) {
+		if (profile != null && !profile.contains("default-profile.png")) {
 			uploadUtil.delete(profile, profileUploadDir);
 		}
 		
