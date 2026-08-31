@@ -34,7 +34,7 @@ public class CommentServiceImpl implements CommentService {
 
 	@Override
 	public List<CommentDTO> getComments(Long boardId) {
-		return null;
+		return mapper.selectCommentsByBoardId(boardId);
 	}
 
 	@Override

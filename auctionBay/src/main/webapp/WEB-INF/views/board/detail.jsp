@@ -504,9 +504,9 @@
 			                    <div class="comment-list_body">
 			                        <span class="comment-list_writer">${comment.writerNickname}</span>
 			                        <span class="comment-list_content">${comment.content}</span>
-			                        <span class="comment-list_date">${comment.createAtStr}</span>
+			                        <span class="comment-list_date">${comment.createdAtStr}</span>
 			                    </div>
-			                    <c:if test="${not empty loginUser and loginUser.UserNo == comment.writerNo}">
+			                    <c:if test="${not empty loginUser and loginUser.userNo == comment.writerNo}">
 			                        <button type="button" class="btn btn-outline comment-delete-btn" data-comment-id="${comment.commentId}">삭제</button>
 			                    </c:if>
 			                </li>
