@@ -137,12 +137,27 @@
                 <button type="submit" class="btn-submit">수정하기</button>
             </div>
         </form>
-    </div>
+   
+		 </div>
 
     <!-- 푸터 포함 -->
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
     <!-- 폼 유효성 검사 스크립트 연결 -->
     <script src="/js/boardUpdate.js"></script>
+	<div class="form-group">
+	    <label for="imageFiles">이미지</label>
+	    <input type="file"
+	           id="imageFiles"
+	           name="imageFiles"
+	           multiple
+	           accept="image/*" />
+
+	    <small>
+	        새 이미지를 선택하면 기존 이미지가 삭제되고 새 이미지로 변경됩니다.
+	    </small>
+	</div>
 </body>
-</html>s
+
+
+</html>

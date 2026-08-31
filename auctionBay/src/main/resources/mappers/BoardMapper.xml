@@ -38,6 +38,25 @@
         ORDER BY media_order ASC
     </select>
 
+    <!-- 게시글 수정 (수정완료) -->
+    <update id="updateBoard" parameterType="com.kh.auctionBay.board.model.dto.BoardDTO">
+        UPDATE PRODUCTS
+        SET
+            TITLE = #{title},
+            DESCRIPTION = #{content},
+            PRICE = #{price},
+            UPDATED_AT = SYSDATE
+        WHERE PRODUCT_ID = #{boardId}
+    </update>
+	
+    <!-- 게시글 삭제 (중복 제거 및 정상화) -->
+    <update id="deleteBoard" parameterType="long">
+        UPDATE PRODUCTS
+        SET
+            IS_DELETED = 1,
+            UPDATED_AT = SYSDATE
+        WHERE PRODUCT_ID = #{boardId}
+    </update>
 
     <!-- ==================== 2. 댓글 관련 쿼리 ==================== -->
 
@@ -52,7 +71,7 @@
             case
 		    	when U.IS_DELETED = 1 then '탈퇴한 회원'
 		    	else U.NICKNAME
-	    	end as AS nickname
+	    	end as nickname
         FROM COMMENTS c
         LEFT JOIN USERS u ON c.writer_no = u.user_no
         WHERE c.product_id = #{boardId}
@@ -73,7 +92,6 @@
             SYSDATE
         )
     </insert>
-    
 
     <!-- 댓글 작성자 번호 조회 (권한 검증용) -->
     <select id="getCommentWriterNo" parameterType="long" resultType="java.lang.Long">
@@ -87,11 +105,8 @@
         DELETE FROM COMMENTS
         WHERE comment_id = #{commentId}
     </delete>
-    
-    <!-- 게시글 수정, 삭제 -->
-
 	
-	<!-- 찜 여부 조회 -->
+    <!-- 찜 여부 조회 -->
     <select id="checkIsLiked" resultType="int">
     	SELECT COUNT(*)
     	FROM WISHLISTS
