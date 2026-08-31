@@ -32,7 +32,8 @@ public class ReviewDTO {
 	private String reviewerNickname;
 	private String revieweeNickname;
 	
-	// 리뷰가 작성된 거래의 게시글 제목
+	// 리뷰가 작성된 거래의 게시글 제목과 거래 유형
 	private String title;
+	private String tradeType;
 	
 }

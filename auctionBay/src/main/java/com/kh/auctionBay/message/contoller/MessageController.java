@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kh.auctionBay.common.SessionConst;
 import com.kh.auctionBay.message.model.dto.MessageDTO;
 import com.kh.auctionBay.message.service.MessageService;
 import com.kh.auctionBay.user.model.dto.UserDTO;
@@ -78,7 +79,16 @@ public class MessageController {
 	public String writeForm(@RequestParam Long productId,
 							@RequestParam Long receiverNo,
 							@RequestParam(required = false) String redirectURL,
-							Model model) {
+							Model model,
+							HttpSession session,
+							RedirectAttributes rttr) {
+		
+		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		// 쪽지 보내는 사람과 글 작성자가 같은지 체크 후 같을시 거부
+		if(receiverNo.equals(loginUser.getUserNo())) {
+			rttr.addFlashAttribute("message", "본인에게 쪽지를 보낼 수 없습니다.");
+			return "redirect:"+redirectURL;
+		}
 		
 		model.addAttribute("productId", productId);
 		model.addAttribute("receiverNo", receiverNo);

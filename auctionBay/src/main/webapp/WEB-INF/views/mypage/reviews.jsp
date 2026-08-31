@@ -34,11 +34,35 @@
         .content-area { display: flex; gap: 30px; align-items: flex-start; }
         
         /* 사이드바 */
-        .sidebar { width: 200px; background-color: #e2e2e2; border-radius: 6px; padding: 15px 0; }
-        .sidebar ul { list-style: none; }
-        .sidebar li a { display: block; padding: 12px 20px; text-decoration: none; color: #555; font-size: 15px; font-weight: 500; }
-        .sidebar li a:hover, .sidebar li a.active { background-color: #d1d1d1; color: #000; font-weight: bold; }
+        .mypage-sidebar {
+            width: 200px;
+            background-color: #e2e2e2;
+            border-radius: 6px;
+            padding: 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
 
+        .sidebar-item {
+            padding: 12px 20px;
+            text-decoration: none;
+            color: #555;
+            font-size: 15px;
+            font-weight: 500;
+            display: block;
+        }
+
+        .sidebar-item:hover {
+            background-color: #d1d1d1;
+            color: #000;
+        }
+
+        .sidebar-item.active {
+            background-color: #c5c5c5;
+            color: #000;
+            font-weight: bold;
+        }
         /* 후기 메인 콘텐츠 */
         .main-content { flex: 1; min-width: 0; }
         
@@ -103,23 +127,23 @@
         <jsp:include page="/WEB-INF/views/mypage/profile/profile.jsp" />
         <!-- 메인 콘텐츠 영역 -->
         <div class="content-area">
-            <!-- 사이드바 -->
-            <nav class="sidebar">
-                <ul>
-                    <li><a href="${pageContext.request.contextPath}/mypage/products">게시글 관리</a></li>
-                    <li><a href="${pageContext.request.contextPath}/mypage/comments">댓글 관리</a></li>
-                    <li><a href="${pageContext.request.contextPath}/mypage/txHistories">거래 내역</a></li>
-                    <li><a href="${pageContext.request.contextPath}/mypage/reviews" class="active">후기</a></li>
-                    <li><a href="${pageContext.request.contextPath}/mypage/recents">최근 본 글</a></li>
-                </ul>
-            </nav>
+        <!-- 3. 사이드바 -->
+        <div class="mypage-sidebar">
+            <a href="${pageContext.request.contextPath}/mypage/products" class="sidebar-item">게시글 관리</a>
+            <a href="${pageContext.request.contextPath}/mypage/comments" class="sidebar-item">댓글 관리</a>
+            <a href="${pageContext.request.contextPath}/mypage/txHistories" class="sidebar-item">거래내역</a>
+            <a href="${pageContext.request.contextPath}/mypage/reviews" class="sidebar-item active">후기</a>
+            <a href="${pageContext.request.contextPath}/mypage/recents" class="sidebar-item">최근 본 글</a>
+            <a href="${pageContext.request.contextPath}/mypage/wishlists" class="sidebar-item">찜 목록</a>
+            <a href="${pageContext.request.contextPath}/message/received" class="sidebar-item">쪽지함</a>
+        </div>
 
             <!-- 후기 콘텐츠 영역 -->
             <main class="main-content">
                 <!-- 탭 메뉴 -->
                 <div class="review-tabs">
-                    <button class="tab-btn ${activeTab eq 'received' ? 'active' : ''}" onclick="switchTab('received', event)">받은 후기</button>
-                    <button class="tab-btn ${activeTab eq 'sent' ? 'active' : ''}" onclick="switchTab('sent', event)">보낸 후기</button>
+                    <button class="tab-btn ${activeTab eq 'received' ? 'active' : ''}">받은 후기</button>
+                    <button class="tab-btn ${activeTab eq 'sent' ? 'active' : ''}">보낸 후기</button>
                 </div>
 
                 <!-- 1. 받은 후기 섹션 -->
@@ -130,7 +154,16 @@
                                 <div class="review-item">
                                     <div class="review-header">
                                         <span class="rating">⭐ ${review.rating}</span>
-                                        <span class="title">${review.title}</span>
+                                        <c:choose>
+                                            <c:when test="${review.tradeType == '경매'}">
+                                                <a href="${pageContext.request.contextPath}/auction/${review.productId}/detail"
+                                                    class="title">${review.title}</a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="${pageContext.request.contextPath}/board/${review.productId}/detail"
+                                                    class="title">${review.title}</a>
+                                            </c:otherwise>
+                                        </c:choose>
                                         <span class="nickname">${review.reviewerNickname}</span>
                                         <span class="time">${review.createdAtStr}</span>
                                     </div>
@@ -139,29 +172,31 @@
                                     </div>
                                 </div>
                             </c:forEach>
-                            <div class="pagination">
-                                <%-- 페이징 바 --%>
-                                    <%-- 이전 페이지 그룹이 있을 경우 --%>
-                                    <c:if test="${receivedPageInfo.hasPrevGroup}">
-                                        <a class="page-btn"
-                                        href="/mypage/reviews?tab=received&page=${receivedPageInfo.startPage - 1}">
-                                    &lt;&lt;</a>
-                                    </c:if>
+                            <c:if test="${not empty receivedReviews}">
+                                <div class="pagination">
+                                    <%-- 페이징 바 --%>
+                                        <%-- 이전 페이지 그룹이 있을 경우 --%>
+                                        <c:if test="${receivedPageInfo.hasPrevGroup}">
+                                            <a class="page-btn"
+                                            href="/mypage/reviews?tab=received&page=${receivedPageInfo.startPage - 1}">
+                                        &lt;&lt;</a>
+                                        </c:if>
                                 
-                                    <%-- 현재 페이지 그룹 표시 --%>
-                                    <c:forEach var="i" begin="${receivedPageInfo.startPage}"
-                                     end="${receivedPageInfo.endPage}">
-                                        <a class="page-btn  ${currentPage eq i  ? 'active' : ''}"
-                                        href="/mypage/reviews?tab=received&page=${i}">
-                                    ${i}</a>
-                                    </c:forEach>
-                                    <%-- 다음 페이지 그룹이 있을 경우 --%>
-                                    <c:if test="${receivedPageInfo.hasNextGroup}">
-                                        <a class="page-btn"
-                                        href="/mypage/reviews?tab=received&page=${receivedPageInfo.endPage + 1}">
-                                    &gt;&gt;</a>
-                                    </c:if>
-                            </div>
+                                        <%-- 현재 페이지 그룹 표시 --%>
+                                        <c:forEach var="i" begin="${receivedPageInfo.startPage}"
+                                         end="${receivedPageInfo.endPage}">
+                                            <a class="page-btn  ${currentPage eq i  ? 'active' : ''}"
+                                            href="/mypage/reviews?tab=received&page=${i}">
+                                        ${i}</a>
+                                        </c:forEach>
+                                        <%-- 다음 페이지 그룹이 있을 경우 --%>
+                                        <c:if test="${receivedPageInfo.hasNextGroup}">
+                                            <a class="page-btn"
+                                            href="/mypage/reviews?tab=received&page=${receivedPageInfo.endPage + 1}">
+                                        &gt;&gt;</a>
+                                        </c:if>
+                                </div>
+                            </c:if>
                         </c:when>
                         <c:otherwise>
                             <div class="no-data">받은 후기가 없습니다.</div>
@@ -186,29 +221,31 @@
                                     </div>
                                 </div>
                             </c:forEach>
-                            <div class="pagination">
-                                <%-- 페이징 바 --%>
-                                    <%-- 이전 페이지 그룹이 있을 경우 --%>
-                                    <c:if test="${sentPageInfo.hasPrevGroup}">
-                                        <a class="page-btn"
-                                        href="/mypage/reviews?tab=sent&page=${sentPageInfo.startPage - 1}">
-                                    &lt;&lt;</a>
-                                    </c:if>
+                            <c:if test="${not empty sentReviews}">
+                                <div class="pagination">
+                                    <%-- 페이징 바 --%>
+                                        <%-- 이전 페이지 그룹이 있을 경우 --%>
+                                        <c:if test="${sentPageInfo.hasPrevGroup}">
+                                            <a class="page-btn"
+                                            href="/mypage/reviews?tab=sent&page=${sentPageInfo.startPage - 1}">
+                                        &lt;&lt;</a>
+                                        </c:if>
                                 
-                                    <%-- 현재 페이지 그룹 표시 --%>
-                                    <c:forEach var="i" begin="${sentPageInfo.startPage}"
-                                     end="${sentPageInfo.endPage}">
-                                        <a class="page-btn ${currentPage eq i  ? 'active' : ''}"
-                                        href="/mypage/reviews?tab=sent&page=${i}">
-                                    ${i}</a>
-                                    </c:forEach>
-                                    <%-- 다음 페이지 그룹이 있을 경우 --%>
-                                    <c:if test="${sentPageInfo.hasNextGroup}">
-                                        <a class="page-btn"
-                                        href="/mypage/reviews?tab=sent&page=${sentPageInfo.endPage + 1}">
-                                    &gt;&gt;</a>
-                                    </c:if>
-                            </div>
+                                        <%-- 현재 페이지 그룹 표시 --%>
+                                        <c:forEach var="i" begin="${sentPageInfo.startPage}"
+                                         end="${sentPageInfo.endPage}">
+                                            <a class="page-btn ${currentPage eq i  ? 'active' : ''}"
+                                            href="/mypage/reviews?tab=sent&page=${i}">
+                                        ${i}</a>
+                                        </c:forEach>
+                                        <%-- 다음 페이지 그룹이 있을 경우 --%>
+                                        <c:if test="${sentPageInfo.hasNextGroup}">
+                                            <a class="page-btn"
+                                            href="/mypage/reviews?tab=sent&page=${sentPageInfo.endPage + 1}">
+                                        &gt;&gt;</a>
+                                        </c:if>
+                                </div>
+                            </c:if>
                         </c:when>
                         <c:otherwise>
                             <div class="no-data">보낸 후기가 없습니다.</div>
@@ -222,17 +259,6 @@
     <!-- 공통 푸터 포함 -->
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
-    <script>
-        // 받은 후기 / 보낸 후기 탭 전환 함수
-        function switchTab(type, event) {
-            // 자바스크립트로 숨기기/보내기 처리하는 대신, 
-            // 아예 해당 탭의 1페이지로 페이지를 이동(새로고침)시킵니다!
-            if (type === 'received') {
-                location.href = '/mypage/reviews?tab=received&page=1';
-            } else if (type === 'sent') {
-                location.href = '/mypage/reviews?tab=sent&page=1';
-            }
-        }
-    </script>
+    <script src="/js/review.js"></script>
 </body>
 </html>

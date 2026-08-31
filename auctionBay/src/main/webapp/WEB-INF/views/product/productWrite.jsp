@@ -177,8 +177,86 @@ header {
 
     align-items: center;
     justify-content: center;
+	
+	overflow: hidden;
+	
+    cursor: pointer;
+	
+	position: relative;
+}
+
+#imagePlaceholder {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#imagePreview {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+	flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+
+	gap: 10px;
+
+	overflow: auto;
+}
+
+#imagePreview img,
+#imagePreview video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+	
+	border-radius: 8px;
+}
+
+/* 이전/다음 버튼 */
+.media-navigation {
+    width: 400px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+	
+	margin-top: 10px;
+}
+
+.media-button {
+    width: 40px;
+    height: 40px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: #888;
+
+    color: white;
+    font-size: 30px;
 
     cursor: pointer;
+}
+
+/* 사진/동영상 추가 버튼 */
+.media-add-btn {
+    display: block;
+    margin: 20px auto 0;
+
+    padding: 8px 20px;
+
+    border: 1px solid #ccc;
+    background: #eee;
+
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.media-add-btn:hover {
+    background: #ddd;
 }
 
 
@@ -315,36 +393,10 @@ header {
      HEADER
      ========================= -->
 
-<header>
-
 	<!-- 공통 헤더 포함 -->
 	<jsp:include page="/WEB-INF/views/common/header.jsp" />
 
 
-    <!-- 검색창 -->
-    <div class="search">
-        상품을 검색해주세요.
-    </div>
-
-
-    <!-- 메뉴 -->
-    <div class="header-menu">
-
-        <button>
-            찜목록
-        </button>
-
-        <button>
-            마이페이지
-        </button>
-
-        <button>
-            로그아웃
-        </button>
-
-    </div>
-
-</header>
 
 
 
@@ -446,32 +498,55 @@ header {
                 <label for="imageInput">
 
                     <div class="image-box">
-
-                        이미지 등록
-
+						<span id="imagePlaceholder">이미지 등록</span>
+						<div id="imagePreview"></div>
                     </div>
 
                 </label>
-
-
+				
                 <!-- 최대 5개 이미지 -->
                 <input
                     type="file"
                     id="imageInput"
                     name="images"
                     multiple
-                    accept="image/*">
+                    accept="image/*, video/*">
 
+				
+				<div class="media-navigation">
 
-                <!-- 이미지 개수 -->
-                <div
-                    class="image-count"
-                    id="imageCount">
+				    <button
+				        type="button"
+				        id="prevMedia"
+				        class="media-button"
+				        onclick="showPreviousMedia(event)">
+				        ‹
+				    </button>
+					
+					<!-- 이미지 개수 -->
+					<div
+					    class="image-count"
+					    id="imageCount">
 
-                    (0/5)
+					    (0/5)
 
-                </div>
+					</div>
 
+				    <button
+				        type="button"
+				        id="nextMedia"
+				        class="media-button"
+				        onclick="showNextMedia(event)">
+				        ›
+				    </button>
+
+				</div>
+				
+				<button type="button" class="media-add-btn" onclick="document.getElementById('imageInput').click();">
+				    사진/동영상 추가
+				</button>
+
+				
             </div>
 
 
@@ -717,12 +792,9 @@ header {
 
 
             <!-- 등록 -->
-            <button
-                type="submit">
-
-                등록하기
-
-            </button>
+			<button type="submit" onclick="return checkFirstMedia();">
+			    등록하기
+			</button>
 
         </div>
 
@@ -768,8 +840,16 @@ function changeTradeType(type) {
 	document.getElementById("tradeLocation").value = "";
 
 	// 이미지 초기화
-	document.getElementById("imageInput").value = "";
+	selectedFiles = new DataTransfer();
+	currentMediaIndex = 0;
+	imageInput.value = "";
+	imagePreview.innerHTML = "";
+	imagePlaceholder.style.display = "block";
 	document.getElementById("imageCount").innerText = "(0/5)";
+	
+	document.getElementById("imagePreview").innerHTML = "";
+	document.getElementById("imagePlaceholder").style.display = "block";
+	document.getElementById("imagePreview").classList.remove("single");
 
     // 현재 거래 방식 저장
     currentTradeType = type;
@@ -941,55 +1021,220 @@ function changeTradeType(type) {
         auctionStartPrice.required = true;
 
         auctionEndTime.required = true;
-
+		
     }
 
 }
 
+const imageInput = document.getElementById("imageInput");
+
+const imagePreview = document.getElementById("imagePreview");
+
+const imagePlaceholder =
+    document.getElementById("imagePlaceholder");
+
+const imageCount =
+    document.getElementById("imageCount");
+
+// 선택한 파일을 계속 저장할 곳
+let selectedFiles = new DataTransfer();
+let currentMediaIndex = 0;
 
 
-/*
- * 이미지 선택 이벤트
- *
- * 한 게시글에 최대 5장의 이미지만 등록 가능
- */
-document
-    .getElementById("imageInput")
-    .addEventListener("change", function() {
+imageInput.addEventListener("change", function () {
 
-        // 선택한 파일 목록
-        const files = this.files;
+    // 새로 선택한 파일 추가
+    Array.from(this.files).forEach(function(file) {
 
+        // 같은 파일 중복 방지
+        const alreadyExists =
+            Array.from(selectedFiles.files).some(function(existingFile) {
 
-        // 5장 초과 검사
-        if (files.length > 5) {
+                return existingFile.name === file.name
+                    && existingFile.size === file.size
+                    && existingFile.lastModified === file.lastModified;
 
-            alert(
-                "이미지는 최대 5장까지 등록할 수 있습니다."
-            );
+            });
 
 
-            // 선택 취소
-            this.value = "";
-
-
-            // 개수 초기화
-            document
-                .getElementById("imageCount")
-                .innerText = "(0/5)";
-
-            return;
+        if (!alreadyExists) {
+            selectedFiles.items.add(file);
         }
-
-
-        // 이미지 개수 표시
-        document
-            .getElementById("imageCount")
-            .innerText =
-            "(" + files.length + "/5)";
 
     });
 
+
+    // 최대 5개
+    if (selectedFiles.files.length > 5) {
+
+        alert("이미지와 동영상은 최대 5개까지 등록할 수 있습니다.");
+
+        // 5개까지만 유지
+        const newDataTransfer = new DataTransfer();
+
+        Array.from(selectedFiles.files)
+            .slice(0, 5)
+            .forEach(function(file) {
+
+                newDataTransfer.items.add(file);
+
+            });
+
+        selectedFiles = newDataTransfer;
+
+    }
+
+
+    // 실제 input에도 누적된 파일 넣기
+    imageInput.files = selectedFiles.files;
+
+
+    // 미리보기 다시 그리기
+    renderPreview();
+
+});
+
+function renderPreview() {
+
+    imagePreview.innerHTML = "";
+
+
+    if (selectedFiles.files.length === 0) {
+
+        imagePlaceholder.style.display = "block";
+
+        imageCount.innerText = "(0/5)";
+
+        return;
+    }
+
+
+    imagePlaceholder.style.display = "none";
+
+
+	const file = selectedFiles.files[currentMediaIndex];
+
+	const url = URL.createObjectURL(file);
+
+
+	// 이미지
+	if (file.type.startsWith("image/")) {
+
+	    const img = document.createElement("img");
+
+	    img.src = url;
+
+	    imagePreview.appendChild(img);
+
+	}
+
+
+	// 동영상
+	else if (file.type.startsWith("video/")) {
+
+	    const video = document.createElement("video");
+
+	    video.src = url;
+
+	    video.controls = true;
+
+	    imagePreview.appendChild(video);
+	}
+
+
+    imageCount.innerText =
+        "(" + selectedFiles.files.length + "/5)";
+}
+
+function showPreviousMedia(event) {
+
+    /*
+     * label 클릭 방지
+     */
+    event.preventDefault();
+
+    event.stopPropagation();
+
+
+    if (selectedFiles.files.length === 0) {
+        return;
+    }
+
+
+    currentMediaIndex--;
+
+
+    if (currentMediaIndex < 0) {
+
+        currentMediaIndex =
+            selectedFiles.files.length - 1;
+    }
+
+
+    renderPreview();
+}
+
+
+function showNextMedia(event) {
+
+    /*
+     * label 클릭 방지
+     */
+    event.preventDefault();
+
+    event.stopPropagation();
+
+
+    if (selectedFiles.files.length === 0) {
+        return;
+    }
+
+
+    currentMediaIndex++;
+
+
+    if (
+        currentMediaIndex >=
+        selectedFiles.files.length
+    ) {
+
+        currentMediaIndex = 0;
+    }
+
+
+    renderPreview();
+}
+
+function checkFirstMedia() {
+
+	// 등록한 미디어가 없으면 그대로 등록
+	if (selectedFiles.files.length === 0) {
+	    return true;
+	}
+
+	// 첫 번째 미디어
+	const firstFile = selectedFiles.files[0];
+
+	// 첫 번째가 동영상이면
+	if (firstFile.type.startsWith("video/")) {
+
+	    const result = confirm(
+	        "첫 번째 등록 미디어가 동영상입니다.\n" +
+	        "목록 화면에서는 기본 이미지로 표시됩니다.\n\n" +
+	        "등록하시겠습니까?"
+	    );
+
+	    // 예
+	    if (result) {
+	        return true;
+	    }
+
+	    // 아니요
+	    return false;
+	}
+
+	return true;
+}
 
 
 /*
@@ -1003,6 +1248,58 @@ function temporarySave() {
     alert("임시저장 기능은 준비 중입니다.");
 
 }
+
+
+// ==========================================
+// 경매 마감시간 검사
+// ==========================================
+document.getElementById("auctionEndTime").addEventListener("change", function() {
+
+    if (!this.value) {
+        return;
+    }
+
+    const selectedTime = new Date(this.value);
+    const now = new Date();
+
+    // 현재 시간보다 이전이면 초기화
+    if (selectedTime <= now) {
+        alert("경매 마감시간은 현재 시간 이후로 선택해주세요.");
+
+        this.value = "";
+    }
+});
+
+
+// ==========================================
+// 등록할 때도 한 번 더 검사
+// ==========================================
+document.getElementById("productForm").addEventListener("submit", function(e) {
+
+    // 경매일 때만 검사
+    if (currentTradeType === "AUCTION") {
+
+        const auctionEndTime =
+            document.getElementById("auctionEndTime");
+
+        if (!auctionEndTime.value) {
+            alert("경매 마감시간을 선택해주세요.");
+            e.preventDefault();
+            return;
+        }
+
+        const selectedTime = new Date(auctionEndTime.value);
+        const now = new Date();
+
+        // 현재 시간 이전이면 등록 막기
+        if (selectedTime <= now) {
+            alert("경매 마감시간은 현재 시간 이후로 설정해주세요.");
+            auctionEndTime.value = "";
+            e.preventDefault();
+            return;
+        }
+    }
+});
 
 
 /*

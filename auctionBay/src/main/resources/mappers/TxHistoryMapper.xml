@@ -12,10 +12,19 @@
 	
 	<!-- 거래내역 리스트 조회 -->
 	<select id="selectTxHistories" parameterType="SearchCondition" resultType="TxHistoryDTO">
-		select HISTORY_ID, PRODUCT_ID, T.TRADE_TYPE,
+		select HISTORY_ID, PRODUCT_ID, 
+		        case 
+		            when T.TRADE_TYPE = 'SELL'then '판매'
+		            when T.TRADE_TYPE = 'BUY' then '구매'
+		            else '경매'
+		        end as "TRADE_TYPE",
 		        SELLER_NO, BUYER_NO, FINAL_PRICE,
 		        to_char(COMPLETED_AT, 'YYYY-MM-DD HH24:MI') as "COMPLETED_AT_STR",
-		        COMPLETED_AT, P.TITLE, nvl(U.NICKNAME, '탈퇴한 회원') as "PARTNER_NICKNAME"
+		        COMPLETED_AT, P.TITLE,
+		       	case
+			    	when U.IS_DELETED = 1 then '탈퇴한 회원'
+			    	else U.NICKNAME
+			    end as "PARTNER_NICKNAME"	
 		from TRANSACTION_HISTORY T
 		    join PRODUCTS P using (PRODUCT_ID)
 		    join USERS U on U.USER_NO = case

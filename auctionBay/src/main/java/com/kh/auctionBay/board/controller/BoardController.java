@@ -96,7 +96,7 @@ public class BoardController {
         // 3. 로그인 회원 작성자 여부 체크 (getMemberId 사용)
         boolean isOwner = false;
         if (loginUser != null && product != null) {
-            if (loginUser.getUserId() != null && loginUser.getUserId().equals(product.getWriterNo())) {
+            if (loginUser.getUserNo() != null && loginUser.getUserNo().equals(product.getWriterNo())) {
                 isOwner = true;
             }
         }

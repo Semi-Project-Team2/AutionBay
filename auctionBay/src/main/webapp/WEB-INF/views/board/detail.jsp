@@ -470,7 +470,7 @@
 				<button type="button" class="btn-message" id="btnSendMessage" 
 											data-product-id="${product.productId}"
 											data-receiver-no="${product.writerNo}"
-											data-redirect-url="${pageContext.request.contextPath}/auction/${product.productId}/detail">판매자에게 쪽지</button>
+											data-redirect-url="${pageContext.request.contextPath}/board/${product.productId}/detail">판매자에게 쪽지</button>
 				<button type="button" id="wishBtn" data-product-id="${product.productId}">
 				    <i class="${isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart'}"></i>
 				</button>

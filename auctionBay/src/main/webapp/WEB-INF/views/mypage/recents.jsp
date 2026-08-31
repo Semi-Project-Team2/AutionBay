@@ -10,13 +10,17 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Malgun Gothic', sans-serif; background-color: #f8f9fa; color: #333; }
 
-        /* 전체 컨테이너: 세로 플렉스 */
+        /* 전체 컨테이너 */
         .container { 
             width: 1200px; 
             margin: 30px auto; 
             display: flex; 
             flex-direction: column; 
             gap: 30px; 
+        }
+
+        .container > *:nth-child(2) {
+            width: 100%;
         }
 
         /* 상단 프로필 영역 */
@@ -27,10 +31,16 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            width: 100%;
         }
+        .profile-info { display: flex; align-items: center; gap: 20px; }
+        .profile-img { width: 70px; height: 70px; background-color: #333; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .profile-text h2 { font-size: 20px; font-weight: bold; margin-bottom: 5px; }
+        .profile-text p { font-size: 14px; color: #555; }
+        .profile-right { display: flex; gap: 10px; }
+        .btn-edit { background-color: #d4edda; border: 1px solid #c3e6cb; padding: 8px 15px; border-radius: 4px; font-weight: bold; color: #155724; cursor: pointer; text-decoration: none; font-size: 13px; }
+        .btn-withdraw { background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 8px 15px; border-radius: 4px; font-weight: bold; color: #721c24; cursor: pointer; text-decoration: none; font-size: 13px; }
 
-        /* 사이드바 + 메인 영역 레이아웃 */
+        /* 사이드바와 메인 컨텐츠 좌우 정렬 */
         .mypage-content { 
             display: flex !important; 
             flex-direction: row !important;
@@ -107,7 +117,7 @@
 </head>
 <body>
 
-    <!-- 헤더는 container 밖에 위치 -->
+    <!-- 헤더 -->
     <jsp:include page="/WEB-INF/views/common/header.jsp" />
 
     <div class="container">
@@ -115,7 +125,8 @@
         <jsp:include page="/WEB-INF/views/mypage/profile/profile.jsp" />
 
         <div class="mypage-content">
-            <!-- 사이드바 -->
+
+            <!-- 사이드바 (올바른 ul/li 구조 하나만 남김) -->
             <nav class="mypage-sidebar">
                 <ul>
                     <li><a href="${pageContext.request.contextPath}/mypage/products">게시글 관리</a></li>
@@ -177,6 +188,7 @@
 
                 <div class="pagination" id="paginationContainer"></div>
             </div>
+
         </div>
     </div>
 
