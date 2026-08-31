@@ -31,5 +31,5 @@ public class MessageDTO {
 	private String opponentNickname;
 	private String productTitle;
 	private String productStatus;
-
+	
 }

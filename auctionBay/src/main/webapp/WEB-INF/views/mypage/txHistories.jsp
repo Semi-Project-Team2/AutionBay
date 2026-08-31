@@ -156,6 +156,7 @@
             font-weight: bold;
             cursor: pointer;
         }
+        .no-data { background-color: #e2e2e2; padding: 40px; text-align: center; border-radius: 6px; color: #777; font-size: 14px; }
 
         .btn-review:hover {
             background-color: #c3e6cb;
@@ -222,7 +223,9 @@
                     <span class="content-title">거래 내역</span>
                     <div class="search-bar">
                         <form action="${pageContext.request.contextPath}/mypage/txHistories" method="get" class="search-bar">
-                            <input type="text" name="keyword" value="${param.keyword}" placeholder="검색어를 입력하세요">
+                            <input type="text" name="keyword" value="${param.keyword}"
+                                id="mypageKeywordInput" 
+                                placeholder="검색어를 입력하세요">
                             <button type="submit">검색</button>
                         </form>
                     </div>
@@ -276,37 +279,38 @@
                             </c:forEach>
                         </c:when>
                         <c:otherwise>
-                            <span>거래 내역이 없습니다.</span>
+                            <div class="no-data">거래 내역이 없습니다.</div>
                         </c:otherwise>
                     </c:choose>
 
                 </div>
 
-                <!-- 페이징 바 -->
-                <div class="pagination">
-                    <%-- 이전 페이지 그룹이 있을 경우 --%>
-                    <c:if test="${pageInfo.hasPrevGroup}">
-                        <a class="page-btn"
-                            href="/mypage/txHistories?page=${pageInfo.startPage - 1}&keyword=${condition.keyword}">
-                            &lt;&lt;
-                        </a>
-                    </c:if>
-                    <%-- 현재 페이지 그룹 표시 --%>
-                    <c:forEach var="i" begin="${pageInfo.startPage}" end="${pageInfo.endPage}">
-                        <a class="page-btn ${currentPage eq i  ? 'active' : ''}"
-                            href="/mypage/txHistories?page=${i}&keyword=${condition.keyword}">
-                            ${i}
-                        </a>
-                    </c:forEach>
-
-                    <%-- 다음 페이지 그룹이 있을 경우 --%>
-                    <c:if test="${pageInfo.hasNextGroup}">
-                        <a class="page-btn"
-                            href="/mypage/txHistories?page=${pageInfo.endPage + 1}&keyword=${condition.keyword}">
-                            &gt;&gt;
-                        </a>
-                    </c:if>
-                </div>
+                <c:if test="${not empty list.txHistories}">
+                    <!-- 페이징 바 -->
+                    <div class="pagination">
+                        <%-- 이전 페이지 그룹이 있을 경우 --%>
+                        <c:if test="${pageInfo.hasPrevGroup}">
+                            <a class="page-btn"
+                                href="/mypage/txHistories?page=${pageInfo.startPage - 1}&keyword=${condition.keyword}">
+                                &lt;&lt;
+                            </a>
+                        </c:if>
+                        <%-- 현재 페이지 그룹 표시 --%>
+                        <c:forEach var="i" begin="${pageInfo.startPage}" end="${pageInfo.endPage}">
+                            <a class="page-btn ${currentPage eq i  ? 'active' : ''}"
+                                href="/mypage/txHistories?page=${i}&keyword=${condition.keyword}">
+                                ${i}
+                            </a>
+                        </c:forEach>
+                        <%-- 다음 페이지 그룹이 있을 경우 --%>
+                        <c:if test="${pageInfo.hasNextGroup}">
+                            <a class="page-btn"
+                                href="/mypage/txHistories?page=${pageInfo.endPage + 1}&keyword=${condition.keyword}">
+                                &gt;&gt;
+                            </a>
+                        </c:if>
+                    </div>
+                </c:if>
 
             </div>
 

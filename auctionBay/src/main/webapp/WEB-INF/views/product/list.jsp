@@ -15,6 +15,10 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
 	
 <main class="container">
+	<%-- 회원 탈퇴 후 초기화면에서 표시할 탈퇴 완료 메시지 --%>
+		<c:if test="${not empty withdrawMessage}">
+            <script>alert('${withdrawMessage}')</script>
+       </c:if>
     <!-- 검색/필터 유지를 위한 공통 Form -->
     <form id="searchForm" action="${pageContext.request.contextPath}/product/list" method="get">
         <input type="hidden" name="tradeType" id="tradeType" value="${condition.tradeType}">
@@ -84,19 +88,33 @@
 		            <c:when test="${not empty result.productList}">
 		                <c:forEach var="p" items="${result.productList}">
 		                    <div class="product-card" onclick="location.href='${pageContext.request.contextPath}/${p.tradeType == 'AUCTION' ? 'auction' : 'board'}/${p.productId}/detail'">
-		                        <div class="product-img">
-		                            [이미지 영역]
-		                        </div>
+								<div class="product-img">
+
+								    <c:choose>
+
+								        <c:when test="${not empty p.mainImage}">
+
+								            <img
+								                src="${pageContext.request.contextPath}${p.mainImage}"
+								                alt="${p.title}">
+
+								        </c:when>
+
+								        <c:otherwise>
+
+								            <span>[이미지 영역]</span>
+
+								        </c:otherwise>
+
+								    </c:choose>
+
+								</div>
 		                        <div class="product-info">
 		                            <div class="product-title-row">
 		                                <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100px;">${p.title}</span>
-		                                <span>
-		                                    <c:choose>
-		                                        <c:when test="${p.tradeType == 'BUY'}">구매</c:when>
-		                                        <c:when test="${p.tradeType == 'SELL'}">판매</c:when>
-		                                        <c:when test="${p.tradeType == 'AUCTION'}">경매</c:when>
-		                                    </c:choose>
-		                                </span>
+										<span>
+										    ${p.typeStatus}
+										</span>
 		                            </div>
 		                            <div class="product-price">
 		                                <c:choose>
@@ -137,21 +155,28 @@
 		</div>
 
         <!-- 4. 우측 퀵 메뉴 섹션 -->
-        <div class="quick-menu-section">
-            <a href="${pageContext.request.contextPath}/product/write" class="btn-write">게시글 작성</a>
-            
-            <div class="quick-box">
-                <a href="${pageContext.request.contextPath}/mypage/wishlists" class="quick-item">
-                    <span>❤️</span>찜목록
-                </a>
-                <a href="${pageContext.request.contextPath}/message/received" class="quick-item">
-                    <span>✉️</span>쪽지함
-                </a>
-                <a href="${pageContext.request.contextPath}/mypage/recents"class="quick-item">
-                    <span>👁️</span>최근 본 글
-                </a>
-            </div>
-        </div>
+        <aside class="right-quick-menu">
+            <a href="${pageContext.request.contextPath}/mypage/wishlists" class="quick-item">
+                <span class="quick-icon">❤️</span>
+                <span>찜목록</span>
+            </a>
+            <a href="${pageContext.request.contextPath}/message/received" class="quick-item">
+                <span class="quick-icon">✉️</span>
+                <span>쪽지함</span>
+				<c:choose>
+                    <c:when test="${sessionScope.loginUser.unreadCount <= 99}">
+                        <span class="badge">${sessionScope.loginUser.unreadCount}</span>
+                    </c:when>
+                    <c:otherwise>
+                        <span class="badge">99+</span>
+                    </c:otherwise>
+                </c:choose>
+            </a>
+            <a href="${pageContext.request.contextPath}/mypage/recents" class="quick-item">
+                <span class="quick-icon">⏱️</span>
+                <span>최근 본 글</span>
+            </a>
+        </aside>
 
     </div>
 	</main>

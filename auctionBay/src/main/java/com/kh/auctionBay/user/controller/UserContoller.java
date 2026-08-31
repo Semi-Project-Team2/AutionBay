@@ -3,6 +3,7 @@ package com.kh.auctionBay.user.controller;
 import java.io.IOException;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,15 +13,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kh.auctionBay.common.SessionConst;
+import com.kh.auctionBay.common.dto.ApiResponse;
+import com.kh.auctionBay.message.service.MessageService;
 import com.kh.auctionBay.user.model.dto.UserDTO;
 import com.kh.auctionBay.user.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-
-import com.kh.auctionBay.common.SessionConst;
-import com.kh.auctionBay.common.dto.ApiResponse;
-
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -28,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/user")
 public class UserContoller {
 
+	private final MessageService messageService;
 	private final UserService service;
 
 	@GetMapping("/join")
@@ -113,6 +114,9 @@ public class UserContoller {
 			HttpSession session, RedirectAttributes redirectAttr) {
 		try {
 			UserDTO user = service.login(userId, password);
+			Long userNo = user.getUserNo();
+			int unreadCount = messageService.getUnreadCount(userNo);
+			user.setUnreadCount(unreadCount);
 			session.setAttribute(SessionConst.LOGIN_USER, user);
 		} catch (IllegalStateException e) {
 			redirectAttr.addFlashAttribute("error", e.getMessage());
@@ -137,17 +141,34 @@ public class UserContoller {
 	}
 	
 	@GetMapping("/withdraw")
-	public String withdraw(HttpSession session, RedirectAttributes redirectAttr) {
-		// 세션에 저장된 사용자 정보 추출
+	public String withdraw() {
+		
+		return "user/withdraw";
+	}
+	
+	@PostMapping("withdraw")
+	public String withdraw(String pwInput, HttpSession session,
+			RedirectAttributes redirectAttr) {
 		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
 		
-		// 서비스에 비즈니스 로직 요청
-		service.withdraw(loginUser.getUserNo());
+		if (loginUser == null) {
+			return "redirect:/login";
+		}
 		
-		// 세션 영역에서 모든 데이터 삭제 (세션 만료시키기)
-		session.invalidate();
+		int result = service.withdraw(loginUser.getUserNo(), pwInput);
 		
-		return "redirect:/";
+		if (result > 0) {
+			// 세션 영역에서 사용자 데이터 삭제
+			// RedirectAttributes는 HttpSession을 이용하여 데이터를 전달하므로
+			// session.invalidate()를 사용하면 withdrawMessage로 데이터 전달 불가
+			redirectAttr.addFlashAttribute("withdrawMessage", "회원 탈퇴가 완료되었습니다.");
+			session.removeAttribute(SessionConst.LOGIN_USER);
+			return "redirect:/product/list";
+			// 초기 화면으로 redirect 하므로 탈퇴 메시지는 초기화면에서 받아야 함
+		} else {
+			redirectAttr.addFlashAttribute("error", "비밀번호가 일치하지 않습니다.");
+			return "redirect:/user/withdraw";
+		}
 	}
 
 }

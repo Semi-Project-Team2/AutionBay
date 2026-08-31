@@ -18,5 +18,8 @@ public interface MessageService {
 	// 메세지 보내기
 	Long sendMessage(Long senderNo, Long receiverNo, Long productId, String content);
 	
+	// 안 읽은 받은 메시지 개수
+	int getUnreadCount(Long userNo);
+	
 	
 }

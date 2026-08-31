@@ -2,6 +2,7 @@ package com.kh.auctionBay.product.service;
 
 
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -25,7 +26,7 @@ public interface ProductService {
 	void increaseViewCount(Long productId);
 	
 	//게시글 작성
-	int createProduct(ProductDTO product, List<MultipartFile> images);
+	int createProduct(ProductDTO product, List<MultipartFile> images) throws IOException;
 	
 	//전체 게시물 조회
 	List<ProductDTO> getProductList();
