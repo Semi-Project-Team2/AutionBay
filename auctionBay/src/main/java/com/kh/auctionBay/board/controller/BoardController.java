@@ -54,25 +54,6 @@ public class BoardController {
         return "board/list";
     }
     
-    // ------- 게시글 작성 ---------
-    @GetMapping("/write")
-    public String writeForm() {
-        return "board/form";
-    }
-    
-    @PostMapping("/write")
-    public String write(@ModelAttribute BoardDTO board,
-                        @RequestParam(value="imageFiles", required=false) List<MultipartFile> images,
-                        HttpSession session) throws IllegalStateException, IOException {
-        UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
-        if (loginUser != null) {
-            board.setMemberId(loginUser.getUserId());
-        }
-        
-        service.writeBoard(board, images);
-        return "redirect:/board/list";
-    }
-    
     // ------- 게시글 상세 조회 ---------
     @GetMapping("/{productId}/detail")
     public String boardDetail(@PathVariable Long productId, Model model, HttpSession session, SearchCondition condition) {
@@ -88,6 +69,7 @@ public class BoardController {
     		activityService.addRecentView(loginUser.getUserNo(), productId);
     	}
         
+    	    	
         // 2. 댓글 목록 가져오기
         List<CommentDTO> comments = commentService.getComments(productId);
         model.addAttribute("comments", comments);
@@ -225,7 +207,6 @@ public class BoardController {
             return "redirect:/board/" + boardId + "/detail";
         }
 
-        // 게시글 삭제
         service.deleteBoard(boardId);
 
         return "redirect:/board/list";

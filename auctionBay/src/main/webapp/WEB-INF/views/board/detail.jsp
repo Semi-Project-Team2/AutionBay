@@ -486,6 +486,7 @@
     <!-- 공통 헤더 -->
     <jsp:include page="/WEB-INF/views/common/header.jsp" />
 	<input type="hidden" id="product-id-value" value="${product.productId}">
+	<input type="hidden" id="is-owner-value" value="${isOwner or (not empty sessionScope.loginUser and sessionScope.loginUser.userNo == product.writerNo)}">
     <div class="page-container">
         <div class="product-card">
          
@@ -539,6 +540,17 @@
             </div>
 
 			<!-- 댓글 영역 -->
+			<c:choose>
+	            <c:when test="${not empty loginUser}">
+	                <form class="comment-form" id="comment-form">
+	                    <textarea placeholder="댓글입력..." name="content" rows="2" required></textarea>
+	                    <button type="submit" class="btn btn-primary">등록</button>
+	                </form>
+	            </c:when>
+	            <c:otherwise>
+	                <p class="form-tip"><a href="/user/login">로그인</a> 후 댓글을 작성하세요.</p>
+	            </c:otherwise>
+	        </c:choose>
 			    <section class="comment-section">
 			        <h3 class="comment-section_title">댓글 ${empty comments ? 0 : comments.size()}</h3>
 			        <ul class="comment-list" id="comment-list">
@@ -556,17 +568,7 @@
 			            </c:forEach>
 			        </ul>
 
-			        <c:choose>
-			            <c:when test="${not empty loginUser}">
-			                <form class="comment-form" id="comment-form">
-			                    <textarea placeholder="댓글입력..." name="content" rows="2" required></textarea>
-			                    <button type="submit" class="btn btn-primary">등록</button>
-			                </form>
-			            </c:when>
-			            <c:otherwise>
-			                <p class="form-tip"><a href="/user/login">로그인</a> 후 댓글을 작성하세요.</p>
-			            </c:otherwise>
-			        </c:choose>
+			        
 			    </section>
 
 			    <!--

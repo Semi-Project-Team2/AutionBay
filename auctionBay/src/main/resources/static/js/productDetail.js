@@ -1,4 +1,4 @@
-const isOwner = document.querySelector("#is-Owner-value").value === "true"; // 문자열을 boolean으로 변환
+const isOwner = document.querySelector("#is-owner-value").value === "true"; // 문자열을 boolean으로 변환
 
 // 댓글 기능
 const commentForm = document.querySelector("#comment-form");
