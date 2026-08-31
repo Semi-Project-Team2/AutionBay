@@ -449,7 +449,7 @@ public class MyPageController {
 	 * - 요청 URL: DELETE /mypage/deleteComment?commentNo=댓글번호
 	 * - 처리 과정:
 	 *    1. 전달받은 댓글 번호와 로그인 유저 번호를 검증합니다.
-	 *    2. 해당 댓글의 내용을 마스킹 처리('삭제된 댓글입니다.')하는 소프트 삭제를 수행합니다.
+	 *    2. 해당 댓글의 삭제 여부 플래그(is_deleted)를 1로 변경하는 소프트 삭제를 수행합니다.
 	 * - 응답 데이터: 성공 시 "SUCCESS", 실패 시 "FAIL" 문자열을 비동기로 반환합니다.
 	 */
 	@DeleteMapping("/deleteComment")
