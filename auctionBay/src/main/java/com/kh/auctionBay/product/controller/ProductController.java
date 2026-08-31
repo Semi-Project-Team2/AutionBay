@@ -105,24 +105,7 @@ public class ProductController {
     	return "redirect:/product/list";
     }
 
-    /**
-	 * [게시글/상품 수정 폼 이동]
-	 * - 요청 URL: GET /product/updateForm?no=상품번호
-	 */
-	@GetMapping("/updateForm")
-	public String updateForm( Long no, Model model) {
-		// 1. 카테고리 목록 조회 (필요 시 수정 폼 드롭다운용)
-		List<CategoryDTO> categoryList = service.findAllCategories();
-		model.addAttribute("categoryList", categoryList);
-
-		// 2. 전달받은 글 번호(no)로 DB 상세 조회 
-		// ProductDTO product = service.getProductDetail(no);
-		// model.addAttribute("product", product);
-
-		// 3. 수정 폼 화면(JSP) 경로 리턴
-		return "board/updateForm";
-	}
-
+ 
 
 }
 
