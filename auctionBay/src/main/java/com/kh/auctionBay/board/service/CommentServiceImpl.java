@@ -29,7 +29,7 @@ public class CommentServiceImpl implements CommentService {
 		
 		mapper.insertComment(comment);	// 실행 후 commentId 가 채워짐
 		
-		return mapper.selectCommentById( comment.getCommentId() );
+		return mapper.selectCommentById(comment.getCommentId());
 	}
 
 	@Override

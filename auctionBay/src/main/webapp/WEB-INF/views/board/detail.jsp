@@ -645,31 +645,4 @@
     <script src="/js/productDetail.js"></script>
 </body>
 
-<!-- 작성자 본인에게만 수정/삭제 버튼 표시 -->
-<c:if test="${isOwner}">
-
-    <div class="owner-action-group">
-
-        <!-- 게시글 수정 -->
-        <a href="${pageContext.request.contextPath}/board/update/${product.productId}"
-           class="btn btn-primary">
-            수정
-        </a>
-
-        <!-- 게시글 삭제 -->
-        <form action="${pageContext.request.contextPath}/board/delete/${product.productId}"
-              method="post"
-              style="display: inline;">
-
-            <button type="submit"
-                    class="btn btn-secondary"
-                    onclick="return confirm('정말 이 게시글을 삭제하시겠습니까?');">
-                삭제
-            </button>
-
-        </form>
-
-    </div>
-
-</c:if>
 </html>
