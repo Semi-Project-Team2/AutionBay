@@ -3,6 +3,7 @@ package com.kh.auctionBay.user.controller;
 import java.io.IOException;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,15 +13,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kh.auctionBay.common.SessionConst;
+import com.kh.auctionBay.common.dto.ApiResponse;
+import com.kh.auctionBay.message.service.MessageService;
 import com.kh.auctionBay.user.model.dto.UserDTO;
 import com.kh.auctionBay.user.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-
-import com.kh.auctionBay.common.SessionConst;
-import com.kh.auctionBay.common.dto.ApiResponse;
-
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -28,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/user")
 public class UserContoller {
 
+	private final MessageService messageService;
 	private final UserService service;
 
 	@GetMapping("/join")
@@ -113,6 +114,9 @@ public class UserContoller {
 			HttpSession session, RedirectAttributes redirectAttr) {
 		try {
 			UserDTO user = service.login(userId, password);
+			Long userNo = user.getUserNo();
+			int unreadCount = messageService.getUnreadCount(userNo);
+			user.setUnreadCount(unreadCount);
 			session.setAttribute(SessionConst.LOGIN_USER, user);
 		} catch (IllegalStateException e) {
 			redirectAttr.addFlashAttribute("error", e.getMessage());

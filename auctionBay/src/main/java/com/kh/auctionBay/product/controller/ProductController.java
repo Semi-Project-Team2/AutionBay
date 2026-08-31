@@ -12,16 +12,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kh.auctionBay.common.SessionConst;
+import com.kh.auctionBay.message.service.MessageService;
 import com.kh.auctionBay.product.model.dto.CategoryDTO;
 import com.kh.auctionBay.product.model.dto.ProductDTO;
 import com.kh.auctionBay.product.model.dto.ProductListResult;
 import com.kh.auctionBay.product.model.dto.ProductSearchCondition;
 import com.kh.auctionBay.product.service.ProductService;
 import com.kh.auctionBay.user.model.dto.UserDTO;
-import com.kh.auctionBay.common.SessionConst;
 
 import jakarta.servlet.http.HttpSession;
-
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -30,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 public class ProductController {
 	private final ProductService service;
 	private String type_status;
+	private final MessageService messageService;
 
 	// 메인페이지 ( HomeController에서 리다이렉트됨)
     @GetMapping("/list")

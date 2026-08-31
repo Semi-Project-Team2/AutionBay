@@ -121,8 +121,8 @@
         .quick-icon { font-size: 22px; }
         .badge {
             position: absolute;
-            top: -2px;
-            right: 8px;
+            top: 0px;
+            right: -2px;
             background-color: #000;
             color: #fff;
             font-size: 9px;
@@ -229,7 +229,15 @@
             <a href="${pageContext.request.contextPath}/message/received" class="quick-item">
                 <span class="quick-icon">✉️</span>
                 <span>쪽지함</span>
-                <span class="badge">1</span>
+
+                <c:choose>
+                    <c:when test="${sessionScope.loginUser.unreadCount <= 99}">
+                        <span class="badge">${sessionScope.loginUser.unreadCount}</span>
+                    </c:when>
+                    <c:otherwise>
+                        <span class="badge">99+</span>
+                    </c:otherwise>
+                </c:choose>
             </a>
             <a href="${pageContext.request.contextPath}/mypage/recents" class="quick-item">
                 <span class="quick-icon">⏱️</span>
