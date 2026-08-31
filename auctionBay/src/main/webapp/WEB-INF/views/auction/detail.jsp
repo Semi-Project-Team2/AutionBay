@@ -41,6 +41,79 @@
         padding: 24px;
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
     }
+/* ==========================================================
+    2-1. 좌측 상품 이미지 영역 스타일
+    ========================================================== */
+    .page-container {
+        width: 1200px;
+        margin: 40px auto;
+        display: flex;
+        gap: 24px; /* 좌측 이미지 영역과 우측 카드 사이의 간격 */
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    .product-image-section {
+        width: 500px; /* 이미지 영역 너비 설정 */
+        background-color: #ffffff;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    }
+
+    .main-image-container {
+        width: 100%;
+        height: 450px; /* 대표 이미지 박스 높이 */
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f8fafc;
+    }
+
+    .main-image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* 이미지가 비율을 유지하며 가득 차도록 설정 */
+        transition: transform 0.3s ease;
+    }
+
+    /* 썸네일 리스트 스타일 */
+    .thumbnail-list {
+        display: flex;
+        gap: 10px;
+        margin-top: 14px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+    }
+
+    .thumbnail-item {
+        width: 75px;
+        height: 75px;
+        border-radius: 6px;
+        overflow: hidden;
+        border: 2px solid transparent;
+        cursor: pointer;
+        flex-shrink: 0;
+        background-color: #f8fafc;
+        transition: all 0.2s;
+    }
+
+    .thumbnail-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .thumbnail-item:hover {
+        border-color: #94a3b8;
+    }
+
+    .thumbnail-item.active {
+        border-color: #0f172a; /* 선택된 썸네일 강조 테두리 */
+    }
 
     /* ==========================================================
     3. 경매 가격 헤더 영역
@@ -508,7 +581,41 @@
     <input type="hidden" id="is-Owner-value" value="${isOwner}">
 
     <!-- 전체를 감싸는 중앙 정렬 컨테이너 -->
-    <div class="page-container">
+    <div class="page-container">	<!-- 전체를 감싸는 중앙 정렬 컨테이너 -->
+	    <div class="page-container">
+	        
+	        <!-- [추가] 좌측 상품 이미지 영역 -->
+	        <div class="product-image-section">
+	            <div class="main-image-container">
+	                <c:choose>
+	                    <c:when test="${not empty product.imageList}">
+	                        <!-- 첫 번째 이미지를 대표 메인 이미지로 출력 -->
+	                        <img id="mainProductImage" src="${product.imageList[0].imagePath}" alt="상품 대표 이미지">
+	                    </c:when>
+	                    <c:otherwise>
+	                        <img id="mainProductImage" src="/images/default-product.png" alt="이미지 없음">
+	                    </c:otherwise>
+	                </c:choose>
+	            </div>
+	            
+	            <!-- 썸네일 목록 영역 (이미지가 여러 개인 경우) -->
+	            <c:if test="${not empty product.imageList and product.imageList.size() > 1}">
+	                <div class="thumbnail-list">
+	                    <c:forEach var="img" items="${product.imageList}" varStatus="status">
+	                        <div class="thumbnail-item ${status.first ? 'active' : ''}" onclick="changeMainImage('${img.imagePath}', this)">
+	                            <img src="${img.imagePath}" alt="상품 썸네일">
+	                        </div>
+	                    </c:forEach>
+	                </div>
+	            </c:if>
+	        </div>
+
+	        <!-- 우측 기존 경매 상세 카드 영역 -->
+	        <div class="auction-card">
+	            <!-- ... 기존 경매 상세 정보 내용 그대로 유지 ... -->
+	        </div>
+	        
+	    </div>
         <div class="auction-card">
             <!-- 현재가 헤더 -->
             <div class="price-header">
