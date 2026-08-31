@@ -28,9 +28,9 @@ public interface ActivityService {
 	boolean deleteMyComment(Long commentNo, Long writerNo);
 	
 	// 7. 최근 본 글 삭제
-	boolean removeRecentView(long userNo, long productNo);
+	boolean removeRecentView(Long userNo, Long productNo);
 	// 8. 최근 본 글 전체 삭제
-	boolean removeAllRecentViews(long userNo);
+	boolean removeAllRecentViews(Long userNo);
 	// 9. 최근 본 글 추가 
-		void addRecentView(long userNo, long productNo);
+	void addRecentView(Long userNo, Long productNo);
 }

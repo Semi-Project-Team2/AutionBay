@@ -18,7 +18,10 @@
 		TO_CHAR(AUCTION_END_TIME, 'YYYY-MM-DD HH24:MI:SS') AS AUCTION_END_TIME_STR,
 		TO_CHAR(P.CREATED_AT, 'YYYY-MM-DD HH24:MI:SS') AS CREATED_AT_STR,
 		TO_CHAR(P.UPDATED_AT, 'YYYY-MM-DD HH24:MI:SS') AS UPDATED_AT_STR,
-		U.NICKNAME AS WRITER_NICKNAME
+		case
+	    	when U.IS_DELETED = 1 then '탈퇴한 회원'
+	    	else U.NICKNAME
+    	end as WRITER_NICKNAME
 	FROM PRODUCTS P
 		LEFT JOIN USERS U ON P.WRITER_NO = U.USER_NO
 	WHERE product_id = #{productId}
@@ -93,7 +96,10 @@
 	       TO_CHAR(P.AUCTION_END_TIME, 'YYYY-MM-DD HH24:MI:SS') AS AUCTION_END_TIME_STR,
 	       TO_CHAR(P.CREATED_AT, 'YYYY-MM-DD HH24:MI:SS') AS CREATED_AT_STR,
 	       TO_CHAR(P.UPDATED_AT, 'YYYY-MM-DD HH24:MI:SS') AS UPDATED_AT_STR,
-	       NVL(U.NICKNAME, '탈퇴한 회원') AS WRITER_NICKNAME,
+	       case
+		    	when U.IS_DELETED = 1 then '탈퇴한 회원'
+		    	else U.NICKNAME
+	    	end as WRITER_NICKNAME,
 	       C.CATEGORY_NAME AS CATEGORY_NAME
 	  FROM PRODUCTS P
 	    LEFT JOIN USERS U ON P.WRITER_NO = U.USER_NO
@@ -135,10 +141,11 @@
 	WHERE PRODUCT_ID = #{productId}
 </update>
 
-<insert id="insertProduct" >
+<insert id="insertProduct" useGeneratedKeys="true" keyProperty="productId" keyColumn="product_id">
 	INSERT INTO PRODUCTS (writer_no, category_id, trade_type, title, description, price, product_condition, auction_start_price, trade_location) 
 	VALUES (#{writerNo}, #{categoryId}, #{tradeType}, #{title}, #{description}, #{price}, #{productCondition}, #{auctionStartPrice}, #{tradeLocation})
 </insert>
+
 
 
 <!-- 상품 거래 상태 변경 (기능 추가 후 변경 예정)-->
@@ -159,6 +166,24 @@
     WHERE PRODUCT_ID = #{productId} AND STATUS = 'RESERVED'
 </update>
 
+
+
+<insert id="insertProductMedia">
+    INSERT INTO PRODUCT_MEDIA (
+        product_id,
+        media_type,
+        media_url,
+        thumbnail_url,
+        media_order
+    )
+    VALUES (
+        #{productId},
+        #{mediaType},
+        #{mediaUrl},
+        #{thumbnailUrl},
+        #{mediaOrder}
+    )
+</insert>
 
 
 </mapper>

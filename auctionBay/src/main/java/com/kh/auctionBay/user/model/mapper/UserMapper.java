@@ -15,12 +15,18 @@ public interface UserMapper {
 	
 	// 닉네임 중복 확인
 	int countByNickname(String nickname);
+	// 회원정보 수정용 닉네임 중복 확인
+	String nicknameCheck(Long userNo);
 	
 	// 이메일 중복 확인 
 	int countByEmail(String email);
+	// 회원정보 수정용 이메일 중복 확인
+	String emailCheck(Long userNo);
 	
 	// 전화번호 중복 확인
 	int countByPhoneNumber(String phoneNumber);
+	// 회원정보 수정용 전화번호 중복 확인
+	String phoneNumberCheck(Long userNo);
 	
 	// 로그인
 	UserDTO selectByUserId(String userId);

@@ -53,7 +53,7 @@
            C.CREATED_AT AS createdAt,
            TO_CHAR(C.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS CREATED_AT_STR,
            P.TITLE AS PRODUCT_TITLE,
-           P.TRADE_TYPE AS tradeType     <!-- 👈 이 부분을 추가했습니다! -->
+           P.TRADE_TYPE AS tradeType     
       FROM COMMENTS C
         JOIN PRODUCTS P ON C.PRODUCT_ID = P.PRODUCT_ID
      WHERE C.WRITER_NO = #{userNo}
@@ -68,17 +68,25 @@
 		- 응답(Result): WishlistDTO 객체로 매핑하여 반환
 	-->
 	<select id="selectMyWishlist" parameterType="long" resultType="WishlistDTO">
-    SELECT W.WISHLIST_ID, W.USER_NO, W.PRODUCT_ID AS productNo, W.CREATED_AT,
-           P.TITLE, P.PRICE, P.TRADE_TYPE, P.STATUS,
+    SELECT W.WISHLIST_ID, 
+           W.USER_NO, 
+           W.PRODUCT_ID AS productNo, 
+           W.CREATED_AT,
+           P.TITLE, 
+           P.PRICE, 
+           P.TRADE_TYPE, 
+           P.STATUS,
            NVL(PM.THUMBNAIL_URL, '/images/no-image.png') AS MAIN_IMAGE,
            TO_CHAR(W.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS WISHED_AT_STR
       FROM WISHLISTS W
-        JOIN PRODUCTS P ON W.PRODUCT_ID = P.PRODUCT_ID
-        LEFT JOIN PRODUCT_MEDIA PM 
-               ON P.PRODUCT_ID = PM.PRODUCT_ID AND PM.MEDIA_ORDER = 1
+      JOIN PRODUCTS P ON W.PRODUCT_ID = P.PRODUCT_ID
+      LEFT JOIN PRODUCT_MEDIA PM 
+             ON P.PRODUCT_ID = PM.PRODUCT_ID AND PM.MEDIA_ORDER = 1
      WHERE W.USER_NO = #{userNo}
      ORDER BY W.CREATED_AT DESC
-	</select>
+</select>
+
+
 
 	<!-- 
 		[4. 최근 본 글 조회]
@@ -154,21 +162,42 @@
 	     WHERE USER_NO = #{userNo}
 	</delete>
 	
-<!--
-    [9. 최근 본 글 추가/갱신 (UPSERT)]
-    - 요청(Parameter): 회원 번호(userNo), 상품 번호(productNo)
-    - 처리 과정: RECENT_VIEWS 테이블에 (USER_NO, PRODUCT_ID) 기준으로 이미 기록이 있으면
-                 VIEWED_AT만 현재 시각으로 갱신하고, 없으면 새로 INSERT합니다.
-                 (VIEW_ID는 GENERATED ALWAYS AS IDENTITY 컬럼이라 직접 값을 넣지 않습니다.)
+	<!-- 
+    [9. 최근 본 글 개수 제한 자동 삭제]
+    - 요청(Parameter): 회원 번호(userNo)
+    - 처리 과정: 해당 회원의 RECENT_VIEWS 기록을 VIEWED_AT(조회 시각) 기준 최신순으로 정렬하여,
+                 상위 30개(가장 최근 30개)에 포함되지 않는 나머지 오래된 기록을 모두 삭제합니다.
+                 즉, 최근 본 글은 항상 최대 30개까지만 유지되고 초과분은 오래된 순서대로 자동 정리됩니다.
+    - 응답(Result): 삭제된 행의 개수 (int, 생략 가능)
 -->
-<insert id="upsertRecentView" parameterType="map">
-    MERGE INTO RECENT_VIEWS RV
-    USING DUAL
-    ON (RV.USER_NO = #{userNo} AND RV.PRODUCT_ID = #{productNo})
-    WHEN MATCHED THEN
-        UPDATE SET RV.VIEWED_AT = SYSTIMESTAMP
-    WHEN NOT MATCHED THEN
-        INSERT (USER_NO, PRODUCT_ID, VIEWED_AT)
-        VALUES (#{userNo}, #{productNo}, SYSTIMESTAMP)
-</insert>
+	<delete id="trimRecentViews" parameterType="java.lang.Long">
+	    DELETE FROM RECENT_VIEWS
+	     WHERE USER_NO = #{userNo}
+	       AND VIEW_ID NOT IN (
+	           SELECT VIEW_ID FROM (
+	               SELECT VIEW_ID FROM RECENT_VIEWS
+	                WHERE USER_NO = #{userNo}
+	                ORDER BY VIEWED_AT DESC
+	           )
+	           WHERE ROWNUM &lt;= 30
+	       )
+	</delete>
+	
+	<!--
+	    [10. 최근 본 글 추가/갱신]
+	    - 요청(Parameter): 회원 번호(userNo), 상품 번호(productNo)
+	    - 처리 과정: RECENT_VIEWS 테이블에 (USER_NO, PRODUCT_ID) 기준으로 이미 기록이 있으면
+	                 VIEWED_AT만 현재 시각으로 갱신하고, 없으면 새로 INSERT합니다.
+	                 (VIEW_ID는 GENERATED ALWAYS AS IDENTITY 컬럼이라 직접 값을 넣지 않습니다.)
+	-->
+	<insert id="upsertRecentView" parameterType="map">
+	    MERGE INTO RECENT_VIEWS RV
+	    USING DUAL
+	    ON (RV.USER_NO = #{userNo} AND RV.PRODUCT_ID = #{productNo})
+	    WHEN MATCHED THEN
+	        UPDATE SET RV.VIEWED_AT = SYSTIMESTAMP
+	    WHEN NOT MATCHED THEN
+	        INSERT (USER_NO, PRODUCT_ID, VIEWED_AT)
+	        VALUES (#{userNo}, #{productNo}, SYSTIMESTAMP)
+	</insert>
 </mapper>
