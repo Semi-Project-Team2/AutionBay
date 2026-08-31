@@ -82,6 +82,15 @@
 		AND IS_READ = 0
 	</update>
 	
+	<!-- 안 읽은 받은 쪽지 개수 -->
+	<select id="countUnread">
+		select count(*)
+		from MESSAGES
+		where RECEIVER_NO = #{userNo}
+			and IS_READ = 0
+	</select>
+	
+	
 	<!-- 쪽지 저장 -->
 	<insert id="insertMessage" parameterType="MessageDTO"
 				useGeneratedKeys="true" keyProperty="messageId" keyColumn="MESSAGE_ID">

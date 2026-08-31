@@ -58,6 +58,11 @@ public class MessageServiceImpl implements MessageService {
 		return message.getMessageId();
 		
 	}
+
+	@Override
+	public int getUnreadCount(Long userNo) {
+		return mapper.countUnread(userNo);
+	}
 	
 	
 	
