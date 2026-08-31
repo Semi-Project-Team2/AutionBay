@@ -146,6 +146,7 @@ public class AuctionController {
 		return "redirect:/auction/"+bidDTO.getProductId()+"/detail";
 	}
 	
+	// 게시글 수정 폼
 	@GetMapping("/{productId}/update")
 	public String auctionUpdateForm(@PathVariable Long productId, RedirectAttributes rttr, Model model, HttpSession session) {
 		
@@ -156,7 +157,6 @@ public class AuctionController {
 	        return "redirect:/user/login";
 	    }
 		ProductDTO product = productService.getProductByProductId(productId);
-		System.out.println(product);
 		if(!loginUser.getUserNo().equals(product.getWriterNo())) {
 			rttr.addFlashAttribute("message", "작성자만 수정할 수 있습니다.");
 			return "redirect:/auction/"+productId+"/detail";
@@ -183,6 +183,7 @@ public class AuctionController {
 		return "auction/updateForm";
 	}
 	
+	// 게시글 수정
 	@PostMapping("{productId}/update")
 	public String actionUpdate(@PathVariable Long productId, @ModelAttribute ProductDTO product, HttpSession session, RedirectAttributes rttr,
 								@RequestParam(required=false) List<MultipartFile> images, String deletedMediaIds) {

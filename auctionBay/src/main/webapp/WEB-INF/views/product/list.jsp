@@ -80,7 +80,6 @@
 
     <!-- 2. 메인 콘텐츠 (상품 그리드 + 우측 퀵메뉴) -->
     <div class="main-content">
-        
         <!-- 상품 목록 그리드 섹션 -->
 		<div class="product-grid-section">
 		    <div class="product-grid">

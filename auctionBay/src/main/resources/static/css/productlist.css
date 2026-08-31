@@ -189,3 +189,34 @@
 .page-btn:hover:not(.active) {
     background-color: #f1f1f1;
 }
+/* ==========================================================
+   상품 등록 버튼 스타일
+   ========================================================== */
+.product-write-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+}
+
+.btn-product-write {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #0f172a;
+    color: #ffffff;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s, transform 0.1s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.btn-product-write:hover {
+    background-color: #1e293b;
+}
+
+.btn-product-write:active {
+    transform: scale(0.98);
+}

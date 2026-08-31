@@ -26,22 +26,17 @@ public class CommentServiceImpl implements CommentService {
 		comment.setProductId(productId);
 		comment.setContent(content);
 		comment.setWriterNo(writerNo);
-		System.out.println("commentService"+comment);
 		mapper.insertComment(comment);	// 실행 후 commentId 가 채워짐
-		
+		System.out.println("test용"+comment);
 		return mapper.selectCommentById(comment.getCommentId());
 	}
 
 	@Override
 	public List<CommentDTO> getComments(Long productId) {
-<<<<<<< HEAD
-		return null; // TODO:
-=======
 		
 		List<CommentDTO> comments =  mapper.selectCommentsByProductId(productId); // 댓글 새로고침 시
 		System.out.println(comments);
 		return comments;
->>>>>>> b23692086235b56cf0b3c0dabea346b5ad96f253
 	}
 	
 	@Override
@@ -53,6 +48,11 @@ public class CommentServiceImpl implements CommentService {
 		// 조회된 댓글이 없으면 예외 발생
 		if (comment == null) {
 			throw new IllegalArgumentException("존재하지 않는 댓글입니다.");
+		}
+		
+		// 삭제 여부
+		if(comment.getIsDeleted() > 0) {
+			throw new IllegalArgumentException("삭제된 댓글 입니다.");
 		}
 		
 		// 작성자와 요청자가 다를 경우 예외 발생

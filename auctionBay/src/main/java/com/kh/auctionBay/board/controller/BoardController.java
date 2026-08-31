@@ -44,81 +44,66 @@ public class BoardController {
     private final CommentService commentService;
     private final ReviewService reviewService;
     private final ProductService productService;
-    
     private final ActivityService activityService;
-    // ------- 게시글 목록 ---------
-    @GetMapping("/list")
-    public String boardList(@ModelAttribute BoardSearchCondition condition, Model model) {
-        BoardListResult result = service.getBoardList(condition);
-        model.addAttribute("boardList", result.getBoardList());
-        model.addAttribute("pageInfo", result.getPageInfo());
-        model.addAttribute("condition", condition);
-    
-        return "board/list";
-    }
     
     // ------- 게시글 상세 조회 ---------
     @GetMapping("/{productId}/detail")
     public String boardDetail(@PathVariable Long productId, Model model, HttpSession session, SearchCondition condition, RedirectAttributes rttr) {
 
-    	// 상품정보 조회용
-    	ProductDTO product = productService.getProductByProductId(productId);
-    	
-    	// 로그인 회원 정보
-    	UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
-    	
-    	// 최근 본 글 기록 (로그인한 회원만)
-    	if (loginUser != null) {
-    		activityService.addRecentView(loginUser.getUserNo(), productId);
-    	}
-    	
-    	// 삭제된 게시물 여부
-    	if(product.getIsDeleted() > 0) {
-			rttr.addFlashAttribute("message", "이미 삭제된 게시글입니다.");
-			return "redirect:/";
+    	// 세션 영역에서 로그인된 유저 가져오기
+    			UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		
+    	// 최근본글 테이블 인서트 (로그인한 회원만)
+		if (loginUser != null) {
+			activityService.addRecentView(loginUser.getUserNo(), productId);
 		}
-        
-    	    	
-        // 2. 댓글 목록 가져오기
-        List<CommentDTO> comments = commentService.getComments(productId);
-        model.addAttribute("comments", comments);
-        System.out.println(comments);
-        // 3. 로그인 회원 작성자 여부 체크 (getMemberId 사용)
-        boolean isOwner = false;
-        if (loginUser != null && product != null) {
-            if (loginUser.getUserNo() != null && loginUser.getUserNo().equals(product.getWriterNo())) {
-                isOwner = true;
-            }
-        }
-        // 게시물 등록자의 받은 리뷰요약 조회용(ReviewSummaryDTO에는 reviewAvg, reviewCount 필드 저장되어있음
- 		ReviewSummaryDTO rs = reviewService.getAvgAndCountReview(product.getWriterNo());
- 		
- 		// 게시물 등록자의 받은 리뷰 보여주기용 리스트
- 		condition.setUserNo(product.getWriterNo());
- 		List<ReviewDTO> reviewList = reviewService.getReceivedReviews(condition)
- 									.getReviews();
- 		
-
+		
+		// 상품정보 조회용
+		ProductDTO product = productService.getProductByProductId(productId);
+	
+		// 게시물 등록자의 받은 리뷰요약 조회용(ReviewSummaryDTO에는 reviewAvg, reviewCount 필드 저장되어있음
+		ReviewSummaryDTO rs = reviewService.getAvgAndCountReview(product.getWriterNo());
+	
+		// 게시물 등록자의 받은 리뷰 보여주기용 리스트
+		condition.setUserNo(product.getWriterNo());
+		List<ReviewDTO> reviewList = reviewService.getReceivedReviews(condition)
+									.getReviews();
+		
+		if(product.getIsDeleted() > 0) {
+			rttr.addFlashAttribute("message", "이미 삭제된 게시글입니다.");
+			return "redirect:/board/"+productId+"/detail";
+		}
+		// 작성자인지 여부
+		boolean isOwner = false;
+	    if (loginUser != null && product != null) {
+	        if (loginUser.getUserNo() != null && loginUser.getUserNo().equals(product.getWriterNo())) {
+	        	isOwner = true;
+	        }
+	    }
 		// 찜 여부 조회
-    	boolean isLiked = false;
+		boolean isLiked = false;
 		if(loginUser != null) {
 			isLiked = service.checkIsLiked(loginUser.getUserNo(),productId);
 		}
 		
-		model.addAttribute("product", product);
+		// 댓글 목록 가져오기
+		List<CommentDTO> comments = commentService.getComments(productId);
+		model.addAttribute("comments", comments);
 		model.addAttribute("isOwner", isOwner);
-		model.addAttribute("isLiked", isLiked);
+		model.addAttribute("product", product);
 		model.addAttribute("reviewSummary", rs);
+		model.addAttribute("isLiked", isLiked);
 		model.addAttribute("reviewList", reviewList);
+	
+		// 상품 조회수 증가 처리
+		productService.increaseViewCount(productId);
 		
 		return "board/detail";
 		
-
     }
-  
 
    
-    // 게시글 수정
+    // 게시글 수정 폼
     @GetMapping("/{productId}/update")
 	public String auctionUpdateForm(@PathVariable Long productId, RedirectAttributes rttr, Model model, HttpSession session) {
 		
@@ -129,7 +114,6 @@ public class BoardController {
 	        return "redirect:/user/login";
 	    }
 		ProductDTO product = productService.getProductByProductId(productId);
-		System.out.println(product);
 		if(!loginUser.getUserNo().equals(product.getWriterNo())) {
 			rttr.addFlashAttribute("message", "작성자만 수정할 수 있습니다.");
 			return "redirect:/board/"+productId+"/detail";
