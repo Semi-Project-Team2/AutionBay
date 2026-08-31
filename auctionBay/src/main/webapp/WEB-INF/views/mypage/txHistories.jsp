@@ -222,7 +222,9 @@
                     <span class="content-title">거래 내역</span>
                     <div class="search-bar">
                         <form action="${pageContext.request.contextPath}/mypage/txHistories" method="get" class="search-bar">
-                            <input type="text" name="keyword" value="${param.keyword}" placeholder="검색어를 입력하세요">
+                            <input type="text" name="keyword" value="${param.keyword}"
+                                id="mypageKeywordInput" 
+                                placeholder="검색어를 입력하세요">
                             <button type="submit">검색</button>
                         </form>
                     </div>

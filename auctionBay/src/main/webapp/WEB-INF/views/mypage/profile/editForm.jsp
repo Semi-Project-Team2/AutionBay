@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>AuctionBay - 회원정보 수정</title>
+<title>AuctionBay - 회원 정보 수정</title>
 <link rel="stylesheet" href="/css/common.css">
 <link rel="stylesheet" href="/css/join.css">
 </head>

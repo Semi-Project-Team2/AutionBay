@@ -15,6 +15,10 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
 	
 <main class="container">
+	<%-- 회원 탈퇴 후 초기화면에서 표시할 탈퇴 완료 메시지 --%>
+		<c:if test="${not empty withdrawMessage}">
+            <script>alert('${withdrawMessage}')</script>
+       </c:if>
     <!-- 검색/필터 유지를 위한 공통 Form -->
     <form id="searchForm" action="${pageContext.request.contextPath}/product/list" method="get">
         <input type="hidden" name="tradeType" id="tradeType" value="${condition.tradeType}">
