@@ -1,6 +1,7 @@
 package com.kh.auctionBay.product.model.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -69,4 +70,8 @@ public class ProductDTO {
 	// 경매 종료 시간 확인용 임시 필드(시간 마감시 "Y", 아닐시 "N" 저장용)
 	private String isClosed;
 	
+	//status에 따른 trade_type
+	private String typeStatus;
+	
+	private List<ProductMediaDTO> mediaList;
 }

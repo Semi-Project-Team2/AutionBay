@@ -16,6 +16,16 @@ reviewBtns.forEach(btn => {
     });
 });
 
+/* 거래내역 목록에서 검색 시 헤더의 검색창에 같은 키워드가 입력되는 것을 방지 */
+document.addEventListener("DOMContentLoaded", function() {
+    const headerInput = document.querySelector('header.header input[name="keyword"]');
+    const mypageInput = document.querySelector("#mypageKeywordInput");
+
+    if (headerInput && mypageInput) {
+        headerInput.value = '';
+    }
+});
+
 /* 후기 작성 버튼 제출 (팝업창 닫기 포함) */
 const reviewForm = document.querySelector("#review-form");
 

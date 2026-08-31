@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.kh.auctionBay.product.model.dto.CategoryDTO;
 import com.kh.auctionBay.product.model.dto.ProductDTO;
+import com.kh.auctionBay.product.model.dto.ProductMediaDTO;
 import com.kh.auctionBay.product.model.dto.ProductSearchCondition;
 
 @Mapper
@@ -32,5 +33,6 @@ public interface ProductMapper {
     
     List<ProductDTO> selectProductByPrice(@Param("minPrice") Long minPrice, @Param("maxPrice") Long maxPrice);
     
+    int insertProductMedia(ProductMediaDTO media);
    
 }
