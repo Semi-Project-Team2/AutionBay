@@ -172,29 +172,31 @@
                                     </div>
                                 </div>
                             </c:forEach>
-                            <div class="pagination">
-                                <%-- 페이징 바 --%>
-                                    <%-- 이전 페이지 그룹이 있을 경우 --%>
-                                    <c:if test="${receivedPageInfo.hasPrevGroup}">
-                                        <a class="page-btn"
-                                        href="/mypage/reviews?tab=received&page=${receivedPageInfo.startPage - 1}">
-                                    &lt;&lt;</a>
-                                    </c:if>
+                            <c:if test="${not empty receivedReviews}">
+                                <div class="pagination">
+                                    <%-- 페이징 바 --%>
+                                        <%-- 이전 페이지 그룹이 있을 경우 --%>
+                                        <c:if test="${receivedPageInfo.hasPrevGroup}">
+                                            <a class="page-btn"
+                                            href="/mypage/reviews?tab=received&page=${receivedPageInfo.startPage - 1}">
+                                        &lt;&lt;</a>
+                                        </c:if>
                                 
-                                    <%-- 현재 페이지 그룹 표시 --%>
-                                    <c:forEach var="i" begin="${receivedPageInfo.startPage}"
-                                     end="${receivedPageInfo.endPage}">
-                                        <a class="page-btn  ${currentPage eq i  ? 'active' : ''}"
-                                        href="/mypage/reviews?tab=received&page=${i}">
-                                    ${i}</a>
-                                    </c:forEach>
-                                    <%-- 다음 페이지 그룹이 있을 경우 --%>
-                                    <c:if test="${receivedPageInfo.hasNextGroup}">
-                                        <a class="page-btn"
-                                        href="/mypage/reviews?tab=received&page=${receivedPageInfo.endPage + 1}">
-                                    &gt;&gt;</a>
-                                    </c:if>
-                            </div>
+                                        <%-- 현재 페이지 그룹 표시 --%>
+                                        <c:forEach var="i" begin="${receivedPageInfo.startPage}"
+                                         end="${receivedPageInfo.endPage}">
+                                            <a class="page-btn  ${currentPage eq i  ? 'active' : ''}"
+                                            href="/mypage/reviews?tab=received&page=${i}">
+                                        ${i}</a>
+                                        </c:forEach>
+                                        <%-- 다음 페이지 그룹이 있을 경우 --%>
+                                        <c:if test="${receivedPageInfo.hasNextGroup}">
+                                            <a class="page-btn"
+                                            href="/mypage/reviews?tab=received&page=${receivedPageInfo.endPage + 1}">
+                                        &gt;&gt;</a>
+                                        </c:if>
+                                </div>
+                            </c:if>
                         </c:when>
                         <c:otherwise>
                             <div class="no-data">받은 후기가 없습니다.</div>
@@ -219,29 +221,31 @@
                                     </div>
                                 </div>
                             </c:forEach>
-                            <div class="pagination">
-                                <%-- 페이징 바 --%>
-                                    <%-- 이전 페이지 그룹이 있을 경우 --%>
-                                    <c:if test="${sentPageInfo.hasPrevGroup}">
-                                        <a class="page-btn"
-                                        href="/mypage/reviews?tab=sent&page=${sentPageInfo.startPage - 1}">
-                                    &lt;&lt;</a>
-                                    </c:if>
+                            <c:if test="${not empty sentReviews}">
+                                <div class="pagination">
+                                    <%-- 페이징 바 --%>
+                                        <%-- 이전 페이지 그룹이 있을 경우 --%>
+                                        <c:if test="${sentPageInfo.hasPrevGroup}">
+                                            <a class="page-btn"
+                                            href="/mypage/reviews?tab=sent&page=${sentPageInfo.startPage - 1}">
+                                        &lt;&lt;</a>
+                                        </c:if>
                                 
-                                    <%-- 현재 페이지 그룹 표시 --%>
-                                    <c:forEach var="i" begin="${sentPageInfo.startPage}"
-                                     end="${sentPageInfo.endPage}">
-                                        <a class="page-btn ${currentPage eq i  ? 'active' : ''}"
-                                        href="/mypage/reviews?tab=sent&page=${i}">
-                                    ${i}</a>
-                                    </c:forEach>
-                                    <%-- 다음 페이지 그룹이 있을 경우 --%>
-                                    <c:if test="${sentPageInfo.hasNextGroup}">
-                                        <a class="page-btn"
-                                        href="/mypage/reviews?tab=sent&page=${sentPageInfo.endPage + 1}">
-                                    &gt;&gt;</a>
-                                    </c:if>
-                            </div>
+                                        <%-- 현재 페이지 그룹 표시 --%>
+                                        <c:forEach var="i" begin="${sentPageInfo.startPage}"
+                                         end="${sentPageInfo.endPage}">
+                                            <a class="page-btn ${currentPage eq i  ? 'active' : ''}"
+                                            href="/mypage/reviews?tab=sent&page=${i}">
+                                        ${i}</a>
+                                        </c:forEach>
+                                        <%-- 다음 페이지 그룹이 있을 경우 --%>
+                                        <c:if test="${sentPageInfo.hasNextGroup}">
+                                            <a class="page-btn"
+                                            href="/mypage/reviews?tab=sent&page=${sentPageInfo.endPage + 1}">
+                                        &gt;&gt;</a>
+                                        </c:if>
+                                </div>
+                            </c:if>
                         </c:when>
                         <c:otherwise>
                             <div class="no-data">보낸 후기가 없습니다.</div>
