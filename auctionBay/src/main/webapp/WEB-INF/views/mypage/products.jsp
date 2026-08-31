@@ -4,12 +4,12 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>AuctionBay - 마이페이지(게시글 관리)</title>
+    <title>마이페이지 - 게시글 관리</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Malgun Gothic', sans-serif; background-color: #f8f9fa; color: #333; }
-        
+
         /* 전체 컨테이너 */
         .container { 
             width: 1200px; 
@@ -19,56 +19,67 @@
             gap: 30px; 
         }
 
+        .container > *:nth-child(2) {
+            width: 100%;
+        }
+
         /* 상단 프로필 영역 */
         .profile-area {
             background-color: #e2e2e2;
             padding: 30px;
             border-radius: 6px;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: space-between !important;
-            width: 100% !important;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
+        .profile-info { display: flex; align-items: center; gap: 20px; }
+        .profile-img { width: 70px; height: 70px; background-color: #333; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .profile-text h2 { font-size: 20px; font-weight: bold; margin-bottom: 5px; }
+        .profile-text p { font-size: 14px; color: #555; }
+        .profile-right { display: flex; gap: 10px; }
+        .btn-edit { background-color: #d4edda; border: 1px solid #c3e6cb; padding: 8px 15px; border-radius: 4px; font-weight: bold; color: #155724; cursor: pointer; text-decoration: none; font-size: 13px; }
+        .btn-withdraw { background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 8px 15px; border-radius: 4px; font-weight: bold; color: #721c24; cursor: pointer; text-decoration: none; font-size: 13px; }
 
-        /* [핵심] 사이드바와 메인 콘텐츠를 무조건 좌우로 나란히 강제 정렬 */
-        .content-area { 
+        /* 사이드바와 메인 컨텐츠 좌우 정렬 */
+        .mypage-content { 
             display: flex !important; 
             flex-direction: row !important;
             gap: 30px !important; 
             align-items: flex-start !important; 
             width: 100% !important; 
         }
-        
-        /* 사이드바 고정 */
-        .sidebar { 
+
+        /* 사이드바 */
+        .mypage-sidebar {
             width: 200px !important; 
             background-color: #e2e2e2; 
-            border-radius: 6px; 
+            border-radius: 6px;
             padding: 15px 0; 
             flex-shrink: 0 !important; 
         }
-        .sidebar ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 5px; }
-        .sidebar li a { display: block; padding: 12px 20px; text-decoration: none; color: #555; font-size: 15px; font-weight: 500; }
-        .sidebar li a:hover, .sidebar li a.active { background-color: #d1d1d1; color: #000; font-weight: bold; }
+        .mypage-sidebar ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 5px; }
+        .mypage-sidebar li a { display: block; padding: 12px 20px; text-decoration: none; color: #555; font-size: 15px; font-weight: 500; }
+        .mypage-sidebar li a:hover, .mypage-sidebar li a.active { background-color: #d1d1d1; color: #000; font-weight: bold; }
 
-        /* 우측 메인 영역 확장 */
-        .main-content { 
+        /* 우측 메인 영역 */
+        .mypage-main { 
             flex: 1 !important; 
             min-width: 0 !important; 
         }
         
-        /* 콘텐츠 헤더 */
         .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .content-title { font-size: 18px; font-weight: bold; }
-        
+
         /* 검색바 스타일 */
         .search-bar { background-color: #e2e2e2; padding: 0 10px; border-radius: 4px; font-size: 13px; color: #666; width: 250px; display: flex; align-items: center; }
         .search-bar input { width: 100%; border: none; background: transparent; outline: none; font-size: 13px; text-align: left; padding: 8px 5px; }
         .search-bar button { border: none; background: transparent; cursor: pointer; font-size: 13px; color: #333; font-weight: bold; white-space: nowrap; }
 
-        /* 게시글 리스트 카드 스타일 */
         .board-list { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
-        .board-card { background-color: #e2e2e2; padding: 15px 20px; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; }
+        .board-card {
+            background-color: #e2e2e2; padding: 15px 20px; border-radius: 6px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
         .board-info { display: flex; align-items: center; gap: 20px; }
         .board-thumb { width: 80px; height: 80px; background-color: #b5b5b5; border-radius: 4px; object-fit: cover; }
         .board-title { font-size: 16px; font-weight: 500; color: #333; text-decoration: none; }
@@ -78,65 +89,31 @@
         .btn-action { background-color: #fff; border: 1px solid #ccc; padding: 6px 12px; border-radius: 4px; text-decoration: none; color: #333; font-size: 13px; font-weight: bold; cursor: pointer; }
         .btn-action:hover { background-color: #f1f1f1; }
 
-        /* 경매/일반 구분 뱃지 */
-        .type-badge {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-size: 11px;
-            font-weight: bold;
-            margin-right: 8px;
-            vertical-align: middle;
-        }
+        .type-badge { display: inline-block; padding: 3px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; margin-right: 8px; vertical-align: middle; }
         .type-badge.auction { background-color: #ffe3e3; color: #c92a2a; }
         .type-badge.general { background-color: #e7f5ff; color: #1971c2; }
-        
-        .no-data { background-color: #e2e2e2; padding: 40px; text-align: center; border-radius: 6px; color: #777; font-size: 14px; }
 
-        /* 페이징 바 */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-            margin-top: 20px;
-        }
+        .no-data { text-align: center; padding: 40px; color: #777; background-color: #e2e2e2; border-radius: 6px; font-size: 14px; }
 
-        .page-btn {
-            padding: 6px 12px;
-            border: 1px solid #ddd;
-            background-color: #fff;
-            color: #333;
-            text-decoration: none;
-            border-radius: 3px;
-            font-size: 13px;
-            cursor: pointer;
-        }
-
-        .page-btn.active {
-            background-color: #222;
-            color: #fff;
-            border-color: #222;
-            font-weight: bold;
-        }
-
-        .page-btn:hover:not(.active) {
-            background-color: #f1f1f1;
-        }
+        .pagination { display: flex; justify-content: center; align-items: center; gap: 5px; margin-top: 20px; }
+        .page-btn { padding: 6px 12px; border: 1px solid #ddd; background-color: #fff; color: #333; text-decoration: none; border-radius: 3px; font-size: 13px; cursor: pointer; }
+        .page-btn.active { background-color: #222; color: #fff; border-color: #222; font-weight: bold; }
+        .page-btn:hover:not(.active) { background-color: #f1f1f1; }
     </style>
 </head>
 <body>
 
-    <!-- 공통 헤더 포함 -->
+    <!-- 헤더 -->
     <jsp:include page="/WEB-INF/views/common/header.jsp" />
 
     <div class="container">
-        <!-- 팀원 원본 프로필 include -->
+        <!-- 프로필 영역 -->
         <jsp:include page="/WEB-INF/views/mypage/profile/profile.jsp" />
 
-        <div class="content-area">
-            <!-- 사이드바 (게시글 관리에 active 적용 및 중복 항목 제거) -->
-            <nav class="sidebar">
+        <div class="mypage-content">
+
+            <!-- 사이드바 -->
+            <nav class="mypage-sidebar">
                 <ul>
                     <li><a href="${pageContext.request.contextPath}/mypage/products" class="active">게시글 관리</a></li>
                     <li><a href="${pageContext.request.contextPath}/mypage/comments">댓글 관리</a></li>
@@ -148,10 +125,10 @@
                 </ul>
             </nav>
 
-            <!-- 우측 게시글 메인 콘텐츠 -->
-            <main class="main-content">
+            <!-- 우측 메인 영역 -->
+            <div class="mypage-main">
                 <div class="content-header">
-                    <span class="content-title">게시글 관리</span>
+                    <div class="content-title">게시글 관리</div>
                     <form action="${pageContext.request.contextPath}/mypage/products" method="get" class="search-bar" onsubmit="return false;">
                         <input type="text" id="mypageKeywordInput" name="keyword" placeholder="검색어를 입력하세요">
                         <button type="button" onclick="searchMypageProducts()">검색</button>
@@ -163,7 +140,6 @@
                         <c:when test="${not empty productList}">
                             <c:forEach var="board" items="${productList}">
                                 <c:set var="pNo" value="${board.productId}" />
-                                
                                 <div class="board-card" id="board-card-${pNo}">
                                     <div class="board-info">
                                         <c:choose>
@@ -200,18 +176,16 @@
                         </c:otherwise>
                     </c:choose>
                 </div>
-                
-                <!-- 자바스크립트 동적 페이징 바 -->
+
                 <div class="pagination" id="paginationContainer"></div>
-            </main>
+            </div>
+
         </div>
     </div>
 
-    <!-- 공통 푸터 포함 -->
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
     <script>
-        // 한 페이지당 5개씩 설정
         const itemsPerPage = 5;
         let currentPage = 1;
         const cards = document.querySelectorAll('.board-card');
@@ -240,9 +214,8 @@
             if (totalItems === 0) return;
 
             const totalPages = Math.ceil(totalItems / itemsPerPage);
-            if (totalPages <= 1) return; // 1페이지 이하면 페이징 바 숨김
+            if (totalPages <= 1) return;
 
-            // 이전 버튼
             const prevBtn = document.createElement('a');
             prevBtn.className = 'page-btn';
             prevBtn.innerHTML = '&lt; 이전';
@@ -254,7 +227,6 @@
             }
             paginationContainer.appendChild(prevBtn);
 
-            // 페이지 번호 버튼
             for (let i = 1; i <= totalPages; i++) {
                 const pageBtn = document.createElement('a');
                 pageBtn.className = 'page-btn' + (i === currentPage ? ' active' : '');
@@ -263,7 +235,6 @@
                 paginationContainer.appendChild(pageBtn);
             }
 
-            // 다음 버튼
             const nextBtn = document.createElement('a');
             nextBtn.className = 'page-btn';
             nextBtn.innerHTML = '다음 &gt;';
@@ -276,30 +247,24 @@
             paginationContainer.appendChild(nextBtn);
         }
 
-        // 페이지 최초 로드 시 1페이지 실행
         if (totalItems > 0) {
             showPage(1);
         }
 
-        // 페이지 로드 시 처리
         document.addEventListener("DOMContentLoaded", function() {
-            // 1. 주소창의 keyword 파라미터 값 가져오기
             const urlParams = new URLSearchParams(window.location.search);
             const keywordParam = urlParams.get('keyword');
             const mypageInput = document.getElementById('mypageKeywordInput');
             
-            // 2. 마이페이지 검색창에 검색어 바인딩
             if (keywordParam && mypageInput) {
                 mypageInput.value = keywordParam;
             }
 
-            // 3. 공통 헤더 검색창의 value 초기화
             const headerInput = document.querySelector('header input[name="keyword"], .header input[name="keyword"]');
             if (headerInput) {
                 headerInput.value = '';
             }
 
-            // 4. 엔터키 감지 이벤트
             if (mypageInput) {
                 mypageInput.addEventListener('keydown', function(event) {
                     if (event.key === 'Enter') {
@@ -310,14 +275,12 @@
             }
         });
 
-        // 마이페이지 검색 실행 함수
         function searchMypageProducts() {
             const input = document.getElementById('mypageKeywordInput');
             const keyword = input ? input.value.trim() : '';
             location.href = '${pageContext.request.contextPath}/mypage/products?keyword=' + encodeURIComponent(keyword);
         }
 
-        // 게시글 삭제 함수
         function deleteProduct(button) {
             const productNo = button.getAttribute("data-product-no");
             
