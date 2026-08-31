@@ -421,6 +421,23 @@ public class MyPageController {
 		model.addAttribute("user", loginUser);
 		return "mypage/recents";
 	}
+	
+	/**
+	 * [게시글/상품 수정 폼 이동]
+	 * - 요청 URL: GET /board/updateForm
+	 * - 처리 과정: 수정할 글 번호(no)를 받아 해당 정보를 조회 후 수정 페이지로 이동
+	 */
+	@GetMapping("/board/updateForm")
+	public String updateForm(@RequestParam("no") Long no, Model model) {
+		// 1. 전달받은 게시글 번호(no)로 DB에서 해당 글 상세정보 조회
+		// BoardDTO board = boardService.selectBoardDetail(no);
+		
+		// 2. 조회 결과를 Model에 담아서 JSP로 전달
+		// model.addAttribute("board", board);
+		
+		// 3. 수정 폼 화면(JSP) 경로 리턴 (/WEB-INF/views/board/updateForm.jsp)
+		return "board/updateForm";
+	}
 
 	/**
 	 * [내가 작성한 게시글 삭제 처리 (AJAX 비동기 통신)]

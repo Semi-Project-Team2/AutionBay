@@ -21,6 +21,7 @@ import com.kh.auctionBay.board.model.dto.CommentDTO;
 import com.kh.auctionBay.board.service.BoardService;
 import com.kh.auctionBay.board.service.CommentService;
 import com.kh.auctionBay.common.SessionConst;
+import com.kh.auctionBay.product.model.dto.CategoryDTO;
 import com.kh.auctionBay.product.model.dto.ProductDTO;
 import com.kh.auctionBay.product.service.ProductService;
 import com.kh.auctionBay.review.model.dto.ReviewDTO;
@@ -124,6 +125,8 @@ public class BoardController {
 		
 
     }
+  
+
     
 //    // ------- 게시글 수정 화면 이동 ---------
 //    @GetMapping("/update/{boardId}")
