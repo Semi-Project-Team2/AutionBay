@@ -12,11 +12,6 @@ import com.kh.auctionBay.board.model.dto.CommentDTO; // CommentDTO import 추가
 
 
 public interface BoardService {
-	// 게시글 목록 조회
-	BoardListResult getBoardList(BoardSearchCondition condition);
-
-	// 게시글 작성
-	Long writeBoard(BoardDTO board, List<MultipartFile> images) throws IllegalStateException, IOException;
 
 	// 게시글 상세 조회
 	BoardDTO getBoardDetail(Long boardId);
@@ -26,12 +21,6 @@ public interface BoardService {
 	
 	// 찜 토글 기능 메서드
 	boolean toggleWish(Long userNo, Long productId);
-
-	// 게시글 수정
-	void updateBoard(BoardDTO board, List<MultipartFile> images) throws IllegalStateException, IOException;
-
-	// 게시글 삭제
-	void deleteBoard(Long boardId);
 
 	// 댓글 목록 조회 추가
 	List<CommentDTO> getCommentList(Long boardId);
