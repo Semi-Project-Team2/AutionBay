@@ -34,4 +34,10 @@ public interface ProductService {
 	//가격 필터
 	List<ProductDTO> getProductByPrice(Long minPrice, Long maxPrice);
 	
+	// 게시글 수정
+	void updateProduct(ProductDTO product, List<MultipartFile> images, String deletedMediaIds);
+	
+	// 게시글 삭제
+	String deleteProduct(Long productId);
+	
 }

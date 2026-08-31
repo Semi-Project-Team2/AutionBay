@@ -13,7 +13,7 @@
 <div class="container">
 
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
-	
+<div id="server-data" data-message="${message}"></div>
 <main class="container">
 	<%-- 회원 탈퇴 후 초기화면에서 표시할 탈퇴 완료 메시지 --%>
 		<c:if test="${not empty withdrawMessage}">
@@ -176,6 +176,12 @@
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
 <script>
+	const serverMessage = document.querySelector("#server-data").dataset.message;
+	if (serverMessage) {
+	    alert(serverMessage);
+	}
+	
+
     function filterChange(type, value) {
         if (type === 'tradeType') {
             document.getElementById('tradeType').value = value;

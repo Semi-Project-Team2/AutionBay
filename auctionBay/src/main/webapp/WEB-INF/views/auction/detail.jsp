@@ -31,7 +31,10 @@
         width: 1200px;
         margin: 40px auto;
         display: flex;
+        flex-wrap: wrap; /* 댓글 영역을 아래로 내리기 위해 wrap 설정 */
+        gap: 24px; /* 좌측 이미지 영역과 우측 카드 사이의 간격 */
         justify-content: center;
+        align-items: flex-start;
     }
 
     .auction-card {
@@ -41,18 +44,10 @@
         padding: 24px;
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
     }
-/* ==========================================================
+
+    /* ==========================================================
     2-1. 좌측 상품 이미지 영역 스타일
     ========================================================== */
-    .page-container {
-        width: 1200px;
-        margin: 40px auto;
-        display: flex;
-        gap: 24px; /* 좌측 이미지 영역과 우측 카드 사이의 간격 */
-        justify-content: center;
-        align-items: flex-start;
-    }
-
     .product-image-section {
         width: 500px; /* 이미지 영역 너비 설정 */
         background-color: #ffffff;
@@ -73,7 +68,8 @@
         background-color: #f8fafc;
     }
 
-    .main-image-container img {
+    .main-image-container img,
+    .main-image-container video {
         width: 100%;
         height: 100%;
         object-fit: cover; /* 이미지가 비율을 유지하며 가득 차도록 설정 */
@@ -406,6 +402,161 @@
     }
 
     /* ==========================================================
+    10. 게시글 수정/삭제 버튼 영역 (우측 하단 배치용)
+    ========================================================== */
+    .post-owner-actions {
+        width: 1000px; /* 좌측 이미지 영역(500) + 우측 카드(440) + 간격(24)에 맞춘 폭 혹은 적절한 폭 */
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: -10px;
+    }
+
+    .btn-owner {
+        padding: 8px 16px;
+        font-size: 13px;
+        font-weight: 600;
+        border-radius: 6px;
+        cursor: pointer;
+        border: 1px solid #cbd5e1;
+        background-color: #ffffff;
+        color: #334155;
+        transition: all 0.2s;
+    }
+
+    .btn-owner:hover {
+        background-color: #f1f5f9;
+    }
+
+    .btn-owner.delete {
+        color: #ef4444;
+        border-color: #fca5a5;
+    }
+
+    .btn-owner.delete:hover {
+        background-color: #fef2f2;
+    }
+
+    /* ==========================================================
+    11. 댓글 영역 (페이지 하단 단독 배치)
+    ========================================================== */
+    .comment-section-full {
+        width: 964px; /* 이미지 영역(500) + 간격(24) + 카드(440)의 총합 너비 */
+        background-color: #ffffff;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        margin-top: 10px;
+    }
+
+    .comment-section_title {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        color: #1e293b;
+    }
+
+    .comment-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .comment-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #f8fafc;
+        padding: 14px;
+        border-radius: 8px;
+        border: 1px solid #f1f5f9;
+        font-size: 13px;
+    }
+
+    .comment-list_body {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .comment-list_writer {
+        font-weight: 600;
+        color: #334155;
+    }
+
+    .comment-list_content {
+        color: #475569;
+    }
+
+    .comment-list_date {
+        color: #94a3b8;
+        font-size: 11px;
+    }
+
+    .comment-delete-btn {
+        font-size: 11px;
+        padding: 4px 8px;
+        cursor: pointer;
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 4px;
+        color: #64748b;
+        transition: all 0.2s;
+    }
+
+    .comment-delete-btn:hover {
+        background-color: #fef2f2;
+        color: #ef4444;
+        border-color: #fca5a5;
+    }
+
+    .comment-form {
+        display: flex;
+        gap: 8px;
+    }
+
+    .comment-textarea {
+        flex-grow: 1;
+        resize: none;
+        padding: 10px;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        font-size: 13px;
+        outline: none;
+        height: 60px;
+    }
+
+    .comment-submit-btn {
+        padding: 0 20px;
+        background: #0f172a;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        transition: background-color 0.2s;
+    }
+
+    .comment-submit-btn:hover {
+        background: #1e293b;
+    }
+
+    .form-tip {
+        font-size: 13px;
+        color: #64748b;
+    }
+
+    .form-tip a {
+        color: #3182ce;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    /* ==========================================================
     9. 공통 모달창 스타일 (입찰 기록 & 리뷰 기록)
     ========================================================== */
     .modal-overlay {
@@ -459,6 +610,7 @@
     .modal-close:hover {
         color: #0f172a;
     }
+    
     /* --- 별점 UI 스타일 --- */
     .star-rating {
         position: relative;
@@ -489,7 +641,6 @@
         padding-right: 4px;
     }
 
-    /* 입찰/리뷰 아이템 카드 공통 스타일 */
     .bid-history-item{
         display: flex;
         justify-content: space-between;
@@ -503,14 +654,14 @@
 
     .review-list-item {
         display: flex;
-        flex-direction: column; /* 위아래로 배치 */
+        flex-direction: column;
         align-items: flex-start;
         padding: 14px;
         background-color: #f8fafc;
         border: 1px solid #f1f5f9;
         border-radius: 8px;
         font-size: 13px;
-        gap: 8px; /* 위쪽(정보)과 아래쪽(내용) 간격 */
+        gap: 8px;
     }
 
     .bid-history-user-info{
@@ -536,11 +687,7 @@
         white-space: nowrap; 
     }
 
-    .bid-history-date {
-        color: #94a3b8;
-        font-size: 11px;
-    }
-
+    .bid-history-date,
     .review-list-date {
         color: #94a3b8;
         font-size: 11px;
@@ -559,7 +706,6 @@
         line-height: 1.4;
     }
 
-    /* 데이터가 없을 때 엠티 박스 */
     .bid-history-empty,
     .review-list-empty {
         text-align: center;
@@ -567,55 +713,67 @@
         color: #94a3b8;
         font-size: 13px;
     }
-        
     </style>
     <link rel="stylesheet" href="/css/common.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <!-- 공통 헤더 -->
     <jsp:include page="/WEB-INF/views/common/header.jsp" />
 
+	<div id="server-data" data-message="${message}"></div>
     <!-- 상품 ID, 작성자 여부를 숨겨서 자바스크립트에서 접근 가능하게 함 -->
     <input type="hidden" id="product-id-value" value="${product.productId}">
     <input type="hidden" id="is-Owner-value" value="${isOwner}">
 
     <!-- 전체를 감싸는 중앙 정렬 컨테이너 -->
-    <div class="page-container">	<!-- 전체를 감싸는 중앙 정렬 컨테이너 -->
-	    <div class="page-container">
-	        
-	        <!-- [추가] 좌측 상품 이미지 영역 -->
-	        <div class="product-image-section">
-	            <div class="main-image-container">
-	                <c:choose>
-	                    <c:when test="${not empty product.imageList}">
-	                        <!-- 첫 번째 이미지를 대표 메인 이미지로 출력 -->
-	                        <img id="mainProductImage" src="${product.imageList[0].imagePath}" alt="상품 대표 이미지">
-	                    </c:when>
-	                    <c:otherwise>
-	                        <img id="mainProductImage" src="/images/default-product.png" alt="이미지 없음">
-	                    </c:otherwise>
-	                </c:choose>
-	            </div>
-	            
-	            <!-- 썸네일 목록 영역 (이미지가 여러 개인 경우) -->
-	            <c:if test="${not empty product.imageList and product.imageList.size() > 1}">
-	                <div class="thumbnail-list">
-	                    <c:forEach var="img" items="${product.imageList}" varStatus="status">
-	                        <div class="thumbnail-item ${status.first ? 'active' : ''}" onclick="changeMainImage('${img.imagePath}', this)">
-	                            <img src="${img.imagePath}" alt="상품 썸네일">
-	                        </div>
-	                    </c:forEach>
-	                </div>
-	            </c:if>
-	        </div>
+    <div class="page-container">
+        
+        <!-- 왼쪽: 상품 미디어 영역 -->
+        <div class="product-image-section">
+            <div class="main-image-container" id="mainImageContainer">
+                <c:choose>
+                    <c:when test="${not empty product.mediaList}">
+                        <c:set var="firstMedia" value="${product.mediaList[0]}" />
+                        <c:choose>
+                            <c:when test="${firstMedia.mediaType == 'VIDEO'}">
+                                <video id="mainVideo" src="${firstMedia.mediaUrl}" controls style="width:100%; height:100%; object-fit:cover;"></video>
+                            </c:when>
+                            <c:otherwise>
+                                <img id="mainImage" src="${firstMedia.mediaUrl}" alt="${product.title}">
+                            </c:otherwise>
+                        </c:choose>
+                    </c:when>
+                    <c:otherwise>
+                        <img src="${pageContext.request.contextPath}/images/no_image.png" alt="이미지 없음" style="width:100%; height:100%; object-fit:contain; opacity: 0.5;">
+                    </c:otherwise>
+                </c:choose>
+            </div>
+            
+            <!-- 썸네일 리스트 (미디어가 여러 개일 경우) -->
+            <c:if test="${not empty product.mediaList && product.mediaList.size() > 1}">
+                <div class="thumbnail-list">
+                    <c:forEach var="media" items="${product.mediaList}" varStatus="status">
+                        <div class="thumbnail-item ${status.first ? 'active' : ''}" 
+                             onclick="changeMainMedia(this, '${media.mediaUrl}', '${media.mediaType}')">
+                            <c:choose>
+                                <c:when test="${not empty media.thumbnailUrl}">
+                                    <img src="${media.thumbnailUrl}" alt="썸네일">
+                                </c:when>
+                                <c:otherwise>
+                                    <img src="${media.mediaUrl}" alt="썸네일">
+                                </c:otherwise>
+                            </c:choose>
+                            <c:if test="${media.mediaType == 'VIDEO'}">
+                                <div class="video-badge"><i class="fa-solid fa-play"></i></div>
+                            </c:if>
+                        </div>
+                    </c:forEach>
+                </div>
+            </c:if>
+        </div>
 
-	        <!-- 우측 기존 경매 상세 카드 영역 -->
-	        <div class="auction-card">
-	            <!-- ... 기존 경매 상세 정보 내용 그대로 유지 ... -->
-	        </div>
-	        
-	    </div>
+        <!-- 우측 기존 경매 상세 카드 영역 -->
         <div class="auction-card">
             <!-- 현재가 헤더 -->
             <div class="price-header">
@@ -638,8 +796,8 @@
                 <div class="info-row">
                     <span class="info-label">시작가격</span>
                     <div class="info-content start-price-text" id="startPrice">
-						<fmt:formatNumber value="${product.auctionStartPrice}" pattern="#,###" />원
-					</div>
+                        <fmt:formatNumber value="${product.auctionStartPrice}" pattern="#,###" />원
+                    </div>
                 </div>
 
                 <!-- 입찰기록 -->
@@ -683,9 +841,9 @@
             <!-- 버튼 영역 -->
             <div class="action-group">
                 <button type="button" class="btn-submit" id="btnSubmitBid" data-product-id="${product.productId}">입찰하기</button>
-				<button type="button" id="wishBtn" data-product-id="${product.productId}">
-				    <i class="${isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart'}"></i>
-				</button>
+                <button type="button" id="wishBtn" data-product-id="${product.productId}">
+                    <i class="${isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart'}"></i>
+                </button>
             </div>
 
             <!-- 판매자 정보 영역 -->
@@ -695,9 +853,9 @@
                         <span class="seller-name" id="sellerNickname">유저 닉네임 : ${product.writerNickname}</span>
                     </div>
                     <button type="button" class="btn-message" id="btnSendMessage" 
-							data-product-id="${product.productId}"
-							data-receiver-no="${product.writerNo}"
-							data-redirect-url="${pageContext.request.contextPath}/auction/${product.productId}/detail">판매자에게 쪽지</button>
+                            data-product-id="${product.productId}"
+                            data-receiver-no="${product.writerNo}"
+                            data-redirect-url="${pageContext.request.contextPath}/auction/${product.productId}/detail">판매자에게 쪽지</button>
                 </div>
                 <div class="seller-stats">
                     <div class="stat-item">
@@ -709,54 +867,49 @@
                     </div>
                 </div>
             </div>
-			
-			<%-- 댓글 영역 --%>
-			<section class="comment-section">
-	        <h3 class="comment-section_title">댓글 ${empty comments ? 0 : comments.size()}</h3>
-	        <ul class="comment-list" id="comment-list">
-	            <c:forEach var="comment" items="${comments}">
-	                <li id="comment-${comment.commentId}">
-	                    <div class="comment-list_body">
-	                        <span class="comment-list_writer">${comment.writerNickname}</span>
-	                        <span class="comment-list_content">${comment.content}</span>
-	                        <span class="comment-list_date">${comment.createdAtStr}</span>
-	                    </div>
-	                    <c:if test="${not empty loginUser and loginUser.UserNo == comment.writerNo}">
-	                        <button type="button" class="btn btn-outline comment-delete-btn" data-comment-id="${comment.commentId}">삭제</button>
-	                    </c:if>
-	                </li>
-	            </c:forEach>
-	        </ul>
-
-	        <c:choose>
-	            <c:when test="${not empty loginUser}">
-	                <form class="comment-form" id="comment-form">
-	                    <textarea placeholder="댓글입력..." name="content" rows="2" required></textarea>
-	                    <button type="submit" class="btn btn-primary">등록</button>
-	                </form>
-	            </c:when>
-	            <c:otherwise>
-	                <p class="form-tip"><a href="/user/login">로그인</a> 후 댓글을 작성하세요.</p>
-	            </c:otherwise>
-	        </c:choose>
-	    </section>
-
-	    <!--
-			댓글 목록을 표시하는 영역에서 사용할 템플릿으로 임시 저장한 UI (브라우저에서 해석되지 않음, 마크업 구조 보관용)
-	    -->
-	    <template id="comment-template">
-	        <li>
-	            <div class="comment-list_body">
-	                <span class="comment-list_writer"></span>
-	                <span class="comment-list_content"></span>
-	                <span class="comment-list_date"></span>
-	            </div>
-	            <button type="button" class="btn btn-outline comment-delete-btn">삭제</button>
-	        </li>
-	    </template>
         </div>
+
+        <!-- 글 작성자일 경우에만 노출되는 수정/삭제 버튼 영역 (우측 하단 배치) -->
+        <c:if test="${isOwner}">
+            <div class="post-owner-actions">
+                <button type="button" class="btn-owner" onclick="location.href='${pageContext.request.contextPath}/auction/${product.productId}/update'">수정</button>
+                <button type="button" class="btn-owner delete" onclick="if(confirm('정말 삭제하시겠습니까?')) { location.href='${pageContext.request.contextPath}/product/${product.productId}/delete'; }">삭제</button>
+            </div>
+        </c:if>
+
+        <%-- 댓글 영역 (아래로 단독 배치) --%>
+        <section class="comment-section-full">
+            <h3 class="comment-section_title">댓글 ${empty comments ? 0 : comments.size()}</h3>
+            <ul class="comment-list" id="comment-list">
+                <c:forEach var="comment" items="${comments}">
+                    <li class="comment-item" id="comment-${comment.commentId}">
+                        <div class="comment-list_body">
+                            <span class="comment-list_writer">${comment.writerNickname}</span>
+                            <span class="comment-list_content">${comment.content}</span>
+                            <span class="comment-list_date">${comment.createdAtStr}</span>
+                        </div>
+                        <c:if test="${not empty loginUser and loginUser.userNo == comment.writerNo}">
+                            <button type="button" class="comment-delete-btn" data-comment-id="${comment.commentId}">삭제</button>
+                        </c:if>
+                    </li>
+                </c:forEach>
+            </ul>
+
+            <c:choose>
+                <c:when test="${not empty loginUser}">
+                    <form class="comment-form" id="comment-form">
+                        <textarea class="comment-textarea" placeholder="댓글을 입력해주세요..." name="content" rows="2" required></textarea>
+                        <button type="submit" class="comment-submit-btn">등록</button>
+                    </form>
+                </c:when>
+                <c:otherwise>
+                    <p class="form-tip"><a href="/user/login">로그인</a> 후 댓글을 작성하세요.</p>
+                </c:otherwise>
+            </c:choose>
+        </section>
     </div>
-	<!-- 입찰 기록 모달 창 -->
+
+    <!-- 입찰 기록 모달 창 -->
     <div class="modal-overlay" id="bidModalOverlay">
         <div class="modal-container">
             <div class="modal-header">
@@ -787,6 +940,7 @@
             </div>
         </div>
     </div>
+
     <!-- 리뷰 기록 모달 창 -->
     <div class="modal-overlay" id="reviewModalOverlay">
         <div class="modal-container">
@@ -801,7 +955,6 @@
                             <div class="review-list-item">
                                 <div class="review-list-user-info">
                                     <span class="review-list-userNickname">${review.reviewerNickname}</span>
-                                    <!-- 숫자 평점을 별점으로 변환하는 UI -->
                                     <div class="star-rating" title="평점: ${review.rating}점">
                                         ★★★★★
                                         <div class="star-rating-fill" style="width: calc(${review.rating} * 10%);">
@@ -826,11 +979,16 @@
         </div>
     </div>
 
-    <script>
-    <c:if test="${not empty message}">
-        alert("${message}");
-    </c:if>
-    </script>
+    <template id="comment-template">
+        <li class="comment-item">
+            <div class="comment-list_body">
+                <span class="comment-list_writer"></span>
+                <span class="comment-list_content"></span>
+                <span class="comment-list_date"></span>
+            </div>
+            <button type="button" class="comment-delete-btn">삭제</button>
+        </li>
+    </template>
 
     <!-- 공통 푸터 -->
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />

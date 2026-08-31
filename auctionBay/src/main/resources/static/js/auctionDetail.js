@@ -1,5 +1,11 @@
 const isOwner = document.querySelector("#is-Owner-value").value === "true"; // 문자열을 boolean으로 변환
 
+const serverMessage = document.querySelector("#server-data").dataset.message;
+
+if (serverMessage) {
+    alert(serverMessage);
+}
+
 // 댓글 기능
 const commentForm = document.querySelector("#comment-form");
 const productId = document.querySelector("#product-id-value").value;
@@ -332,11 +338,12 @@ if (btnSubmitBid) {
     btnSubmitBid.addEventListener('click', function() {
         const productId = this.getAttribute('data-product-id');
         const bidPrice = parseInt(bidInput.value.replace(/[^0-9]/g, '')) || 0;
-
-        if(isOwner){
-            alert("본인이 등록한 상품에는 입찰할 수 없습니다.");
-            return;
-        }
+		
+		// 조건문 안으로 진입하는지 확인하기 위한 로그 추가
+		if (isOwner) {
+		    alert("본인이 등록한 상품에는 입찰할 수 없습니다.");
+		    return;
+		}
 
         if (bidPrice < minValidBid || (bidPrice - currentPrice) % unit !== 0) {
             alert('올바른 입찰 단위 금액이 아닙니다.');
@@ -448,3 +455,18 @@ if(btnSendMessage){
 }
 
 
+function changeMainMedia(element, mediaUrl, mediaType) {
+    const container = document.getElementById('mainImageContainer');
+    
+    if (mediaType === 'VIDEO') {
+        container.innerHTML = `<video id="mainVideo" src="${mediaUrl}" controls autoplay style="width:100%; height:100%; object-fit:cover;"></video>`;
+    } else {
+        container.innerHTML = `<img id="mainImage" src="${mediaUrl}" alt="상품 이미지">`;
+    }
+    
+    // 썸네일 활성화 테두리 토글
+    document.querySelectorAll('.thumbnail-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    element.classList.add('active');
+}

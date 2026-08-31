@@ -9,7 +9,7 @@
 
 <meta charset="UTF-8">
 
-<title>일반 게시글 수정</title>
+<title>경매 게시글 수정</title>
 
 <style>
 
@@ -99,39 +99,11 @@ header {
 }
 
 
-/* 제목 영역 및 거래 타입 탭 버튼 */
-.page-header-area {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 40px;
-}
-
+/* 제목 */
 .page-title {
     font-size: 38px;
-    margin: 0;
-}
 
-/* 구매/판매 전환 탭 버튼 스타일 */
-.trade-type-tabs {
-    display: flex;
-    gap: 10px;
-}
-
-.trade-tab-btn {
-    width: 120px;
-    height: 50px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.trade-tab-btn.active {
-    background-color: #ddd;
-    border-color: #aaa;
+    margin-bottom: 40px;
 }
 
 
@@ -389,42 +361,35 @@ header {
 <div class="container">
 
 
-    <!-- 페이지 제목 및 구매/판매 전환 탭 -->
-    <div class="page-header-area">
-        <div class="page-title">
-            일반 게시글 수정
-        </div>
+    <!-- 페이지 제목 -->
+    <div class="page-title">
 
-        <!-- 구매 / 판매 선택 탭 버튼 -->
-        <div class="trade-type-tabs">
-            <button type="button" class="trade-tab-btn ${product.tradeType == 'BUY' ? 'active' : ''}" onclick="setTradeType('BUY')">구매</button>
-            <button type="button" class="trade-tab-btn ${product.tradeType == 'SELL' || empty product.tradeType ? 'active' : ''}" onclick="setTradeType('SELL')">판매</button>
-        </div>
+        경매 게시글 수정
+
     </div>
 
 
 
     <!-- =========================
-         일반 게시글 수정 Form
+         경매 게시글 수정 Form
          ========================= -->
 
     <form
         id="productForm"
 
-        action="${pageContext.request.contextPath}/board/${product.productId}/update"
+        action="${pageContext.request.contextPath}/auction/${product.productId}/update"
 
         method="post"
 
         enctype="multipart/form-data">
 
 
-        <!-- 거래 방식 (BUY 또는 SELL) -->
+        <!-- 거래 방식 (고정: AUCTION) -->
         <input
             type="hidden"
             name="tradeType"
             id="tradeType"
-            value="${not empty product.tradeType ? product.tradeType : 'SELL'}">
-            
+            value="AUCTION">
 		<!-- 작성자 고유 번호 -->
         <input
             type="hidden"
@@ -607,22 +572,43 @@ header {
 
 
                 <!-- =========================
-                     가격 (price)
+                     경매 시작 가격
                      ========================= -->
 
-                <div class="form-row" id="priceArea">
+                <div class="form-row" id="auctionPriceArea">
 
-                    <label for="price">
-                        가격
+                    <label for="auctionStartPrice">
+                        시작가격
                     </label>
 
                     <input
                         type="number"
-                        id="price"
-                        name="price"
-                        value="${product.price}"
+                        id="auctionStartPrice"
+                        name="auctionStartPrice"
+                        value="${product.auctionStartPrice}"
                         min="0"
-                        placeholder="가격을 입력해주세요"
+                        placeholder="경매 시작 가격"
+                        required>
+
+                </div>
+
+
+
+                <!-- =========================
+                     경매 마감시간
+                     ========================= -->
+
+                <div class="form-row" id="auctionEndArea">
+
+                    <label for="auctionEndTime">
+                        마감시간
+                    </label>
+
+                    <input
+                        type="datetime-local"
+                        id="auctionEndTime"
+                        name="auctionEndTime"
+                        value="${product.auctionEndTime}"
                         required>
 
                 </div>
@@ -650,7 +636,7 @@ header {
 
 
                 <!-- =========================
-                     거래 방식 (택배/직거래)
+                     거래 방식
                      ========================= -->
 
                 <div class="form-row">
@@ -709,7 +695,7 @@ header {
             <!-- 취소 -->
             <button
                 type="button"
-                onclick="location.href='${pageContext.request.contextPath}/board/${product.productId}/detail'">
+                onclick="location.href='${pageContext.request.contextPath}/auction/${product.productId}/detail'">
 
                 취소
 
@@ -731,20 +717,6 @@ header {
 
 
 <script>
-    // 구매/판매 탭 전환 함수
-    function setTradeType(type) {
-        document.getElementById("tradeType").value = type;
-        
-        const buttons = document.querySelectorAll(".trade-tab-btn");
-        buttons.forEach(btn => btn.classList.remove("active"));
-        
-        if (type === 'BUY') {
-            buttons[0].classList.add("active");
-        } else {
-            buttons[1].classList.add("active");
-        }
-    }
-
     // 서버에서 가져온 기존 미디어 목록을 JS 배열로 변환
     const existingMediaList = [
         <c:forEach var="media" items="${product.mediaList}" varStatus="status">
@@ -954,16 +926,40 @@ header {
         return true;
     }
 
+    // 경매 마감시간 변경 검사
+    document.getElementById("auctionEndTime").addEventListener("change", function() {
+        if (!this.value) {
+            return;
+        }
+
+        const selectedTime = new Date(this.value);
+        const now = new Date();
+
+        if (selectedTime <= now) {
+            alert("경매 마감시간은 현재 시간 이후로 선택해주세요.");
+            this.value = "";
+        }
+    });
+
     // 폼 제출 시 최종 유효성 검사 및 제출 직전 파일 동기화 보장
     document.getElementById("productForm").addEventListener("submit", function(e) {
         // 제출 직전 파일 객체들이 input[type="file"]에 확실히 담기도록 동기화 보장
         updateInputFiles();
 
-        const price = document.getElementById("price");
+        const auctionEndTime = document.getElementById("auctionEndTime");
 
-        if (!price.value || price.value < 0) {
-            alert("올바른 가격을 입력해주세요.");
-            price.value = "";
+        if (!auctionEndTime.value) {
+            alert("경매 마감시간을 선택해주세요.");
+            e.preventDefault();
+            return;
+        }
+
+        const selectedTime = new Date(auctionEndTime.value);
+        const now = new Date();
+
+        if (selectedTime <= now) {
+            alert("경매 마감시간은 현재 시간 이후로 설정해주세요.");
+            auctionEndTime.value = "";
             e.preventDefault();
             return;
         }

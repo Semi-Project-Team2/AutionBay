@@ -18,7 +18,7 @@
 		    	end as WRITER_NICKNAME
 		  FROM  COMMENTS C
 		  	LEFT JOIN USERS U ON C.WRITER_NO = U.USER_NO
-		 WHERE C.COMMENT_ID = #{commentId}
+		 WHERE C.PRODUCT_ID = #{productId}
 	</select>
 	
 	<delete id="deleteComment" parameterType="long">
