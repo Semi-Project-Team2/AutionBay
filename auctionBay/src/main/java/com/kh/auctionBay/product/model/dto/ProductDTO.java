@@ -45,6 +45,7 @@ public class ProductDTO {
 	private Long auctionStartPrice;
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private LocalDateTime auctionEndTime;
+
 	private String tradeLocation;
 	private int isDirect;
 	private String status;

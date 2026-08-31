@@ -20,7 +20,11 @@
 		        end as "TRADE_TYPE",
 		        SELLER_NO, BUYER_NO, FINAL_PRICE,
 		        to_char(COMPLETED_AT, 'YYYY-MM-DD HH24:MI') as "COMPLETED_AT_STR",
-		        COMPLETED_AT, P.TITLE
+		        COMPLETED_AT, P.TITLE,
+		       	case
+			    	when U.IS_DELETED = 1 then '탈퇴한 회원'
+			    	else U.NICKNAME
+			    end as "PARTNER_NICKNAME"	
 		from TRANSACTION_HISTORY T
 		    join PRODUCTS P using (PRODUCT_ID)
 		    join USERS U on U.USER_NO = case

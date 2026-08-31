@@ -16,27 +16,34 @@ public class CommentServiceImpl implements CommentService {
 	private final CommentMapper mapper;
 	
 	@Override
-	public CommentDTO addComment(Long boardId, String content, Long writerNo) {
+	public CommentDTO addComment(Long productId, String content, Long writerNo) {
 		// 댓글 내용 검토
 		if (content == null || content.isBlank()) {
 			throw new IllegalArgumentException("댓글 내용을 입력해주세요.");
 		}
 		
 		CommentDTO comment = new CommentDTO();
-		comment.setProductId(boardId);
+		comment.setProductId(productId);
 		comment.setContent(content);
 		comment.setWriterNo(writerNo);
 		System.out.println("commentService"+comment);
 		mapper.insertComment(comment);	// 실행 후 commentId 가 채워짐
 		
-		return mapper.selectCommentById( comment.getCommentId() );
+		return mapper.selectCommentById(comment.getCommentId());
 	}
 
 	@Override
 	public List<CommentDTO> getComments(Long productId) {
+<<<<<<< HEAD
 		return null; // TODO:
+=======
+		
+		List<CommentDTO> comments =  mapper.selectCommentsByProductId(productId); // 댓글 새로고침 시
+		System.out.println(comments);
+		return comments;
+>>>>>>> b23692086235b56cf0b3c0dabea346b5ad96f253
 	}
-
+	
 	@Override
 	public void deleteComment(Long commentId, Long writerNo) {
 		
@@ -57,8 +64,7 @@ public class CommentServiceImpl implements CommentService {
 		mapper.deleteComment(commentId);
 		
 	}
-	
-	
+
+
 		
 }
-

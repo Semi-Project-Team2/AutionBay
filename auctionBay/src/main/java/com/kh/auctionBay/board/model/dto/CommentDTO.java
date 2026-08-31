@@ -19,7 +19,6 @@ public class CommentDTO {
 	private Long commentId;
 	private Long productId;
 	private Long writerNo;
-	private Long paredtNo;
 	private String content;
 	private LocalDateTime createdAt;
 	

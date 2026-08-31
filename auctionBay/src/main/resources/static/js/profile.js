@@ -313,7 +313,7 @@ if (editForm) {
             }
 
             if (result.success) {
-                location.href="/mypage/txHistories";
+                location.href="/mypage/products";
             } else {
                 // 메시지가 "로그인"을 포함하면 로그인 페이지로 유도
                 if (result.message && result.message.includes("로그인")) {

@@ -56,7 +56,6 @@ public class AuctionController {
 		// 세션 영역에서 로그인된 유저 가져오기
 		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
 
-		
 
 		// 최근본글 테이블 인서트 (로그인한 회원만)
 		if (loginUser != null) {

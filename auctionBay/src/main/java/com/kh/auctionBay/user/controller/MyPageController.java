@@ -421,6 +421,8 @@ public class MyPageController {
 		model.addAttribute("user", loginUser);
 		return "mypage/recents";
 	}
+	
+	
 
 	/**
 	 * [내가 작성한 게시글 삭제 처리 (AJAX 비동기 통신)]

@@ -109,6 +109,7 @@ public class ProductController {
     	
     	return "redirect:/product/list";
     }
+
     
     @GetMapping("/{productId}/delete")
     public String deleteProduct(@PathVariable Long productId,HttpSession session, RedirectAttributes rttr) {
@@ -150,9 +151,7 @@ public class ProductController {
     	return "redirect:/product/list";
     }
     
-    
-    
-  
+
 }
 
 

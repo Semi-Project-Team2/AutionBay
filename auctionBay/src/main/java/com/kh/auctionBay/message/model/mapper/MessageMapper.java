@@ -25,6 +25,8 @@ public interface MessageMapper {
 	
 	// 쪽지 읽음 처리
 	int markAsRead(Long myNo, Long opponentNo, Long productId);
+	// 안 읽은 받은 쪽지 개수 (우측 네비게이션 바에 뱃지 표시용)
+	int countUnread(Long userNo);
 	
 	// 쪽지 저장
 	int insertMessage(MessageDTO message);

@@ -121,8 +121,8 @@
         .quick-icon { font-size: 22px; }
         .badge {
             position: absolute;
-            top: -2px;
-            right: 8px;
+            top: 0px;
+            right: -2px;
             background-color: #000;
             color: #fff;
             font-size: 9px;
@@ -146,6 +146,7 @@
             text-decoration: none;
             border-radius: 3px;
             font-size: 12px;
+            cursor: pointer;
         }
         .page-btn.active {
             background-color: #000;
@@ -154,6 +155,11 @@
             font-weight: bold;
         }
         .page-btn:hover:not(.active) { background-color: #f1f1f1; }
+        .page-btn.disabled {
+            opacity: 0.4;
+            cursor: default;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
@@ -164,7 +170,7 @@
     <main style="margin-top: 30px;">
         <div class="wishlist-header-title">WISHLISTS</div>
 
-        <div class="wishlist-grid">
+        <div class="wishlist-grid" id="wishlistGrid">
             <c:choose>
                 <c:when test="${not empty wishlist}">
                     <c:forEach var="item" items="${wishlist}">
@@ -223,7 +229,15 @@
             <a href="${pageContext.request.contextPath}/message/received" class="quick-item">
                 <span class="quick-icon">✉️</span>
                 <span>쪽지함</span>
-                <span class="badge">1</span>
+
+                <c:choose>
+                    <c:when test="${sessionScope.loginUser.unreadCount <= 99}">
+                        <span class="badge">${sessionScope.loginUser.unreadCount}</span>
+                    </c:when>
+                    <c:otherwise>
+                        <span class="badge">99+</span>
+                    </c:otherwise>
+                </c:choose>
             </a>
             <a href="${pageContext.request.contextPath}/mypage/recents" class="quick-item">
                 <span class="quick-icon">⏱️</span>
@@ -231,15 +245,8 @@
             </a>
         </aside>
 
-        <div class="pagination">
-            <a class="page-btn" href="#">&lt; 이전</a>
-            <a class="page-btn active" href="#">1</a>
-            <a class="page-btn" href="#">2</a>
-            <a class="page-btn" href="#">3</a>
-            <a class="page-btn" href="#">4</a>
-            <a class="page-btn" href="#">5</a>
-            <a class="page-btn" href="#">다음 &gt;</a>
-        </div>
+        <!-- 자바스크립트가 실제 카드 개수 기준으로 채워줄 페이징 바 영역 -->
+        <div class="pagination" id="paginationContainer"></div>
     </main>
 
     <div style="margin-top: 50px;">
@@ -278,6 +285,68 @@ document.addEventListener("DOMContentLoaded", function() {
                 document.getElementById('price-' + productNo).innerText = '경매 진행중';
             });
     });
+
+    // ------------------------------------------------------
+    // 찜목록 클라이언트 사이드 페이지네이션
+    // (한 페이지당 10개 = 그리드 2줄. 필요하면 itemsPerPage만 조정)
+    // ------------------------------------------------------
+    const itemsPerPage = 10;
+    let currentPage = 1;
+    const cards = document.querySelectorAll('#wishlistGrid .product-card');
+    const totalItems = cards.length;
+
+    function showPage(page) {
+        currentPage = page;
+        const start = (page - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+
+        cards.forEach((card, index) => {
+            card.style.display = (index >= start && index < end) ? 'flex' : 'none';
+        });
+
+        renderPagination();
+    }
+
+    function renderPagination() {
+        const paginationContainer = document.getElementById('paginationContainer');
+        paginationContainer.innerHTML = '';
+
+        if (totalItems === 0) return; // 찜한 상품이 없으면 페이징 바 자체를 노출하지 않음
+
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+        if (totalPages <= 1) return; // 1페이지 이하면 페이징 바 숨김
+
+        // 이전 버튼
+        const prevBtn = document.createElement('a');
+        prevBtn.className = 'page-btn' + (currentPage === 1 ? ' disabled' : '');
+        prevBtn.innerHTML = '&lt; 이전';
+        if (currentPage > 1) {
+            prevBtn.onclick = () => showPage(currentPage - 1);
+        }
+        paginationContainer.appendChild(prevBtn);
+
+        // 페이지 번호 버튼 (실제 totalPages 만큼만 생성)
+        for (let i = 1; i <= totalPages; i++) {
+            const pageBtn = document.createElement('a');
+            pageBtn.className = 'page-btn' + (i === currentPage ? ' active' : '');
+            pageBtn.innerText = i;
+            pageBtn.onclick = () => showPage(i);
+            paginationContainer.appendChild(pageBtn);
+        }
+
+        // 다음 버튼
+        const nextBtn = document.createElement('a');
+        nextBtn.className = 'page-btn' + (currentPage === totalPages ? ' disabled' : '');
+        nextBtn.innerHTML = '다음 &gt;';
+        if (currentPage < totalPages) {
+            nextBtn.onclick = () => showPage(currentPage + 1);
+        }
+        paginationContainer.appendChild(nextBtn);
+    }
+
+    if (totalItems > 0) {
+        showPage(1);
+    }
 });
 </script>
 
