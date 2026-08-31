@@ -45,6 +45,7 @@ public class ProductDTO {
 	private String productCondition;
 	private Long auctionStartPrice;
 	private LocalDateTime auctionEndTime;
+
 	private String tradeLocation;
 	private int isDirect;
 	private String status;

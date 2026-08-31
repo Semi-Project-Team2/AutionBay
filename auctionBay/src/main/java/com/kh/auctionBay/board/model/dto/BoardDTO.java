@@ -27,7 +27,13 @@ public class BoardDTO {
     private int readCount;
     private LocalDateTime createdDate;
     
+    private String deleteBoard;
     // 첨부 이미지 목록
-    private List<BoardImageDTO> images;
-   
+
+	public void setImages(List<BoardImageDTO> selectImagesByBoardId) {
+		// TODO Auto-generated method stub
+		
+	}
+       
+
 }

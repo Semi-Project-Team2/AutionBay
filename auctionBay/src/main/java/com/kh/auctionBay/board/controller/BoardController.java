@@ -55,25 +55,6 @@ public class BoardController {
         return "board/list";
     }
     
-    // ------- 게시글 작성 ---------
-    @GetMapping("/write")
-    public String writeForm() {
-        return "board/form";
-    }
-    
-    @PostMapping("/write")
-    public String write(@ModelAttribute BoardDTO board,
-                        @RequestParam(value="imageFiles", required=false) List<MultipartFile> images,
-                        HttpSession session) throws IllegalStateException, IOException {
-        UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
-        if (loginUser != null) {
-            board.setMemberId(loginUser.getUserId());
-        }
-        
-        service.writeBoard(board, images);
-        return "redirect:/board/list";
-    }
-    
     // ------- 게시글 상세 조회 ---------
     @GetMapping("/{productId}/detail")
     public String boardDetail(@PathVariable Long productId, Model model, HttpSession session, SearchCondition condition) {
@@ -89,10 +70,11 @@ public class BoardController {
     		activityService.addRecentView(loginUser.getUserNo(), productId);
     	}
         
+    	    	
         // 2. 댓글 목록 가져오기
         List<CommentDTO> comments = commentService.getComments(productId);
         model.addAttribute("comments", comments);
-        
+        System.out.println(comments);
         // 3. 로그인 회원 작성자 여부 체크 (getMemberId 사용)
         boolean isOwner = false;
         if (loginUser != null && product != null) {
@@ -128,65 +110,110 @@ public class BoardController {
   
 
     
-//    // ------- 게시글 수정 화면 이동 ---------
-//    @GetMapping("/update/{boardId}")
-//    public String updateForm(@PathVariable("boardId") Long boardId, Model model, HttpSession session) {
-//        // 게시글 상세 조회
-//        BoardDTO board = boardService.getBoardDetail(boardId);
-//        UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
-//
-//        // 2. 비로그인 사용자 처리
-//        if (loginUser == null) {
-//            return "redirect:/login";
-//        }
-//
-//        // 3. 작성자 본인 확인 (본인이 아니면 상세 페이지로)
-//        if (board == null || !loginUser.getUserId().equals(board.getMemberId())) {
-//            return "redirect:/board/" + boardId + "/detail";
-//        }
-//
-//        // 4. Model에 데이터 담고 수정 폼 이동
-//        model.addAttribute("board", board);
-//        return "board/updateForm";
-//    }
-//
-//    // ------- 게시글 수정 처리 ---------
-//    @PostMapping("/update/{boardId}")
-//    public String update(@PathVariable("boardId") Long boardId,
-//                         @ModelAttribute BoardDTO board,
-//                         @RequestParam(value="imageFiles", required=false) List<MultipartFile> images,
-//                         HttpSession session) throws IllegalStateException, IOException {
-//
-//        UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
-//        BoardDTO originalBoard = boardService.getBoardDetail(boardId);
-//
-//        // POST 요청 검증
-//        if (loginUser == null || originalBoard == null || !loginUser.getUserId().equals(originalBoard.getMemberId())) {
-//            return "redirect:/board/" + boardId + "/detail";
-//        }
-//
-//        board.setBoardId(boardId);
-//        board.setMemberId(loginUser.getUserId());
-//        board.setWriterNo(loginUser.getUserNo());
-//
-//        // 인터페이스의 updateBoard 호출
-//        boardService.updateBoard(board, images);
-//        return "redirect:/board/" + boardId + "/detail";
-//    }
-//
-//    // ------- 게시글 삭제 ---------
-//    @PostMapping("/delete/{boardId}")
-//    public String delete(@PathVariable("boardId") Long boardId, HttpSession session) {
-//        UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
-//        BoardDTO board = boardService.getBoardDetail(boardId);
-//
-//        // 삭제 전 권한 검증
-//        if (loginUser == null || board == null || !loginUser.getUserId().equals(board.getMemberId())) {
-//            return "redirect:/board/" + boardId + "/detail";
-//        }
-//
-//        // 인터페이스의 deleteBoard 호출
-//        boardService.deleteBoard(boardId);
-//        return "redirect:/board/list";
-//    }
+ // ------- 게시글 수정 화면 이동 ---------
+    @GetMapping("/update/{boardId}")
+    public String updateForm(@PathVariable("boardId") Long boardId,
+                             Model model,
+                             HttpSession session) {
+
+        UserDTO loginUser =
+                (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
+
+        // 로그인 확인
+        if (loginUser == null) {
+            return "redirect:/user/login";
+        }
+
+        // 게시글 조회
+        BoardDTO board = service.getBoardDetail(boardId);
+
+        // 게시글이 없으면 목록으로
+        if (board == null) {
+            return "redirect:/board/list";
+        }
+
+        // 작성자 본인 확인
+        if (!loginUser.getUserNo().equals(board.getWriterNo())) {
+            return "redirect:/board/" + boardId + "/detail";
+        }
+
+        model.addAttribute("board", board);
+
+        return "board/updateForm";
+    }
+
+
+    // ------- 게시글 수정 처리 ---------
+    @PostMapping("/update/{boardId}")
+    public String update(@PathVariable("boardId") Long boardId,
+                         @ModelAttribute BoardDTO board,
+                         @RequestParam(value = "imageFiles",
+                                       required = false)
+                         List<MultipartFile> images,
+                         HttpSession session)
+            throws IllegalStateException, IOException {
+
+        UserDTO loginUser =
+                (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
+
+        // 로그인 확인
+        if (loginUser == null) {
+            return "redirect:/user/login";
+        }
+
+        // 기존 게시글 조회
+        BoardDTO originalBoard = service.getBoardDetail(boardId);
+
+        // 게시글 존재 여부 + 작성자 확인
+        if (originalBoard == null ||
+            !loginUser.getUserNo().equals(originalBoard.getWriterNo())) {
+
+            return "redirect:/board/" + boardId + "/detail";
+        }
+
+        // 게시글 번호
+        board.setBoardId(boardId);
+
+        // 작성자 번호
+        board.setWriterNo(loginUser.getUserNo());
+
+        // 회원 ID
+        board.setMemberId(loginUser.getUserId());
+
+        // 게시글 수정
+        service.updateBoard(board, images);
+
+        return "redirect:/board/" + boardId + "/detail";
+    }
+
+
+    // ------- 게시글 삭제 ---------
+    @PostMapping("/delete/{boardId}")
+    public String delete(@PathVariable("boardId") Long boardId,
+                         HttpSession session) {
+
+        UserDTO loginUser =
+                (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
+
+        // 로그인 확인
+        if (loginUser == null) {
+            return "redirect:/user/login";
+        }
+
+        // 게시글 조회
+        BoardDTO board = service.getBoardDetail(boardId);
+
+        // 게시글 존재 여부 + 작성자 확인
+        if (board == null ||
+            !loginUser.getUserNo().equals(board.getWriterNo())) {
+
+            return "redirect:/board/" + boardId + "/detail";
+        }
+
+        service.deleteBoard(boardId);
+
+        return "redirect:/board/list";
+    }
+    
+
 }
