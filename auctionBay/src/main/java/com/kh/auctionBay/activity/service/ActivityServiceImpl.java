@@ -81,9 +81,9 @@ public class ActivityServiceImpl implements ActivityService {
 	}
 
 	/**
-	 * [6. 내가 작성한 댓글 삭제 로직]
+	 * [6. 내가 작성한 댓글 삭제 로직 (소프트 딜리트)]
 	 * - 요청 데이터: 댓글 번호(commentNo), 작성자 번호(writerNo)
-	 * - 처리 과정: Mapper를 통해 댓글 내용을 마스킹 처리('삭제된 댓글입니다.')하고, 업데이트된 행의 수가 0보다 큰지 확인합니다.
+	 * - 처리 과정: Mapper를 통해 댓글의 삭제 여부 플래그(is_deleted)를 1로 변경하고, 업데이트된 행의 수가 0보다 큰지 확인합니다.
 	 * - 반환 데이터: 성공 시 true, 실패 시 false (boolean)
 	 */
 	@Override
@@ -91,7 +91,6 @@ public class ActivityServiceImpl implements ActivityService {
 		int result = activityMapper.deleteMyComment(commentNo, writerNo);
 		return result > 0;
 	}
-	
 	/**
 	 * [7. 최근 본 글 개별 삭제 로직]
 	 * - 요청 데이터: 회원 번호(userNo), 상품 번호(productNo)
