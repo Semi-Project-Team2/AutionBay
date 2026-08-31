@@ -1,16 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>AuctionBay - 마이페이지(게시글 관리)</title>
-    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Malgun Gothic', sans-serif; background-color: #f8f9fa; color: #333; }
         
-        /* 전체 컨테이너를 세로 플렉스로 잡아 프로필이 위, content-area가 아래로 오게 고정 */
+        /* 전체 컨테이너 */
         .container { 
             width: 1200px; 
             margin: 30px auto; 
@@ -19,29 +19,18 @@
             gap: 30px; 
         }
 
-        /* 팀원 원본 프로필 영역이 가로 전체를 채우도록 설정 */
-        .container > *:nth-child(2) {
-            width: 100%;
-        }
-
         /* 상단 프로필 영역 */
         .profile-area {
             background-color: #e2e2e2;
             padding: 30px;
             border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            width: 100% !important;
         }
-        .profile-info { display: flex; align-items: center; gap: 20px; }
-        .profile-img { width: 70px; height: 70px; background-color: #333; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-        .profile-text h2 { font-size: 20px; font-weight: bold; margin-bottom: 5px; }
-        .profile-text p { font-size: 14px; color: #555; }
-        .profile-right { display: flex; gap: 10px; }
-        .btn-edit { background-color: #d4edda; border: 1px solid #c3e6cb; padding: 8px 15px; border-radius: 4px; font-weight: bold; color: #155724; cursor: pointer; text-decoration: none; font-size: 13px; }
-        .btn-withdraw { background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 8px 15px; border-radius: 4px; font-weight: bold; color: #721c24; cursor: pointer; text-decoration: none; font-size: 13px; }
 
-        /* [핵심] 사이드바와 메인 컨텐츠를 무조건 좌우로 나란히 강제 정렬 */
+        /* [핵심] 사이드바와 메인 콘텐츠를 무조건 좌우로 나란히 강제 정렬 */
         .content-area { 
             display: flex !important; 
             flex-direction: row !important;
@@ -138,6 +127,7 @@
 </head>
 <body>
 
+    <!-- 공통 헤더 포함 -->
     <jsp:include page="/WEB-INF/views/common/header.jsp" />
 
     <div class="container">
@@ -145,7 +135,7 @@
         <jsp:include page="/WEB-INF/views/mypage/profile/profile.jsp" />
 
         <div class="content-area">
-            <!-- 사이드바 (게시글 관리에 active 클래스) -->
+            <!-- 사이드바 (게시글 관리에 active 적용 및 중복 항목 제거) -->
             <nav class="sidebar">
                 <ul>
                     <li><a href="${pageContext.request.contextPath}/mypage/products" class="active">게시글 관리</a></li>
@@ -153,6 +143,8 @@
                     <li><a href="${pageContext.request.contextPath}/mypage/txHistories">거래 내역</a></li>
                     <li><a href="${pageContext.request.contextPath}/mypage/reviews">후기</a></li>
                     <li><a href="${pageContext.request.contextPath}/mypage/recents">최근 본 글</a></li>
+                    <li><a href="${pageContext.request.contextPath}/mypage/wishlists">찜 목록</a></li>
+                    <li><a href="${pageContext.request.contextPath}/message/received">쪽지 함</a></li>
                 </ul>
             </nav>
 
@@ -161,7 +153,7 @@
                 <div class="content-header">
                     <span class="content-title">게시글 관리</span>
                     <form action="${pageContext.request.contextPath}/mypage/products" method="get" class="search-bar" onsubmit="return false;">
-                        <input type="text" id="mypageKeywordInput" name="mypageSearchKeyword" placeholder="검색어를 입력하세요">
+                        <input type="text" id="mypageKeywordInput" name="keyword" placeholder="검색어를 입력하세요">
                         <button type="button" onclick="searchMypageProducts()">검색</button>
                     </form>
                 </div>
@@ -197,7 +189,7 @@
                                         </div>
                                     </div>
                                     <div class="board-actions">
-                                        <a href="${pageContext.request.contextPath}/board/update?no=${pNo}" class="btn-action">수정</a>
+                                        <a href="${pageContext.request.contextPath}/product/updateForm?no=${pNo}" class="btn-action">수정</a>
                                         <button type="button" class="btn-action" style="color: #c92a2a;" data-product-no="${pNo}" onclick="deleteProduct(this);">삭제</button>
                                     </div>
                                 </div>
@@ -209,12 +201,13 @@
                     </c:choose>
                 </div>
                 
-                <!-- 자바스크립트가 동적으로 채워줄 페이징 바 영역 -->
+                <!-- 자바스크립트 동적 페이징 바 -->
                 <div class="pagination" id="paginationContainer"></div>
             </main>
         </div>
     </div>
 
+    <!-- 공통 푸터 포함 -->
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
     <script>
@@ -295,12 +288,12 @@
             const keywordParam = urlParams.get('keyword');
             const mypageInput = document.getElementById('mypageKeywordInput');
             
-            // 2. 마이페이지 검색창에만 검색어 쏙 넣기
+            // 2. 마이페이지 검색창에 검색어 바인딩
             if (keywordParam && mypageInput) {
                 mypageInput.value = keywordParam;
             }
 
-            // 3. 헤더 검색창의 name 속성은 건드리지 않고, 'value' 값만 깨끗하게 비우기 (핵심!)
+            // 3. 공통 헤더 검색창의 value 초기화
             const headerInput = document.querySelector('header input[name="keyword"], .header input[name="keyword"]');
             if (headerInput) {
                 headerInput.value = '';
