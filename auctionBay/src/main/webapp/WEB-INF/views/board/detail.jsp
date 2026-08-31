@@ -104,338 +104,381 @@
         word-break: break-all;
     }
 	
+	/* ==========================================================
+	 5. 게시글 수정/삭제 버튼 영역
+	========================================================== */
+	    .owner-action-group {
+	        display: flex;
+	        justify-content: flex-end;
+	        gap: 8px;
+	        margin-bottom: 16px;
+	        padding-bottom: 12px;
+	        border-bottom: 1px solid #f1f5f9;
+	    }
+
+	    .btn-edit, .btn-delete {
+	        padding: 6px 14px;
+	        font-size: 13px;
+	        font-weight: 500;
+	        border-radius: 4px;
+	        text-decoration: none;
+	        cursor: pointer;
+	        transition: all 0.2s;
+	    }
+
+	    .btn-edit {
+	        background-color: #f1f5f9;
+	        color: #334155;
+	        border: 1px solid #cbd5e1;
+	    }
+
+	    .btn-edit:hover {
+	        background-color: #e2e8f0;
+	    }
+
+	    .btn-delete {
+	        background-color: #fef2f2;
+	        color: #ef4444;
+	        border: 1px solid #fecaca;
+	    }
+
+	    .btn-delete:hover {
+	        background-color: #fee2e2;
+	    }
+	
 
 	/* ==========================================================
-	    7. 하단 액션 버튼 그룹 (입찰하기 + 찜하기)
+	    6. 하단 액션 버튼 그룹 (구매하기 + 찜하기)
 	    ========================================================== */
-    .action-group {
-        display: flex;
-        gap: 8px;
-        margin-top: 16px;
-    }
-
-    .btn-submit {
-        flex-grow: 1;
-        height: 46px;
-        background-color: #0f172a;
-        color: #fff;
-        border: none;
-        border-radius: 6px;
-        font-size: 15px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background-color 0.2s;
-    }
-
-    .btn-submit:hover {
-        background-color: #1e293b;
-    }
-
-    /* 찜 버튼 디자인 개선 */
-    #wishBtn {
-        width: 46px;
-        height: 46px;
-        background: #ffffff;
-        border: 1px solid #cbd5e1;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.2s ease;
-    }
-
-    #wishBtn:hover {
-        transform: scale(1.05);
-        background-color: #f8fafc;
-    }
-
-    #wishBtn .fa-regular.fa-heart {
-        color: #94a3b8;
-        transition: color 0.2s ease;
-    }
-
-    #wishBtn .fa-regular.fa-heart:hover {
-        color: #ef4444;
-    }
-
-    #wishBtn .fa-solid.fa-heart {
-        color: #ef4444;
-    }
-/* ==========================================================
-    8. 판매자 프로필 영역
-    ========================================================== */
-    .seller-card {
-        margin-top: 20px;
-        padding-top: 16px;
-        border-top: 1px solid #e5e7eb;
-    }
-
-    .seller-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
-    }
-
-    .seller-name {
-        font-weight: 600;
-        font-size: 14px;
-        color: #1e293b;
-    }
-
-    .btn-message {
-        background-color: #f1f5f9;
-        border: 1px solid #cbd5e1;
-        padding: 6px 12px;
-        border-radius: 4px;
-        font-size: 12px;
-        font-weight: 500;
-        cursor: pointer;
-        color: #334155;
-        transition: background-color 0.2s;
-    }
-
-    .btn-message:hover {
-        background-color: #e2e8f0;
-    }
-
-    .seller-stats {
-        display: flex;
-        background-color: #f9fafb;
-        border: 1px solid #f0f0f0;
-        border-radius: 6px;
-        padding: 10px 12px;
-        align-items: center;
-    }
-
-    .stat-item {
-        width: 100%;
-    }
-
-    .stat-value {
-        font-size: 13px;
-        color: #475569;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-    }
-
-    .review-count-text {
-        font-size: 12px;
-        color: #64748b;
-        margin-left: 6px;
-    }
+		    .action-group {
+		        display: flex;
+		        gap: 8px;
+		        margin-top: 16px;
+		    }
+		
+		    .btn-submit {
+		        flex-grow: 1;
+		        height: 46px;
+		        background-color: #0f172a;
+		        color: #fff;
+		        border: none;
+		        border-radius: 6px;
+		        font-size: 15px;
+		        font-weight: 600;
+		        cursor: pointer;
+		        transition: background-color 0.2s;
+		    }
+		
+		    .btn-submit:hover {
+		        background-color: #1e293b;
+		    }
+		
+		    /* 찜 버튼 디자인 개선 */
+		    #wishBtn {
+		        width: 46px;
+		        height: 46px;
+		        background: #ffffff;
+		        border: 1px solid #cbd5e1;
+		        border-radius: 6px;
+		        cursor: pointer;
+		        font-size: 20px;
+		        display: flex;
+		        align-items: center;
+		        justify-content: center;
+		        transition: all 0.2s ease;
+		    }
+		
+		    #wishBtn:hover {
+		        transform: scale(1.05);
+		        background-color: #f8fafc;
+		    }
+		
+		    #wishBtn .fa-regular.fa-heart {
+		        color: #94a3b8;
+		        transition: color 0.2s ease;
+		    }
+		
+		    #wishBtn .fa-regular.fa-heart:hover {
+		        color: #ef4444;
+		    }
+		
+		    #wishBtn .fa-solid.fa-heart {
+		        color: #ef4444;
+		    }
+	
+	/* ==========================================================
+	    7. 판매자 프로필 영역
+	    ========================================================== */
+	    .seller-card {
+	        margin-top: 20px;
+	        padding-top: 16px;
+	        border-top: 1px solid #e5e7eb;
+	    }
+	
+	    .seller-header {
+	        display: flex;
+	        justify-content: space-between;
+	        align-items: center;
+	        margin-bottom: 10px;
+	    }
+	
+	    .seller-name {
+	        font-weight: 600;
+	        font-size: 14px;
+	        color: #1e293b;
+	    }
+	
+	    .btn-message {
+	        background-color: #f1f5f9;
+	        border: 1px solid #cbd5e1;
+	        padding: 6px 12px;
+	        border-radius: 4px;
+	        font-size: 12px;
+	        font-weight: 500;
+	        cursor: pointer;
+	        color: #334155;
+	        transition: background-color 0.2s;
+	    }
+	
+	    .btn-message:hover {
+	        background-color: #e2e8f0;
+	    }
+	
+	    .seller-stats {
+	        display: flex;
+	        background-color: #f9fafb;
+	        border: 1px solid #f0f0f0;
+	        border-radius: 6px;
+	        padding: 10px 12px;
+	        align-items: center;
+	    }
+	
+	    .stat-item {
+	        width: 100%;
+	    }
+	
+	    .stat-value {
+	        font-size: 13px;
+	        color: #475569;
+	        display: flex;
+	        align-items: center;
+	        justify-content: space-between;
+	        width: 100%;
+	    }
+	
+	    .review-count-text {
+	        font-size: 12px;
+	        color: #64748b;
+	        margin-left: 6px;
+	    }
+	
+	    /* ==========================================================
+	    8. 댓글 영역
+	    ========================================================== */
+	    .comment-section {
+	        margin-top: 24px;
+	        padding-top: 20px;
+	        border-top: 1px solid #e5e7eb;
+	    }
+	
+	    .comment-title {
+	        font-size: 15px;
+	        font-weight: 700;
+	        color: #1e293b;
+	        margin-bottom: 12px;
+	    }
+	
+	    .comment-list {
+	        display: flex;
+	        flex-direction: column;
+	        gap: 10px;
+	        margin-bottom: 16px; /* 댓글 작성 폼과의 간격 추가 */
+	    }
+	
+	    .comment-item {
+	        background-color: #f8fafc;
+	        padding: 10px 12px;
+	        border-radius: 6px;
+	        font-size: 13px;
+	    }
+	
+	    .comment-header {
+	        display: flex;
+	        justify-content: space-between;
+	        margin-bottom: 4px;
+	    }
+	
+	    .comment-writer {
+	        font-weight: 600;
+	        color: #334155;
+	    }
+	
+	    .btn-comment-delete {
+	        background: none;
+	        border: none;
+	        color: #ef4444;
+	        font-size: 11px;
+	        cursor: pointer;
+	    }
+	
+	    .comment-body {
+	        color: #475569;
+	        line-height: 1.4;
+	    }
+	
+	    .comment-empty {
+	        text-align: center;
+	        padding: 20px 0;
+	        color: #94a3b8;
+	        font-size: 13px;
+	        margin-bottom: 16px;
+	    }
+	
+	    .comment-form {
+	        display: flex;
+	        flex-direction: column;
+	        gap: 8px;
+	    }
+	
+	    .comment-textarea {
+	        width: 100%;
+	        height: 70px;
+	        padding: 10px;
+	        border: 1px solid #cbd5e1;
+	        border-radius: 6px;
+	        font-size: 13px;
+	        resize: none;
+	        outline: none;
+	    }
+	
+	    .comment-textarea:focus {
+	        border-color: #0f172a;
+	    }
+	
+	    .btn-comment-submit {
+	        align-self: flex-end;
+	        padding: 6px 16px;
+	        background-color: #0f172a;
+	        color: #fff;
+	        border: none;
+	        border-radius: 4px;
+	        font-size: 13px;
+	        cursor: pointer;
+	    }
 
     /* ==========================================================
-    7. 댓글 영역
+    9. 공통 모달창 스타일 (리뷰 기록)
     ========================================================== */
-    .comment-section {
-        margin-top: 24px;
-        padding-top: 20px;
-        border-top: 1px solid #e5e7eb;
-    }
-
-    .comment-title {
-        font-size: 15px;
-        font-weight: 700;
-        color: #1e293b;
-        margin-bottom: 12px;
-    }
-
-    .comment-list {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        margin-bottom: 16px; /* 댓글 작성 폼과의 간격 추가 */
-    }
-
-    .comment-item {
-        background-color: #f8fafc;
-        padding: 10px 12px;
-        border-radius: 6px;
-        font-size: 13px;
-    }
-
-    .comment-header {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 4px;
-    }
-
-    .comment-writer {
-        font-weight: 600;
-        color: #334155;
-    }
-
-    .btn-comment-delete {
-        background: none;
-        border: none;
-        color: #ef4444;
-        font-size: 11px;
-        cursor: pointer;
-    }
-
-    .comment-body {
-        color: #475569;
-        line-height: 1.4;
-    }
-
-    .comment-empty {
-        text-align: center;
-        padding: 20px 0;
-        color: #94a3b8;
-        font-size: 13px;
-        margin-bottom: 16px;
-    }
-
-    .comment-form {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-    }
-
-    .comment-textarea {
-        width: 100%;
-        height: 70px;
-        padding: 10px;
-        border: 1px solid #cbd5e1;
-        border-radius: 6px;
-        font-size: 13px;
-        resize: none;
-        outline: none;
-    }
-
-    .comment-textarea:focus {
-        border-color: #0f172a;
-    }
-
-    .btn-comment-submit {
-        align-self: flex-end;
-        padding: 6px 16px;
-        background-color: #0f172a;
-        color: #fff;
-        border: none;
-        border-radius: 4px;
-        font-size: 13px;
-        cursor: pointer;
-    }
-
-    /* ==========================================================
-    8. 공통 모달창 스타일 (리뷰 기록)
-    ========================================================== */
-    .modal-overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background-color: rgba(0, 0, 0, 0.4);
-        z-index: 9999;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .modal-container {
-        background-color: #fff;
-        width: 440px;
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        max-height: 80vh;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .modal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 1px solid #e5e7eb;
-        padding-bottom: 12px;
-        margin-bottom: 12px;
-    }
-
-    .modal-title {
-        font-size: 16px;
-        font-weight: 700;
-        color: #1e293b;
-    }
-
-    .modal-close {
-        background: none;
-        border: none;
-        font-size: 22px;
-        cursor: pointer;
-        color: #94a3b8;
-        line-height: 1;
-    }
-
-    .star-rating {
-        position: relative;
-        unicode-bidi: bidi-override;
-        color: #ddd;
-        font-size: 14px;
-        letter-spacing: 2px;
-    }
-
-    .star-rating-fill {
-        position: absolute;
-        top: 0;
-        left: 0;
-        white-space: nowrap;
-        overflow: hidden;
-        color: #f59e0b;
-    }
-
-    .review-list {
-        overflow-y: auto;
-        max-height: 350px;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        padding-right: 4px;
-    }
-
-    .review-list-item {
-        display: flex;
-        flex-direction: column;
-        padding: 12px;
-        background-color: #f8fafc;
-        border: 1px solid #f1f5f9;
-        border-radius: 8px;
-        font-size: 13px;
-        gap: 6px;
-    }
-
-    .review-list-user-info {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-    }
-
-    .review-list-userNickname {
-        font-weight: 600;
-        color: #334155;
-    }
-
-    .review-list-content {
-        color: #475569;
-        word-break: break-all;
-        line-height: 1.4;
-    }
-
-    .review-list-empty {
-        text-align: center;
-        padding: 30px 0;
-        color: #94a3b8;
-        font-size: 13px;
-    }
-    </style>
+	    .modal-overlay {
+	        display: none;
+	        position: fixed;
+	        top: 0;
+	        left: 0;
+	        width: 100vw;
+	        height: 100vh;
+	        background-color: rgba(0, 0, 0, 0.4);
+	        z-index: 9999;
+	        justify-content: center;
+	        align-items: center;
+	    }
+	
+	    .modal-container {
+	        background-color: #fff;
+	        width: 440px;
+	        border-radius: 12px;
+	        padding: 20px;
+	        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+	        max-height: 80vh;
+	        display: flex;
+	        flex-direction: column;
+	    }
+	
+	    .modal-header {
+	        display: flex;
+	        justify-content: space-between;
+	        align-items: center;
+	        border-bottom: 1px solid #e5e7eb;
+	        padding-bottom: 12px;
+	        margin-bottom: 12px;
+	    }
+	
+	    .modal-title {
+	        font-size: 16px;
+	        font-weight: 700;
+	        color: #1e293b;
+	    }
+	
+	    .modal-close {
+	        background: none;
+	        border: none;
+	        font-size: 22px;
+	        cursor: pointer;
+	        color: #94a3b8;
+	        line-height: 1;
+	    }
+	
+	    .star-rating {
+	        position: relative;
+	        unicode-bidi: bidi-override;
+	        color: #ddd;
+	        font-size: 14px;
+	        letter-spacing: 2px;
+	    }
+	
+	    .star-rating-fill {
+	        position: absolute;
+	        top: 0;
+	        left: 0;
+	        white-space: nowrap;
+	        overflow: hidden;
+	        color: #f59e0b;
+	    }
+	
+	    .review-list {
+	        overflow-y: auto;
+	        max-height: 350px;
+	        display: flex;
+	        flex-direction: column;
+	        gap: 8px;
+	        padding-right: 4px;
+	    }
+	
+	    .review-list-item {
+	        display: flex;
+	        flex-direction: column;
+	        padding: 12px;
+	        background-color: #f8fafc;
+	        border: 1px solid #f1f5f9;
+	        border-radius: 8px;
+	        font-size: 13px;
+	        gap: 6px;
+	    }
+	
+	    .review-list-user-info {
+	        display: flex;
+	        align-items: center;
+	        justify-content: space-between;
+	        width: 100%;
+	    }
+	
+	    .review-list-userNickname {
+	        font-weight: 600;
+	        color: #334155;
+	    }
+	
+	    .review-list-content {
+	        color: #475569;
+	        word-break: break-all;
+	        line-height: 1.4;
+	    }
+	
+	    .review-list-empty {
+	        text-align: center;
+	        padding: 30px 0;
+	        color: #94a3b8;
+	        font-size: 13px;
+	    }
+ 	   </style>
     <link rel="stylesheet" href="/css/common.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -443,6 +486,7 @@
     <!-- 공통 헤더 -->
     <jsp:include page="/WEB-INF/views/common/header.jsp" />
 	<input type="hidden" id="product-id-value" value="${product.productId}">
+	<input type="hidden" id="is-owner-value" value="${isOwner or (not empty sessionScope.loginUser and sessionScope.loginUser.userNo == product.writerNo)}">
     <div class="page-container">
         <div class="product-card">
          
@@ -475,6 +519,7 @@
 				    <i class="${isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart'}"></i>
 				</button>
             </div>
+			
 			<!-- 판매자 정보 영역 -->
             <div class="seller-card">
                 <div class="seller-header">
@@ -494,7 +539,18 @@
                 </div>
             </div>
 
-			<%-- 댓글 영역 --%>
+			<!-- 댓글 영역 -->
+			<c:choose>
+	            <c:when test="${not empty loginUser}">
+	                <form class="comment-form" id="comment-form">
+	                    <textarea placeholder="댓글입력..." name="content" rows="2" required></textarea>
+	                    <button type="submit" class="btn btn-primary">등록</button>
+	                </form>
+	            </c:when>
+	            <c:otherwise>
+	                <p class="form-tip"><a href="/user/login">로그인</a> 후 댓글을 작성하세요.</p>
+	            </c:otherwise>
+	        </c:choose>
 			    <section class="comment-section">
 			        <h3 class="comment-section_title">댓글 ${empty comments ? 0 : comments.size()}</h3>
 			        <ul class="comment-list" id="comment-list">
@@ -503,26 +559,16 @@
 			                    <div class="comment-list_body">
 			                        <span class="comment-list_writer">${comment.writerNickname}</span>
 			                        <span class="comment-list_content">${comment.content}</span>
-			                        <span class="comment-list_date">${comment.createAtStr}</span>
+			                        <span class="comment-list_date">${comment.createdAtStr}</span>
 			                    </div>
-			                    <c:if test="${not empty loginUser and loginUser.UserNo == comment.writerNo}">
+			                    <c:if test="${not empty loginUser and loginUser.userNo == comment.writerNo}">
 			                        <button type="button" class="btn btn-outline comment-delete-btn" data-comment-id="${comment.commentId}">삭제</button>
 			                    </c:if>
 			                </li>
 			            </c:forEach>
 			        </ul>
 
-			        <c:choose>
-			            <c:when test="${not empty loginUser}">
-			                <form class="comment-form" id="comment-form">
-			                    <textarea placeholder="댓글입력..." name="content" rows="2" required></textarea>
-			                    <button type="submit" class="btn btn-primary">등록</button>
-			                </form>
-			            </c:when>
-			            <c:otherwise>
-			                <p class="form-tip"><a href="/user/login">로그인</a> 후 댓글을 작성하세요.</p>
-			            </c:otherwise>
-			        </c:choose>
+			        
 			    </section>
 
 			    <!--
@@ -542,7 +588,16 @@
         </div>
     </div>
 
-    <!-- 리뷰 기록 모달 창 -->
+	<!-- 1. 작성자 본인일 때 수정, 삭제 버튼 출력 -->
+	<c:if test="${isOwner or (not empty sessionScope.loginUser and sessionScope.loginUser.userNo == product.writerNo)}">
+	    <div class="owner-action-group">
+	        <a href="/board/update/${product.productId}" class="btn-edit">수정</a>
+	        <button type="button" class="btn-delete" id="btnDeleteBoard" data-board-id="${product.productId}">삭제</button>
+	    </div>
+	</c:if>
+	
+	
+    <!-- 리뷰 기록 창 -->
     <div class="modal-overlay" id="reviewModalOverlay">
         <div class="modal-container">
             <div class="modal-header">
@@ -591,4 +646,5 @@
     <!-- 자바스크립트 파일 연결 -->
     <script src="/js/productDetail.js"></script>
 </body>
+
 </html>

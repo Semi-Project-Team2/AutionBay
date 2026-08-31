@@ -30,6 +30,9 @@ public class UserDTO {
 	private String createdAtStr;
 	private String deletedAtStr;
 	
+	// 안 읽은 받은 메시지 개수
+	private int unreadCount;
+	
 	
 	
 }
