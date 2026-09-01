@@ -393,6 +393,7 @@ header {
      HEADER
      ========================= -->
 
+
 	<!-- 공통 헤더 포함 -->
 	<jsp:include page="/WEB-INF/views/common/header.jsp" />
 

@@ -13,7 +13,12 @@
                             <c:if test="${m.isRead == 0}"><span class="unread-dot"></span></c:if>
                             ${m.opponentNickname}
                         </span>
-                        <span class="message-product">${m.productTitle}</span>
+						<span class="message-product">
+						    ${m.productTitle}
+						    <c:if test="${m.productStatus == 'COMPLETED'}">
+						        <span class="trade-status-badge done">거래완료</span>
+						    </c:if>
+						</span>
                     </div>
 
                     <div class="message-item-bottom">

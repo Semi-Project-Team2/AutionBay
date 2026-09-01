@@ -14,6 +14,7 @@
 		P.IS_DIRECT, P.TRADE_LOCATION, 
 		P.STATUS, P.VIEW_COUNT, P.CREATED_AT, P.UPDATED_AT, 
 		P.IS_DELETED,
+		P.RESERVED_USER_NO, <!-- 구매자 컬럼 추가 -->
 		TO_CHAR(AUCTION_END_TIME, 'YYYY-MM-DD HH24:MI:SS') AS AUCTION_END_TIME_STR,
 		TO_CHAR(P.CREATED_AT, 'YYYY-MM-DD HH24:MI:SS') AS CREATED_AT_STR,
 		TO_CHAR(P.UPDATED_AT, 'YYYY-MM-DD HH24:MI:SS') AS UPDATED_AT_STR,
@@ -91,6 +92,7 @@
 	SELECT P.PRODUCT_ID, P.WRITER_NO, P.CATEGORY_ID, P.TRADE_TYPE, P.TITLE, P.DESCRIPTION, P.PRICE,
 	       P.PRODUCT_CONDITION, P.AUCTION_START_PRICE, P.AUCTION_END_TIME, P.IS_DIRECT, P.TRADE_LOCATION, 
 	       P.STATUS, P.VIEW_COUNT, P.CREATED_AT, P.UPDATED_AT, P.IS_DELETED,
+	       P.RESERVED_USER_NO, <!-- 구매자 컬럼 추가 -->
 	       TO_CHAR(P.AUCTION_END_TIME, 'YYYY-MM-DD HH24:MI:SS') AS AUCTION_END_TIME_STR,
 	       TO_CHAR(P.CREATED_AT, 'YYYY-MM-DD HH24:MI:SS') AS CREATED_AT_STR,
 	       TO_CHAR(P.UPDATED_AT, 'YYYY-MM-DD HH24:MI:SS') AS UPDATED_AT_STR,
@@ -148,6 +150,28 @@
 	VALUES (#{writerNo}, #{categoryId}, #{tradeType}, #{title}, #{description}, #{price}, #{productCondition}, #{auctionStartPrice}, #{tradeLocation}, #{auctionEndTime})
 </insert>
 
+
+
+<!-- 상품 거래 상태 변경 (기능 추가 후 변경 예정)-->
+<update id="updateProductStatus">
+	UPDATE PRODUCTS SET STATUS =#{status}, UPDATED_AT = SYSDATE
+	WHERE PRODUCT_ID = #{productId}
+</update>
+
+<!-- 거래 상태 예약으로 변경-->
+<update id="updateToReserved">
+    UPDATE PRODUCTS SET STATUS = 'RESERVED', RESERVED_USER_NO = #{reservedUserNo}, UPDATED_AT = SYSDATE
+    WHERE PRODUCT_ID = #{productId} AND STATUS = 'ONGOING'
+</update>
+
+<!-- 거래 완료 처리-->
+<update id="updateToCompleted">
+    UPDATE PRODUCTS SET STATUS = 'COMPLETED', UPDATED_AT = SYSDATE
+    WHERE PRODUCT_ID = #{productId} AND STATUS = 'RESERVED'
+</update>
+
+
+
 <insert id="insertProductMedia">
     INSERT INTO PRODUCT_MEDIA (
         product_id,
@@ -164,6 +188,7 @@
         #{mediaOrder}
     )
 </insert>
+
 
 <select id="getMediaListByProductId" resultType="ProductMediaDTO">
     SELECT 
@@ -226,6 +251,7 @@
 <select id="selectMediaListByProductId" resultType="ProductMediaDTO">
 	SELECT * FROM PRODUCT_MEDIA WHERE PRODUCT_ID = #{productId}
 </select>
+
 
 
 

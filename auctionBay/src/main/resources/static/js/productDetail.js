@@ -185,7 +185,7 @@ const btnSendMessage = document.getElementById("btnSendMessage");
 if(btnSendMessage){
 	btnSendMessage.addEventListener('click', function (){
 		if(isOwner){
-			alert("본인이 등록한 상품은 찜목록에 추가할 수 없습니다.");
+			alert("본인에게는 쪽지를 보낼 수 없습니다.");
 			return;
 		}
 		const productId = this.dataset.productId;
