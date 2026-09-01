@@ -53,6 +53,16 @@ public interface ProductMapper {
     // 게시물 삭제
     int deleteProduct(Long productId);
    
+    // 상품 거래 상태 변경 
+    int updateProductStatus(@Param("productId") Long productId, @Param("status") String status);
+
+    // 예약 상태로 변경
+    int updateToReserved(@Param("productId") Long productId,
+    					 @Param("reservedUserNo") Long reservedUserNo);
+    
+    // 거래 완료 처리
+    int updateToCompleted(Long productId);
+
     // productId로 Media List 가져오기
     List<ProductMediaDTO> selectMediaListByProductId(Long productId);
     
