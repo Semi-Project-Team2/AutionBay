@@ -207,10 +207,10 @@
             <div class="mypage-sidebar">
                 <a href="${pageContext.request.contextPath}/mypage/products" class="sidebar-item">게시글 관리</a>
                 <a href="${pageContext.request.contextPath}/mypage/comments" class="sidebar-item">댓글 관리</a>
-                <a href="${pageContext.request.contextPath}/mypage/txHistories" class="sidebar-item active">거래내역</a>
+                <a href="${pageContext.request.contextPath}/mypage/txHistories" class="sidebar-item active">거래 내역</a>
                 <a href="${pageContext.request.contextPath}/mypage/reviews" class="sidebar-item">후기</a>
                 <a href="${pageContext.request.contextPath}/mypage/recents" class="sidebar-item">최근 본 글</a>
-                <a href="${pageContext.request.contextPath}/mypage/wishlists" class="sidebar-item">찜 목록</a>
+                <a href="${pageContext.request.contextPath}/mypage/wishlists" class="sidebar-item">찜목록</a>
                 <a href="${pageContext.request.contextPath}/message/received" class="sidebar-item">쪽지함</a>
             </div>
 

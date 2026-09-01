@@ -23,7 +23,11 @@
 					${ error }
 				</p>
 			</c:if>
-
+			<c:if test="${not empty uploadError}">
+				<script>
+					alert("${uploadError}");
+				</script>
+			</c:if>
 
 
 
