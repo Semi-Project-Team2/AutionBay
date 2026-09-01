@@ -25,6 +25,7 @@ import com.kh.auctionBay.activity.service.ActivityService;
 import com.kh.auctionBay.common.SessionConst;
 import com.kh.auctionBay.common.dto.ApiResponse;
 import com.kh.auctionBay.common.util.FileUploadUtil;
+import com.kh.auctionBay.message.service.MessageService;
 import com.kh.auctionBay.product.model.dto.ProductDTO;
 import com.kh.auctionBay.product.service.ProductService;
 import com.kh.auctionBay.review.model.dto.ReviewDTO;
@@ -50,6 +51,7 @@ public class MyPageController {
 	private final ReviewService reviewService;
 	private final UserService userService;
 	private final ProductService productService;
+	private final MessageService messageService;
 	
 
 	// 팀원 코드를 건드리지 않기 위해 맨 아래에 추가하는 내 파트용 서비스 주입
@@ -427,6 +429,8 @@ public class MyPageController {
 		List<WishlistDTO> wishlist = activityService.selectMyWishlist(loginUser.getUserNo());
 		model.addAttribute("wishlist", wishlist);
 		// 로그인한 유저 정보 전달 (프로필 영역에 설정한 프로필 이미지 표시용)
+		// 쪽지함 '안읽음' 뱃지 개수 갱신
+		loginUser.setUnreadCount(messageService.getUnreadCount(loginUser.getUserNo()));
 		model.addAttribute("user", loginUser);
 		return "mypage/wishlists"; 
 	}
@@ -479,7 +483,7 @@ public class MyPageController {
 	 * - 요청 URL: DELETE /mypage/deleteComment?commentNo=댓글번호
 	 * - 처리 과정:
 	 *    1. 전달받은 댓글 번호와 로그인 유저 번호를 검증합니다.
-	 *    2. 해당 댓글의 내용을 마스킹 처리('삭제된 댓글입니다.')하는 소프트 삭제를 수행합니다.
+	 *    2. 해당 댓글의 삭제 여부 플래그(is_deleted)를 1로 변경하는 소프트 삭제를 수행합니다.
 	 * - 응답 데이터: 성공 시 "SUCCESS", 실패 시 "FAIL" 문자열을 비동기로 반환합니다.
 	 */
 	@DeleteMapping("/deleteComment")

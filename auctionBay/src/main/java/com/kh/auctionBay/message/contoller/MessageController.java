@@ -65,7 +65,7 @@ public class MessageController {
 		
 		Long myNo = loginUser.getUserNo();
 		
-		List<MessageDTO> message = service.detail(myNo, messageId);
+		List<MessageDTO> message = service.detail(myNo, messageId, session);
 		
 		model.addAttribute("message", message);
 		model.addAttribute("myNo", myNo);

@@ -19,6 +19,7 @@ public class MyCommentDTO {
 	private Long writerNo;              // 댓글 작성자 ID
 	private Long parentNo;              // 부모 댓글 ID (대댓글용)
 	private String content;             // 댓글 내용
+	private Integer isDeleted;          // 삭제 여부 (0: 정상, 1: 삭제됨)
 	private LocalDateTime createdAt;    // 작성 일시
 	private String tradeType;
 	
