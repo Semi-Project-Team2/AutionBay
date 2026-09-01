@@ -103,7 +103,7 @@
            P.TITLE AS title, 
            P.PRICE AS price, 
            P.STATUS AS status,
-           NVL(PM.THUMBNAIL_URL, '/images/no-image.png') AS mainImage,
+           NVL(PM.THUMBNAIL_URL, '/uploads/product/common/default_thumb.png') AS mainImage,
            TO_CHAR(RV.VIEWED_AT, 'YYYY-MM-DD HH24:MI') AS viewedAtStr,
            P.TRADE_TYPE AS tradeType
       FROM RECENT_VIEWS RV

@@ -169,7 +169,7 @@ public class ProductServiceImpl implements ProductService{
 
 
 	    int order = 1;
-	    String defaultVideoThumbnail = "/product/common/default_thumb.png";
+	    String defaultVideoThumbnail = "/uploads/product/common/default_thumb.png";
 
 	    for (MultipartFile file : images) {
 
@@ -320,7 +320,7 @@ public class ProductServiceImpl implements ProductService{
 	    // 3. 새로 추가된 미디어가 있는 경우 파일 업로드 및 DB 저장
 	    if (images != null && !images.isEmpty()) {
 	        int order = 1; // 필요하다면 기존 남은 미디어 개수를 고려하거나 순서 지정
-	        String defaultVideoThumbnail = "/product/common/default_thumb.png";
+	        String defaultVideoThumbnail = "/uploads/product/common/default_thumb.png";
 	        for (MultipartFile file : images) {
 	            if (file == null || file.isEmpty()) {
 	                continue;
