@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,6 +25,7 @@ import com.kh.auctionBay.activity.service.ActivityService;
 import com.kh.auctionBay.common.SessionConst;
 import com.kh.auctionBay.common.dto.ApiResponse;
 import com.kh.auctionBay.common.util.FileUploadUtil;
+import com.kh.auctionBay.message.service.MessageService;
 import com.kh.auctionBay.product.model.dto.ProductDTO;
 import com.kh.auctionBay.product.service.ProductService;
 import com.kh.auctionBay.review.model.dto.ReviewDTO;
@@ -49,6 +51,7 @@ public class MyPageController {
 	private final ReviewService reviewService;
 	private final UserService userService;
 	private final ProductService productService;
+	private final MessageService messageService;
 	
 
 	// 팀원 코드를 건드리지 않기 위해 맨 아래에 추가하는 내 파트용 서비스 주입
@@ -101,6 +104,21 @@ public class MyPageController {
 		model.addAttribute("user", loginUser);
 		
 		return "mypage/txHistories";
+	}
+	
+	/**
+	 * 거래내역 상세 화면
+	 */
+	@GetMapping("/txHistory/{historyId}")
+	public String txHistoryDetail(@PathVariable Long historyId,	Model model) {
+		
+		// DB에서 거래내역 조회 후 변수에 저장
+		TxHistoryDTO txHistory = txService.getTxHistoryDetail(historyId);
+		
+		// 브라우저에서 "txHistory"로 요청 시 txHistory 전달
+		model.addAttribute("txHistory", txHistory);
+		
+		return "mypage/txHistory/detail";
 	}
 
 	
@@ -186,6 +204,20 @@ public class MyPageController {
 		}
 		
 		return "mypage/profile/editForm";
+	}
+	
+	@GetMapping("/reviewForm")
+	public String reviewForm() {	
+		return "review/form";
+	}
+	
+	/**
+	 * 마이페이지 회원 정보 수정 버튼 클릭 시
+	 * @return
+	 */
+	@GetMapping("/profileEditForm")
+	public String editProfile() {
+		return "editProfile";
 	}
 	
 	/* ----------------------------------------- */
@@ -397,6 +429,8 @@ public class MyPageController {
 		List<WishlistDTO> wishlist = activityService.selectMyWishlist(loginUser.getUserNo());
 		model.addAttribute("wishlist", wishlist);
 		// 로그인한 유저 정보 전달 (프로필 영역에 설정한 프로필 이미지 표시용)
+		// 쪽지함 '안읽음' 뱃지 개수 갱신
+		loginUser.setUnreadCount(messageService.getUnreadCount(loginUser.getUserNo()));
 		model.addAttribute("user", loginUser);
 		return "mypage/wishlists"; 
 	}
@@ -511,4 +545,14 @@ public class MyPageController {
 		activityService.removeAllRecentViews(loginUser.getUserNo());
 		return ResponseEntity.ok("SUCCESS");
 	}
+	
+	@PostMapping("/form")
+	public String editProfile(@ModelAttribute UserDTO user, HttpSession session)
+				throws IllegalStateException, IOException {
+		
+		
+		return "redirect:/mypage/txHistories";
+	}
+	
+	
 }
