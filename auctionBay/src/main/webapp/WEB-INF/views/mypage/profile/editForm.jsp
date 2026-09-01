@@ -21,6 +21,13 @@
 			<c:if test="${ message != null }">
 				<script>alert("${message}")</script>
 			</c:if>
+			<c:if test="${uploadError != null}">
+				<script>
+					window.addEventListener("DOMContentLoaded", function() {
+						alert("${uploadError}");
+					});
+				</script>
+			</c:if>
 
 
 		<form id="edit-form" class="form form-flex" 

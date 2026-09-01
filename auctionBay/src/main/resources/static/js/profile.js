@@ -326,3 +326,12 @@ if (editForm) {
         }
     });
 }
+
+
+// 파일 업로드 용량 초과 시 에러 메시지 alert
+const serverData = document.querySelector("#server-data");
+const uploadError = serverData ? serverData.dataset.uploadError : null;
+
+if (uploadError) {
+	alert(uploadError);
+}

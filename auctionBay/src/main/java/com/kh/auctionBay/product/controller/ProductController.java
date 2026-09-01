@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -95,7 +96,8 @@ public class ProductController {
     }
     
     @PostMapping("/write")
-    public String productWrite(ProductDTO product, @RequestParam(value = "images", required = false)List<MultipartFile> images, HttpSession session) throws IOException{
+    public String productWrite(ProductDTO product, @RequestParam(value = "images", required = false)List<MultipartFile> images, 
+    			HttpSession session, RedirectAttributes rttr, Model model) throws IOException{
     	
     	UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
     	if(loginUser == null) {
