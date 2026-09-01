@@ -1,5 +1,11 @@
 const isOwner = document.querySelector("#is-Owner-value").value === "true"; // 문자열을 boolean으로 변환
 
+const serverMessage = document.querySelector("#server-data").dataset.message;
+
+if (serverMessage) {
+    alert(serverMessage);
+}
+
 // 댓글 기능
 const commentForm = document.querySelector("#comment-form");
 const productId = document.querySelector("#product-id-value").value;
@@ -50,7 +56,10 @@ if (commentForm) {
 const commentList = document.querySelector("#comment-list");
 
 function appendComment(comment) {
-	
+	// isDeleted가 1이면 화면에 표시하지 않고 종료
+    if (comment.isDeleted === 1) {
+        return;
+    }
 	// 템플릿 영역 접근
 	const commentTemplate = document.querySelector("#comment-template");
 	const cloneComment = commentTemplate.content.cloneNode(true);
@@ -60,12 +69,19 @@ function appendComment(comment) {
 	
 	cloneComment.querySelector(".comment-list_writer").textContent = comment.writerNickname;
 	cloneComment.querySelector(".comment-list_content").textContent = comment.content;
-	cloneComment.querySelector(".comment-list_date").textContent = comment.createAtStr;
+	cloneComment.querySelector(".comment-list_date").textContent = comment.createdAtStr;
 	
 	cloneComment.querySelector(".comment-delete-btn").dataset.commentId = comment.commentId;
 	// => dataset 을 사용하면 data-* 속성으로 추가될 것임.
 	
 	commentList.appendChild(cloneComment);
+
+    // 댓글 등록 시 개수 1 증가시키기
+    const commentCountElem = document.querySelector("#comment-count");
+    if (commentCountElem) {
+        let currentCount = parseInt(commentCountElem.textContent.replace(/[^0-9]/g, '')) || 0;
+        commentCountElem.textContent = currentCount + 1;
+    }
 }
 
 
@@ -101,6 +117,14 @@ if (commentList) {
 			
 			// 화면상에서 해당 댓글 제거
 			document.querySelector(`#comment-${commentId}`).remove();
+            // 댓글 개수 실시간으로 1 감소시키기
+            const commentCountElem = document.querySelector("#comment-count"); // 만약 클래스라면 ".comment-count"로 변경
+            if (commentCountElem) {
+                let currentCount = parseInt(commentCountElem.textContent.replace(/[^0-9]/g, '')) || 0;
+                if (currentCount > 0) {
+                    commentCountElem.textContent = currentCount - 1;
+                }
+            }
 		} catch (error) {
 			alert("댓글 삭제 중 오류가 발생했습니다.");
 		}
@@ -332,11 +356,12 @@ if (btnSubmitBid) {
     btnSubmitBid.addEventListener('click', function() {
         const productId = this.getAttribute('data-product-id');
         const bidPrice = parseInt(bidInput.value.replace(/[^0-9]/g, '')) || 0;
-
-        if(isOwner){
-            alert("본인이 등록한 상품에는 입찰할 수 없습니다.");
-            return;
-        }
+		
+		// 조건문 안으로 진입하는지 확인하기 위한 로그 추가
+		if (isOwner) {
+		    alert("본인이 등록한 상품에는 입찰할 수 없습니다.");
+		    return;
+		}
 
         if (bidPrice < minValidBid || (bidPrice - currentPrice) % unit !== 0) {
             alert('올바른 입찰 단위 금액이 아닙니다.');
@@ -448,3 +473,18 @@ if(btnSendMessage){
 }
 
 
+function changeMainMedia(element, mediaUrl, mediaType) {
+    const container = document.getElementById('mainImageContainer');
+    
+    if (mediaType === 'VIDEO') {
+        container.innerHTML = `<video id="mainVideo" src="${mediaUrl}" controls autoplay style="width:100%; height:100%; object-fit:cover;"></video>`;
+    } else {
+        container.innerHTML = `<img id="mainImage" src="${mediaUrl}" alt="상품 이미지">`;
+    }
+    
+    // 썸네일 활성화 테두리 토글
+    document.querySelectorAll('.thumbnail-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    element.classList.add('active');
+}

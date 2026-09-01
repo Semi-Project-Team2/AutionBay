@@ -34,5 +34,24 @@ public interface ProductMapper {
     List<ProductDTO> selectProductByPrice(@Param("minPrice") Long minPrice, @Param("maxPrice") Long maxPrice);
     
     int insertProductMedia(ProductMediaDTO media);
+    
+    // 상세페이지 미디어 보여주기
+    List<ProductMediaDTO> getMediaListByProductId(Long productId);
+    
+    // 경매 게시글 수정
+    int updateAuctionProduct(ProductDTO product);
+    
+    // 일반 게시글 수정
+    int updateNormalProduct(ProductDTO product);
+    
+    // 미디어 테이블 단건 조회
+    ProductMediaDTO getMediaByMediaId(Long mediaId);
+    
+    // 미디어 테이블 단건 삭제
+    int deleteProductMedia(Long mediaId);
+    
+    // 게시물 삭제
+    int deleteProduct(Long productId);
+    
    
 }

@@ -9,7 +9,7 @@
 
 <select id="selectProductById" resultType="ProductDTO">
 	SELECT P.PRODUCT_ID, P.WRITER_NO, P.CATEGORY_ID, P.TRADE_TYPE, 
-		P.TITLE, DESCRIPTION, PRICE, P.PRODUCT_CONDITION, 
+		P.TITLE, DESCRIPTION, PRICE, P.PRODUCT_CONDITION,
 		P.AUCTION_START_PRICE, P.AUCTION_END_TIME, 
 		P.IS_DIRECT, P.TRADE_LOCATION, 
 		P.STATUS, P.VIEW_COUNT, P.CREATED_AT, P.UPDATED_AT, 
@@ -139,9 +139,10 @@
 	WHERE PRODUCT_ID = #{productId}
 </update>
 
+
 <insert id="insertProduct" useGeneratedKeys="true" keyProperty="productId" keyColumn="product_id">
-	INSERT INTO PRODUCTS (writer_no, category_id, trade_type, title, description, price, product_condition, auction_start_price, trade_location) 
-	VALUES (#{writerNo}, #{categoryId}, #{tradeType}, #{title}, #{description}, #{price}, #{productCondition}, #{auctionStartPrice}, #{tradeLocation})
+	INSERT INTO PRODUCTS (writer_no, category_id, trade_type, title, description, price, product_condition, auction_start_price, trade_location, auction_end_time) 
+	VALUES (#{writerNo}, #{categoryId}, #{tradeType}, #{title}, #{description}, #{price}, #{productCondition}, #{auctionStartPrice}, #{tradeLocation}, #{auctionEndTime})
 </insert>
 
 <insert id="insertProductMedia">
@@ -160,5 +161,65 @@
         #{mediaOrder}
     )
 </insert>
+
+<select id="getMediaListByProductId" resultType="ProductMediaDTO">
+    SELECT 
+        media_id,
+        product_id,
+        media_type,
+        media_url,
+        thumbnail_url,
+        media_order
+    FROM PRODUCT_MEDIA
+    WHERE product_id = #{productId}
+    ORDER BY media_order
+</select>
+
+<update id="updateAuctionProduct">
+	UPDATE PRODUCTS
+	SET 
+		CATEGORY_ID = #{categoryId},
+		TITLE = #{title},
+		DESCRIPTION = #{description},
+		PRODUCT_CONDITION = #{productCondition},
+		AUCTION_START_PRICE = #{auctionStartPrice},
+		AUCTION_END_TIME = #{auctionEndTime},
+		IS_DIRECT = #{isDirect},
+		TRADE_LOCATION = #{tradeLocation},
+		UPDATED_AT = SYSDATE
+	WHERE PRODUCT_ID = #{productId}
+		
+</update>
+
+<update id="updateNormalProduct">
+	UPDATE PRODUCTS
+	SET 
+		CATEGORY_ID = #{categoryId},
+		TITLE = #{title},
+		DESCRIPTION = #{description},
+		PRODUCT_CONDITION = #{productCondition},
+		PRICE = #{price},
+		IS_DIRECT = #{isDirect},
+		TRADE_LOCATION = #{tradeLocation},
+		UPDATED_AT = SYSDATE
+	WHERE PRODUCT_ID = #{productId}
+</update>
+
+<select id="getMediaByMediaId" resultType="ProductMediaDTO">
+	SELECT * FROM PRODUCT_MEDIA WHERE media_id = #{mediaId}
+</select>
+
+<delete id="deleteProductMedia">
+    DELETE FROM product_media
+    WHERE media_id = #{mediaId}
+</delete>
+
+<update id="deleteProduct">
+	UPDATE PRODUCTS
+	SET IS_DELETED = 1
+	WHERE PRODUCT_ID = #{productId}
+</update>
+
+
 
 </mapper>

@@ -21,6 +21,7 @@ public class CommentDTO {
 	private Long writerNo;
 	private String content;
 	private LocalDateTime createdAt;
+	private int isDeleted;
 	
 	private String writerNickname; // 작성자 닉네임
 	private String createdAtStr;    // 날짜 포맷팅 문자열

@@ -34,8 +34,15 @@ public class ProductServiceImpl implements ProductService{
 	// productId로 ProductDTO 1개 조회
 	@Override
 	public ProductDTO getProductByProductId(Long productId) {
+		// 상품 기본 정보 조회
+		ProductDTO product = mapper.selectProductById(productId);
 		
-		return mapper.selectProductById(productId);
+		if (product != null) {
+	        // 상품 미디어 목록 조회 후 세팅
+	        List<ProductMediaDTO> mediaList = mapper.getMediaListByProductId(productId);
+	        product.setMediaList(mediaList);
+	    }
+		return product;
 	}
 
 	@Override
@@ -259,5 +266,91 @@ public class ProductServiceImpl implements ProductService{
 	@Override
 	public List<ProductDTO> getProductByPrice(Long minPrice, Long maxPrice){
 		return mapper.selectProductByPrice(minPrice, maxPrice);
+	}
+	
+	@Override
+	@Transactional
+	public void updateProduct(ProductDTO product, List<MultipartFile> images, String deletedMediaIds) {
+	    
+	    // 1. 상품 기본 정보(제목, 가격, 설명 등) 업데이트
+	    
+		if(product.getTradeType().equals("AUCTION"))
+			mapper.updateAuctionProduct(product);
+		else
+			mapper.updateNormalProduct(product);
+	    
+	    // 2. 삭제된 기존 미디어가 있는 경우 처리
+	    if (deletedMediaIds != null && !deletedMediaIds.trim().isEmpty()) {
+	        String[] idArr = deletedMediaIds.split(",");
+	        for (String idStr : idArr) {
+	            Long mediaId = Long.parseLong(idStr.trim());
+	            
+	            // DB에서 미디어 정보 조회 후 실제 물리 파일 삭제
+	            ProductMediaDTO media = mapper.getMediaByMediaId(mediaId);
+	            if (media != null && media.getMediaUrl() != null) {
+	                fileUploadUtil.delete(media.getMediaUrl(), productUploadDir);
+	            }
+	            
+	            // DB에서 미디어 레코드 삭제
+	            mapper.deleteProductMedia(mediaId);
+	        }
+	    }
+	    
+	    // 3. 새로 추가된 미디어가 있는 경우 파일 업로드 및 DB 저장
+	    if (images != null && !images.isEmpty()) {
+	        int order = 1; // 필요하다면 기존 남은 미디어 개수를 고려하거나 순서 지정
+	        
+	        for (MultipartFile file : images) {
+	            if (file == null || file.isEmpty()) {
+	                continue;
+	            }
+	            
+	            // 미디어 타입 검증 (createProduct와 동일하게 맞춤)
+	            String contentType = file.getContentType();
+	            String mediaType;
+	            
+	            if (contentType != null && contentType.startsWith("image/")) {
+	                mediaType = "IMAGE";
+	            } else if (contentType != null && contentType.startsWith("video/")) {
+	                mediaType = "VIDEO";
+	            } else {
+	                throw new IllegalArgumentException("이미지 또는 동영상 파일만 등록할 수 있습니다.");
+	            }
+	            
+	            try {
+	                // 클래스 상단에 선언된 productUploadDir 및 통일된 경로 프리픽스 사용
+	                SavedFile savedFile = fileUploadUtil.save(
+	                    file, 
+	                    productUploadDir, 
+	                    "/uploads/product"
+	                );
+	            
+	                
+	                if (savedFile != null) {
+	                    ProductMediaDTO mediaDTO = new ProductMediaDTO();
+	                    mediaDTO.setProductId(product.getProductId());
+	                    mediaDTO.setMediaUrl(savedFile.getPath()); // 저장된 웹 경로
+	                    mediaDTO.setMediaType(mediaType);
+	                    mediaDTO.setThumbnailUrl(null);
+	                    mediaDTO.setMediaOrder((long) order); // 순서 세팅 추가
+	                    
+	                    mapper.insertProductMedia(mediaDTO);
+	                    order++;
+	                }
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	                throw new RuntimeException("파일 업로드 중 오류가 발생했습니다.", e);
+	            }
+	        }
+	    }
+	}
+
+	@Override
+	public String deleteProduct(Long productId) {
+		int result = mapper.deleteProduct(productId);
+		if(result > 0)
+			return "성공적으로 삭제하였습니다.";
+		else
+			return "삭제과정에서 오류가 발생하였습니다.";
 	}
 }
