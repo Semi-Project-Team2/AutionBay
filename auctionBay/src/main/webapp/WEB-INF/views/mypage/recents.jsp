@@ -157,14 +157,14 @@
                             <c:forEach var="recent" items="${recentList}">
                                 <div class="board-card" data-product-no="${recent.productNo}">
                                     <div class="board-info">
-                                        <c:choose>
-                                            <c:when test="${not empty recent.mainImage and recent.mainImage != '/images/no-image.png'}">
-                                                <img src="${pageContext.request.contextPath}/resources/upload/${recent.mainImage}" class="board-thumb" alt="상품 이미지">
-                                            </c:when>
-                                            <c:otherwise>
-                                                <div class="board-thumb" style="display:flex; align-items:center; justify-content:center; font-size:10px; color:#555;">이미지없음</div>
-                                            </c:otherwise>
-                                        </c:choose>
+										<c:choose>
+									        <c:when test="${not empty recent.mainImage}">
+									            <img src="${pageContext.request.contextPath}${recent.mainImage}" alt="썸네일" class="board-thumb" style="object-fit:cover;">
+									        </c:when>
+									        <c:otherwise>
+									            <img src="${pageContext.request.contextPath}/uploads/product/common/default_thumb.png" alt="이미지 없음" class="board-thumb" style="object-fit:cover;">
+									        </c:otherwise>
+									    </c:choose>
                                         
                                         <div>
                                             <c:choose>
