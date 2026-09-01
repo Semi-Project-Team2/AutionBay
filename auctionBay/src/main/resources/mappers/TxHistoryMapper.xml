@@ -74,7 +74,7 @@
     	end as reviewWrited
 		from TRANSACTION_HISTORY T
 		    join PRODUCTS P on T.PRODUCT_ID = P.PRODUCT_ID
-		    left join REVIEWS R on T.PRODUCT_ID = R.PRODUCT_ID and R.REVIEWER_NO = 1
+		    left join REVIEWS R on T.PRODUCT_ID = R.PRODUCT_ID and R.REVIEWER_NO = #{userNo}
 		where T.HISTORY_ID = #{historyId}
 	</select>
 

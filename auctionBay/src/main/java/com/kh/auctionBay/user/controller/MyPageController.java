@@ -87,7 +87,7 @@ public class MyPageController {
 		TxHistoryResultList list = txService.getTxHistories(condition);
 		// 거래 후기 작성여부 확인
 		for (TxHistoryDTO tx : list.getTxHistories()) {
-			tx.setReviewWrited(txService.checkReviewWrited(tx.getHistoryId()));
+			tx.setReviewWrited(txService.checkReviewWrited(tx.getHistoryId(), userNo));
 		}
 		
 		// 브라우저에서 "list"로 요청 시 컨트롤러 클래스에 list라고 저장된 데이터 전달

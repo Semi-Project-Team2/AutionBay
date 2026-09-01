@@ -94,7 +94,7 @@
 
 			<div class="form-row">
 				<label>주소</label>
-				<input type="text" name="regionAddress" required>
+				<input type="text" name="regionAddress">
 			</div>
 
 

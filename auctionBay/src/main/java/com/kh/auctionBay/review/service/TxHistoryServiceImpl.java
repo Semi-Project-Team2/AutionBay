@@ -52,8 +52,8 @@ public class TxHistoryServiceImpl implements TxHistoryService {
 	}
 
 	@Override
-	public boolean checkReviewWrited(Long historyId) {
-		return txHistoryMapper.selectReviewWrited(historyId);
+	public boolean checkReviewWrited(Long historyId, Long userNo) {
+		return txHistoryMapper.selectReviewWrited(historyId, userNo);
 	}
 	
 	
