@@ -85,6 +85,9 @@
         .board-title { font-size: 16px; font-weight: 500; color: #333; text-decoration: none; }
         .board-title:hover { text-decoration: underline; }
         
+        /* 댓글 개수 배지 스타일 */
+        .comment-count { color: #666; font-weight: bold; margin-left: 5px; font-size: 15px; }
+        
         .board-actions { display: flex; gap: 10px; }
         .btn-action { background-color: #fff; border: 1px solid #ccc; padding: 6px 12px; border-radius: 4px; text-decoration: none; color: #333; font-size: 13px; font-weight: bold; cursor: pointer; }
         .btn-action:hover { background-color: #f1f1f1; }
@@ -120,8 +123,8 @@
                     <li><a href="${pageContext.request.contextPath}/mypage/txHistories">거래 내역</a></li>
                     <li><a href="${pageContext.request.contextPath}/mypage/reviews">후기</a></li>
                     <li><a href="${pageContext.request.contextPath}/mypage/recents">최근 본 글</a></li>
-                    <li><a href="${pageContext.request.contextPath}/mypage/wishlists">찜 목록</a></li>
-                    <li><a href="${pageContext.request.contextPath}/message/received">쪽지 함</a></li>
+                    <li><a href="${pageContext.request.contextPath}/mypage/wishlists">찜목록</a></li>
+                    <li><a href="${pageContext.request.contextPath}/message/received">쪽지함</a></li>
                 </ul>
             </nav>
 
@@ -155,11 +158,21 @@
                                             <c:choose>
                                                 <c:when test="${board.tradeType == 'AUCTION'}">
                                                     <span class="type-badge auction">경매</span>
-                                                    <a href="${pageContext.request.contextPath}/auction/${pNo}/detail" class="board-title">${board.title}</a>
+                                                    <a href="${pageContext.request.contextPath}/auction/${pNo}/detail" class="board-title">
+                                                        ${board.title}
+                                                        <c:if test="${board.commentCount > 0}">
+                                                            <span class="comment-count">댓글: ${board.commentCount}</span>
+                                                        </c:if>
+                                                    </a>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <span class="type-badge general">일반</span>
-                                                    <a href="${pageContext.request.contextPath}/board/${pNo}/detail" class="board-title">${board.title}</a>
+                                                    <a href="${pageContext.request.contextPath}/board/${pNo}/detail" class="board-title">
+                                                        ${board.title}
+                                                        <c:if test="${board.commentCount > 0}">
+                                                            <span class="comment-count">댓글: ${board.commentCount}</span>
+                                                        </c:if>
+                                                    </a>
                                                 </c:otherwise>
                                             </c:choose>
                                         </div>
