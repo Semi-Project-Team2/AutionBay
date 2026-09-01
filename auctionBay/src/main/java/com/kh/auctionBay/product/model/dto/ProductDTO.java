@@ -76,4 +76,7 @@ public class ProductDTO {
 	private String typeStatus;
 	
 	private List<ProductMediaDTO> mediaList;
+	
+	// 해당 게시글에 달린 댓글 개수
+		private int commentCount;
 }

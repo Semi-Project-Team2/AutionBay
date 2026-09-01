@@ -134,8 +134,8 @@
                     <li><a href="${pageContext.request.contextPath}/mypage/txHistories">거래 내역</a></li>
                     <li><a href="${pageContext.request.contextPath}/mypage/reviews">후기</a></li>
                     <li><a href="${pageContext.request.contextPath}/mypage/recents" class="active">최근 본 글</a></li>
-                    <li><a href="${pageContext.request.contextPath}/mypage/wishlists">찜 목록</a></li>
-                    <li><a href="${pageContext.request.contextPath}/message/received">쪽지 함</a></li>
+                    <li><a href="${pageContext.request.contextPath}/mypage/wishlists">찜목록</a></li>
+                    <li><a href="${pageContext.request.contextPath}/message/received">쪽지함</a></li>
                 </ul>
             </nav>
 

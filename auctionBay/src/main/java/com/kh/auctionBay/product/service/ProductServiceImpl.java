@@ -182,7 +182,7 @@ public class ProductServiceImpl implements ProductService{
 	            break;
 	        }
 
-
+	        
 	        // =========================
 	        // 이미지 / 동영상 구분
 	        // =========================

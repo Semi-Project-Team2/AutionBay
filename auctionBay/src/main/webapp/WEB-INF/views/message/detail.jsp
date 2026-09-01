@@ -47,7 +47,7 @@
 		    <form class="complete-trade-form" 
 		          action="${pageContext.request.contextPath}/message/acceptTrade" 
 		          method="post"
-		          onsubmit="return confirm('이 분과 거래를 수락하시겠습니까?\n수락 후 예약 상태로 변경됩니다.');">
+		          onsubmit="return confirm('이 분과 거래를 수락하시겠습니까?\n예약 상태로 변경됩니다.\n※주의 : 수락 후에는 취소할 수 없습니다');">
 		        <input type="hidden" name="productId" value="${product.productId}">
 		        <input type="hidden" name="opponentNo" value="${opponentNo}">
 		        <input type="hidden" name="messageId" value="${firstMessage.messageId}">
@@ -60,7 +60,7 @@
 		    <form class="complete-trade-form" 
 		          action="${pageContext.request.contextPath}/message/completeTrade" 
 		          method="post"
-		          onsubmit="return confirm('거래를 완료 처리하시겠습니까?\n완료 후에는 되돌릴 수 없습니다.');">
+		          onsubmit="return confirm('거래를 완료 처리하시겠습니까?\n※주의 : 완료 후에는 최소할 수 없습니다.');">
 		        <input type="hidden" name="productId" value="${product.productId}">
 		        <input type="hidden" name="opponentNo" value="${opponentNo}">
 		        <input type="hidden" name="messageId" value="${firstMessage.messageId}">

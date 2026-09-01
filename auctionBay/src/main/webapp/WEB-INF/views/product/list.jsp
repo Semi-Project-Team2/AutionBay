@@ -10,156 +10,171 @@
 </head>
 <body>
 
-<div class="container">
-
+<!-- 1. 헤더 (브라우저 전체 너비로 확장) -->
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
+
 <div id="server-data" data-message="${message}"></div>
-<main class="container">
-	<%-- 회원 탈퇴 후 초기화면에서 표시할 탈퇴 완료 메시지 --%>
-		<c:if test="${not empty withdrawMessage}">
-            <script>alert('${withdrawMessage}')</script>
-       </c:if>
-	   <!-- 검색/필터 유지를 위한 공통 Form -->
-       <form id="searchForm" action="${pageContext.request.contextPath}/product/list" method="get">
-           <input type="hidden" name="tradeType" id="tradeType" value="${condition.tradeType}">
-           <input type="hidden" name="categoryId" id="categoryId" value="${condition.categoryId}">
-           <input type="hidden" name="sortBy" id="sortBy" value="${condition.sortBy}">
-           <input type="hidden" name="page" id="page" value="${result.pageInfo.page}">
-           <input type="hidden" name="keyword" value="${condition.keyword}">
-           
-           <!-- 1. 상단 필터 바 -->
-           <div class="filter-bar">
-               <div class="filter-row">
-                   <div class="filter-label">게시글 유형</div>
-                   <div class="filter-options">
-                       <a class="filter-item ${empty condition.tradeType ? 'active' : ''}" onclick="filterChange('tradeType', '')">전체</a>
-                       <a class="filter-item ${condition.tradeType == 'BUY' ? 'active' : ''}" onclick="filterChange('tradeType', 'BUY')">구매</a>
-                       <a class="filter-item ${condition.tradeType == 'SELL' ? 'active' : ''}" onclick="filterChange('tradeType', 'SELL')">판매</a>
-                       <a class="filter-item ${condition.tradeType == 'AUCTION' ? 'active' : ''}" onclick="filterChange('tradeType', 'AUCTION')">경매</a>
-                   </div>
-               </div>
-               <div class="filter-row">
-                   <div class="filter-label">상품 카테고리</div>
-                   <div class="filter-options category-wrap">
-                       <a class="filter-item ${empty condition.categoryId ? 'active' : ''}" onclick="filterChange('categoryId', '')">전체</a>
-                       <c:forEach var="c" items="${categoryList}">
-                           <a class="filter-item ${condition.categoryId == c.categoryId ? 'active' : ''}" onclick="filterChange('categoryId', '${c.categoryId}')">${c.categoryName}</a>
-                       </c:forEach>
-                   </div>    
-               </div>
-               <div class="filter-row">
-                   <div class="filter-label">가격</div>
-                   <div class="filter-options price-filter">
-                       <input
-                           type="number"
-                           name="minPrice"
-                           id="minPrice"
-                           value="${condition.minPrice}"
-                           placeholder="최소 가격"
-                           min="0">
-                       <span>~</span>
-                       <input
-                           type="number"
-                           name="maxPrice"
-                           id="maxPrice"
-                           value="${condition.maxPrice}"
-                           placeholder="최대 가격"
-                           min="0">
-                       <button type="submit" class="price-search-btn">
-                           검색
-                       </button>
-                   </div>
-               </div>
-               
-			   <!-- 정렬 필터 영역 -->
-               <div class="filter-row" style="border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px;">
-                   <div class="filter-label">정렬 기준</div>
-                   <div class="filter-options">
-                       <a class="filter-item ${empty condition.sortBy || condition.sortBy == 'LATEST' ? 'active' : ''}" onclick="filterChange('sortBy', 'LATEST')">최신순</a>
-                       <a class="filter-item ${condition.sortBy == 'PRICE_ASC' ? 'active' : ''}" onclick="filterChange('sortBy', 'PRICE_ASC')">낮은가격순</a>
-                       <a class="filter-item ${condition.sortBy == 'PRICE_DESC' ? 'active' : ''}" onclick="filterChange('sortBy', 'PRICE_DESC')">높은가격순</a>
-                       <a class="filter-item ${condition.sortBy == 'VIEWS' ? 'active' : ''}" onclick="filterChange('sortBy', 'VIEWS')">조회수순</a>
-                       <a class="filter-item ${condition.sortBy == 'WISHS' ? 'active' : ''}" onclick="filterChange('sortBy', 'WISHS')">찜 많은 순</a>
-                   </div>
-               </div>
-           </div>
-       </form>
 
-    <!-- 2. 메인 콘텐츠 (상품 그리드 + 우측 퀵메뉴) -->
-    <div class="main-content">
-        <!-- 상품 목록 그리드 섹션 -->
-		<div class="product-grid-section">
-		    <div class="product-grid">
-		        <c:choose>
-		            <c:when test="${not empty result.productList}">
-		                <c:forEach var="p" items="${result.productList}">
-		                    <div class="product-card" onclick="location.href='${pageContext.request.contextPath}/${p.tradeType == 'AUCTION' ? 'auction' : 'board'}/${p.productId}/detail'">
-								<div class="product-img">
-								    <c:choose>
-								        <%-- 미디어가 존재하고 첫 번째 미디어가 있는 경우 --%>
-								        <c:when test="${not empty p.mediaList}">
-								            <c:set var="firstMedia" value="${p.mediaList[0]}" />
-								            <c:set var="imgSrc" value="${not empty firstMedia.thumbnailUrl ? firstMedia.thumbnailUrl : firstMedia.mediaUrl}" />
-								            
-								            <img src="${pageContext.request.contextPath}${imgSrc}" alt="${p.title}" style="width: 100%; height: 100%; object-fit: cover;">
-								        </c:when>
-								        
-										<%-- 등록된 미디어가 없을 때 기본 이미지 출력 --%>
-										<c:otherwise>
-										    <img src="/uploads/product/common/default_thumb.png" alt="이미지 없음" style="width: 100%; height: 100%; object-fit: cover;">
-										</c:otherwise>
-								    </c:choose>
-								</div>
-		                        <div class="product-info">
-		                            <div class="product-title-row">
-		                                <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100px;">${p.title}</span>
-										<span>
-										    ${p.typeStatus}
-										</span>
-		                            </div>
-		                            <div class="product-price">
-		                                <c:choose>
-		                                    <c:when test="${p.tradeType == 'AUCTION'}">
-		                                        ${p.auctionStartPrice}원 <span>(시작가)</span>
-		                                    </c:when>
-		                                    <c:otherwise>
-		                                        ${p.price}원
-		                                    </c:otherwise>
-		                                </c:choose>
-		                            </div>
-		                        </div>
-		                    </div>
-		                </c:forEach>
-		            </c:when>
-		            <c:otherwise>
-		                <div style="grid-column: span 5; text-align: center; padding: 50px; color: #888;">
-		                    등록된 상품이 없습니다.
-		                </div>
-		            </c:otherwise>
-		        </c:choose>
-		    </div>
+<!-- 2. 중앙 콘텐츠를 감싸는 메인 래퍼 (1200px 중앙 정렬) -->
+<main class="main-container">
+    <%-- 회원 탈퇴 후 초기화면에서 표시할 탈퇴 완료 메시지 --%>
+    <c:if test="${not empty withdrawMessage}">
+        <script>alert('${withdrawMessage}')</script>
+    </c:if>
 
-			<!-- 3. 페이징 바 영역 -->
-			<div class="pagination">
-			    <c:if test="${result.pageInfo.hasPrevGroup}">
-			        <a class="page-btn" href="javascript:movePage(${result.pageInfo.startPage - 1})">&laquo; 이전</a>
-			    </c:if>
-
-			    <c:forEach var="i" begin="${result.pageInfo.startPage}" end="${result.pageInfo.endPage}">
-			        <a class="page-btn ${result.pageInfo.page == i ? 'active' : ''}" href="javascript:movePage(${i})">${i}</a>
-			    </c:forEach>
-
-			    <c:if test="${result.pageInfo.hasNextGroup}">
-			        <a class="page-btn" href="javascript:movePage(${result.pageInfo.endPage + 1})">다음 &raquo;</a>
-			    </c:if>
+    <!-- 검색/필터 유지를 위한 공통 Form -->
+    <form id="searchForm" action="${pageContext.request.contextPath}/product/list" method="get">
+        <input type="hidden" name="tradeType" id="tradeType" value="${condition.tradeType}">
+        <input type="hidden" name="categoryId" id="categoryId" value="${condition.categoryId}">
+        <input type="hidden" name="sortBy" id="sortBy" value="${condition.sortBy}">
+        <input type="hidden" name="page" id="page" value="${result.pageInfo.page}">
+        <input type="hidden" name="keyword" value="${condition.keyword}">
+        
+        <!-- 상단 필터 바 -->
+        <div class="filter-bar">
+            <div class="filter-row">
+                <div class="filter-label">게시글 유형</div>
+                <div class="filter-options">
+                    <a class="filter-item ${empty condition.tradeType ? 'active' : ''}" onclick="filterChange('tradeType', '')">전체</a>
+                    <a class="filter-item ${condition.tradeType == 'BUY' ? 'active' : ''}" onclick="filterChange('tradeType', 'BUY')">구매</a>
+                    <a class="filter-item ${condition.tradeType == 'SELL' ? 'active' : ''}" onclick="filterChange('tradeType', 'SELL')">판매</a>
+                    <a class="filter-item ${condition.tradeType == 'AUCTION' ? 'active' : ''}" onclick="filterChange('tradeType', 'AUCTION')">경매</a>
+                </div>
+            </div>
+            <div class="filter-row">
+                <div class="filter-label">상품 카테고리</div>
+                <div class="filter-options category-wrap">
+                    <a class="filter-item ${empty condition.categoryId ? 'active' : ''}" onclick="filterChange('categoryId', '')">전체</a>
+                    <c:forEach var="c" items="${categoryList}">
+                        <a class="filter-item ${condition.categoryId == c.categoryId ? 'active' : ''}" onclick="filterChange('categoryId', '${c.categoryId}')">${c.categoryName}</a>
+                    </c:forEach>
+                </div>    
+            </div>
+			<div class="filter-row">
+	            <div class="filter-label">가격</div>
+	            <div class="filter-options price-filter">
+	                <input type="text" name="minPrice" id="minPrice" value="${condition.minPrice}" placeholder="최소 가격" onblur="formatNumberOnly(this)">
+	                <span>~</span>
+	                <input type="text" name="maxPrice" id="maxPrice" value="${condition.maxPrice}" placeholder="최대 가격" onblur="formatNumberOnly(this)">
+	                <button type="submit" class="price-search-btn">검색</button>
+	            </div>
+	        </div>
+            
+            <!-- 정렬 필터 영역 -->
+            <div class="filter-row" style="border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px;">
+                <div class="filter-label">정렬 기준</div>
+                <div class="filter-options">
+                    <a class="filter-item ${empty condition.sortBy || condition.sortBy == 'LATEST' ? 'active' : ''}" onclick="filterChange('sortBy', 'LATEST')">최신순</a>
+                    <a class="filter-item ${condition.sortBy == 'PRICE_ASC' ? 'active' : ''}" onclick="filterChange('sortBy', 'PRICE_ASC')">낮은가격순</a>
+                    <a class="filter-item ${condition.sortBy == 'PRICE_DESC' ? 'active' : ''}" onclick="filterChange('sortBy', 'PRICE_DESC')">높은가격순</a>
+                    <a class="filter-item ${condition.sortBy == 'VIEWS' ? 'active' : ''}" onclick="filterChange('sortBy', 'VIEWS')">조회수순</a>
+                    <a class="filter-item ${condition.sortBy == 'WISHS' ? 'active' : ''}" onclick="filterChange('sortBy', 'WISHS')">찜 많은 순</a>
+                </div>
+            </div>
+			<!-- 완료된 상품 포함 보기 필터 -->
+			<div class="filter-row">
+			    <div class="filter-label">상태 보기</div>
+			    <div class="filter-options">
+			        <input type="hidden" name="includeFinished" id="includeFinished" value="${empty condition.includeFinished ? 'false' : condition.includeFinished}">
+			        <span class="filter-item ${empty condition.includeFinished || !condition.includeFinished ? 'active' : ''}" onclick="filterChange('includeFinished', 'false')">진행중 상품</span>
+			        <span class="filter-item ${condition.includeFinished ? 'active' : ''}" onclick="filterChange('includeFinished', 'true')">완료 상품 포함</span>
+			    </div>
 			</div>
-		</div>
+        </div>
+    </form>
 
-        <!-- 4. 우측 퀵 메뉴 섹션 -->
-		<a href="${pageContext.request.contextPath}/product/write" class="btn-write">게시글<br>작성</a>
+    <!-- 카테고리 타이틀/상품수와 게시글 작성 버튼을 한 줄에 배치 -->
+    <div class="section-title-area">
+        <div class="section-left-info">
+            <h2 class="current-category-title">
+                <c:choose>
+                    <c:when test="${empty condition.categoryId}">
+                        전체 상품
+                    </c:when>
+                    <c:otherwise>
+                        <c:forEach var="c" items="${categoryList}">
+                            <c:if test="${condition.categoryId == c.categoryId}">
+                                ${c.categoryName}
+                            </c:if>
+                        </c:forEach>
+                    </c:otherwise>
+                </c:choose>
+            </h2>
+            <div class="section-sub-info">
+                상품 <span>${result.pageInfo.totalCount}</span>
+            </div>
+        </div>
+        
+        <div class="product-write-container">
+            <a href="${pageContext.request.contextPath}/product/write" class="btn-product-write">
+                <span>✏️ 게시글 작성</span>
+            </a>
+        </div>
+    </div>
 
+    <!-- 메인 콘텐츠 (상품 그리드 + 우측 퀵메뉴 포함 구조) -->
+    <div class="content-wrapper">
+        <div class="product-grid-section">
+            <div class="product-grid">
+                <c:choose>
+                    <c:when test="${not empty result.productList}">
+                        <c:forEach var="p" items="${result.productList}">
+                            <div class="product-card" onclick="location.href='${pageContext.request.contextPath}/${p.tradeType == 'AUCTION' ? 'auction' : 'board'}/${p.productId}/detail'">
+                                <div class="product-img">
+                                    <c:choose>
+                                        <c:when test="${not empty p.mediaList}">
+                                            <c:set var="firstMedia" value="${p.mediaList[0]}" />
+                                            <c:set var="imgSrc" value="${not empty firstMedia.thumbnailUrl ? firstMedia.thumbnailUrl : firstMedia.mediaUrl}" />
+                                            <img src="${pageContext.request.contextPath}${imgSrc}" alt="${p.title}" style="width: 100%; height: 100%; object-fit: cover;">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <img src="/uploads/product/common/default_thumb.png" alt="이미지 없음" style="width: 100%; height: 100%; object-fit: cover;">
+                                        </c:otherwise>
+                                    </c:choose>
+                                </div>
+                                <div class="product-info">
+                                    <div class="product-title-row">
+                                        <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 120px;">${p.title}</span>
+                                        <span>${p.typeStatus}</span>
+                                    </div>
+                                    <div class="product-price">
+                                        <c:choose>
+                                            <c:when test="${p.tradeType == 'AUCTION'}">
+                                                ${p.auctionStartPrice}원 <span>(시작가)</span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                ${p.price}원
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                        <div style="grid-column: span 5; text-align: center; padding: 50px; color: #888;">
+                            등록된 상품이 없습니다.
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+
+            <!-- 페이징 바 영역 -->
+            <div class="pagination">
+                <c:if test="${result.pageInfo.hasPrevGroup}">
+                    <a class="page-btn" href="javascript:movePage(${result.pageInfo.startPage - 1})">&laquo; 이전</a>
+                </c:if>
+                <c:forEach var="i" begin="${result.pageInfo.startPage}" end="${result.pageInfo.endPage}">
+                    <a class="page-btn ${result.pageInfo.page == i ? 'active' : ''}" href="javascript:movePage(${i})">${i}</a>
+                </c:forEach>
+                <c:if test="${result.pageInfo.hasNextGroup}">
+                    <a class="page-btn" href="javascript:movePage(${result.pageInfo.endPage + 1})">다음 &raquo;</a>
+                </c:if>
+            </div>
+        </div>
+
+        <!-- 우측 퀵 메뉴 섹션 -->
         <aside class="right-quick-menu">
-			
             <a href="${pageContext.request.contextPath}/mypage/wishlists" class="quick-item">
                 <span class="quick-icon">❤️</span>
                 <span>찜목록</span>
@@ -168,7 +183,7 @@
                 <span class="quick-icon">✉️</span>
                 <span>쪽지함</span>
                 <c:choose>
-                    <c:when test="${sessionScope.loginUser.unreadCount <= 99}">
+                    <c:when test="${sessionScope.loginUser.unreadCount <= 99 && sessionScope.loginUser.unreadCount > 0}">
                         <span class="badge">${sessionScope.loginUser.unreadCount}</span>
                     </c:when>
                     <c:when test="${empty sessionScope.loginUser || sessionScope.loginUser.unreadCount == 0}">
@@ -183,31 +198,42 @@
                 <span>최근 본 글</span>
             </a>
         </aside>
-
     </div>
-	</main>
+</main>
+
+<!-- 3. 푸터 -->
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
 <script>
 	const serverMessage = document.querySelector("#server-data").dataset.message;
-	if (serverMessage) {
-	    alert(serverMessage);
-	}
-	
+    if (serverMessage) {
+        alert(serverMessage);
+    }
+	function toggleFinishedProducts() {
+        const checkbox = document.getElementById('includeFinished');
+        // hidden이나 다른 상태를 유지하며 폼 제출
+        document.getElementById('page').value = 1;
+        document.getElementById('searchForm').submit();
+    }
+    // 폼 제출(검색 버튼 클릭 등) 시 가격 입력창에 숫자만 들어가도록 최종 검증
+    document.getElementById('searchForm').addEventListener('submit', function(event) {
+        const minPriceInput = document.getElementById('minPrice');
+        const maxPriceInput = document.getElementById('maxPrice');
+        
+        if (minPriceInput) minPriceInput.value = minPriceInput.value.replace(/[^0-9]/g, '');
+        if (maxPriceInput) maxPriceInput.value = maxPriceInput.value.replace(/[^0-9]/g, '');
+    });
 
-    function filterChange(type, value) {
+	function filterChange(type, value) {
         if (type === 'tradeType') {
             document.getElementById('tradeType').value = value;
         } else if (type === 'categoryId') {
             document.getElementById('categoryId').value = value;
+        } else if (type === 'sortBy') {
+            document.getElementById('sortBy').value = value;
+        } else if (type === 'includeFinished') {
+            document.getElementById('includeFinished').value = value;
         }
-        
-		/*
-		const keywordInput = document.querySelector('input[name="keyword"]');
-		if (keywordInput) {
-		    keywordInput.value = '';
-		}
-		*/
         document.getElementById('page').value = 1;
         document.getElementById('searchForm').submit();
     }
@@ -216,76 +242,46 @@
         document.getElementById('page').value = page;
         document.getElementById('searchForm').submit();
     }
-	/*
-    window.addEventListener('pageshow', function(event) {
-        if (event.persisted || (performance && performance.getEntriesByType("navigation")[0].type === "back_forward")) {
-            const keywordInput = document.querySelector('input[name="keyword"]');
-            if (keywordInput) {
-                keywordInput.value = '';
-            }
-        }
-    });
-	*/
-	function filterChange(type, value) {
-        if (type === 'tradeType') {
-            document.getElementById('tradeType').value = value;
-        } else if (type === 'categoryId') {
-            document.getElementById('categoryId').value = value;
-        } else if (type === 'sortBy') {
-            document.getElementById('sortBy').value = value;
-        }
-        
-        document.getElementById('page').value = 1;
-        document.getElementById('searchForm').submit();
+
+    /* 가격 입력창에 숫자만 남기도록 정제하는 함수 (blur용) */
+    function formatNumberOnly(input) {
+        input.value = input.value.replace(/[^0-9]/g, '');
     }
 
-	/* 쪽지함 아이콘 위 '안읽음' 뱃지 */
-	function updateUnreadBadge() {
-		fetch('${pageContext.request.contextPath}/message/unread-count')
-			.then(response => {
-				if (response.ok) {
-					return response.json();
-				}
-				throw new Error('안읽음 뱃지 갱신 실패');
-			})
-			.then(unreadCount => {
-				// 쪽지함 a 태그 내의 뱃지 요소
-				const badgeContainer = document.querySelector('a[href*="/message/received"]');
-				if (!badgeContainer) return;
-
-				let badge = badgeContainer.querySelector(".badge");
-
-				if (unreadCount > 0) {
+    /* 쪽지함 아이콘 위 '안읽음' 뱃지 */
+    function updateUnreadBadge() {
+        fetch('${pageContext.request.contextPath}/message/unread-count')
+            .then(response => {
+                if (response.ok) return response.json();
+                throw new Error('안읽음 뱃지 갱신 실패');
+            })
+            .then(unreadCount => {
+                const badgeContainer = document.querySelector('a[href*="/message/received"]');
+                if (!badgeContainer) return;
+                let badge = badgeContainer.querySelector(".badge");
+                if (unreadCount > 0) {
                     const badgeText = unreadCount <= 99 ? unreadCount : '99+';
-					if (badge) {
-						badge.innerText = badgeText;
-					} else {
-						// 뱃지가 없는데 개수가 생겼다면 새로 생성해서 추가
-							badge = document.createElement('span');
-							badge.className = 'badge';
-							badge.innerText = badgeText;
-							badgeContainer.appendChild(badge);
-					}
-				} else {
-					if (badge) {
-						// unreadCount = 0이면 뱃지 삭제
-						badge.remove();
-					}
-				}
-			})
-				.catch(error => console.error('Error updating unread badge:', error));
-		}
+                    if (badge) {
+                        badge.innerText = badgeText;
+                    } else {
+                        badge = document.createElement('span');
+                        badge.className = 'badge';
+                        badge.innerText = badgeText;
+                        badgeContainer.appendChild(badge);
+                    }
+                } else {
+                    if (badge) badge.remove();
+                }
+            })
+            .catch(error => console.error('Error updating unread badge:', error));
+    }
 
-		// 1. 페이지가 처음 로드될 때 실행
-		document.addEventListener('DOMContentLoaded', updateUnreadBadge);
-
-		// 2. 뒤로 가기(bfcache)로 페이지가 복원될 때도 비동기로 실행
-		window.addEventListener('pageshow', function(event) {
-			if (event.persisted || (performance.getEntriesByType("navigation")[0]?.type === "back_forward")) {
-				updateUnreadBadge();
-			}
-		});
-
+    document.addEventListener('DOMContentLoaded', updateUnreadBadge);
+    window.addEventListener('pageshow', function(event) {
+        if (event.persisted || (performance.getEntriesByType("navigation")[0]?.type === "back_forward")) {
+            updateUnreadBadge();
+        }
+    });
 </script>
 </body>
 </html>

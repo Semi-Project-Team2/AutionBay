@@ -28,8 +28,9 @@ public class ProductSearchCondition {
     // 6. 정렬 및 페이징 (UI 하단 1, 2, 3... 페이지 연동)
     private String sortBy;           // 정렬 기준 (LATEST: 최신순, PRICE_ASC: 낮은가격순, PRICE_DESC: 높은가격순, VIEWS: 조회수순)
     private Integer page = 1;        // 현재 페이지 번호 (기본값: 1)
-    private Integer size = 3;       // 한 페이지당 노출할 개수 (기본값: 12개)
+    private Integer size = 15;       // 한 페이지당 노출할 개수 (기본값: 12개)
 	
+    private boolean includeFinished; // 완료된 상품 포함 여부 (true/false)
     
     // 쿼리문 실행 시 사용할 값
  	private int offset;		// 건너뛸 행수

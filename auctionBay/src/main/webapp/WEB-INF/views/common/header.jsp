@@ -6,10 +6,9 @@
 <header class="header">
     <div class="header-container">
         
-        <!-- 1. 로고 (Auction Bay) -->
+        <!-- 1. 로고 이미지 수정 영역 -->
         <a href="${pageContext.request.contextPath}/" class="header-logo">
-            Auction
-            <span class="bay">Bay</span>
+            <img src="${pageContext.request.contextPath}/css/logo/logo.png" alt="AuctionBay" class="logo-img">
         </a>
 
         <!-- 2. 검색창 영역 (독립된 form 태그 적용) -->

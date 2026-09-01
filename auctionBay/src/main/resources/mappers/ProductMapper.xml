@@ -76,6 +76,9 @@
                 OR U.NICKNAME LIKE '%' || #{keyword} || '%'
             )
         </if>
+        <if test="!includeFinished">
+		    AND p.status IN ('ONGOING', 'RESERVED')
+		</if>
 	</where> 	
 </sql>
 
@@ -251,8 +254,6 @@
 <select id="selectMediaListByProductId" resultType="ProductMediaDTO">
 	SELECT * FROM PRODUCT_MEDIA WHERE PRODUCT_ID = #{productId}
 </select>
-
-
 
 
 </mapper>
