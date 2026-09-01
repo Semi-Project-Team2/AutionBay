@@ -37,6 +37,7 @@ public class ProductDTO {
 	private Long productId;
 	private Long writerNo;
 	private Long categoryId;
+	private Long ReservedUserNo; // 구매자 컬럼 추가
 	private String tradeType;
 	private String title;
 	private String description;

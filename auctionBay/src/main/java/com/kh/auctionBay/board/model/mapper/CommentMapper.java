@@ -16,7 +16,7 @@ public interface CommentMapper {
 	CommentDTO selectCommentById(Long commentId);
 	
 	// 댓글 목록 조회
-	List<CommentDTO> getComments(Long boardId);
+	List<CommentDTO> selectCommentsByBoardId(Long boardId);
 	
 	// 댓글 삭제
 	int deleteComment(Long commentId);
