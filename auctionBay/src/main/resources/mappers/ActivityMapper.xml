@@ -26,7 +26,7 @@
            P.VIEW_COUNT AS viewCount, 
            P.CREATED_AT AS createdAt,
            TO_CHAR(P.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS createdAtStr,
-           NVL(PM.THUMBNAIL_URL, '/images/no-image.png') AS mainImage
+           NVL(PM.THUMBNAIL_URL, '/uploads/product/common/default_thumb.png') AS mainImage
       FROM PRODUCTS P
         LEFT JOIN PRODUCT_MEDIA PM 
                ON P.PRODUCT_ID = PM.PRODUCT_ID AND PM.MEDIA_ORDER = 1
@@ -76,7 +76,7 @@
            P.PRICE, 
            P.TRADE_TYPE, 
            P.STATUS,
-           NVL(PM.THUMBNAIL_URL, '/images/no-image.png') AS MAIN_IMAGE,
+           NVL(PM.THUMBNAIL_URL, '/uploads/product/common/default_thumb.png') AS MAIN_IMAGE,
            TO_CHAR(W.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS WISHED_AT_STR
       FROM WISHLISTS W
       JOIN PRODUCTS P ON W.PRODUCT_ID = P.PRODUCT_ID

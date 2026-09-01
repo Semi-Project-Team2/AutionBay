@@ -45,7 +45,7 @@ public class CommentApiController {
 		try {
 			
 			CommentDTO comment = service.addComment(productId, commentRequest.getContent(), loginUser.getUserNo());
-			System.out.println("test용2"+comment);
+			//System.out.println("test용2"+comment);
 			return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(comment));
 		
 		} catch (RuntimeException e) {
