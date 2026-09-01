@@ -154,21 +154,33 @@
 		</div>
 
         <!-- 4. 우측 퀵 메뉴 섹션 -->
-		<div class="quick-menu-section">
-		            <a href="${pageContext.request.contextPath}/product/write" class="btn-write">게시글 작성</a>
+		<a href="${pageContext.request.contextPath}/product/write" class="btn-write">게시글<br>작성</a>
 
-		            <div class="quick-box">
-		                <a href="${pageContext.request.contextPath}/mypage/wishlists" class="quick-item">
-		                    <span>❤️</span>찜목록
-		                </a>
-		                <a href="${pageContext.request.contextPath}/message/received" class="quick-item">
-		                    <span>✉️</span>쪽지함
-		                </a>
-		                <a href="${pageContext.request.contextPath}/mypage/recents"class="quick-item">
-		                    <span>👁️</span>최근 본 글
-		                </a>
-		            </div>
-		        </div>
+        <aside class="right-quick-menu">
+			
+            <a href="${pageContext.request.contextPath}/mypage/wishlists" class="quick-item">
+                <span class="quick-icon">❤️</span>
+                <span>찜목록</span>
+            </a>
+            <a href="${pageContext.request.contextPath}/message/received" class="quick-item">
+                <span class="quick-icon">✉️</span>
+                <span>쪽지함</span>
+                <c:choose>
+                    <c:when test="${sessionScope.loginUser.unreadCount <= 99}">
+                        <span class="badge">${sessionScope.loginUser.unreadCount}</span>
+                    </c:when>
+                    <c:when test="${empty sessionScope.loginUser || sessionScope.loginUser.unreadCount == 0}">
+                    </c:when>
+                    <c:otherwise>
+                        <span class="badge">99+</span>
+                    </c:otherwise>
+                </c:choose>
+            </a>
+            <a href="${pageContext.request.contextPath}/mypage/recents" class="quick-item">
+                <span class="quick-icon">⏱️</span>
+                <span>최근 본 글</span>
+            </a>
+        </aside>
 
     </div>
 	</main>
@@ -212,6 +224,54 @@
         }
     });
 	*/
+
+	/* 쪽지함 아이콘 위 '안읽음' 뱃지 */
+	function updateUnreadBadge() {
+		fetch('${pageContext.request.contextPath}/message/unread-count')
+			.then(response => {
+				if (response.ok) {
+					return response.json();
+				}
+				throw new Error('안읽음 뱃지 갱신 실패');
+			})
+			.then(unreadCount => {
+				// 쪽지함 a 태그 내의 뱃지 요소
+				const badgeContainer = document.querySelector('a[href*="/message/received"]');
+				if (!badgeContainer) return;
+
+				let badge = badgeContainer.querySelector(".badge");
+
+				if (unreadCount > 0) {
+                    const badgeText = unreadCount <= 99 ? unreadCount : '99+';
+					if (badge) {
+						badge.innerText = badgeText;
+					} else {
+						// 뱃지가 없는데 개수가 생겼다면 새로 생성해서 추가
+							badge = document.createElement('span');
+							badge.className = 'badge';
+							badge.innerText = badgeText;
+							badgeContainer.appendChild(badge);
+					}
+				} else {
+					if (badge) {
+						// unreadCount = 0이면 뱃지 삭제
+						badge.remove();
+					}
+				}
+			})
+				.catch(error => console.error('Error updating unread badge:', error));
+		}
+
+		// 1. 페이지가 처음 로드될 때 실행
+		document.addEventListener('DOMContentLoaded', updateUnreadBadge);
+
+		// 2. 뒤로 가기(bfcache)로 페이지가 복원될 때도 비동기로 실행
+		window.addEventListener('pageshow', function(event) {
+			if (event.persisted || (performance.getEntriesByType("navigation")[0]?.type === "back_forward")) {
+				updateUnreadBadge();
+			}
+		});
+
 </script>
 </body>
 </html>
