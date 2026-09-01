@@ -80,7 +80,6 @@
 
     <!-- 2. 메인 콘텐츠 (상품 그리드 + 우측 퀵메뉴) -->
     <div class="main-content">
-        
         <!-- 상품 목록 그리드 섹션 -->
 		<div class="product-grid-section">
 		    <div class="product-grid">
@@ -155,28 +154,21 @@
 		</div>
 
         <!-- 4. 우측 퀵 메뉴 섹션 -->
-        <aside class="right-quick-menu">
-            <a href="${pageContext.request.contextPath}/mypage/wishlists" class="quick-item">
-                <span class="quick-icon">❤️</span>
-                <span>찜목록</span>
-            </a>
-            <a href="${pageContext.request.contextPath}/message/received" class="quick-item">
-                <span class="quick-icon">✉️</span>
-                <span>쪽지함</span>
-				<c:choose>
-                    <c:when test="${sessionScope.loginUser.unreadCount <= 99}">
-                        <span class="badge">${sessionScope.loginUser.unreadCount}</span>
-                    </c:when>
-                    <c:otherwise>
-                        <span class="badge">99+</span>
-                    </c:otherwise>
-                </c:choose>
-            </a>
-            <a href="${pageContext.request.contextPath}/mypage/recents" class="quick-item">
-                <span class="quick-icon">⏱️</span>
-                <span>최근 본 글</span>
-            </a>
-        </aside>
+		<div class="quick-menu-section">
+		            <a href="${pageContext.request.contextPath}/product/write" class="btn-write">게시글 작성</a>
+
+		            <div class="quick-box">
+		                <a href="${pageContext.request.contextPath}/mypage/wishlists" class="quick-item">
+		                    <span>❤️</span>찜목록
+		                </a>
+		                <a href="${pageContext.request.contextPath}/message/received" class="quick-item">
+		                    <span>✉️</span>쪽지함
+		                </a>
+		                <a href="${pageContext.request.contextPath}/mypage/recents"class="quick-item">
+		                    <span>👁️</span>최근 본 글
+		                </a>
+		            </div>
+		        </div>
 
     </div>
 	</main>

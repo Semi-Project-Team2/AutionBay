@@ -54,6 +54,17 @@
         border-radius: 12px;
         padding: 20px;
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+	.product-title-header {
+        font-size: 22px; /* 글씨 크기 확대 (기존 18px -> 22px) */
+        font-weight: 700;
+        color: #0f172a;  /* 색상을 조금 더 진하게 조정 */
+        word-break: break-all;
+        line-height: 1.4;
     }
 
     .main-image-container {
@@ -76,6 +87,21 @@
         transition: transform 0.3s ease;
     }
 
+    /* 이미지 없을 때 대체 이미지 전용 스타일 */
+    .no-image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        opacity: 0.5;
+    }
+
+    /* 비디오 전용 스타일 */
+    .main-video-element {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
     /* 썸네일 리스트 스타일 */
     .thumbnail-list {
         display: flex;
@@ -95,6 +121,7 @@
         flex-shrink: 0;
         background-color: #f8fafc;
         transition: all 0.2s;
+        position: relative;
     }
 
     .thumbnail-item img {
@@ -405,7 +432,7 @@
     10. 게시글 수정/삭제 버튼 영역 (우측 하단 배치용)
     ========================================================== */
     .post-owner-actions {
-        width: 1000px; /* 좌측 이미지 영역(500) + 우측 카드(440) + 간격(24)에 맞춘 폭 혹은 적절한 폭 */
+        width: 1000px;
         display: flex;
         justify-content: flex-end;
         gap: 8px;
@@ -441,7 +468,7 @@
     11. 댓글 영역 (페이지 하단 단독 배치)
     ========================================================== */
     .comment-section-full {
-        width: 964px; /* 이미지 영역(500) + 간격(24) + 카드(440)의 총합 너비 */
+        width: 964px;
         background-color: #ffffff;
         border-radius: 12px;
         padding: 24px;
@@ -615,8 +642,8 @@
     .star-rating {
         position: relative;
         unicode-bidi: bidi-override;
-        color: #ddd; /* 빈 별 색상 */
-        font-size: 14px; /* 별 크기 조절 */
+        color: #ddd;
+        font-size: 14px;
         font-family: Arial, sans-serif;
         letter-spacing: 2px;
     }
@@ -627,10 +654,9 @@
         left: 0;
         white-space: nowrap;
         overflow: hidden;
-        color: #f59e0b; /* 채워진 별 색상 (노란색) */
+        color: #f59e0b;
     }
 
-    /* 모달 내부 리스트 스크롤 영역 공통 */
     .bid-history-list,
     .review-list {
         overflow-y: auto;
@@ -731,13 +757,15 @@
         
         <!-- 왼쪽: 상품 미디어 영역 -->
         <div class="product-image-section">
+            <h2 class="product-title-header">${product.title}</h2>
+
             <div class="main-image-container" id="mainImageContainer">
                 <c:choose>
                     <c:when test="${not empty product.mediaList}">
                         <c:set var="firstMedia" value="${product.mediaList[0]}" />
                         <c:choose>
                             <c:when test="${firstMedia.mediaType == 'VIDEO'}">
-                                <video id="mainVideo" src="${firstMedia.mediaUrl}" controls style="width:100%; height:100%; object-fit:cover;"></video>
+                                <video id="mainVideo" src="${firstMedia.mediaUrl}" controls class="main-video-element"></video>
                             </c:when>
                             <c:otherwise>
                                 <img id="mainImage" src="${firstMedia.mediaUrl}" alt="${product.title}">
@@ -745,7 +773,7 @@
                         </c:choose>
                     </c:when>
                     <c:otherwise>
-                        <img src="${pageContext.request.contextPath}/images/no_image.png" alt="이미지 없음" style="width:100%; height:100%; object-fit:contain; opacity: 0.5;">
+                        <img src="${pageContext.request.contextPath}/images/no_image.png" alt="이미지 없음" class="no-image">
                     </c:otherwise>
                 </c:choose>
             </div>
@@ -879,7 +907,7 @@
 
         <%-- 댓글 영역 (아래로 단독 배치) --%>
         <section class="comment-section-full">
-            <h3 class="comment-section_title">댓글 ${empty comments ? 0 : comments.size()}</h3>
+            <h3 id="comment-section-title" class="comment-section_title">댓글 <span id="comment-count">${empty comments ? 0 : comments.size()}</span></h3>
             <ul class="comment-list" id="comment-list">
                 <c:forEach var="comment" items="${comments}">
                     <li class="comment-item" id="comment-${comment.commentId}">

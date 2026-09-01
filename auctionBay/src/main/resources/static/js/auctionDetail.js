@@ -56,7 +56,10 @@ if (commentForm) {
 const commentList = document.querySelector("#comment-list");
 
 function appendComment(comment) {
-	
+	// isDeleted가 1이면 화면에 표시하지 않고 종료
+    if (comment.isDeleted === 1) {
+        return;
+    }
 	// 템플릿 영역 접근
 	const commentTemplate = document.querySelector("#comment-template");
 	const cloneComment = commentTemplate.content.cloneNode(true);
@@ -66,12 +69,19 @@ function appendComment(comment) {
 	
 	cloneComment.querySelector(".comment-list_writer").textContent = comment.writerNickname;
 	cloneComment.querySelector(".comment-list_content").textContent = comment.content;
-	cloneComment.querySelector(".comment-list_date").textContent = comment.createAtStr;
+	cloneComment.querySelector(".comment-list_date").textContent = comment.createdAtStr;
 	
 	cloneComment.querySelector(".comment-delete-btn").dataset.commentId = comment.commentId;
 	// => dataset 을 사용하면 data-* 속성으로 추가될 것임.
 	
 	commentList.appendChild(cloneComment);
+
+    // 댓글 등록 시 개수 1 증가시키기
+    const commentCountElem = document.querySelector("#comment-count");
+    if (commentCountElem) {
+        let currentCount = parseInt(commentCountElem.textContent.replace(/[^0-9]/g, '')) || 0;
+        commentCountElem.textContent = currentCount + 1;
+    }
 }
 
 
@@ -107,6 +117,14 @@ if (commentList) {
 			
 			// 화면상에서 해당 댓글 제거
 			document.querySelector(`#comment-${commentId}`).remove();
+            // 댓글 개수 실시간으로 1 감소시키기
+            const commentCountElem = document.querySelector("#comment-count"); // 만약 클래스라면 ".comment-count"로 변경
+            if (commentCountElem) {
+                let currentCount = parseInt(commentCountElem.textContent.replace(/[^0-9]/g, '')) || 0;
+                if (currentCount > 0) {
+                    commentCountElem.textContent = currentCount - 1;
+                }
+            }
 		} catch (error) {
 			alert("댓글 삭제 중 오류가 발생했습니다.");
 		}

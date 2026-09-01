@@ -93,7 +93,7 @@ public class AuctionServiceImpl implements AuctionService{
 		
 		// 1. 마감 시간이 지났지만 아직 ONGOING 상태인 상품 리스트 조회
 	    List<ProductDTO> expiredProducts = mapper.selectExpiredOngoingProducts();
-	    System.out.println("마감시간 지난 아직 ONGOING 상품"+expiredProducts);
+	    //System.out.println("마감시간 지난 아직 ONGOING 상품"+expiredProducts);
 	    if (expiredProducts == null || expiredProducts.isEmpty()) {
 	        return;
 	    }
@@ -103,11 +103,11 @@ public class AuctionServiceImpl implements AuctionService{
 
 	        // 2. 해당 상품의 최고 입찰 내역 조회
 	        BidsDTO highestBid = mapper.selectHighestBidByProductId(productId);
-	        System.out.println("최고 입찰 내역 "+highestBid);
+	        //System.out.println("최고 입찰 내역 "+highestBid);
 	        if (highestBid == null) {
 	            // 입찰자가 없는 경우 (유찰)
 	            mapper.updateProductExpired(productId);
-	            System.out.println("경매 유찰 처리 (입찰자 없음) - 상품 ID: " + productId);
+	            //System.out.println("경매 유찰 처리 (입찰자 없음) - 상품 ID: " + productId);
 	            
 	        } else {
 	            // 입찰자가 존재하는 경우 (낙찰 성공)
@@ -126,10 +126,10 @@ public class AuctionServiceImpl implements AuctionService{
 	            txHistory.setSellerNo(product.getWriterNo());
 	            txHistory.setBuyerNo(highestBid.getBidderNo());
 	            txHistory.setFinalPrice(highestBid.getBidPrice());
-	            System.out.println(txHistory);
+	            //System.out.println(txHistory);
 	            mapper.insertTxHistory(txHistory);
 	            
-	            System.out.println("경매 낙찰 완료 (홀드 상태 변경 포함) - 상품 ID: " + productId + ", 낙찰가: " + highestBid.getBidPrice());
+	            //System.out.println("경매 낙찰 완료 (홀드 상태 변경 포함) - 상품 ID: " + productId + ", 낙찰가: " + highestBid.getBidPrice());
 	        }
 	    }
 	}
