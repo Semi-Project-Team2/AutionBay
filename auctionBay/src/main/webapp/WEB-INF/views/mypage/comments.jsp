@@ -30,7 +30,6 @@
 		    width: 100% !important;
 		}
 
-		/* [추가] 프로필 이미지 + 텍스트 가로 정렬 */
 		.profile-info { display: flex; align-items: center; gap: 20px; }
 		.profile-img { width: 70px; height: 70px; background-color: #333; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
 		.profile-text h2 { font-size: 20px; font-weight: bold; margin-bottom: 5px; }
@@ -39,7 +38,7 @@
 		.btn-edit { background-color: #d4edda; border: 1px solid #c3e6cb; padding: 8px 15px; border-radius: 4px; font-weight: bold; color: #155724; cursor: pointer; text-decoration: none; font-size: 13px; }
 		.btn-withdraw { background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 8px 15px; border-radius: 4px; font-weight: bold; color: #721c24; cursor: pointer; text-decoration: none; font-size: 13px; }
 
-		/* [핵심] 사이드바 + 메인 가로 배치 강제 고정 */
+		/* 사이드바 + 메인 가로 배치 강제 고정 */
 		.content-area { 
 		    display: flex !important; 
 		    flex-direction: row !important;
@@ -79,6 +78,11 @@
 		.comment-info { display: flex; align-items: center; gap: 15px; font-size: 14px; color: #333; }
 		.comment-title { font-weight: bold; color: #111; text-decoration: none; }
 		.comment-title:hover { text-decoration: underline; }
+		
+		/* 삭제된 게시글 스타일 */
+		.comment-title.deleted { color: #888; font-weight: normal; cursor: default; }
+		.comment-title.deleted:hover { text-decoration: none; }
+
 		.divider { color: #999; }
 		.comment-content.deleted { color: #888; font-style: italic; }
 
@@ -132,7 +136,7 @@
 </head>
 <body>
 
-    <!-- 공통 헤더 (container 바깥으로 이동) -->
+    <!-- 공통 헤더 -->
     <jsp:include page="/WEB-INF/views/common/header.jsp" />
 
     <div class="container">
@@ -141,7 +145,7 @@
 
         <!-- 메인 콘텐츠 영역 -->
         <div class="content-area">
-            <!-- 사이드바 (중복 항목 제거 및 목록 통일) -->
+            <!-- 사이드바 -->
             <nav class="sidebar">
                 <ul>
                     <li><a href="${pageContext.request.contextPath}/mypage/products">게시글 관리</a></li>
@@ -166,12 +170,20 @@
                             <c:forEach var="comment" items="${commentList}">
                                 <div class="comment-card" id="comment-card-${comment.commentNo}">
                                     <div class="comment-info">
+                                        <%-- 게시글이 삭제되었거나(productDeleted == 1) 제목이 없는 경우 체크 --%>
                                         <c:choose>
-                                            <c:when test="${comment.tradeType == 'AUCTION'}">
-                                                <a href="${pageContext.request.contextPath}/auction/${comment.productNo}/detail" class="comment-title">${comment.productTitle}</a>
+                                            <c:when test="${comment.productDeleted == 1 || empty comment.productTitle}">
+                                                <span class="comment-title deleted">[삭제된 게시글]</span>
                                             </c:when>
                                             <c:otherwise>
-                                                <a href="${pageContext.request.contextPath}/board/${comment.productNo}/detail" class="comment-title">${comment.productTitle}</a>
+                                                <c:choose>
+                                                    <c:when test="${comment.tradeType == 'AUCTION'}">
+                                                        <a href="${pageContext.request.contextPath}/auction/${comment.productNo}/detail" class="comment-title">${comment.productTitle}</a>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <a href="${pageContext.request.contextPath}/board/${comment.productNo}/detail" class="comment-title">${comment.productTitle}</a>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </c:otherwise>
                                         </c:choose>
                                         
@@ -186,7 +198,8 @@
                                         </c:choose>
                                     </div>
                                     
-                                    <c:if test="${comment.isDeleted != 1}">
+                                    <%-- 댓글도 안 지워졌고, 게시글도 정상 존재할 때만 삭제 버튼 노출 --%>
+                                    <c:if test="${comment.isDeleted != 1 && comment.productDeleted != 1 && not empty comment.productTitle}">
                                         <a href="#" class="btn-delete" data-comment-no="${comment.commentNo}" onclick="deleteComment(this); return false;">삭제</a>
                                     </c:if>
                                 </div>

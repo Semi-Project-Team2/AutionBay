@@ -40,7 +40,9 @@
 	<!-- 
 		[2. 내가 작성한 댓글 조회]
 		- 요청(Parameter): 로그인한 회원의 번호 (long 타입 userNo)
-		- 처리 과정: COMMENTS 테이블과 PRODUCTS 테이블을 조인하여, 회원이 작성한 댓글 목록과 해당 댓글이 달린 게시글의 제목(PRODUCT_TITLE), 거래 타입(TRADE_TYPE)을 함께 조회합니다. 최신순 정렬.
+		- 처리 과정: COMMENTS 테이블과 PRODUCTS 테이블을 LEFT JOIN하여, 회원이 작성한 댓글 목록과 
+		             해당 댓글이 달린 게시글의 제목(PRODUCT_TITLE), 거래 타입(TRADE_TYPE), 그리고 
+		             게시글 삭제 여부(productDeleted)를 함께 조회합니다. (게시글이 삭제되거나 없어도 댓글 조회 가능) 최신순 정렬.
 		- 응답(Result): MyCommentDTO 객체로 매핑하여 반환
 	-->
 	<select id="selectMyCommentList" parameterType="long" resultType="MyCommentDTO">
@@ -53,12 +55,13 @@
            C.CREATED_AT AS createdAt,
            TO_CHAR(C.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS CREATED_AT_STR,
            P.TITLE AS PRODUCT_TITLE,
-           P.TRADE_TYPE AS tradeType     
+           P.TRADE_TYPE AS tradeType,
+           NVL(P.IS_DELETED, 1) AS productDeleted     
       FROM COMMENTS C
-        JOIN PRODUCTS P ON C.PRODUCT_ID = P.PRODUCT_ID
+        LEFT JOIN PRODUCTS P ON C.PRODUCT_ID = P.PRODUCT_ID
      WHERE C.WRITER_NO = #{userNo}
      ORDER BY C.CREATED_AT DESC
-</select> 
+</select>
 
 	<!-- 
 		[3. 찜 목록 조회]
