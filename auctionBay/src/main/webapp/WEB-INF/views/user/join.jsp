@@ -87,7 +87,7 @@
 
 			<div class="form-row">
 				<label>연락처</label>
-				<input type="text" name="phoneNumber" id="phoneNumber">
+				<input type="tel" name="phoneNumber" id="phoneNumber" pattern="[0-9]*" maxlength="11" placeholder=" - 제외하고 숫자만 입력">
 				<button type="button" id="check-phoneNumber-btn">중복확인</button>
 				<p id="check-phoneNumber-result" class="form-tip"></p>
 			</div>

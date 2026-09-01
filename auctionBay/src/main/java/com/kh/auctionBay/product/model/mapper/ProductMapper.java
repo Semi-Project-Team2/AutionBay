@@ -59,7 +59,7 @@ public interface ProductMapper {
     // 예약 상태로 변경
     int updateToReserved(@Param("productId") Long productId,
     					 @Param("reservedUserNo") Long reservedUserNo);
-    
+  
     // 거래 완료 처리
     int updateToCompleted(Long productId);
 
