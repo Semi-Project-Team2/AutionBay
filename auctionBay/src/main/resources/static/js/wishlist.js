@@ -46,3 +46,50 @@ if (wishBtn) {
         }
     });
 }
+
+/* 쪽지함 아이콘 위 '안읽음' 뱃지 */
+function updateUnreadBadge() {
+    fetch(contextPath + '/message/unread-count')
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('안읽음 뱃지 갱신 실패');
+        })
+        .then(unreadCount => {
+            // 쪽지함 a 태그 내의 뱃지 요소
+            const badgeContainer = document.querySelector('a[href*="/message/received"]');
+            if (!badgeContainer) return;
+
+            let badge = badgeContainer.querySelector(".badge");
+
+            if (unreadCount > 0) {
+                const badgeText = unreadCount <= 99 ? unreadCount : '99+';
+                if (badge) {
+                    badge.innerText = badgeText;
+                } else {
+                    // 뱃지가 없는데 개수가 생겼다면 새로 생성해서 추가
+                        badge = document.createElement('span');
+                        badge.className = 'badge';
+                        badge.innerText = badgeText;
+                        badgeContainer.appendChild(badge);
+                }
+            } else {
+                if (badge) {
+                    // unreadCount = 0이면 뱃지 삭제
+                    badge.remove();
+                }
+            }
+        })
+            .catch(error => console.error('Error updating unread badge:', error));
+    }
+
+    // 1. 페이지가 처음 로드될 때 실행
+    document.addEventListener('DOMContentLoaded', updateUnreadBadge);
+
+    // 2. 뒤로 가기(bfcache)로 페이지가 복원될 때도 비동기로 실행
+    window.addEventListener('pageshow', function(event) {
+        if (event.persisted || (performance.getEntriesByType("navigation")[0]?.type === "back_forward")) {
+            updateUnreadBadge();
+        }
+    });

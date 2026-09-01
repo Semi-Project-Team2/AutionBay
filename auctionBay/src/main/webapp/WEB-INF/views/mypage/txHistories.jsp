@@ -25,25 +25,25 @@
             margin: 30px auto;
         }
 
-/* 상단 프로필 영역 */
-.profile-area {
-    background-color: #e2e2e2;
-    padding: 30px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 30px;
-}
-.profile-info { display: flex; align-items: center; gap: 20px; }
-.profile-img { width: 70px; height: 70px; background-color: #333; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-.profile-text h2 { font-size: 20px; font-weight: bold; margin-bottom: 5px; }
-.profile-text p { font-size: 14px; color: #555; }
-.profile-right { display: flex; gap: 10px; }
-.btn-edit { background-color: #d4edda; border: 1px solid #c3e6cb; padding: 8px 15px; border-radius: 4px; font-weight: bold; color: #155724; cursor: pointer; text-decoration: none; font-size: 13px; }
-.btn-withdraw { background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 8px 15px; border-radius: 4px; font-weight: bold; color: #721c24; cursor: pointer; text-decoration: none; font-size: 13px; }
+        /* 상단 프로필 영역 */
+        .profile-area {
+            background-color: #e2e2e2;
+            padding: 30px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        .profile-info { display: flex; align-items: center; gap: 20px; }
+        .profile-img { width: 70px; height: 70px; background-color: #333; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .profile-text h2 { font-size: 20px; font-weight: bold; margin-bottom: 5px; }
+        .profile-text p { font-size: 14px; color: #555; }
+        .profile-right { display: flex; gap: 10px; }
+        .btn-edit { background-color: #d4edda; border: 1px solid #c3e6cb; padding: 8px 15px; border-radius: 4px; font-weight: bold; color: #155724; cursor: pointer; text-decoration: none; font-size: 13px; }
+        .btn-withdraw { background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 8px 15px; border-radius: 4px; font-weight: bold; color: #721c24; cursor: pointer; text-decoration: none; font-size: 13px; }
 
-        /* 2. 메인 콘텐츠 영역 (사이드바 + 리스트) */
+        /* 메인 콘텐츠 영역 (사이드바 + 리스트) */
         .mypage-content {
             display: flex;
             gap: 30px;
@@ -170,7 +170,6 @@
             gap: 5px;
             margin-top: 20px;
         }
-
         .page-btn {
             padding: 6px 12px;
             border: 1px solid #ddd;
@@ -180,14 +179,12 @@
             border-radius: 3px;
             font-size: 13px;
         }
-
         .page-btn.active {
             background-color: #222;
             color: #fff;
             border-color: #222;
             font-weight: bold;
         }
-
         .page-btn:hover:not(.active) {
             background-color: #f1f1f1;
         }
@@ -203,19 +200,19 @@
         <!-- 프로필 영역 포함 -->
         <jsp:include page="/WEB-INF/views/mypage/profile/profile.jsp" />
 
-        <!-- 2. 메인 콘텐츠 (사이드바 + 내용) -->
+        <!-- 메인 콘텐츠 (사이드바 + 내용) -->
         <div class="mypage-content">
 
-        <!-- 3. 사이드바 -->
-        <div class="mypage-sidebar">
-            <a href="${pageContext.request.contextPath}/mypage/products" class="sidebar-item">게시글 관리</a>
-            <a href="${pageContext.request.contextPath}/mypage/comments" class="sidebar-item">댓글 관리</a>
-            <a href="${pageContext.request.contextPath}/mypage/txHistories" class="sidebar-item active">거래내역</a>
-            <a href="${pageContext.request.contextPath}/mypage/reviews" class="sidebar-item">후기</a>
-            <a href="${pageContext.request.contextPath}/mypage/recents" class="sidebar-item">최근 본 글</a>
-            <a href="${pageContext.request.contextPath}/mypage/wishlists" class="sidebar-item">찜 목록</a>
-            <a href="${pageContext.request.contextPath}/message/received" class="sidebar-item">쪽지함</a>
-        </div>
+            <!-- 사이드바 -->
+            <div class="mypage-sidebar">
+                <a href="${pageContext.request.contextPath}/mypage/products" class="sidebar-item">게시글 관리</a>
+                <a href="${pageContext.request.contextPath}/mypage/comments" class="sidebar-item">댓글 관리</a>
+                <a href="${pageContext.request.contextPath}/mypage/txHistories" class="sidebar-item active">거래내역</a>
+                <a href="${pageContext.request.contextPath}/mypage/reviews" class="sidebar-item">후기</a>
+                <a href="${pageContext.request.contextPath}/mypage/recents" class="sidebar-item">최근 본 글</a>
+                <a href="${pageContext.request.contextPath}/mypage/wishlists" class="sidebar-item">찜 목록</a>
+                <a href="${pageContext.request.contextPath}/message/received" class="sidebar-item">쪽지함</a>
+            </div>
 
             <!-- 우측 거래 내역 리스트 -->
             <div class="mypage-main">
@@ -233,26 +230,21 @@
 
                 <!-- 리스트 반복 영역 -->
                 <div class="history-list">
-
                     <c:choose>
                         <c:when test="${not empty list.txHistories}">
                             <c:forEach var="txHistory" items="${list.txHistories}">
-                                <!-- 
-                                    list.txHistories: 
-                                    TxHistoryResultList 클래스의 필드 List<TxHistoryDTO> list의 getter 호출
-                                -->
                                 <div class="history-card">
                                     <div class="history-info">
-                                <c:choose>
-                                    <c:when test="${txHistory.tradeType == '경매'}">
-                                        <a href="${pageContext.request.contextPath}/auction/${txHistory.productId}/detail"
-                                            class="title">${txHistory.title}</a>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <a href="${pageContext.request.contextPath}/board/${txHistory.productId}/detail"
-                                            class="title">${txHistory.title}</a>
-                                    </c:otherwise>
-                                </c:choose>
+                                        <c:choose>
+                                            <c:when test="${txHistory.tradeType == '경매'}">
+                                                <a href="${pageContext.request.contextPath}/auction/${txHistory.productId}/detail"
+                                                    class="title">${txHistory.title}</a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="${pageContext.request.contextPath}/board/${txHistory.productId}/detail"
+                                                    class="title">${txHistory.title}</a>
+                                            </c:otherwise>
+                                        </c:choose>
                                         <span class="divider">|</span>
                                         <span>${txHistory.tradeType}</span>
                                         <span class="divider" style="margin-left: 40px;">|</span>
@@ -263,11 +255,9 @@
                                         <span>${txHistory.completedAtStr}</span>
                                     </div>
                                     <c:choose>
-                                        <%-- 후기작성완료(reviewWrited값이 true)인 경우 작성 완료 --%>
                                         <c:when test="${txHistory.reviewWrited == true}">
                                             <button class="review-completed">후기 작성 완료</button>
                                         </c:when>
-                                        <%-- 후기 미작성(reviewWrited값이 false)인 경우 --%>
                                         <c:when test="${txHistory.reviewWrited == false}">
                                             <a href="${pageContext.request.contextPath}/mypage/review/writeForm?historyId=${txHistory.historyId}"
                                             class="btn-review">
@@ -282,27 +272,23 @@
                             <div class="no-data">거래 내역이 없습니다.</div>
                         </c:otherwise>
                     </c:choose>
-
                 </div>
 
                 <c:if test="${not empty list.txHistories}">
                     <!-- 페이징 바 -->
                     <div class="pagination">
-                        <%-- 이전 페이지 그룹이 있을 경우 --%>
                         <c:if test="${pageInfo.hasPrevGroup}">
                             <a class="page-btn"
                                 href="/mypage/txHistories?page=${pageInfo.startPage - 1}&keyword=${condition.keyword}">
                                 &lt;&lt;
                             </a>
                         </c:if>
-                        <%-- 현재 페이지 그룹 표시 --%>
                         <c:forEach var="i" begin="${pageInfo.startPage}" end="${pageInfo.endPage}">
                             <a class="page-btn ${currentPage eq i  ? 'active' : ''}"
                                 href="/mypage/txHistories?page=${i}&keyword=${condition.keyword}">
                                 ${i}
                             </a>
                         </c:forEach>
-                        <%-- 다음 페이지 그룹이 있을 경우 --%>
                         <c:if test="${pageInfo.hasNextGroup}">
                             <a class="page-btn"
                                 href="/mypage/txHistories?page=${pageInfo.endPage + 1}&keyword=${condition.keyword}">
@@ -313,10 +299,9 @@
                 </c:if>
 
             </div>
-
         </div>
-
     </div>
+
     <!-- 공통 푸터 포함 -->
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />
     <script src="/js/review.js"></script>

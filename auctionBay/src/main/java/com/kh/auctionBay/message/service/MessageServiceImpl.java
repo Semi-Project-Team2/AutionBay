@@ -5,13 +5,19 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kh.auctionBay.common.SessionConst;
 import com.kh.auctionBay.message.model.dto.MessageDTO;
 import com.kh.auctionBay.message.model.mapper.MessageMapper;
+
 import com.kh.auctionBay.product.model.dto.ProductDTO;
 import com.kh.auctionBay.product.model.mapper.ProductMapper;
 import com.kh.auctionBay.review.model.dto.TxHistoryDTO;
 import com.kh.auctionBay.review.model.mapper.TxHistoryMapper;
 
+import com.kh.auctionBay.user.model.dto.UserDTO;
+
+
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -33,7 +39,7 @@ public class MessageServiceImpl implements MessageService {
 	}
 
 	@Override
-	public List<MessageDTO> detail(Long myNo, Long messageId) {
+	public List<MessageDTO> detail(Long myNo, Long messageId, HttpSession session) {
 		
 		MessageDTO message = mapper.findById(messageId);
 		
@@ -44,6 +50,9 @@ public class MessageServiceImpl implements MessageService {
 		
 		// 쪽지 읽음 처리
 		mapper.markAsRead(myNo, opponentNo, productId);
+		// 쪽지 읽은 후에 unreadCount 업데이트
+		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		loginUser.setUnreadCount(getUnreadCount(myNo));
 		
 		// 전체 대화 조회
 		return mapper.findAllMessage(myNo, opponentNo, productId);
@@ -87,7 +96,6 @@ public class MessageServiceImpl implements MessageService {
 	    }
 	    
 	    // 판매자만 수락 가능
-	    Long sellerNo;
 	    if ("SELL".equals(product.getTradeType())) {
 	        if (!myNo.equals(product.getWriterNo())) {
 	            throw new IllegalStateException("판매자만 거래를 수락할 수 있습니다.");

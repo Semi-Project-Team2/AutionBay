@@ -66,7 +66,7 @@ public class MessageController {
 	    UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
 	    Long myNo = loginUser.getUserNo();
 	    
-	    List<MessageDTO> message = service.detail(myNo, messageId);
+	    List<MessageDTO> message = service.detail(myNo, messageId, session);
 	    
 	    model.addAttribute("message", message);
 	    model.addAttribute("myNo", myNo);
@@ -81,21 +81,17 @@ public class MessageController {
 	        
 	        ProductDTO product = productService.getProductByProductId(productId);
 	        
-	        boolean canAccept = false;   // 거래 수락 버튼
-	        boolean canComplete = false; // 거래 완료 버튼
+	        boolean canAccept = false;
+	        boolean canComplete = false;
 	        
 	        if (product != null) {
 	            if ("ONGOING".equals(product.getStatus())) {
-	                // 판매자만 수락 가능
 	                if ("SELL".equals(product.getTradeType())) {
 	                    canAccept = myNo.equals(product.getWriterNo());
 	                } else if ("BUY".equals(product.getTradeType())) {
-	                    // BUY 글인 경우 대화 상대(판매자)가 수락
 	                    canAccept = !myNo.equals(product.getWriterNo());
 	                }
-	            } 
-	            else if ("RESERVED".equals(product.getStatus())) {
-	                // 예약된 구매자만 완료 가능
+	            } else if ("RESERVED".equals(product.getStatus())) {
 	                canComplete = product.getReservedUserNo() != null 
 	                           && product.getReservedUserNo().equals(myNo);
 	            }
@@ -108,49 +104,6 @@ public class MessageController {
 	    }
 	    
 	    return "message/detail";
-	}
-	
-	@PostMapping("/acceptTrade")
-	public String acceptTrade(@RequestParam Long productId,
-	                          @RequestParam Long opponentNo,
-	                          @RequestParam Long messageId,
-	                          HttpSession session,
-	                          RedirectAttributes ra) {
-	    
-	    UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
-	    Long myNo = loginUser.getUserNo();
-	    
-	    try {
-	        service.acceptTrade(productId, myNo, opponentNo);
-	        ra.addFlashAttribute("completeMessage", "거래를 수락했습니다. 예약 상태로 변경되었습니다.");
-	    } catch (IllegalStateException | IllegalArgumentException e) {
-	        ra.addFlashAttribute("completeError", e.getMessage());
-	    }
-	    
-	    return "redirect:/message/detail/" + messageId;
-	}
-	
-	
-	@PostMapping("/completeTrade")
-	public String completeTrade(@RequestParam Long productId,
-								@RequestParam Long opponentNo,
-								@RequestParam Long messageId,
-								HttpSession session,
-								RedirectAttributes ra) {
-		
-		UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
-		
-		Long myNo = loginUser.getUserNo();
-		
-		try {
-			service.completeTrade(productId, myNo, opponentNo);
-			ra.addFlashAttribute("completeMessage", "거래가 완료되었습니다");
-		} catch (IllegalStateException | IllegalArgumentException e) {
-			ra.addFlashAttribute("completeError", e.getMessage());
-		}
-		
-		return "redirect:/message/detail/" + messageId;
-		
 	}
 	
 	@GetMapping("/write")
@@ -202,7 +155,45 @@ public class MessageController {
 	
 	
 	
-	
+	@PostMapping("/acceptTrade")
+	public String acceptTrade(@RequestParam Long productId,
+	                          @RequestParam Long opponentNo,
+	                          @RequestParam Long messageId,
+	                          HttpSession session,
+	                          RedirectAttributes ra) {
+	    
+	    UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+	    Long myNo = loginUser.getUserNo();
+	    
+	    try {
+	        service.acceptTrade(productId, myNo, opponentNo);
+	        ra.addFlashAttribute("completeMessage", "거래를 수락했습니다. 예약 상태로 변경되었습니다.");
+	    } catch (IllegalStateException | IllegalArgumentException e) {
+	        ra.addFlashAttribute("completeError", e.getMessage());
+	    }
+	    
+	    return "redirect:/message/detail/" + messageId;
+	}
+
+	@PostMapping("/completeTrade")
+	public String completeTrade(@RequestParam Long productId,
+	                            @RequestParam Long opponentNo,
+	                            @RequestParam Long messageId,
+	                            HttpSession session,
+	                            RedirectAttributes ra) {
+	    
+	    UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+	    Long myNo = loginUser.getUserNo();
+	    
+	    try {
+	        service.completeTrade(productId, myNo, opponentNo);
+	        ra.addFlashAttribute("completeMessage", "거래가 완료되었습니다");
+	    } catch (IllegalStateException | IllegalArgumentException e) {
+	        ra.addFlashAttribute("completeError", e.getMessage());
+	    }
+	    
+	    return "redirect:/message/detail/" + messageId;
+	}
 	
 	
 	

@@ -230,9 +230,11 @@
                 <span class="quick-icon">✉️</span>
                 <span>쪽지함</span>
 
-                <c:choose>
-                    <c:when test="${sessionScope.loginUser.unreadCount <= 99}">
+                 <c:choose>
+                    <c:when test="${sessionScope.loginUser.unreadCount > 0 && sessionScope.loginUser.unreadCount <= 99}">
                         <span class="badge">${sessionScope.loginUser.unreadCount}</span>
+                    </c:when>
+                    <c:when test="${sessionScope.loginUser.unreadCount == 0}">
                     </c:when>
                     <c:otherwise>
                         <span class="badge">99+</span>
@@ -255,6 +257,8 @@
 </div>
 
 <script>
+const contextPath = "${pageContext.request.contextPath}";
+
 document.addEventListener("DOMContentLoaded", function() {
     const contextPath = "${pageContext.request.contextPath}";
     const auctionElements = document.querySelectorAll('.auction-price-loading');
