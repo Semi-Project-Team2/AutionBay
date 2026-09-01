@@ -59,6 +59,13 @@ public class ProductServiceImpl implements ProductService{
         // 조건에 맞는 상품 목록 조회
         List<ProductDTO> productList = mapper.selectProductList(condition);
         
+        if (productList != null && !productList.isEmpty()) {
+            for (ProductDTO product : productList) {
+                List<ProductMediaDTO> mediaList = mapper.getMediaListByProductId(product.getProductId());
+                product.setMediaList(mediaList);
+            }
+        }
+        
         // 조회된 목록과 페이징 정보를 ProductListResult에 담아서 반환
         return new ProductListResult(productList, pageInfo);
 	}
@@ -162,7 +169,7 @@ public class ProductServiceImpl implements ProductService{
 
 
 	    int order = 1;
-
+	    String defaultVideoThumbnail = "/product/common/default_thumb.png";
 
 	    for (MultipartFile file : images) {
 
@@ -238,11 +245,25 @@ public class ProductServiceImpl implements ProductService{
 
 	        media.setMediaUrl(saved.getPath());
 
-	        // 동영상은 썸네일 없음
-	        media.setThumbnailUrl(null);
+	        
 
 	        media.setMediaOrder((long) order);
 
+	        // =========================
+	        // order가 1인 경우 썸네일 처리
+	        // =========================
+	        if (order == 1) {
+	            if ("IMAGE".equals(mediaType)) {
+	                // 첫 번째 미디어가 이미지면 썸네일 URL에 이미지 경로 저장
+	                media.setThumbnailUrl(saved.getPath());
+	            } else {
+	                // 첫 번째 미디어가 동상이면 기본 썸네일 저장
+	                media.setThumbnailUrl(defaultVideoThumbnail);
+	            }
+	        } else {
+	            // 1번 순서가 아니면 썸네일은 null 처리
+	            media.setThumbnailUrl(null);
+	        }
 
 	        // =========================
 	        // PRODUCT_MEDIA 저장
@@ -299,7 +320,7 @@ public class ProductServiceImpl implements ProductService{
 	    // 3. 새로 추가된 미디어가 있는 경우 파일 업로드 및 DB 저장
 	    if (images != null && !images.isEmpty()) {
 	        int order = 1; // 필요하다면 기존 남은 미디어 개수를 고려하거나 순서 지정
-	        
+	        String defaultVideoThumbnail = "/product/common/default_thumb.png";
 	        for (MultipartFile file : images) {
 	            if (file == null || file.isEmpty()) {
 	                continue;
@@ -334,6 +355,19 @@ public class ProductServiceImpl implements ProductService{
 	                    mediaDTO.setThumbnailUrl(null);
 	                    mediaDTO.setMediaOrder((long) order); // 순서 세팅 추가
 	                    
+	                    // =========================
+	                    // order가 1인 경우 썸네일 처리
+	                    // =========================
+	                    if (order == 1) {
+	                        if ("IMAGE".equals(mediaType)) {
+	                            mediaDTO.setThumbnailUrl(savedFile.getPath());
+	                        } else {
+	                            mediaDTO.setThumbnailUrl(defaultVideoThumbnail);
+	                        }
+	                    } else {
+	                        mediaDTO.setThumbnailUrl(null);
+	                    }
+	                    
 	                    mapper.insertProductMedia(mediaDTO);
 	                    order++;
 	                }
@@ -348,8 +382,20 @@ public class ProductServiceImpl implements ProductService{
 	@Override
 	public String deleteProduct(Long productId) {
 		int result = mapper.deleteProduct(productId);
-		if(result > 0)
+		if(result > 0) {
+			List<ProductMediaDTO> MediaList = mapper.selectMediaListByProductId(productId);
+			for (ProductMediaDTO media : MediaList) {
+	            
+	            // DB에서 미디어 정보 조회 후 실제 물리 파일 삭제
+	            if (media != null && media.getMediaUrl() != null) {
+	                fileUploadUtil.delete(media.getMediaUrl(), productUploadDir);
+	            }
+	            
+	            // DB에서 미디어 레코드 삭제
+	            mapper.deleteProductMedia(media.getMediaId());
+	        }
 			return "성공적으로 삭제하였습니다.";
+		}
 		else
 			return "삭제과정에서 오류가 발생하였습니다.";
 	}

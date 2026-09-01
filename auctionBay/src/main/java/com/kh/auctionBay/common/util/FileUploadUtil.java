@@ -50,7 +50,7 @@ public class FileUploadUtil {
 		
 		// File 객체를 사용하여 업로드할 경로 확인
 		File dir = new File(uploadDir).getAbsoluteFile();
-		System.out.println(dir);	// 확인용
+		//System.out.println(dir);	// 확인용
 		
 		// 해당 경로가 없으면 폴더를 생성
 		if (!dir.exists()) {

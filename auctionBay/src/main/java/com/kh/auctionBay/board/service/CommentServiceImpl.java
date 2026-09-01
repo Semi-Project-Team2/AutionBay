@@ -27,7 +27,7 @@ public class CommentServiceImpl implements CommentService {
 		comment.setContent(content);
 		comment.setWriterNo(writerNo);
 		mapper.insertComment(comment);	// 실행 후 commentId 가 채워짐
-		System.out.println("test용"+comment);
+		//System.out.println("test용"+comment);
 		return mapper.selectCommentById(comment.getCommentId());
 	}
 
@@ -35,7 +35,7 @@ public class CommentServiceImpl implements CommentService {
 	public List<CommentDTO> getComments(Long productId) {
 		
 		List<CommentDTO> comments =  mapper.selectCommentsByProductId(productId); // 댓글 새로고침 시
-		System.out.println(comments);
+		//System.out.println(comments);
 		return comments;
 	}
 	
