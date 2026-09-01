@@ -8,9 +8,10 @@
 	
 	<!-- 
 		[1. 내가 작성한 게시글 조회]
-		- 요청(Parameter): 로그인한 회원의 번호 (long 타입 userNo)
+		- 요청(Parameter): 로그인한 회원의 번호 (long 타입 userNo) 및 검색 키워드(keyword)가 담긴 Map
 		- 처리 과정: PRODUCTS 테이블에서 작성자 번호가 일치하고 삭제되지 않은(IS_DELETED = 0 또는 NULL) 게시글을 조회하며, 
-		             PRODUCT_MEDIA 테이블과 조인하여 대표 이미지(MEDIA_ORDER = 1)를 함께 가져옵니다. 최신순 정렬.
+		             PRODUCT_MEDIA 테이블과 조인하여 대표 이미지(MEDIA_ORDER = 1)를 가져오고, 
+		             해당 게시글에 달린 활성 댓글 개수(commentCount)를 서브쿼리로 함께 조회합니다. 최신순 정렬.
 		- 응답(Result): ProductDTO 객체로 매핑하여 반환
 	-->
 	<select id="selectMyProductList" parameterType="map" resultType="ProductDTO">
@@ -26,7 +27,8 @@
            P.VIEW_COUNT AS viewCount, 
            P.CREATED_AT AS createdAt,
            TO_CHAR(P.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS createdAtStr,
-           NVL(PM.THUMBNAIL_URL, '/uploads/product/common/default_thumb.png') AS mainImage
+           NVL(PM.THUMBNAIL_URL, '/uploads/product/common/default_thumb.png') AS mainImage,
+           (SELECT COUNT(*) FROM COMMENTS C WHERE C.PRODUCT_ID = P.PRODUCT_ID AND C.IS_DELETED = 0) AS commentCount
       FROM PRODUCTS P
         LEFT JOIN PRODUCT_MEDIA PM 
                ON P.PRODUCT_ID = PM.PRODUCT_ID AND PM.MEDIA_ORDER = 1
@@ -36,7 +38,8 @@
          AND (P.TITLE LIKE '%' || #{keyword} || '%' OR P.DESCRIPTION LIKE '%' || #{keyword} || '%')
        </if>
      ORDER BY P.CREATED_AT DESC
-</select>
+	</select>
+
 	<!-- 
 		[2. 내가 작성한 댓글 조회]
 		- 요청(Parameter): 로그인한 회원의 번호 (long 타입 userNo)
