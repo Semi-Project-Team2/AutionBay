@@ -748,8 +748,8 @@
         <!-- 글 작성자일 경우에만 노출되는 수정/삭제 버튼 영역 (우측 하단 배치) -->
         <c:if test="${isOwner or (not empty sessionScope.loginUser and sessionScope.loginUser.userNo == product.writerNo)}">
             <div class="post-owner-actions">
-                <button type="button" class="btn-owner" onclick="location.href='${pageContext.request.contextPath}/board/update/${product.productId}'">수정</button>
-                <button type="button" class="btn-owner delete" id="btnDeleteBoard" data-board-id="${product.productId}">삭제</button>
+                <button type="button" class="btn-owner" onclick="location.href='${pageContext.request.contextPath}/board/${product.productId}/update'">수정</button>
+                <button type="button" class="btn-owner delete" onclick="if(confirm('정말 삭제하시겠습니까?')) { location.href='${pageContext.request.contextPath}/product/${product.productId}/delete'; }">삭제</button>
             </div>
         </c:if>
 
