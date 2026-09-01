@@ -144,22 +144,32 @@
             font-size: 13px;
             font-weight: bold;
             cursor: pointer;
+            display: inline-block; /* a 태그일 때 모양 유지용 */
+            text-align: center;
         }
-        .review-completed {
-            background-color: #a1a1a1;
-            border: 1px solid #aaa;
+        .review-completed, button.review-completed {
+            background-color: #e2e2e2; /* 목록 배경색인 #e2e2e2와 맞추거나 차분한 회색으로 설정 */
+            border: 1px solid #ccc;
+            border-style: solid; /* 브라우저 기본 3D 보더 효과 제거 */
             padding: 6px 14px;
             border-radius: 4px;
             text-decoration: none;
-            color: #555;
+            color: #777; /* 글자색을 너무 어둡지 않게 조절 */
             font-size: 13px;
             font-weight: bold;
-            cursor: pointer;
-        }
-        .no-data { background-color: #e2e2e2; padding: 40px; text-align: center; border-radius: 6px; color: #777; font-size: 14px; }
+            cursor: default;
+            display: inline-block;
 
+            box-sizing: border-box;
+            font-family: inherit;
+            line-height: normal;
+        }
         .btn-review:hover {
             background-color: #c3e6cb;
+        }
+        .review-completed:hover {
+            background-color: #e2e2e2;
+            border-color: #ccc;
         }
 
         /* 페이징 바 */
@@ -261,7 +271,7 @@
                                         <c:when test="${txHistory.reviewWrited == false}">
                                             <a href="${pageContext.request.contextPath}/mypage/review/writeForm?historyId=${txHistory.historyId}"
                                             class="btn-review">
-                                                후기작성
+                                                후기 작성
                                             </a>
                                         </c:when>
                                     </c:choose>
@@ -304,7 +314,7 @@
 
     <!-- 공통 푸터 포함 -->
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />
-    <script src="/js/review.js"></script>
+    <script src="/js/txHistory.js"></script>
 </body>
 
 </html>
