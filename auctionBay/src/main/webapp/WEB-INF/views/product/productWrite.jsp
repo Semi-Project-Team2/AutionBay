@@ -407,7 +407,10 @@ header {
 
 <div class="container">
 
-
+    <c:if test="${not empty uploadError}">
+        <script>alert("${uploadError}")</script>
+    </c:if>
+    
     <!-- 페이지 제목 -->
     <div class="page-title">
 
