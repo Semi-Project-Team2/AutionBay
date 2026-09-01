@@ -155,7 +155,10 @@
 		</div>
 
         <!-- 4. 우측 퀵 메뉴 섹션 -->
+		<a href="${pageContext.request.contextPath}/product/write" class="btn-write">게시글<br>작성</a>
+
         <aside class="right-quick-menu">
+			
             <a href="${pageContext.request.contextPath}/mypage/wishlists" class="quick-item">
                 <span class="quick-icon">❤️</span>
                 <span>찜목록</span>

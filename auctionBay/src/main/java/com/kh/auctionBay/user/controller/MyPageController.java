@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -102,6 +103,21 @@ public class MyPageController {
 		
 		return "mypage/txHistories";
 	}
+	
+	/**
+	 * 거래내역 상세 화면
+	 */
+	@GetMapping("/txHistory/{historyId}")
+	public String txHistoryDetail(@PathVariable Long historyId,	Model model) {
+		
+		// DB에서 거래내역 조회 후 변수에 저장
+		TxHistoryDTO txHistory = txService.getTxHistoryDetail(historyId);
+		
+		// 브라우저에서 "txHistory"로 요청 시 txHistory 전달
+		model.addAttribute("txHistory", txHistory);
+		
+		return "mypage/txHistory/detail";
+	}
 
 	
 	/**
@@ -186,6 +202,20 @@ public class MyPageController {
 		}
 		
 		return "mypage/profile/editForm";
+	}
+	
+	@GetMapping("/reviewForm")
+	public String reviewForm() {	
+		return "review/form";
+	}
+	
+	/**
+	 * 마이페이지 회원 정보 수정 버튼 클릭 시
+	 * @return
+	 */
+	@GetMapping("/profileEditForm")
+	public String editProfile() {
+		return "editProfile";
 	}
 	
 	/* ----------------------------------------- */
@@ -511,4 +541,14 @@ public class MyPageController {
 		activityService.removeAllRecentViews(loginUser.getUserNo());
 		return ResponseEntity.ok("SUCCESS");
 	}
+	
+	@PostMapping("/form")
+	public String editProfile(@ModelAttribute UserDTO user, HttpSession session)
+				throws IllegalStateException, IOException {
+		
+		
+		return "redirect:/mypage/txHistories";
+	}
+	
+	
 }
