@@ -10,7 +10,7 @@
 	</insert>
 	
 	<select id="selectCommentById" parameterType="long" resultType="CommentDTO">
-		SELECT C.COMMENT_ID, C.PRODUCT_ID, C.WRITER_NO, C.CONTENT, C.CREATED_AT,
+		SELECT C.COMMENT_ID, C.PRODUCT_ID, C.WRITER_NO, C.CONTENT, C.IS_DELETED, C.CREATED_AT,
 			   TO_CHAR(C.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS CREATED_AT_STR,
 			   case
 			    	when U.IS_DELETED = 1 then '탈퇴한 회원'
@@ -22,11 +22,13 @@
 	</select>
 	
 	<delete id="deleteComment" parameterType="long">
-		DELETE FROM COMMENTS WHERE COMMENT_ID = #{commentId}
+		UPDATE COMMENTS
+		SET IS_DELETED = 1
+		WHERE COMMENT_ID = #{commentId}
 	</delete>
 	
-	<select id="selectCommentsByBoardId" parameterType="long" resultType="CommentDTO">
-		SELECT C.COMMENT_ID, C.PRODUCT_ID, C.WRITER_NO, C.CONTENT, C.CREATED_AT,
+	<select id="selectCommentsByProductId" parameterType="long" resultType="CommentDTO">
+		SELECT C.COMMENT_ID, C.PRODUCT_ID, C.WRITER_NO, C.CONTENT, C.IS_DELETED, C.CREATED_AT,
 			   TO_CHAR(C.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS CREATED_AT_STR,
 			   case
 			    	when U.IS_DELETED = 1 then '탈퇴한 회원'
@@ -34,7 +36,8 @@
 		    	end as WRITER_NICKNAME
 		  FROM COMMENTS C
 		  	LEFT JOIN USERS U ON C.WRITER_NO = U.USER_NO
-		 WHERE C.PRODUCT_ID = #{boardId}
+		 WHERE C.PRODUCT_ID = #{productId} 
+		 	AND C.IS_DELETED = 0
 		 ORDER BY C.COMMENT_ID ASC	
 	</select>
 	

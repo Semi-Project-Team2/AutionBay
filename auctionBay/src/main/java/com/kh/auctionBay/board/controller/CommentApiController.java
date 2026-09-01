@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.auctionBay.board.model.dto.CommentDTO;
+import com.kh.auctionBay.board.model.dto.CommentRequest;
 import com.kh.auctionBay.board.service.CommentService;
 import com.kh.auctionBay.common.SessionConst;
 import com.kh.auctionBay.common.dto.ApiResponse;
@@ -28,18 +29,23 @@ public class CommentApiController {
 
 	
 	// 댓글 추가
-	@PostMapping("/board/{boardId}/comment")
-	public ResponseEntity<ApiResponse<CommentDTO>> addComment(@PathVariable Long boardId,
+	@PostMapping("/board/{productId}/comment")
+	public ResponseEntity<ApiResponse<CommentDTO>> addComment(@PathVariable Long productId,
 															  @RequestBody CommentRequest commentRequest,
 															  HttpSession session) {
+		
 		// 로그인한 사용자 정보 추출
-		UserDTO loginMember = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		if (loginUser == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+					.body(ApiResponse.fail("로그인이 필요한 서비스입니다."));
+		}
 		
 		// 게시글 번호, 사용자 아이디, 댓글 정보를 저장
 		try {
 			
-			CommentDTO comment = service.addComment(boardId, commentRequest.getContent(), loginMember.getUserNo());
-			System.out.println(comment);
+			CommentDTO comment = service.addComment(productId, commentRequest.getContent(), loginUser.getUserNo());
+			System.out.println("test용2"+comment);
 			return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(comment));
 		
 		} catch (RuntimeException e) {
@@ -55,7 +61,13 @@ public class CommentApiController {
 	@DeleteMapping("/comments/{commentId}")
 	public ResponseEntity<ApiResponse<Long>> deleteComment(@PathVariable Long commentId,
 														   HttpSession session) {
+	 
 		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
+		if (loginUser == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+					.body(ApiResponse.fail("로그인이 필요한 서비스입니다."));
+		}
+		
 		try {
 			service.deleteComment(commentId, loginUser.getUserNo());
 			return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success("성공적으로 삭제하였습니다", commentId));

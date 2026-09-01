@@ -498,9 +498,23 @@ header {
                 <!-- 파일 선택 -->
                 <label for="imageInput">
 
-                    <div class="image-box">
+                    <div class="image-box" style="position: relative;">
 						<span id="imagePlaceholder">이미지 등록</span>
 						<div id="imagePreview"></div>
+						
+						<!-- 미디어 순서 표시 (예: 1 / 5) -->
+						<div id="mediaOrderBadge" style="display: none; position: absolute; top: 10px; left: 10px; z-index: 10; background: rgba(0,0,0,0.6); color: white; padding: 4px 8px; border-radius: 4px; font-size: 14px; font-weight: bold;">
+						    1 / 5
+						</div>
+						
+						<!-- 개별 삭제 버튼 -->
+						<button 
+						    type="button" 
+						    id="currentMediaDeleteBtn" 
+						    onclick="removeCurrentMedia(event)" 
+						    style="display: none; position: absolute; top: 10px; right: 10px; z-index: 10; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-weight: bold;">
+						    ×
+						</button>
                     </div>
 
                 </label>
@@ -846,11 +860,9 @@ function changeTradeType(type) {
 	imageInput.value = "";
 	imagePreview.innerHTML = "";
 	imagePlaceholder.style.display = "block";
+	document.getElementById("currentMediaDeleteBtn").style.display = "none";
+	document.getElementById("mediaOrderBadge").style.display = "none";
 	document.getElementById("imageCount").innerText = "(0/5)";
-	
-	document.getElementById("imagePreview").innerHTML = "";
-	document.getElementById("imagePlaceholder").style.display = "block";
-	document.getElementById("imagePreview").classList.remove("single");
 
     // 현재 거래 방식 저장
     currentTradeType = type;
@@ -1028,14 +1040,11 @@ function changeTradeType(type) {
 }
 
 const imageInput = document.getElementById("imageInput");
-
 const imagePreview = document.getElementById("imagePreview");
-
-const imagePlaceholder =
-    document.getElementById("imagePlaceholder");
-
-const imageCount =
-    document.getElementById("imageCount");
+const imagePlaceholder = document.getElementById("imagePlaceholder");
+const imageCount = document.getElementById("imageCount");
+const currentMediaDeleteBtn = document.getElementById("currentMediaDeleteBtn");
+const mediaOrderBadge = document.getElementById("mediaOrderBadge");
 
 // 선택한 파일을 계속 저장할 곳
 let selectedFiles = new DataTransfer();
@@ -1103,7 +1112,8 @@ function renderPreview() {
     if (selectedFiles.files.length === 0) {
 
         imagePlaceholder.style.display = "block";
-
+        currentMediaDeleteBtn.style.display = "none";
+        mediaOrderBadge.style.display = "none";
         imageCount.innerText = "(0/5)";
 
         return;
@@ -1111,10 +1121,15 @@ function renderPreview() {
 
 
     imagePlaceholder.style.display = "none";
+    currentMediaDeleteBtn.style.display = "block";
+    mediaOrderBadge.style.display = "block";
 
+    // 인덱스 범위 초과 방지
+    if (currentMediaIndex >= selectedFiles.files.length) {
+        currentMediaIndex = selectedFiles.files.length - 1;
+    }
 
 	const file = selectedFiles.files[currentMediaIndex];
-
 	const url = URL.createObjectURL(file);
 
 
@@ -1143,8 +1158,36 @@ function renderPreview() {
 	}
 
 
-    imageCount.innerText =
-        "(" + selectedFiles.files.length + "/5)";
+    mediaOrderBadge.innerText = (currentMediaIndex + 1) + " / " + selectedFiles.files.length;
+    imageCount.innerText = "(" + selectedFiles.files.length + "/5)";
+}
+
+// 현재 보고 있는 미디어 개별 삭제 함수 (X 버튼 클릭 시)
+function removeCurrentMedia(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (selectedFiles.files.length === 0) return;
+
+    const newDataTransfer = new DataTransfer();
+    const files = selectedFiles.files;
+
+    // 현재 인덱스에 해당하는 파일을 제외하고 새로운 DataTransfer에 담기
+    for (let i = 0; i < files.length; i++) {
+        if (i !== currentMediaIndex) {
+            newDataTransfer.items.add(files[i]);
+        }
+    }
+
+    selectedFiles = newDataTransfer;
+    imageInput.files = selectedFiles.files;
+
+    // 인덱스 조정
+    if (currentMediaIndex >= selectedFiles.files.length && currentMediaIndex > 0) {
+        currentMediaIndex--;
+    }
+
+    renderPreview();
 }
 
 function showPreviousMedia(event) {

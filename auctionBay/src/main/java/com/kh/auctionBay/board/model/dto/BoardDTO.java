@@ -27,7 +27,6 @@ public class BoardDTO {
     private int readCount;
     private LocalDateTime createdDate;
     
-    // 첨부 이미지 목록
-    private List<BoardImageDTO> images;
-   
+    private String deleteBoard;
+
 }

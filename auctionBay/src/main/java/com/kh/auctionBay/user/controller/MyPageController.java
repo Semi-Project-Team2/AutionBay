@@ -422,22 +422,7 @@ public class MyPageController {
 		return "mypage/recents";
 	}
 	
-	/**
-	 * [게시글/상품 수정 폼 이동]
-	 * - 요청 URL: GET /board/updateForm
-	 * - 처리 과정: 수정할 글 번호(no)를 받아 해당 정보를 조회 후 수정 페이지로 이동
-	 */
-	@GetMapping("/board/updateForm")
-	public String updateForm(@RequestParam("no") Long no, Model model) {
-		// 1. 전달받은 게시글 번호(no)로 DB에서 해당 글 상세정보 조회
-		// BoardDTO board = boardService.selectBoardDetail(no);
-		
-		// 2. 조회 결과를 Model에 담아서 JSP로 전달
-		// model.addAttribute("board", board);
-		
-		// 3. 수정 폼 화면(JSP) 경로 리턴 (/WEB-INF/views/board/updateForm.jsp)
-		return "board/updateForm";
-	}
+	
 
 	/**
 	 * [내가 작성한 게시글 삭제 처리 (AJAX 비동기 통신)]
@@ -464,7 +449,7 @@ public class MyPageController {
 	 * - 요청 URL: DELETE /mypage/deleteComment?commentNo=댓글번호
 	 * - 처리 과정:
 	 *    1. 전달받은 댓글 번호와 로그인 유저 번호를 검증합니다.
-	 *    2. 해당 댓글의 내용을 마스킹 처리('삭제된 댓글입니다.')하는 소프트 삭제를 수행합니다.
+	 *    2. 해당 댓글의 삭제 여부 플래그(is_deleted)를 1로 변경하는 소프트 삭제를 수행합니다.
 	 * - 응답 데이터: 성공 시 "SUCCESS", 실패 시 "FAIL" 문자열을 비동기로 반환합니다.
 	 */
 	@DeleteMapping("/deleteComment")

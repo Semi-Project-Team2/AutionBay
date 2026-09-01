@@ -65,6 +65,11 @@ public class MessageServiceImpl implements MessageService {
 		return message.getMessageId();
 		
 	}
+
+	@Override
+	public int getUnreadCount(Long userNo) {
+		return mapper.countUnread(userNo);
+	}
 	
 	// 판매자만 가능하게 
 	@Override
@@ -84,14 +89,14 @@ public class MessageServiceImpl implements MessageService {
 	    // 판매자만 수락 가능
 	    Long sellerNo;
 	    if ("SELL".equals(product.getTradeType())) {
-	        sellerNo = product.getWriterNo();
+	        if (!myNo.equals(product.getWriterNo())) {
+	            throw new IllegalStateException("판매자만 거래를 수락할 수 있습니다.");
+	        }
 	    } 
-	    else { // BUY 글인 경우
-	        sellerNo = opponentNo; // 대화 상대가 판매자
-	    }
-	    
-	    if (!sellerNo.equals(myNo)) {
-	        throw new IllegalStateException("판매자만 거래를 수락할 수 있습니다.");
+	    else { // BUY 글 → 수락하는 사람(대화 상대) 본인이 곧 판매자
+	        if (myNo.equals(product.getWriterNo())) {
+	            throw new IllegalStateException("판매자만 거래를 수락할 수 있습니다.");
+	        }
 	    }
 	    
 	    // 예약 처리 (상대방을 예약 구매자로 지정)

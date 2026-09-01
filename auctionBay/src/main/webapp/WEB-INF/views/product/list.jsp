@@ -13,7 +13,7 @@
 <div class="container">
 
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
-	
+<div id="server-data" data-message="${message}"></div>
 <main class="container">
 	<%-- 회원 탈퇴 후 초기화면에서 표시할 탈퇴 완료 메시지 --%>
 		<c:if test="${not empty withdrawMessage}">
@@ -80,7 +80,6 @@
 
     <!-- 2. 메인 콘텐츠 (상품 그리드 + 우측 퀵메뉴) -->
     <div class="main-content">
-        
         <!-- 상품 목록 그리드 섹션 -->
 		<div class="product-grid-section">
 		    <div class="product-grid">
@@ -155,27 +154,33 @@
 		</div>
 
         <!-- 4. 우측 퀵 메뉴 섹션 -->
-        <div class="quick-menu-section">
-            <a href="${pageContext.request.contextPath}/product/write" class="btn-write">게시글 작성</a>
-            
-            <div class="quick-box">
-                <a href="${pageContext.request.contextPath}/mypage/wishlists" class="quick-item">
-                    <span>❤️</span>찜목록
-                </a>
-                <a href="${pageContext.request.contextPath}/message/received" class="quick-item">
-                    <span>✉️</span>쪽지함
-                </a>
-                <a href="${pageContext.request.contextPath}/mypage/recents"class="quick-item">
-                    <span>👁️</span>최근 본 글
-                </a>
-            </div>
-        </div>
+		<div class="quick-menu-section">
+		            <a href="${pageContext.request.contextPath}/product/write" class="btn-write">게시글 작성</a>
+
+		            <div class="quick-box">
+		                <a href="${pageContext.request.contextPath}/mypage/wishlists" class="quick-item">
+		                    <span>❤️</span>찜목록
+		                </a>
+		                <a href="${pageContext.request.contextPath}/message/received" class="quick-item">
+		                    <span>✉️</span>쪽지함
+		                </a>
+		                <a href="${pageContext.request.contextPath}/mypage/recents"class="quick-item">
+		                    <span>👁️</span>최근 본 글
+		                </a>
+		            </div>
+		        </div>
 
     </div>
 	</main>
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
 <script>
+	const serverMessage = document.querySelector("#server-data").dataset.message;
+	if (serverMessage) {
+	    alert(serverMessage);
+	}
+	
+
     function filterChange(type, value) {
         if (type === 'tradeType') {
             document.getElementById('tradeType').value = value;
