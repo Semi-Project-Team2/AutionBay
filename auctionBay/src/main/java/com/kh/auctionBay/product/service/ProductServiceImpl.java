@@ -176,14 +176,14 @@ public class ProductServiceImpl implements ProductService{
 	        if (file == null || file.isEmpty()) {
 	            continue;
 	        }
-
+	        
 
 	        // 최대 5개
 	        if (order > 5) {
 	            break;
 	        }
 
-
+	        
 	        // =========================
 	        // 이미지 / 동영상 구분
 	        // =========================
