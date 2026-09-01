@@ -107,15 +107,18 @@
 	<!-- 정렬 조건 처리 (VIEW_COUNT 기준 정렬 반영) -->
 	ORDER BY 
 	<choose>
-		<when test="sortBy == 'priceAsc'">
+		<when test="sortBy == 'PRICE_ASC' or sortBy == 'priceAsc'">
 			P.PRICE ASC, P.PRODUCT_ID DESC
 		</when>
-		<when test="sortBy == 'priceDesc'">
+		<when test="sortBy == 'PRICE_DESC' or sortBy == 'priceDesc'">
 			P.PRICE DESC, P.PRODUCT_ID DESC
 		</when>
-		<when test="sortBy == 'views'">
+		<when test="sortBy == 'VIEWS' or sortBy == 'views'">
 			P.VIEW_COUNT DESC, P.PRODUCT_ID DESC
 		</when>
+		<when test="sortBy == 'WISHS'">
+	        (SELECT COUNT(*) FROM WISHLISTS W WHERE W.PRODUCT_ID = P.PRODUCT_ID) DESC, P.CREATED_AT DESC
+	    </when>
 		<otherwise>
 			P.PRODUCT_ID DESC
 		</otherwise>
@@ -219,6 +222,10 @@
 	SET IS_DELETED = 1
 	WHERE PRODUCT_ID = #{productId}
 </update>
+
+<select id="selectMediaListByProductId" resultType="ProductMediaDTO">
+	SELECT * FROM PRODUCT_MEDIA WHERE PRODUCT_ID = #{productId}
+</select>
 
 
 
