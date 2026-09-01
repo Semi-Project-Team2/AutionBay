@@ -1,9 +1,32 @@
+/* ==========================================================
+   메인 콘텐츠 영역 CSS (Flexbox를 이용한 완벽한 Sticky 퀵메뉴 정렬)
+   ========================================================== */
+
+body {
+    background-color: #ffffff !important;
+}
+
+.main-container {
+    width: 1200px;
+    margin: 30px auto;
+    background-color: #ffffff;
+}
+
+/* 상품 그리드 영역과 퀵메뉴를 나란히 배치하기 위한 Flex 컨테이너 */
+.content-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 30px; /* 본문과 퀵메뉴 사이의 간격 */
+    position: relative;
+}
+
 /* 1. 상단 필터 바 영역 */
 .filter-bar {
-    background-color: #e2e2e2;
+    background-color: #f8f9fa;
+    border: 1px solid #eaeaea;
     padding: 20px;
-    border-radius: 6px;
-    margin-bottom: 30px;
+    border-radius: 8px;
+    margin-bottom: 25px;
 }
 .filter-row {
     display: flex;
@@ -15,36 +38,139 @@
     width: 120px;
     font-weight: bold;
     font-size: 15px;
+    color: #222;
 }
 .filter-options {
     display: flex;
-    gap: 20px;
+    gap: 15px;
+    align-items: center;
 }
 .filter-options.category-wrap {
     flex-wrap: wrap;
-    gap: 10px 20px;
+    gap: 8px 15px;
 }
 .filter-item {
     cursor: pointer;
     color: #555;
     text-decoration: none;
-    padding: 4px 8px;
-    border-radius: 4px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    background-color: #f1f3f5;
+    transition: all 0.2s;
 }
-.filter-item:hover, .filter-item.active {
-    background-color: #ccc;
+.filter-item:hover {
+    background-color: #e2e8f0;
     color: #000;
+}
+.filter-item.active {
+    background-color: #f3e8ff;
+    color: #7c3aed;
     font-weight: bold;
 }
-
-/* 2. 메인 콘텐츠 및 상품 그리드 */
-.main-content {
+/* 필터 바 내의 모든 행이 일관된 간격과 정렬을 가지도록 설정 */
+.filter-row {
     display: flex;
-    gap: 30px;
-    align-items: flex-start;
+    align-items: center;
+    padding: 8px 0;
 }
-.product-grid-section {
+
+.filter-label {
+    width: 100px;
+    font-weight: bold;
+    color: #555;
+    flex-shrink: 0;
+}
+
+.filter-options {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
     flex: 1;
+}
+
+/* 상태 보기 체크박스 레이블 정렬 */
+.filter-options label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+}
+
+.price-filter input {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+    width: 130px;
+    outline: none;
+}
+.price-search-btn {
+    padding: 6px 14px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
+}
+.price-search-btn:hover {
+    background-color: #555;
+}
+/* 카테고리 타이틀 및 게시글 작성 버튼 한 줄 정렬 영역 */
+.section-title-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end; /* 아래쪽 라인에 맞춤 */
+    margin: 30px 0 15px 0;
+}
+
+.current-category-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #111;
+    margin-bottom: 6px;
+}
+
+.section-sub-info {
+    font-size: 14px;
+    color: #666;
+}
+
+.section-sub-info span {
+    font-weight: bold;
+    color: #111;
+}
+
+/* 기존 단독 컨테이너 마진 초기화 (한 줄 정렬용) */
+.product-write-container {
+    margin-bottom: 0;
+}
+
+.btn-product-write {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #f3e8ff;
+    color: #6b21a8;
+    border: 1px solid #e9d5ff;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: bold;
+    text-decoration: none;
+}
+.btn-product-write:hover {
+    background-color: #e9d5ff;
+}
+
+/* 3. 상품 그리드 섹션 */
+.product-grid-section {
+    flex: 1; /* 남은 공간을 모두 차지하도록 설정 */
     min-width: 0;
 }
 .product-grid {
@@ -55,20 +181,20 @@
 }
 .product-card {
     background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
     overflow: hidden;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 .product-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transform: translateY(-4px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.08);
 }
 .product-img {
     width: 100%;
-    height: 160px;
-    background-color: #d8d8d8;
+    height: 180px;
+    background-color: #f1f3f5;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -78,67 +204,41 @@
 .product-img img {
     width: 100%;
     height: 100%;
-
     object-fit: cover;
 }
 .product-info {
-    padding: 10px;
+    padding: 12px;
 }
 .product-title-row {
     display: flex;
     justify-content: space-between;
     font-size: 13px;
-    margin-bottom: 6px;
-    color: #666;
+    margin-bottom: 8px;
+    color: #444;
 }
 .product-price {
     font-size: 15px;
     font-weight: bold;
-    color: #000;
+    color: #111;
 }
 
-/* 3. 우측 퀵 메뉴 영역 */
-.quick-menu-section {
-    width: 100px;
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-.btn-write {
-	width: 6%;
-	height: 60px;
-    background-color: #d1d1d1;
-    border: none;
-    padding: 12px;
-    font-weight: bold;
-    text-align: center;
-    text-decoration: none;
-    color: #333;
-    border-radius: 4px;
-    cursor: pointer;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-size: 11px;
-}
-.btn-write:hover { background-color: #bcbcbc; }
-
-.container {position: relative;}
+/* 우측 스크롤 고정 퀵 메뉴 (기존보다 오른쪽으로 더 이동) */
 .right-quick-menu {
-    position: absolute;
-    top: 300px;
-    right: 0px;
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    left: calc(50% + 645px); /* 기존 625px에서 오른쪽으로 20px 더 이동 */
     width: 75px;
-    background-color: #ffeef4;
-    border: 1px solid #ffccd5;
-    border-radius: 6px;
+    background-color: #ffffff;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 15px 0;
     gap: 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    z-index: 1000;
 }
 .quick-item {
     display: flex;
@@ -146,30 +246,31 @@
     align-items: center;
     text-decoration: none;
     color: #333;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: bold;
     gap: 5px;
     position: relative;
 }
-.quick-icon { font-size: 22px; }
+.quick-icon { font-size: 20px; }
 .badge {
     position: absolute;
-    top: 0px;
-    right: 0px;
-    background-color: #000;
+    top: -2px;
+    right: 4px;
+    background-color: #ff3b30;
     color: #fff;
     font-size: 9px;
-    padding: 1px 4px;
-    border-radius: 50%;
+    padding: 1px 5px;
+    border-radius: 10px;
+    font-weight: bold;
 }
 
-/* 4. 페이징 바 영역 */
+/* 5. 페이징 바 영역 */
 .pagination {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 5px;
-    margin-top: 20px;
+    margin-top: 30px;
 }
 .page-btn {
     padding: 6px 12px;
@@ -177,46 +278,15 @@
     background-color: #fff;
     color: #333;
     text-decoration: none;
-    border-radius: 3px;
+    border-radius: 4px;
     font-size: 13px;
 }
 .page-btn.active {
-    background-color: #222;
+    background-color: #111;
     color: #fff;
-    border-color: #222;
+    border-color: #111;
     font-weight: bold;
 }
 .page-btn:hover:not(.active) {
     background-color: #f1f1f1;
-}
-/* ==========================================================
-   상품 등록 버튼 스타일
-   ========================================================== */
-.product-write-container {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 16px;
-}
-
-.btn-product-write {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background-color: #0f172a;
-    color: #ffffff;
-    padding: 10px 18px;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: background-color 0.2s, transform 0.1s;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.btn-product-write:hover {
-    background-color: #1e293b;
-}
-
-.btn-product-write:active {
-    transform: scale(0.98);
 }
