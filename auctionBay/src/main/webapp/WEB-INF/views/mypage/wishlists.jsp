@@ -176,16 +176,16 @@
                     <c:forEach var="item" items="${wishlist}">
                         
                         <div class="product-card" onclick="location.href='${pageContext.request.contextPath}/${item.tradeType == 'AUCTION' ? 'auction' : 'board'}/${item.productNo}/detail'">
-                            <div class="product-img">
-                                <c:choose>
-                                    <c:when test="${not empty item.mainImage}">
-                                        <img src="${item.mainImage}" alt="상품 이미지" style="width:100%; height:100%; object-fit:cover;">
-                                    </c:when>
-                                    <c:otherwise>
-                                        <span>[이미지 영역]</span>
-                                    </c:otherwise>
-                                </c:choose>
-                            </div>
+							<div class="product-img">
+							    <c:choose>
+							        <c:when test="${not empty item.mainImage}">
+							            <img src="${pageContext.request.contextPath}${item.mainImage}" alt="상품 이미지" style="width:100%; height:100%; object-fit:cover;">
+							        </c:when>
+							        <c:otherwise>
+							            <img src="/uploads/product/common/default_thumb.png" alt="이미지 없음" style="width:100%; height:100%; object-fit:cover;">
+							        </c:otherwise>
+							    </c:choose>
+							</div>
                             <div class="product-info">
                                 <div class="product-title-row">
                                     <span class="product-title">${item.title}</span>

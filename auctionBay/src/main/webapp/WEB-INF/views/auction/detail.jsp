@@ -772,9 +772,9 @@
                             </c:otherwise>
                         </c:choose>
                     </c:when>
-                    <c:otherwise>
-                        <img src="${pageContext.request.contextPath}/images/no_image.png" alt="이미지 없음" class="no-image">
-                    </c:otherwise>
+					<c:otherwise>
+					    <img src="${pageContext.request.contextPath}/uploads/product/common/default_thumb.png" alt="이미지 없음" class="no-image">
+					</c:otherwise>
                 </c:choose>
             </div>
             
@@ -859,7 +859,23 @@
                         </div>
                     </div>
                 </div>
-
+				<!-- 상품 상태 -->
+                <div class="info-row">
+                    <span class="info-label">상품상태</span>
+                    <div class="info-content" id="productCondition">
+						<c:choose >
+							<c:when test="${product.productCondition == 'NEW'}">
+								미개봉
+							</c:when>
+							<c:when test="${product.productCondition == 'LIKE_NEW'}">
+								거의새것
+							</c:when>
+							<c:when test="${product.productCondition == 'USED'}">
+								사용감있음
+							</c:when>	
+						</c:choose>
+                    </div>
+                </div>
                 <!-- description 영역 -->
                 <div class="description-box" id="productDescription">
                     ${product.description}

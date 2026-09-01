@@ -19,64 +19,71 @@
 		<c:if test="${not empty withdrawMessage}">
             <script>alert('${withdrawMessage}')</script>
        </c:if>
-    <!-- 검색/필터 유지를 위한 공통 Form -->
-    <form id="searchForm" action="${pageContext.request.contextPath}/product/list" method="get">
-        <input type="hidden" name="tradeType" id="tradeType" value="${condition.tradeType}">
-        <input type="hidden" name="categoryId" id="categoryId" value="${condition.categoryId}">
-        <input type="hidden" name="page" id="page" value="${result.pageInfo.page}">
-		<input type="hidden" name="keyword" value="${param.keyword}">
-        
-		<!-- 1. 상단 필터 바 -->
-        <div class="filter-bar">
-            <div class="filter-row">
-                <div class="filter-label">게시글 유형</div>
-                <div class="filter-options">
-                    <a class="filter-item ${empty condition.tradeType ? 'active' : ''}" onclick="filterChange('tradeType', '')">전체</a>
-                    <a class="filter-item ${condition.tradeType == 'BUY' ? 'active' : ''}" onclick="filterChange('tradeType', 'BUY')">구매</a>
-                    <a class="filter-item ${condition.tradeType == 'SELL' ? 'active' : ''}" onclick="filterChange('tradeType', 'SELL')">판매</a>
-                    <a class="filter-item ${condition.tradeType == 'AUCTION' ? 'active' : ''}" onclick="filterChange('tradeType', 'AUCTION')">경매</a>
-                </div>
-            </div>
-			<div class="filter-row">
-			    <div class="filter-label">상품 카테고리</div>
-			    <div class="filter-options category-wrap">
-			        <a class="filter-item ${empty condition.categoryId ? 'active' : ''}" onclick="filterChange('categoryId', '')">전체</a>
-			        <c:forEach var="c" items="${categoryList}">
-			            <a class="filter-item ${condition.categoryId == c.categoryId ? 'active' : ''}" onclick="filterChange('categoryId', '${c.categoryId}')">${c.categoryName}</a>
-			        </c:forEach>
-			    </div>	
-			</div>
-			<div class="filter-row">
-			    <div class="filter-label">가격</div>
-
-			    <div class="filter-options price-filter">
-
-			        <input
-			            type="number"
-			            name="minPrice"
-			            id="minPrice"
-			            value="${condition.minPrice}"
-			            placeholder="최소 가격"
-			            min="0">
-
-			        <span>~</span>
-
-			        <input
-			            type="number"
-			            name="maxPrice"
-			            id="maxPrice"
-			            value="${condition.maxPrice}"
-			            placeholder="최대 가격"
-			            min="0">
-
-			        <button type="submit" class="price-search-btn">
-			            검색
-			        </button>
-
-			    </div>
-			</div>
-        </div>
-    </form>
+	   <!-- 검색/필터 유지를 위한 공통 Form -->
+       <form id="searchForm" action="${pageContext.request.contextPath}/product/list" method="get">
+           <input type="hidden" name="tradeType" id="tradeType" value="${condition.tradeType}">
+           <input type="hidden" name="categoryId" id="categoryId" value="${condition.categoryId}">
+           <input type="hidden" name="sortBy" id="sortBy" value="${condition.sortBy}">
+           <input type="hidden" name="page" id="page" value="${result.pageInfo.page}">
+           <input type="hidden" name="keyword" value="${condition.keyword}">
+           
+           <!-- 1. 상단 필터 바 -->
+           <div class="filter-bar">
+               <div class="filter-row">
+                   <div class="filter-label">게시글 유형</div>
+                   <div class="filter-options">
+                       <a class="filter-item ${empty condition.tradeType ? 'active' : ''}" onclick="filterChange('tradeType', '')">전체</a>
+                       <a class="filter-item ${condition.tradeType == 'BUY' ? 'active' : ''}" onclick="filterChange('tradeType', 'BUY')">구매</a>
+                       <a class="filter-item ${condition.tradeType == 'SELL' ? 'active' : ''}" onclick="filterChange('tradeType', 'SELL')">판매</a>
+                       <a class="filter-item ${condition.tradeType == 'AUCTION' ? 'active' : ''}" onclick="filterChange('tradeType', 'AUCTION')">경매</a>
+                   </div>
+               </div>
+               <div class="filter-row">
+                   <div class="filter-label">상품 카테고리</div>
+                   <div class="filter-options category-wrap">
+                       <a class="filter-item ${empty condition.categoryId ? 'active' : ''}" onclick="filterChange('categoryId', '')">전체</a>
+                       <c:forEach var="c" items="${categoryList}">
+                           <a class="filter-item ${condition.categoryId == c.categoryId ? 'active' : ''}" onclick="filterChange('categoryId', '${c.categoryId}')">${c.categoryName}</a>
+                       </c:forEach>
+                   </div>    
+               </div>
+               <div class="filter-row">
+                   <div class="filter-label">가격</div>
+                   <div class="filter-options price-filter">
+                       <input
+                           type="number"
+                           name="minPrice"
+                           id="minPrice"
+                           value="${condition.minPrice}"
+                           placeholder="최소 가격"
+                           min="0">
+                       <span>~</span>
+                       <input
+                           type="number"
+                           name="maxPrice"
+                           id="maxPrice"
+                           value="${condition.maxPrice}"
+                           placeholder="최대 가격"
+                           min="0">
+                       <button type="submit" class="price-search-btn">
+                           검색
+                       </button>
+                   </div>
+               </div>
+               
+			   <!-- 정렬 필터 영역 -->
+               <div class="filter-row" style="border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px;">
+                   <div class="filter-label">정렬 기준</div>
+                   <div class="filter-options">
+                       <a class="filter-item ${empty condition.sortBy || condition.sortBy == 'LATEST' ? 'active' : ''}" onclick="filterChange('sortBy', 'LATEST')">최신순</a>
+                       <a class="filter-item ${condition.sortBy == 'PRICE_ASC' ? 'active' : ''}" onclick="filterChange('sortBy', 'PRICE_ASC')">낮은가격순</a>
+                       <a class="filter-item ${condition.sortBy == 'PRICE_DESC' ? 'active' : ''}" onclick="filterChange('sortBy', 'PRICE_DESC')">높은가격순</a>
+                       <a class="filter-item ${condition.sortBy == 'VIEWS' ? 'active' : ''}" onclick="filterChange('sortBy', 'VIEWS')">조회수순</a>
+                       <a class="filter-item ${condition.sortBy == 'WISHS' ? 'active' : ''}" onclick="filterChange('sortBy', 'WISHS')">찜 많은 순</a>
+                   </div>
+               </div>
+           </div>
+       </form>
 
     <!-- 2. 메인 콘텐츠 (상품 그리드 + 우측 퀵메뉴) -->
     <div class="main-content">
@@ -88,25 +95,20 @@
 		                <c:forEach var="p" items="${result.productList}">
 		                    <div class="product-card" onclick="location.href='${pageContext.request.contextPath}/${p.tradeType == 'AUCTION' ? 'auction' : 'board'}/${p.productId}/detail'">
 								<div class="product-img">
-
 								    <c:choose>
-
-								        <c:when test="${not empty p.mainImage}">
-
-								            <img
-								                src="${pageContext.request.contextPath}${p.mainImage}"
-								                alt="${p.title}">
-
+								        <%-- 미디어가 존재하고 첫 번째 미디어가 있는 경우 --%>
+								        <c:when test="${not empty p.mediaList}">
+								            <c:set var="firstMedia" value="${p.mediaList[0]}" />
+								            <c:set var="imgSrc" value="${not empty firstMedia.thumbnailUrl ? firstMedia.thumbnailUrl : firstMedia.mediaUrl}" />
+								            
+								            <img src="${pageContext.request.contextPath}${imgSrc}" alt="${p.title}" style="width: 100%; height: 100%; object-fit: cover;">
 								        </c:when>
-
-								        <c:otherwise>
-
-								            <span>[이미지 영역]</span>
-
-								        </c:otherwise>
-
+								        
+										<%-- 등록된 미디어가 없을 때 기본 이미지 출력 --%>
+										<c:otherwise>
+										    <img src="/uploads/product/common/default_thumb.png" alt="이미지 없음" style="width: 100%; height: 100%; object-fit: cover;">
+										</c:otherwise>
 								    </c:choose>
-
 								</div>
 		                        <div class="product-info">
 		                            <div class="product-title-row">
@@ -212,6 +214,18 @@
         }
     });
 	*/
+	function filterChange(type, value) {
+        if (type === 'tradeType') {
+            document.getElementById('tradeType').value = value;
+        } else if (type === 'categoryId') {
+            document.getElementById('categoryId').value = value;
+        } else if (type === 'sortBy') {
+            document.getElementById('sortBy').value = value;
+        }
+        
+        document.getElementById('page').value = 1;
+        document.getElementById('searchForm').submit();
+    }
 </script>
 </body>
 </html>

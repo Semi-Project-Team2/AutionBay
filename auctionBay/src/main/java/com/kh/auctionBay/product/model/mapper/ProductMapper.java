@@ -52,6 +52,8 @@ public interface ProductMapper {
     
     // 게시물 삭제
     int deleteProduct(Long productId);
-    
    
+    // productId로 Media List 가져오기
+    List<ProductMediaDTO> selectMediaListByProductId(Long productId);
+    
 }
