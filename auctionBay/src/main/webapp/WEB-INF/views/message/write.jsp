@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,8 +15,7 @@
 
 <div class="main-container">
     <div class="content-wrapper">
-        
-        <!-- 쪽지 보내기 본문 영역 -->
+
         <main class="message-container">
 
             <c:choose>
@@ -26,10 +26,23 @@
                     <a class="back-link" href="${pageContext.request.contextPath}/message/received">&laquo; 쪽지함으로</a>
                 </c:otherwise>
             </c:choose>
-
+			
             <h2 class="message-title">쪽지 보내기</h2>
 
-            <!-- 첫 메시지 작성 폼 -->
+			<!-- 간단한 상품 정보 -->
+			<c:if test="${not empty product}">
+			    <div class="product-summary">
+			        <div class="product-summary-title">${product.title}</div>
+			        <div class="product-summary-price">
+			            <fmt:formatNumber value="${product.price}" pattern="#,###"/>원
+			            <span class="product-summary-type">
+			                ${product.tradeType eq 'SELL' ? '판매글' : '구매글'}
+			            </span>
+			        </div>
+			    </div>
+			</c:if>
+
+
             <form class="reply-form" action="${pageContext.request.contextPath}/message/send" method="post">
                 <input type="hidden" name="receiverNo" value="${receiverNo}">
                 <input type="hidden" name="productId" value="${productId}">
@@ -40,7 +53,6 @@
 
         </main>
 
-        <!-- 우측 스크롤 고정 퀵 메뉴 -->
         <aside class="right-quick-menu">
             <a href="${pageContext.request.contextPath}/mypage/wishlists" class="quick-item">
                 <span class="quick-icon">❤️</span>

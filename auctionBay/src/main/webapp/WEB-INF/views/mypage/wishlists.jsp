@@ -92,8 +92,10 @@
             </div>
         </div>
     </div>
+	
+	<!-- 공통 푸터 포함 -->
+	    <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
-    <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
