@@ -729,13 +729,18 @@
                 </div>
             </div>
 
-            <!-- 버튼 영역 -->
-            <div class="action-group">
-                <button type="button" class="btn-submit" id="btnSubmitPurchase" data-product-id="${product.productId}">구매하기</button>
-                <button type="button" id="wishBtn" data-product-id="${product.productId}">
-                    <i class="${isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart'}"></i>
-                </button>
-            </div>
+			<!-- 버튼 영역 -->
+			<div class="action-group">
+			    <button type="button" class="btn-submit" id="btnSendMessage"
+			            data-product-id="${product.productId}"
+			            data-receiver-no="${product.writerNo}"
+			            data-redirect-url="${pageContext.request.contextPath}/board/${product.productId}/detail">
+			        ${product.tradeType == 'SELL' ? '쪽지하여 구매하기' : '쪽지하여 판매하기'}
+			    </button>
+			    <button type="button" id="wishBtn" data-product-id="${product.productId}">
+			        <i class="${isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart'}"></i>
+			    </button>
+			</div>
 
             <!-- 판매자 정보 영역 -->
             <div class="seller-card">
@@ -743,10 +748,7 @@
                     <div class="seller-info">
                         <span class="seller-name" id="sellerNickname">유저 닉네임 : ${product.writerNickname}</span>
                     </div>
-                    <button type="button" class="btn-message" id="btnSendMessage" 
-                            data-product-id="${product.productId}"
-                            data-receiver-no="${product.writerNo}"
-                            data-redirect-url="${pageContext.request.contextPath}/board/${product.productId}/detail">판매자에게 쪽지</button>
+                    
                 </div>
                 <div class="seller-stats">
                     <div class="stat-item">
