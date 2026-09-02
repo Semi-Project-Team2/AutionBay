@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -34,27 +33,27 @@ import lombok.RequiredArgsConstructor;
 public class ProductController {
 	private final ProductService service;
 	private final AuctionService auctionService;
-	private String type_status;
 
 	// 메인페이지 ( HomeController에서 리다이렉트됨)
     @GetMapping("/list")
-    public String getProductList(@ModelAttribute ProductSearchCondition condition, Model model) {
-        ProductListResult result = service.getProductList(condition);
+    public String getProductList(@ModelAttribute ProductSearchCondition condition, Model model, HttpSession session) {
+    	UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+    	if (loginUser != null) {
+            condition.setUserNo(loginUser.getUserNo()); // 로그인 유저 PK 바인딩
+        }
+    	ProductListResult result = service.getProductList(condition);
         
         for(ProductDTO product : result.getProductList()) {
-        	
         	String tradeType = productTradeType(product);
-        	
+        	String typeStatus;
+            
             if("COMPLETED".equals(product.getStatus())) {
-            	
-            	type_status = tradeType + " 완료";
+            	typeStatus = tradeType + " 완료";
+            } else {
+            	typeStatus = tradeType;
             }
-            else {
-            	type_status = tradeType;
-            }
-            product.setTypeStatus(type_status);
+            product.setTypeStatus(typeStatus);
         }
-        
         
         List<CategoryDTO> categoryList = service.findAllCategories();
         model.addAttribute("categoryList", categoryList);
@@ -82,31 +81,27 @@ public class ProductController {
 
     @GetMapping("/write")
     public String productWrite(Model model, HttpSession session) {
-    	
     	UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
     	if(loginUser == null) {
     		return "redirect:/user/login";
     	}
     	
     	List<CategoryDTO> categoryList = service.findAllCategories();
-    	
     	model.addAttribute("categoryList", categoryList);
     	
     	return "product/productWrite";
     }
     
     @PostMapping("/write")
-    public String productWrite(ProductDTO product, @RequestParam(value = "images", required = false)List<MultipartFile> images, 
-    			HttpSession session, RedirectAttributes rttr, Model model) throws IOException{
+    public String productWrite(ProductDTO product, @RequestParam(value = "images", required = false) List<MultipartFile> images, 
+    			HttpSession session, RedirectAttributes rttr, Model model) throws IOException {
     	
     	UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
     	if(loginUser == null) {
     		return "redirect:/user/login";
     	}
     	
-    	
     	product.setWriterNo(loginUser.getUserNo());
-    	
     	service.createProduct(product, images);
     	
     	return "redirect:/product/list";
@@ -114,7 +109,7 @@ public class ProductController {
 
     
     @GetMapping("/{productId}/delete")
-    public String deleteProduct(@PathVariable Long productId,HttpSession session, RedirectAttributes rttr) {
+    public String deleteProduct(@PathVariable Long productId, HttpSession session, RedirectAttributes rttr) {
     	UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
 		
 		if (loginUser == null) {
@@ -152,8 +147,4 @@ public class ProductController {
     	rttr.addFlashAttribute("message", message);
     	return "redirect:/product/list";
     }
-    
-
 }
-
-
