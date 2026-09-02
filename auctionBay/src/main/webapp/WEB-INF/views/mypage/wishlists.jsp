@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -85,15 +85,17 @@
 
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
+<div style="margin-top: 50px;">
+    <jsp:include page="/WEB-INF/views/common/footer.jsp" />
+</div>
+
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    const contextPath = "${pageContext.request.contextPath}";
     const auctionElements = document.querySelectorAll('.auction-price-loading');
 
     auctionElements.forEach(el => {
         const productNo = el.getAttribute('data-pno');
         
-        // 경매 상세 페이지 HTML/JSON에서 가격 파싱
         fetch(contextPath + '/auction/' + productNo + '/detail')
             .then(response => response.text())
             .then(htmlStr => {
@@ -146,7 +148,6 @@ document.addEventListener("DOMContentLoaded", function() {
         const totalPages = Math.ceil(totalItems / itemsPerPage);
         if (totalPages <= 1) return;
 
-        // 이전 버튼
         const prevBtn = document.createElement('a');
         prevBtn.className = 'page-btn' + (currentPage === 1 ? ' disabled' : '');
         prevBtn.innerHTML = '&lt; 이전';
@@ -164,7 +165,6 @@ document.addEventListener("DOMContentLoaded", function() {
             paginationContainer.appendChild(pageBtn);
         }
 
-        // 다음 버튼
         const nextBtn = document.createElement('a');
         nextBtn.className = 'page-btn' + (currentPage === totalPages ? ' disabled' : '');
         nextBtn.innerHTML = '다음 &gt;';
