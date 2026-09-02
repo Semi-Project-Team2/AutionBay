@@ -116,130 +116,137 @@
 
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
-    <script>
-        const itemsPerPage = 5;
-        let currentPage = 1;
-        const cards = document.querySelectorAll('.board-card');
-        const totalItems = cards.length;
+	<script>
+	    const itemsPerPage = 5;
+	    let currentPage = 1;
+	    const cards = document.querySelectorAll('.board-card');
+	    const totalItems = cards.length;
 
-        function showPage(page) {
-            currentPage = page;
-            const start = (page - 1) * itemsPerPage;
-            const end = start + itemsPerPage;
+	    function showPage(page) {
+	        currentPage = page;
+	        const start = (page - 1) * itemsPerPage;
+	        const end = start + itemsPerPage;
 
-            cards.forEach((card, index) => {
-                if (index >= start && index < end) {
-                    card.style.display = 'flex';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+	        cards.forEach((card, index) => {
+	            if (index >= start && index < end) {
+	                card.style.display = 'flex';
+	            } else {
+	                card.style.display = 'none';
+	            }
+	        });
 
-            renderPagination();
-        }
+	        renderPagination();
+	    }
 
-        function renderPagination() {
-            const paginationContainer = document.getElementById('paginationContainer');
-            paginationContainer.innerHTML = '';
+	    function renderPagination() {
+	        const paginationContainer = document.getElementById('paginationContainer');
+	        paginationContainer.innerHTML = '';
 
-            if (totalItems === 0) return;
+	        if (totalItems === 0) return;
 
-            const totalPages = Math.ceil(totalItems / itemsPerPage);
-            if (totalPages <= 1) return;
+	        const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-            const prevBtn = document.createElement('a');
-            prevBtn.className = 'page-btn';
-            prevBtn.innerHTML = '&lt; 이전';
-            if (currentPage > 1) {
-                prevBtn.onclick = () => showPage(currentPage - 1);
-            } else {
-                prevBtn.style.opacity = '0.4';
-                prevBtn.style.cursor = 'default';
-            }
-            paginationContainer.appendChild(prevBtn);
+	        // 1페이지 초과일 때만 이전 버튼 생성
+	        if (totalPages > 1) {
+	            const prevBtn = document.createElement('a');
+	            prevBtn.className = 'page-btn';
+	            prevBtn.innerHTML = '&lt; 이전';
+	            if (currentPage > 1) {
+	                prevBtn.onclick = () => showPage(currentPage - 1);
+	            } else {
+	                prevBtn.style.opacity = '0.4';
+	                prevBtn.style.cursor = 'default';
+	            }
+	            paginationContainer.appendChild(prevBtn);
+	        }
 
-            for (let i = 1; i <= totalPages; i++) {
-                const pageBtn = document.createElement('a');
-                pageBtn.className = 'page-btn' + (i === currentPage ? ' active' : '');
-                pageBtn.innerText = i;
-                pageBtn.onclick = () => showPage(i);
-                paginationContainer.appendChild(pageBtn);
-            }
+	        // 페이지 번호 버튼 (5개 이하일 때는 '1'만 생성됨)
+	        for (let i = 1; i <= totalPages; i++) {
+	            const pageBtn = document.createElement('a');
+	            pageBtn.className = 'page-btn' + (i === currentPage ? ' active' : '');
+	            pageBtn.innerText = i;
+	            pageBtn.onclick = () => showPage(i);
+	            paginationContainer.appendChild(pageBtn);
+	        }
 
-            const nextBtn = document.createElement('a');
-            nextBtn.className = 'page-btn';
-            nextBtn.innerHTML = '다음 &gt;';
-            if (currentPage < totalPages) {
-                nextBtn.onclick = () => showPage(currentPage + 1);
-            } else {
-                nextBtn.style.opacity = '0.4';
-                nextBtn.style.cursor = 'default';
-            }
-            paginationContainer.appendChild(nextBtn);
-        }
+	        // 1페이지 초과일 때만 다음 버튼 생성
+	        if (totalPages > 1) {
+	            const nextBtn = document.createElement('a');
+	            nextBtn.className = 'page-btn';
+	            nextBtn.innerHTML = '다음 &gt;';
+	            if (currentPage < totalPages) {
+	                nextBtn.onclick = () => showPage(currentPage + 1);
+	            } else {
+	                nextBtn.style.opacity = '0.4';
+	                nextBtn.style.cursor = 'default';
+	            }
+	            paginationContainer.appendChild(nextBtn);
+	        }
+	    }
 
-        if (totalItems > 0) {
-            showPage(1);
-        }
+	    // 페이지 최초 로드 시 1페이지 실행
+	    if (totalItems > 0) {
+	        showPage(1);
+	    }
 
-        document.addEventListener("DOMContentLoaded", function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const keywordParam = urlParams.get('keyword');
-            const mypageInput = document.getElementById('mypageKeywordInput');
-            
-            if (keywordParam && mypageInput) {
-                mypageInput.value = keywordParam;
-            }
+	    // 검색창 및 엔터키 이벤트 설정
+	    document.addEventListener("DOMContentLoaded", function() {
+	        const urlParams = new URLSearchParams(window.location.search);
+	        const keywordParam = urlParams.get('keyword');
+	        const mypageInput = document.getElementById('mypageKeywordInput');
+	        
+	        if (keywordParam && mypageInput) {
+	            mypageInput.value = keywordParam;
+	        }
 
-            const headerInput = document.querySelector('header input[name="keyword"], .header input[name="keyword"]');
-            if (headerInput) {
-                headerInput.value = '';
-            }
+	        const headerInput = document.querySelector('header input[name="keyword"], .header input[name="keyword"]');
+	        if (headerInput) {
+	            headerInput.value = '';
+	        }
 
-            if (mypageInput) {
-                mypageInput.addEventListener('keydown', function(event) {
-                    if (event.key === 'Enter') {
-                        event.preventDefault();
-                        searchMypageProducts();
-                    }
-                });
-            }
-        });
+	        if (mypageInput) {
+	            mypageInput.addEventListener('keydown', function(event) {
+	                if (event.key === 'Enter') {
+	                    event.preventDefault();
+	                    searchMypageProducts();
+	                }
+	            });
+	        }
+	    });
 
-        function searchMypageProducts() {
-            const input = document.getElementById('mypageKeywordInput');
-            const keyword = input ? input.value.trim() : '';
-            location.href = '${pageContext.request.contextPath}/mypage/products?keyword=' + encodeURIComponent(keyword);
-        }
+	    function searchMypageProducts() {
+	        const input = document.getElementById('mypageKeywordInput');
+	        const keyword = input ? input.value.trim() : '';
+	        location.href = '${pageContext.request.contextPath}/mypage/products?keyword=' + encodeURIComponent(keyword);
+	    }
 
-        function deleteProduct(button) {
-            const productNo = button.getAttribute("data-product-no");
-            
-            if (!productNo || productNo === 'undefined' || productNo === '') {
-                alert("게시글 번호를 찾을 수 없습니다.");
-                return;
-            }
-            
-            if (!confirm("정말 이 게시글을 삭제하시겠습니까?")) {
-                return;
-            }
+	    function deleteProduct(button) {
+	        const productNo = button.getAttribute("data-product-no");
+	        
+	        if (!productNo || productNo === 'undefined' || productNo === '') {
+	            alert("게시글 번호를 찾을 수 없습니다.");
+	            return;
+	        }
+	        
+	        if (!confirm("정말 이 게시글을 삭제하시겠습니까?")) {
+	            return;
+	        }
 
-            fetch('${pageContext.request.contextPath}/mypage/deleteProduct?productNo=' + productNo, {
-                method: 'DELETE'
-            })
-            .then(response => response.text())
-            .then(result => {
-                if (result.trim() === "SUCCESS") {
-                    location.reload();
-                } else {
-                    alert("게시글 삭제에 실패했습니다.");
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert("서버 통신 중 오류가 발생했습니다.");
-            });
-        }
-    </script>
-</body>
+	        fetch('${pageContext.request.contextPath}/mypage/deleteProduct?productNo=' + productNo, {
+	            method: 'DELETE'
+	        })
+	        .then(response => response.text())
+	        .then(result => {
+	            if (result.trim() === "SUCCESS") {
+	                location.reload();
+	            } else {
+	                alert("게시글 삭제에 실패했습니다.");
+	            }
+	        })
+	        .catch(error => {
+	            console.error('Error:', error);
+	            alert("서버 통신 중 오류가 발생했습니다.");
+	        });
+	    }
+	</script></body>
 </html>

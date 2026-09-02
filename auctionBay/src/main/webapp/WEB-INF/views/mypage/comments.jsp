@@ -111,49 +111,54 @@
             renderPagination();
         }
 
-        function renderPagination() {
-            const paginationContainer = document.getElementById('paginationContainer');
-            paginationContainer.innerHTML = '';
+		function renderPagination() {
+		    const paginationContainer = document.getElementById('paginationContainer');
+		    paginationContainer.innerHTML = '';
 
-            if (totalItems === 0) return;
+		    if (totalItems === 0) return;
 
-            const totalPages = Math.ceil(totalItems / itemsPerPage);
-            if (totalPages <= 1) return;
+		    const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-            // 이전 버튼
-            const prevBtn = document.createElement('a');
-            prevBtn.className = 'page-btn';
-            prevBtn.innerHTML = '&lt; 이전';
-            if (currentPage > 1) {
-                prevBtn.onclick = () => showPage(currentPage - 1);
-            } else {
-                prevBtn.style.opacity = '0.4';
-                prevBtn.style.cursor = 'default';
-            }
-            paginationContainer.appendChild(prevBtn);
+		    // [이전 버튼] 선택 사항: 1페이지 이하일 때 이전 버튼을 숨기고 싶다면 아래 조건 유지, 
+		    // 혹은 1페이지밖에 없으니 이전/다음 버튼은 안 나오고 '1' 페이지만 나오게 하려면 아래처럼 totalPages > 1 일 때만 이전/다음이 나오게 처리합니다.
+		    
+		    if (totalPages > 1) {
+		        // 이전 버튼
+		        const prevBtn = document.createElement('a');
+		        prevBtn.className = 'page-btn';
+		        prevBtn.innerHTML = '&lt; 이전';
+		        if (currentPage > 1) {
+		            prevBtn.onclick = () => showPage(currentPage - 1);
+		        } else {
+		            prevBtn.style.opacity = '0.4';
+		            prevBtn.style.cursor = 'default';
+		        }
+		        paginationContainer.appendChild(prevBtn);
+		    }
 
-            // 페이지 번호 버튼
-            for (let i = 1; i <= totalPages; i++) {
-                const pageBtn = document.createElement('a');
-                pageBtn.className = 'page-btn' + (i === currentPage ? ' active' : '');
-                pageBtn.innerText = i;
-                pageBtn.onclick = () => showPage(i);
-                paginationContainer.appendChild(pageBtn);
-            }
+		    // 페이지 번호 버튼 (여기가 핵심! totalPages가 1이든 그 이상이든 무조건 반복문이 돌아 1페이지 버튼이 생성됩니다.)
+		    for (let i = 1; i <= totalPages; i++) {
+		        const pageBtn = document.createElement('a');
+		        pageBtn.className = 'page-btn' + (i === currentPage ? ' active' : '');
+		        pageBtn.innerText = i;
+		        pageBtn.onclick = () => showPage(i);
+		        paginationContainer.appendChild(pageBtn);
+		    }
 
-            // 다음 버튼
-            const nextBtn = document.createElement('a');
-            nextBtn.className = 'page-btn';
-            nextBtn.innerHTML = '다음 &gt;';
-            if (currentPage < totalPages) {
-                nextBtn.onclick = () => showPage(currentPage + 1);
-            } else {
-                nextBtn.style.opacity = '0.4';
-                nextBtn.style.cursor = 'default';
-            }
-            paginationContainer.appendChild(nextBtn);
-        }
-
+		    if (totalPages > 1) {
+		        // 다음 버튼
+		        const nextBtn = document.createElement('a');
+		        nextBtn.className = 'page-btn';
+		        nextBtn.innerHTML = '다음 &gt;';
+		        if (currentPage < totalPages) {
+		            nextBtn.onclick = () => showPage(currentPage + 1);
+		        } else {
+		            nextBtn.style.opacity = '0.4';
+		            nextBtn.style.cursor = 'default';
+		        }
+		        paginationContainer.appendChild(nextBtn);
+		    }
+		}
         // 페이지 최초 로드 시 1페이지 실행
         if (totalItems > 0) {
             showPage(1);
