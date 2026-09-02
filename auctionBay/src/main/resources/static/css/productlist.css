@@ -278,11 +278,23 @@ body {
     background-color: rgb(188, 188, 188);   
     color: white;
 	font-size: 13px;
-	    font-weight: 700;
-	    padding: 3px 8px;
-	    border-radius: 6px;
-	    border: 1px solid rgb(226, 226, 220); 
-	    flex-shrink: 0;
+	font-weight: 700;
+	padding: 3px 8px;
+	border-radius: 6px;
+	border: 1px solid rgb(226, 226, 220); 
+	flex-shrink: 0;
+}
+
+/* '경매 기간 만료' 뱃지 */
+.expired-badge{
+	background-color: rgb(188, 188, 188);   
+	color: white;
+	font-size: 13px;
+	font-weight: 700;
+	padding: 3px 8px;
+	border-radius: 6px;
+	border: 1px solid rgb(226, 226, 220); 
+	flex-shrink: 0;
 }
 
 .product-price {
