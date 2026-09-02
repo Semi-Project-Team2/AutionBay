@@ -100,7 +100,7 @@ checkEmailBtn.addEventListener("click", async function() {
     const email = emailInput.value.trim();
     
 	if (email.length === 0) {
-        checkEmailResult.textContent = "닉네임을 입력해주세요.";
+        checkEmailResult.textContent = "이메일을 입력해주세요.";
         checkEmailResult.className = "form-tip form-tip-error";
         checkEmail = null;
         return;
@@ -254,6 +254,13 @@ joinForm.addEventListener("submit", function(e) {
 		alert("이메일 중복확인을 진행해주세요.");
 		return;
 	}
+
+    if (!checkPhoneNumber) {
+        e.preventDefault();
+        alert("연락처 중복확인을 진행해주세요.");
+        phoneNumberInput.focus();
+        return;
+    }
 	
 	if (!checkPwd) {
 		e.preventDefault();		// 기존 폼 제출 동작을 막기!

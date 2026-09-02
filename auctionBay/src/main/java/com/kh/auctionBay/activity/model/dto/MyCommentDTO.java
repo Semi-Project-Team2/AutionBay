@@ -26,4 +26,6 @@ public class MyCommentDTO {
 	// 화면 표시용 가공 필드
 	private String createdAtStr;        // 작성일시 포맷팅 (YYYY-MM-DD HH:mm)
 	private String productTitle;        // 원본 게시글 제목 (PRODUCTS JOIN)
+	// [추가] 원본 게시글이 삭제되었는지 여부 (0: 정상, 1: 삭제됨)
+	private Integer productDeleted;
 }

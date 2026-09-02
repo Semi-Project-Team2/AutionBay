@@ -386,6 +386,9 @@ header {
 <!-- =========================
      MAIN
      ========================= -->
+<c:if test="${not empty uploadError}">
+    <script>alert("${uploadError}")</script>
+</c:if>
 
 <div class="container">
 
