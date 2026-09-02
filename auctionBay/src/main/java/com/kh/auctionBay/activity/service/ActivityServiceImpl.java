@@ -68,18 +68,7 @@ public class ActivityServiceImpl implements ActivityService {
 		return activityMapper.selectRecentViews(userNo);
 	}
 	
-	/**
-	 * [5. 내가 작성한 게시글 삭제 로직 (소프트 딜리트)]
-	 * - 요청 데이터: 상품 번호(productNo), 작성자 번호(writerNo)
-	 * - 처리 과정: Mapper를 통해 게시글의 삭제 상태 값을 변경하고, 업데이트된 행의 수가 0보다 큰지(성공 여부) 확인합니다.
-	 * - 반환 데이터: 성공 시 true, 실패 시 false (boolean)
-	 */
-	@Override
-	public boolean deleteMyProduct(Long productNo, Long writerNo) {
-		int result = activityMapper.deleteMyProduct(productNo, writerNo);
-		return result > 0;
-	}
-
+	
 	/**
 	 * [6. 내가 작성한 댓글 삭제 로직 (소프트 딜리트)]
 	 * - 요청 데이터: 댓글 번호(commentNo), 작성자 번호(writerNo)

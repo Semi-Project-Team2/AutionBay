@@ -25,8 +25,7 @@ public interface ActivityMapper {
 	// 4. 회원 번호(userNo)를 받아 해당 회원이 최근 본 글 목록을 조회하는 메서드
 	List<RecentViewDTO> selectRecentViews(Long userNo);
 	
-	// 5. 내가 작성한 게시글 삭제 (성공 시 변경된 행 수 반환)
-	int deleteMyProduct(Long productNo, Long writerNo);
+	
 
 	// 6. 내가 작성한 댓글 삭제
 	int deleteMyComment(Long commentNo, Long writerNo);

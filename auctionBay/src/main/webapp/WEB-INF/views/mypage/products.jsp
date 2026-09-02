@@ -89,13 +89,13 @@
 									        <%-- 1. 경매글일 때 --%>
 									        <c:when test="${board.tradeType == 'AUCTION'}">
 									            <button type="button" class="btn-action" onclick="location.href='${pageContext.request.contextPath}/auction/${pNo}/update'">수정</button>
-									            <button type="button" class="btn-action" style="color: #c92a2a;" data-product-no="${pNo}" onclick="deleteProduct(this)">삭제</button>
+									            <button type="button" class="btn-action" style="color: #c92a2a;" data-product-no="${pNo}" onclick="location.href='${pageContext.request.contextPath}/product/${pNo}/delete'">삭제</button>
 									        </c:when>
 									        
 									        <%-- 2. 일반글일 때 (경매와 경로 형식을 board로 통일) --%>
 									        <c:otherwise>
 									            <button type="button" class="btn-action" onclick="location.href='${pageContext.request.contextPath}/board/${pNo}/update'">수정</button>
-									            <button type="button" class="btn-action" style="color: #c92a2a;" data-product-no="${pNo}" onclick="deleteProduct(this)">삭제</button>
+									            <button type="button" class="btn-action" style="color: #c92a2a;" data-product-no="${pNo}" onclick="location.href='${pageContext.request.contextPath}/product/${pNo}/delete'">삭제</button>
 									        </c:otherwise>
 									    </c:choose>
 									</div>
@@ -220,33 +220,6 @@
 	        location.href = '${pageContext.request.contextPath}/mypage/products?keyword=' + encodeURIComponent(keyword);
 	    }
 
-	    function deleteProduct(button) {
-	        const productNo = button.getAttribute("data-product-no");
-	        
-	        if (!productNo || productNo === 'undefined' || productNo === '') {
-	            alert("게시글 번호를 찾을 수 없습니다.");
-	            return;
-	        }
-	        
-	        if (!confirm("정말 이 게시글을 삭제하시겠습니까?")) {
-	            return;
-	        }
-
-	        fetch('${pageContext.request.contextPath}/mypage/deleteProduct?productNo=' + productNo, {
-	            method: 'DELETE'
-	        })
-	        .then(response => response.text())
-	        .then(result => {
-	            if (result.trim() === "SUCCESS") {
-	                location.reload();
-	            } else {
-	                alert("게시글 삭제에 실패했습니다.");
-	            }
-	        })
-	        .catch(error => {
-	            console.error('Error:', error);
-	            alert("서버 통신 중 오류가 발생했습니다.");
-	        });
-	    }
+	   
 	</script></body>
 </html>
