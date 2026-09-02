@@ -27,7 +27,10 @@
             </jsp:include>
 
             <!-- 후기 콘텐츠 영역 -->
-            <main class="mypage-main">
+            <main class="main-content">
+                <div class="content-header">
+                    <div class="content-title">후기</div>
+                </div>
                 <!-- 탭 메뉴 -->
                 <div class="review-tabs">
                     <button class="tab-btn ${activeTab eq 'received' ? 'active' : ''}">받은 후기</button>
@@ -44,7 +47,7 @@
                                         <div class="review-header">
                                             <span class="rating">⭐ ${review.rating}</span>
                                             <c:choose>
-                                                <c:when test="${review.tradeType == '경매'}">
+                                                <c:when test="${review.tradeType eq '경매'}">
                                                     <a href="${pageContext.request.contextPath}/auction/${review.productId}/detail"
                                                         class="title">${review.title}</a>
                                                 </c:when>
@@ -95,7 +98,16 @@
                                     <div class="review-item mypage-card">
                                         <div class="review-header">
                                             <span class="rating">⭐ ${review.rating}</span>
-                                            <span class="title">${review.title}</span>
+                                            <c:choose>
+                                                <c:when test="${review.tradeType eq '경매'}">
+                                                    <a href="${pageContext.request.contextPath}/auction/${review.productId}/detail"
+                                                        class="title">${review.title}</a>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <a href="${pageContext.request.contextPath}/board/${review.productId}/detail"
+                                                        class="title">${review.title}</a>
+                                                </c:otherwise>
+                                            </c:choose>
                                             <span class="nickname">${review.revieweeNickname}</span>
                                             <span class="time">${review.createdAtStr}</span>
                                         </div>

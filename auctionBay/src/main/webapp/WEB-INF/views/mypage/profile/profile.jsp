@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<link rel="stylesheet" href="/css/join.css">
+
+<!-- 기존 join.css 링크를 삭제하고, 마이페이지 css로 변경 또는 제거해 주세요 -->
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/mypage.css">
 
 <div class="profile-area">
     <div class="profile-info">
@@ -26,8 +28,6 @@
 </div>
 
 <script>
-    /* 회원 탈퇴 확인 */
-
 document.addEventListener("click", function(e) {
     const btnWithdraw = e.target.closest("#btn-withdraw");
 
@@ -36,11 +36,8 @@ document.addEventListener("click", function(e) {
         const isWithdraw = confirm("정말 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다.");
 
         if (isWithdraw) {
-            location.href=btnWithdraw.getAttribute("href");
-        } else {
-            return;
+            location.href = btnWithdraw.getAttribute("href");
         }
     }
 }); 
-
 </script>

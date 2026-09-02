@@ -15,13 +15,31 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // 2. 최근 본 글, 찜목록, 게시글/댓글 카드를 누르면 상세 페이지로 부드럽게 이동하기
-    // (JSP에서 onclick 속성을 일일이 안 넣어도 data-url 속성만 읽어서 이동하게 만들어 줍니다)
+    // 2. [핵심] 사이드바 메뉴 클릭 시 페이지 전체 새로고침(깜빡임) 방지
+    sidebarItems.forEach(item => {
+        item.addEventListener("click", function(e) {
+            const url = this.getAttribute("href");
+
+            // 외부 링크나 빈 값은 제외
+            if (!url || url === "#" || url.startsWith("javascript:")) return;
+
+            // 1) 브라우저의 기본 페이지 새로고침(하얀 화면 깜빡임) 강제 차단
+            e.preventDefault();
+
+            // 2) 사이드바 active 메뉴 표시 전환
+            sidebarItems.forEach(el => el.classList.remove("active"));
+            this.classList.add("active");
+
+            // 3) 비동기(fetch)로 우측 컨텐츠 영역만 가져와서 교체
+            loadMypageContent(url);
+        });
+    });
+
+    // 3. 카드 클릭 시 상세 페이지 이동
     const clickableCards = document.querySelectorAll(".board-card, .product-card");
 
     clickableCards.forEach(card => {
         card.addEventListener("click", function(e) {
-            // 안쪽에 따로 링크(a태그)가 걸려있지 않은 경우에만 카드 전체 클릭 작동
             if (e.target.tagName.toLowerCase() !== 'a') {
                 const url = this.getAttribute("data-url");
                 if (url) {
@@ -32,3 +50,35 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
 });
+
+// 사이드바 비동기 컨텐츠 로더 함수
+function loadMypageContent(url) {
+    fetch(url, {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(response => {
+        if (!response.ok) throw new Error("페이지 로드 실패");
+        return response.text();
+    })
+    .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+
+        // 우측 메인 컨텐츠 박스 영역만 찾아 쏙 교체 (클래스명이 다르면 수정 필요)
+        const targetContainer = document.querySelector('.mypage-content-area') || document.querySelector('.mypage-content');
+        const newContainer = doc.querySelector('.mypage-content-area') || doc.querySelector('.mypage-content');
+
+        if (targetContainer && newContainer) {
+            targetContainer.innerHTML = newContainer.innerHTML;
+            // 브라우저 주소창 URL만 자연스럽게 변경
+            window.history.pushState({}, '', url);
+        } else {
+            // 영역을 못 찾으면 어쩔 수 없이 일반 이동
+            location.href = url;
+        }
+    })
+    .catch(err => {
+        console.error("마이페이지 로딩 오류:", err);
+        location.href = url; // 실패 시 안전하게 일반 이동
+    });
+}
