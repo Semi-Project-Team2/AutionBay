@@ -39,6 +39,7 @@
                                             <c:choose>
                                                 <c:when test="${not empty item.mainImage}">
                                                     <img src="${pageContext.request.contextPath}${item.mainImage}" alt="상품 이미지">
+                                                </c:when>
 												<c:when test="${item.status == 'COMPLETED'}">
 													<span class="finished-badge">거래완료</span>
 												</c:when>
