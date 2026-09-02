@@ -60,7 +60,7 @@
     border: 1px solid #f0f0f0;
     border-radius: 12px;
     padding: 16px 20px;
-    display: flex !important; /* JS style.display 제어 대응 */
+    display: flex; /* JS style.display 제어 대응 */
     align-items: center;
     justify-content: space-between;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
@@ -89,30 +89,56 @@
     height: 60px;
     border-radius: 8px;
     border: 1px solid #eaeaea;
+    object-fit: cover;
+    background-color: #f8f9fa;
     flex-shrink: 0;
 }
 
-/* 유형 뱃지 (경매 / 일반) */
-.type-badge {
-    display: inline-block;
-    padding: 3px 8px;
+/* 뱃지와 제목을 나란히 수직 정렬하기 위한 내부 래퍼 */
+.board-info > div:last-child {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex: 1;
+}
+
+/* 거래 유형 뱃지 공통 스타일 (크기 및 수직정렬 통일) */
+.type-badge,
+.auction-badge,
+.buy-badge,
+.sell-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     font-size: 11px;
     font-weight: 700;
+    padding: 2px 6px;
     border-radius: 4px;
-    margin-right: 6px;
+    flex-shrink: 0;
+    line-height: 1.1;
     vertical-align: middle;
 }
 
-.type-badge.auction {
-    background-color: #fff0f6;
-    color: #eb2f96;
-    border: 1px solid #ffadd2;
+/* '경매' 뱃지 (연한 핑크빛) */
+.auction-badge {
+    background-color: #fff0f5;
+    color: #ff2d55;
+    border: 1px solid #ffb6c1;
 }
 
-.type-badge.general {
-    background-color: #e6f7ff;
-    color: #1890ff;
-    border: 1px solid #91d5ff;
+/* '구매' 뱃지 (연한 초록색 계열) */
+.buy-badge {
+    background-color: #f0fdf4;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+}
+
+/* '판매' 뱃지 (연한 파란색 계열) */
+.sell-badge {
+    background-color: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
 }
 
 /* 게시글 제목 */
@@ -125,7 +151,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 450px;
+    max-width: 430px;
     display: inline-block;
 }
 

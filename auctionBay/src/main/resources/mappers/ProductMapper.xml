@@ -103,7 +103,12 @@
 		    	when U.IS_DELETED = 1 then '탈퇴한 회원'
 		    	else U.NICKNAME
 	    	end as WRITER_NICKNAME,
-	       C.CATEGORY_NAME AS CATEGORY_NAME
+	       C.CATEGORY_NAME AS CATEGORY_NAME,
+       <!-- 로그인 유저의 찜 여부 추가 (로그인하지 않은 경우 memberNo가 null이 들어와 0으로 조회됨) -->
+       (SELECT COUNT(*) 
+          FROM WISHLISTS W 
+         WHERE W.PRODUCT_ID = P.PRODUCT_ID 
+           AND W.USER_NO = #{userNo}) AS IS_WISHED
 	  FROM PRODUCTS P
 	    LEFT JOIN USERS U ON P.WRITER_NO = U.USER_NO
 	    LEFT JOIN CATEGORIES C ON P.CATEGORY_ID = C.CATEGORY_ID
