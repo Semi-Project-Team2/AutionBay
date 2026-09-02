@@ -4,64 +4,11 @@
    게시글 관리 메인 영역 (Product Management)
    ========================================== */
 
-/* 메인 영역 너비 고정 */
+/* 1. 메인 영역 너비 고정 */
 .mypage-main {
     flex: 1 !important;
     min-width: 0 !important;
     width: 100% !important;
-}
-
-/* 1. 헤더 & 검색창 */
-.content-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 12px;
-    border-bottom: 2px solid #111111;
-}
-
-.content-title {
-    font-size: 20px;
-    font-weight: 700;
-    color: #111111;
-}
-
-/* 게시글 내 검색창 */
-.search-bar {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.search-bar input[type="text"] {
-    padding: 7px 12px;
-    border: 1px solid #e0e0e0;
-    border-radius: 6px;
-    font-size: 13px;
-    outline: none;
-    width: 180px;
-    transition: border-color 0.2s ease;
-}
-
-.search-bar input[type="text"]:focus {
-    border-color: #f2d2f7;
-}
-
-.search-bar button {
-    background-color: #f2d2f7;
-    color: #111111;
-    border: none;
-    padding: 7px 14px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.search-bar button:hover {
-    background-color: #e2c4e6;
 }
 
 /* 2. 게시글 목록 컨테이너 */

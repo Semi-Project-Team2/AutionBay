@@ -27,7 +27,10 @@
             </jsp:include>
 
             <!-- 후기 콘텐츠 영역 -->
-            <main class="mypage-main">
+            <main class="main-content">
+                <div class="content-header">
+                    <div class="content-title">후기</div>
+                </div>
                 <!-- 탭 메뉴 -->
                 <div class="review-tabs">
                     <button class="tab-btn ${activeTab eq 'received' ? 'active' : ''}">받은 후기</button>

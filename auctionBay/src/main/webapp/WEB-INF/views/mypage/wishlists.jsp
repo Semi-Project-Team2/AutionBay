@@ -23,58 +23,62 @@
             </jsp:include>
             
             <!-- 사이드바 우측 메인 영역 -->
-            <div class="mypage-main">
-                <div class="wishlist-header-title">WISHLISTS</div>
+            <div class="mypage-main main-content">
+                <div class="content-header">
+                    <h2 class="content-title">찜목록</h2>
+                </div>
 
-                <div class="wishlist-grid" id="wishlistGrid">
-                    <c:choose>
-                        <c:when test="${not empty wishlist}">
-                            <c:forEach var="item" items="${wishlist}">
-                                
-                                <div class="product-card" onclick="location.href='${pageContext.request.contextPath}/${item.tradeType == 'AUCTION' ? 'auction' : 'board'}/${item.productNo}/detail'">
-                                    <div class="product-img">
-                                        <c:choose>
-                                            <c:when test="${not empty item.mainImage}">
-                                                <img src="${pageContext.request.contextPath}${item.mainImage}" alt="상품 이미지">
-                                            </c:when>
-                                            <c:otherwise>
-                                                <img src="${pageContext.request.contextPath}/uploads/product/common/default_thumb.png" alt="이미지 없음">
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </div>
-                                    <div class="product-info">
-                                        <div class="product-title-row">
-                                            <span class="product-title">${item.title}</span>
-                                            <span class="trade-type">
-                                                <c:choose>
-                                                    <c:when test="${item.tradeType == 'BUY'}">구매</c:when>
-                                                    <c:when test="${item.tradeType == 'SELL'}">판매</c:when>
-                                                    <c:otherwise>경매</c:otherwise>
-                                                </c:choose>
-                                            </span>
-                                        </div>
-                                        <div class="product-price" id="price-${item.productNo}">
+                <div class="content-main">
+                    <div class="wishlist-grid" id="wishlistGrid">
+                        <c:choose>
+                            <c:when test="${not empty wishlist}">
+                                <c:forEach var="item" items="${wishlist}">
+                    
+                                    <div class="product-card" onclick="location.href='${pageContext.request.contextPath}/${item.tradeType == 'AUCTION' ? 'auction' : 'board'}/${item.productNo}/detail'">
+                                        <div class="product-img">
                                             <c:choose>
-                                                <c:when test="${item.tradeType == 'AUCTION'}">
-                                                    <!-- 경매 상품: JS로 가격 동적 조회 -->
-                                                    <span class="auction-price-loading" data-pno="${item.productNo}">조회중...</span>
+                                                <c:when test="${not empty item.mainImage}">
+                                                    <img src="${pageContext.request.contextPath}${item.mainImage}" alt="상품 이미지">
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <!-- 일반 상품: DTO price 출력 -->
-                                                    ${item.price}원
+                                                    <img src="${pageContext.request.contextPath}/uploads/product/common/default_thumb.png" alt="이미지 없음">
                                                 </c:otherwise>
                                             </c:choose>
                                         </div>
+                                        <div class="product-info">
+                                            <div class="product-title-row">
+                                                <span class="product-title">${item.title}</span>
+                                                <span class="trade-type">
+                                                    <c:choose>
+                                                        <c:when test="${item.tradeType == 'BUY'}">구매</c:when>
+                                                        <c:when test="${item.tradeType == 'SELL'}">판매</c:when>
+                                                        <c:otherwise>경매</c:otherwise>
+                                                    </c:choose>
+                                                </span>
+                                            </div>
+                                            <div class="product-price" id="price-${item.productNo}">
+                                                <c:choose>
+                                                    <c:when test="${item.tradeType == 'AUCTION'}">
+                                                        <!-- 경매 상품: JS로 가격 동적 조회 -->
+                                                        <span class="auction-price-loading" data-pno="${item.productNo}">조회중...</span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <!-- 일반 상품: DTO price 출력 -->
+                                                        ${item.price}원
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </div>
+                                        </div>
                                     </div>
+                                </c:forEach>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="empty-wishlist">
+                                    찜한 상품이 없습니다.
                                 </div>
-                            </c:forEach>
-                        </c:when>
-                        <c:otherwise>
-                            <div class="empty-wishlist">
-                                찜한 상품이 없습니다.
-                            </div>
-                        </c:otherwise>
-                    </c:choose>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
                 </div>
 
                 <!-- 자바스크립트가 실제 카드 개수 기준으로 채워줄 페이징 바 영역 -->
@@ -84,10 +88,6 @@
     </div>
 
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />
-
-<div style="margin-top: 50px;">
-    <jsp:include page="/WEB-INF/views/common/footer.jsp" />
-</div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {

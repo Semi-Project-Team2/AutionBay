@@ -30,9 +30,9 @@
             </jsp:include>
 
             <!-- 우측 거래 내역 리스트 -->
-            <div class="mypage-main">
+            <div class="main-content">
                 <div class="content-header">
-                    <span class="content-title">거래 내역</span>
+                    <div class="content-title">거래 내역</div>
                         <form action="${pageContext.request.contextPath}/mypage/txHistories"
                             method="get" class="search-bar">
                             <input type="text" name="keyword" value="${param.keyword}"

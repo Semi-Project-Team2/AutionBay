@@ -50,21 +50,24 @@ body {
     gap: 20px;
 }
 
+/* 프로필 원형 프레임 (감싸는 태그) */
+.profile-preview-wrap,
 .profile-img-wrap {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    overflow: hidden;
-    background-color: #2b2f3a;
+    width: 80px;            /* 원하시는 크기로 조정 */
+    height: 80px;           /* width와 동일하게 설정 */
+    border-radius: 50%;     /* 완벽한 원형 */
+    overflow: hidden;       /* 영역 벗어나는 이미지 잘라내기 */
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
+/* 프로필 이미지 (내부 img 태그) */
+.profile-preview-wrap img,
 .profile-img-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important; /* 비율을 유지하면서 원형 프레임을 가득 채움 */
 }
 
 .profile-text h2 {
@@ -163,22 +166,78 @@ body {
 /* ==========================================
    4. 우측 메인 콘텐츠 영역 (Main Content)
    ========================================== */
-.mypage-main {
+/* 메인 영역 폭 및 기본 레이아웃 */
+.main-content {
     flex: 1 !important;
     min-width: 0 !important;
+    width: 100% !important;
 }
 
 .content-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 50px;
     margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #111111;
 }
 
 .content-title {
     font-size: 20px;
     font-weight: 700;
     color: #111;
+}
+
+/* 검색바 전체 폼 컨테이너 (일체형 카드 디자인) */
+.search-bar {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px; /* 둥근 알약 모양 디자인 */
+    padding: 4px 6px 4px 16px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    transition: all 0.2s ease;
+}
+
+/* 입력창 포커스 시 테두리 강조 */
+.search-bar:focus-within {
+    border-color: #111111;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* 텍스트 입력창 (내부 테두리 제거) */
+.search-bar input[type="text"] {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 13px;
+    color: #333333;
+    width: 200px;
+    padding: 6px 0;
+}
+
+.search-bar input[type="text"]::placeholder {
+    color: #aaa;
+}
+
+/* 검색 버튼 (우측 정돈된 버튼) */
+.search-bar button {
+    background-color: #23252d;
+    color: #ffffff;
+    border: none;
+    border-radius: 14px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-left: 6px;
+}
+
+.search-bar button:hover {
+    background-color: #3b3e4a;
 }
 
 /* ==========================================
@@ -316,5 +375,187 @@ body {
 }
 
 .page-btn:hover:not(.active) {
+    background-color: #e9ecef;
+}
+
+/* ==========================================
+   7. 회원 정보 수정 (Edit Profile) 스타일
+   ========================================== */
+
+/* 수정 폼 카드 컨테이너 */
+.edit-profile-card {
+    max-width: 600px;
+    margin: 40px auto 80px auto;
+    padding: 40px;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.edit-profile-card .page-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #111111;
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #111111;
+}
+
+/* 프로필 이미지 영역 */
+.profile-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 35px;
+}
+
+.profile-preview-wrap {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid #f1f3f5;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    background-color: #f8f9fa;
+}
+
+.profile-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.file-label-btn {
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #495057;
+    background-color: #f1f3f5;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.file-label-btn:hover {
+    background-color: #e9ecef;
+    color: #212529;
+}
+
+.file-label-btn-danger {
+    color: #ff4d4f;
+    border-color: #ffccd5;
+    background-color: #ffeef4;
+}
+
+.file-label-btn-danger:hover {
+    background-color: #ffdae3;
+    color: #d9363e;
+}
+
+/* 폼 로우 레이아웃 */
+.edit-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 20px;
+}
+
+.edit-form-group label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #333333;
+}
+
+.input-with-btn {
+    display: flex;
+    gap: 8px;
+}
+
+.edit-input {
+    flex: 1;
+    padding: 10px 14px;
+    font-size: 14px;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.edit-input:focus {
+    border-color: #111111;
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+}
+
+.check-btn {
+    padding: 0 16px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    background-color: #343a40;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.check-btn:hover {
+    background-color: #111111;
+}
+
+/* 안내 및 결과 메세지 */
+.form-tip {
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+/* 하단 버튼 그룹 */
+.edit-btn-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.edit-submit-btn {
+    flex: 1;
+    padding: 12px 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+    background-color: #111111;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.edit-submit-btn:hover {
+    background-color: #333333;
+}
+
+.edit-cancel-btn {
+    flex: 1;
+    padding: 12px 0;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+    color: #495057;
+    background-color: #f1f3f5;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.edit-cancel-btn:hover {
     background-color: #e9ecef;
 }
