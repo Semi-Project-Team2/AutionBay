@@ -5,139 +5,26 @@
 <head>
     <meta charset="UTF-8">
     <title>마이페이지 - 최근 본 글</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Malgun Gothic', sans-serif; background-color: #f8f9fa; color: #333; }
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/mypage/common.css">
+    <link rel="stylesheet" href="/css/mypage/recent.css">
 
-        /* 전체 컨테이너 */
-        .container { 
-            width: 1200px; 
-            margin: 30px auto; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 30px; 
-        }
-
-        .container > *:nth-child(2) {
-            width: 100%;
-        }
-
-        /* 상단 프로필 영역 */
-        .profile-area {
-            background-color: #e2e2e2;
-            padding: 30px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .profile-info { display: flex; align-items: center; gap: 20px; }
-        .profile-img { width: 70px; height: 70px; background-color: #333; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-        .profile-text h2 { font-size: 20px; font-weight: bold; margin-bottom: 5px; }
-        .profile-text p { font-size: 14px; color: #555; }
-        .profile-right { display: flex; gap: 10px; }
-        .btn-edit { background-color: #d4edda; border: 1px solid #c3e6cb; padding: 8px 15px; border-radius: 4px; font-weight: bold; color: #155724; cursor: pointer; text-decoration: none; font-size: 13px; }
-        .btn-withdraw { background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 8px 15px; border-radius: 4px; font-weight: bold; color: #721c24; cursor: pointer; text-decoration: none; font-size: 13px; }
-
-        /* 사이드바와 메인 컨텐츠 좌우 정렬 */
-        .mypage-content { 
-            display: flex !important; 
-            flex-direction: row !important;
-            gap: 30px !important; 
-            align-items: flex-start !important; 
-            width: 100% !important; 
-        }
-
-        /* 사이드바 */
-        .mypage-sidebar {
-            width: 200px !important; 
-            background-color: #e2e2e2; 
-            border-radius: 6px;
-            padding: 15px 0; 
-            flex-shrink: 0 !important; 
-        }
-        .mypage-sidebar ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 5px; }
-        .mypage-sidebar li a { display: block; padding: 12px 20px; text-decoration: none; color: #555; font-size: 15px; font-weight: 500; }
-        .mypage-sidebar li a:hover, .mypage-sidebar li a.active { background-color: #d1d1d1; color: #000; font-weight: bold; }
-
-        /* 우측 메인 영역 */
-        .mypage-main { 
-            flex: 1 !important; 
-            min-width: 0 !important; 
-        }
-        
-        .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .content-title { font-size: 18px; font-weight: bold; }
-
-        .btn-clear-all {
-            background-color: #ff8b94;
-            color: #fff;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .btn-clear-all:hover { background-color: #ff6b7b; }
-
-        .board-list { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
-        .board-card {
-            background-color: #e2e2e2; padding: 15px 20px; border-radius: 6px;
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .board-info { display: flex; align-items: center; gap: 20px; }
-        .board-thumb { width: 80px; height: 80px; background-color: #b5b5b5; border-radius: 4px; object-fit: cover; }
-        .board-title { font-size: 16px; font-weight: 500; color: #333; text-decoration: none; }
-        .board-title:hover { text-decoration: underline; }
-        
-        .type-badge { display: inline-block; padding: 3px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; margin-right: 8px; }
-        .type-badge.auction { background-color: #ffe3e3; color: #c92a2a; }
-        .type-badge.general { background-color: #e7f5ff; color: #1971c2; }
-
-        .btn-delete-item {
-            background: none;
-            border: none;
-            font-size: 18px;
-            color: #888;
-            cursor: pointer;
-            padding: 5px;
-            line-height: 1;
-        }
-        .btn-delete-item:hover { color: #ff0000; }
-
-        .no-data { text-align: center; padding: 40px; color: #777; background-color: #e2e2e2; border-radius: 6px; }
-
-        .pagination { display: flex; justify-content: center; align-items: center; gap: 5px; margin-top: 20px; }
-        .page-btn { padding: 6px 12px; border: 1px solid #ddd; background-color: #fff; color: #333; text-decoration: none; border-radius: 3px; font-size: 13px; cursor: pointer; }
-        .page-btn.active { background-color: #222; color: #fff; border-color: #222; font-weight: bold; }
-        .page-btn:hover:not(.active) { background-color: #f1f1f1; }
-    </style>
 </head>
 <body>
 
     <!-- 헤더 -->
     <jsp:include page="/WEB-INF/views/common/header.jsp" />
 
-    <div class="container">
+    <div class="mypage-container">
         <!-- 프로필 영역 -->
         <jsp:include page="/WEB-INF/views/mypage/profile/profile.jsp" />
 
-        <div class="mypage-content">
+        <div class="mypage-content-area">
 
-            <!-- 사이드바 (올바른 ul/li 구조 하나만 남김) -->
-            <nav class="mypage-sidebar">
-                <ul>
-                    <li><a href="${pageContext.request.contextPath}/mypage/products">게시글 관리</a></li>
-                    <li><a href="${pageContext.request.contextPath}/mypage/comments">댓글 관리</a></li>
-                    <li><a href="${pageContext.request.contextPath}/mypage/txHistories">거래 내역</a></li>
-                    <li><a href="${pageContext.request.contextPath}/mypage/reviews">후기</a></li>
-                    <li><a href="${pageContext.request.contextPath}/mypage/recents" class="active">최근 본 글</a></li>
-                    <li><a href="${pageContext.request.contextPath}/mypage/wishlists">찜목록</a></li>
-                    <li><a href="${pageContext.request.contextPath}/message/received">쪽지함</a></li>
-                </ul>
-            </nav>
+            <!-- 사이드바 -->
+            <jsp:include page="/WEB-INF/views/mypage/sidebar.jsp">
+                <jsp:param name="activeMenu" value="recents"></jsp:param>
+            </jsp:include>
 
             <!-- 우측 메인 영역 -->
             <div class="mypage-main">
