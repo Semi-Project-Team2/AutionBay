@@ -5,6 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <title>거래 후기 작성</title>
+    <!-- 외부 CSS 연결 -->
+    <link rel="stylesheet" href="/css/mypage/review.css">
 </head>
 <body>
 
@@ -23,32 +25,35 @@
             action="${pageContext.request.contextPath}/mypage/review/writeForm" 
             method="post" class="popup-form">
             
-            <!-- Hidden 데이터 전달 영역 (productId, reviewerNo, revieweeNo) -->
+            <!-- Hidden 데이터 전달 영역 -->
             <input type="hidden" name="historyId" value="${txHistory.historyId}">
             <input type="hidden" name="productId" value="${txHistory.productId}">
 
-            <!-- 평점 입력 영역 (드롭박스, 1~10, required) -->
+            <!-- 평점 입력 영역 (0~10점 / 0.5개 단위 지원) -->
             <div class="form-group">
-                <label for="rating">평점</label>
-                <select id="rating" name="rating" required>
-                    <option value="" disabled selected>평점을 선택하세요</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                </select>
+                <label>평점</label>
+                <div class="star-rating-box">
+                    <div class="stars" id="star-container">
+                        <!-- 각 별은 left(0.5점), right(1.0점) 영역을 가집니다 -->
+                        <span class="star" data-value="1"><span class="half left" data-val="1"></span><span class="half right" data-val="2"></span>★</span>
+                        <span class="star" data-value="2"><span class="half left" data-val="3"></span><span class="half right" data-val="4"></span>★</span>
+                        <span class="star" data-value="3"><span class="half left" data-val="5"></span><span class="half right" data-val="6"></span>★</span>
+                        <span class="star" data-value="4"><span class="half left" data-val="7"></span><span class="half right" data-val="8"></span>★</span>
+                        <span class="star" data-value="5"><span class="half left" data-val="9"></span><span class="half right" data-val="10"></span>★</span>
+                    </div>
+                    <!-- 서버로 넘어갈 실제 평점 값 (1~10) -->
+                    <input type="hidden" id="rating" name="rating" value="" required>
+                    <span class="rating-text"><b id="rating-count">0</b> / 10점</span>
+                </div>
             </div>
 
-            <!-- 내용 입력 영역 (placeholder 지정, required 아님) -->
+            <!-- 내용 입력 영역 -->
             <div class="form-group">
                 <label for="content">내용</label>
-                <textarea id="content" name="content" rows="6" placeholder="내용을 입력하세요. (공백 포함 최대 100자)" maxlength="100"></textarea>
+                <textarea id="content" name="content" rows="6" placeholder="상세 설명을 입력해주세요.
+- 거래 흐름
+- 상품 상태
+- 만족도 " maxlength="100"></textarea>
             </div>
 
             <!-- 작성 완료 버튼 -->
@@ -57,8 +62,9 @@
             </div>
 
         </form>
-
     </div>
-<script src="/js/review.js"></script>
+
+    <!-- js 파일 연결 -->
+    <script src="/js/txHistory.js"></script>
 </body>
 </html>

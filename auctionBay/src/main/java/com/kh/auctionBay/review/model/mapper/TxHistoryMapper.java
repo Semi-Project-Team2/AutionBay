@@ -22,6 +22,6 @@ public interface TxHistoryMapper {
 	int insertTxHistory(TxHistoryDTO txHistory);
 	
 	// 거래 후기 작성 여부 조회
-	boolean selectReviewWrited(Long historyId);
+	boolean selectReviewWrited(Long historyId, Long userNo);
 
 }

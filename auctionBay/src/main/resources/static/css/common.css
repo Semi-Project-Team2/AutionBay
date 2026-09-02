@@ -23,10 +23,13 @@
     padding: 15px 0;
     margin-bottom: 30px;
     width: 100%;
+	min-width: 1200px;
 }
 .header-container {
-    width: 1200px;
+	max-width: 1200px;
+    width: 100%;
     margin: 0 auto;
+	padding: 0 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -57,6 +60,25 @@
     font-size: 14px;
     outline: none;
 }
+/* 헤더 검색창 기본 및 포커스 스타일 */
+.header-search input[type="text"] {
+    transition: all 0.2s ease-in-out;
+}
+
+.header-search input[type="text"]:focus {
+    outline: none;
+    border-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3); /* 은은한 흰색 외곽 빛 번짐 효과 */
+    background-color: #ffffff;
+}
+/* 헤더 로그인 환영 텍스트 스타일 */
+.header-welcome-text {
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    font-size: 14px;      /* 기존 13px에서 14px로 키움 */
+    font-weight: 600;     /* 적당히 굵은 폰트 두께 부여 */
+}
 
 .header-auth {
     display: flex;
@@ -72,6 +94,35 @@
     font-size: 13px;
     font-weight: bold;
     cursor: pointer;
+}
+
+/* 헤더 쪽지함 버튼 위치 상대 지정 */
+.auth-btn.header-msg-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible; /* 뱃지가 버튼 밖으로 나갈 수 있도록 허용 */
+}
+
+/* 헤더 빨간색 안읽은 쪽지 뱃지 */
+.auth-btn.header-msg-btn .header-badge {
+    position: absolute;
+    top: -6px;            /* 위로 끌어올림 */
+    right: -10px;          /* 오른쪽으로 밀어붙임 */
+    background-color: #ff4d4f;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: bold;
+    min-width: 16px;
+    height: 16px;
+    line-height: 18px;
+    text-align: center;
+    border-radius: 50%;
+    padding: 0 4px;
+    box-shadow: 0 0 0 2px #000000;   /* 헤더 배경과의 경계선 */
+    z-index: 10;          /* 다른 요소에 가려지지 않게 최상단 배치 */
+    pointer-events: none;             /* 클릭 이벤트가 버튼으로 전달되도록 설정 */
 }
 
 /* 푸터: 회색 배경은 화면 전체를 채우고 내용은 1200px 중앙 정렬 */
