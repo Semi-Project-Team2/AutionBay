@@ -52,6 +52,9 @@
                                         <div class="product-title-row">
                                             <span class="product-title">${item.title}</span>
                                             <c:choose>
+												<c:when test="${item.status == 'COMPLETED'}">
+													<span class="finished-badge">거래완료</span>
+												</c:when>
                                                 <c:when test="${item.tradeType == 'BUY'}">
                                                     <span class="buy-badge">구매</span>
                                                 </c:when>
