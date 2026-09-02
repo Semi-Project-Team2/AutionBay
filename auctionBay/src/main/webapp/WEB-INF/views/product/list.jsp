@@ -248,40 +248,34 @@
         input.value = input.value.replace(/[^0-9]/g, '');
     }
 
-    /* 쪽지함 아이콘 위 '안읽음' 뱃지 */
-    function updateUnreadBadge() {
-        fetch('${pageContext.request.contextPath}/message/unread-count')
-            .then(response => {
-                if (response.ok) return response.json();
-                throw new Error('안읽음 뱃지 갱신 실패');
-            })
-            .then(unreadCount => {
-                const badgeContainer = document.querySelector('a[href*="/message/received"]');
-                if (!badgeContainer) return;
-                let badge = badgeContainer.querySelector(".badge");
-                if (unreadCount > 0) {
-                    const badgeText = unreadCount <= 99 ? unreadCount : '99+';
-                    if (badge) {
-                        badge.innerText = badgeText;
-                    } else {
-                        badge = document.createElement('span');
-                        badge.className = 'badge';
-                        badge.innerText = badgeText;
-                        badgeContainer.appendChild(badge);
-                    }
-                } else {
-                    if (badge) badge.remove();
-                }
-            })
-            .catch(error => console.error('Error updating unread badge:', error));
-    }
-
-    document.addEventListener('DOMContentLoaded', updateUnreadBadge);
-    window.addEventListener('pageshow', function(event) {
-        if (event.persisted || (performance.getEntriesByType("navigation")[0]?.type === "back_forward")) {
-            updateUnreadBadge();
-        }
-    });
+	/* 쪽지함 아이콘 위 '안읽음' 뱃지 */
+	 function updateUnreadBadge() {
+	     fetch('${pageContext.request.contextPath}/message/unread-count')
+	         .then(response => {
+	             if (response.ok) return response.json();
+	             throw new Error('안읽음 뱃지 갱신 실패');
+	         })
+	         .then(unreadCount => {
+	             const badgeContainers = document.querySelectorAll('a[href*="/message/received"]');
+	             badgeContainers.forEach(badgeContainer => {
+	                 let badge = badgeContainer.querySelector(".badge, .header-badge");
+	                 if (unreadCount > 0) {
+	                     const badgeText = unreadCount <= 99 ? unreadCount : '99+';
+	                     if (badge) {
+	                         badge.innerText = badgeText;
+	                     } else {
+	                         badge = document.createElement('span');
+	                         badge.className = 'badge';
+	                         badge.innerText = badgeText;
+	                         badgeContainer.appendChild(badge);
+	                     }
+	                 } else {
+	                     if (badge) badge.remove();
+	                 }
+	             });
+	         })
+	         .catch(error => console.error('Error updating unread badge:', error));
+	 }
 </script>
 </body>
 </html>
