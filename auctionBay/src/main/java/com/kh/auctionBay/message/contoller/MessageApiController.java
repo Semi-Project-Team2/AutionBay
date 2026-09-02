@@ -32,6 +32,10 @@ public class MessageApiController {
 		}
 		
 		int unreadCount = messageService.getUnreadCount(loginUser.getUserNo());
+		
+		loginUser.setUnreadCount(unreadCount);
+		session.setAttribute(SessionConst.LOGIN_USER, loginUser);
+		
 		return ResponseEntity.ok(unreadCount);
 	}
 

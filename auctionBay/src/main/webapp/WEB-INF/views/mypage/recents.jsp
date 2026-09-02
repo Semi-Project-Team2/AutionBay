@@ -85,107 +85,114 @@
 
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
-    <script>
-        const itemsPerPage = 5;
-        let currentPage = 1;
-        const cards = document.querySelectorAll('.board-card');
-        const totalItems = cards.length;
+	<script>
+	    const itemsPerPage = 5;
+	    let currentPage = 1;
+	    const cards = document.querySelectorAll('.board-card');
+	    const totalItems = cards.length;
 
-        function showPage(page) {
-            currentPage = page;
-            const start = (page - 1) * itemsPerPage;
-            const end = start + itemsPerPage;
+	    function showPage(page) {
+	        currentPage = page;
+	        const start = (page - 1) * itemsPerPage;
+	        const end = start + itemsPerPage;
 
-            cards.forEach((card, index) => {
-                if (index >= start && index < end) {
-                    card.style.display = 'flex';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+	        cards.forEach((card, index) => {
+	            if (index >= start && index < end) {
+	                card.style.display = 'flex';
+	            } else {
+	                card.style.display = 'none';
+	            }
+	        });
 
-            renderPagination();
-        }
+	        renderPagination();
+	    }
 
-        function renderPagination() {
-            const paginationContainer = document.getElementById('paginationContainer');
-            paginationContainer.innerHTML = '';
+	    function renderPagination() {
+	        const paginationContainer = document.getElementById('paginationContainer');
+	        paginationContainer.innerHTML = '';
 
-            if (totalItems === 0) return;
+	        if (totalItems === 0) return;
 
-            const totalPages = Math.ceil(totalItems / itemsPerPage);
-            if (totalPages <= 1) return;
+	        const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-            const prevBtn = document.createElement('a');
-            prevBtn.className = 'page-btn';
-            prevBtn.innerHTML = '&lt; 이전';
-            if (currentPage > 1) {
-                prevBtn.onclick = () => showPage(currentPage - 1);
-            } else {
-                prevBtn.style.opacity = '0.4';
-                prevBtn.style.cursor = 'default';
-            }
-            paginationContainer.appendChild(prevBtn);
+	        // 1페이지 초과일 때만 이전 버튼 생성
+	        if (totalPages > 1) {
+	            const prevBtn = document.createElement('a');
+	            prevBtn.className = 'page-btn';
+	            prevBtn.innerHTML = '&lt; 이전';
+	            if (currentPage > 1) {
+	                prevBtn.onclick = () => showPage(currentPage - 1);
+	            } else {
+	                prevBtn.style.opacity = '0.4';
+	                prevBtn.style.cursor = 'default';
+	            }
+	            paginationContainer.appendChild(prevBtn);
+	        }
 
-            for (let i = 1; i <= totalPages; i++) {
-                const pageBtn = document.createElement('a');
-                pageBtn.className = 'page-btn' + (i === currentPage ? ' active' : '');
-                pageBtn.innerText = i;
-                pageBtn.onclick = () => showPage(i);
-                paginationContainer.appendChild(pageBtn);
-            }
+	        // 페이지 번호 버튼 (5개 이하일 때도 '1'번 버튼이 무조건 생성됩니다!)
+	        for (let i = 1; i <= totalPages; i++) {
+	            const pageBtn = document.createElement('a');
+	            pageBtn.className = 'page-btn' + (i === currentPage ? ' active' : '');
+	            pageBtn.innerText = i;
+	            pageBtn.onclick = () => showPage(i);
+	            paginationContainer.appendChild(pageBtn);
+	        }
 
-            const nextBtn = document.createElement('a');
-            nextBtn.className = 'page-btn';
-            nextBtn.innerHTML = '다음 &gt;';
-            if (currentPage < totalPages) {
-                nextBtn.onclick = () => showPage(currentPage + 1);
-            } else {
-                nextBtn.style.opacity = '0.4';
-                nextBtn.style.cursor = 'default';
-            }
-            paginationContainer.appendChild(nextBtn);
-        }
+	        // 1페이지 초과일 때만 다음 버튼 생성
+	        if (totalPages > 1) {
+	            const nextBtn = document.createElement('a');
+	            nextBtn.className = 'page-btn';
+	            nextBtn.innerHTML = '다음 &gt;';
+	            if (currentPage < totalPages) {
+	                nextBtn.onclick = () => showPage(currentPage + 1);
+	            } else {
+	                nextBtn.style.opacity = '0.4';
+	                nextBtn.style.cursor = 'default';
+	            }
+	            paginationContainer.appendChild(nextBtn);
+	        }
+	    }
 
-        if (totalItems > 0) {
-            showPage(1);
-        }
+	    // 페이지 최초 로드 시 실행
+	    if (totalItems > 0) {
+	        showPage(1);
+	    }
 
-        function deleteRecent(productNo, btnElement) {
-            if (!confirm("해당 기록을 삭제하시겠습니까?")) return;
+	    function deleteRecent(productNo, btnElement) {
+	        if (!confirm("해당 기록을 삭제하시겠습니까?")) return;
 
-            fetch('${pageContext.request.contextPath}/mypage/recents/delete?productNo=' + productNo, { method: 'DELETE' })
-            .then(res => {
-                if (!res.ok) throw new Error("HTTP error " + res.status);
-                return res.text();
-            })
-            .then(data => {
-                if (data === 'SUCCESS') {
-                    location.reload();
-                } else {
-                    alert("삭제 실패: " + data);
-                }
-            })
-            .catch(err => alert("오류 발생: " + err.message));
-        }
+	        fetch('${pageContext.request.contextPath}/mypage/recents/delete?productNo=' + productNo, { method: 'DELETE' })
+	        .then(res => {
+	            if (!res.ok) throw new Error("HTTP error " + res.status);
+	            return res.text();
+	        })
+	        .then(data => {
+	            if (data === 'SUCCESS') {
+	                location.reload();
+	            } else {
+	                alert("삭제 실패: " + data);
+	            }
+	        })
+	        .catch(err => alert("오류 발생: " + err.message));
+	    }
 
-        function clearAllRecents() {
-            if (!confirm("최근 본 글을 모두 삭제하시겠습니까?")) return;
+	    function clearAllRecents() {
+	        if (!confirm("최근 본 글을 모두 삭제하시겠습니까?")) return;
 
-            fetch('${pageContext.request.contextPath}/mypage/recents/clear', { method: 'DELETE' })
-            .then(res => {
-                if (!res.ok) throw new Error("HTTP error " + res.status);
-                return res.text();
-            })
-            .then(data => {
-                if (data === 'SUCCESS') {
-                    location.reload();
-                } else {
-                    alert("삭제 실패: " + data);
-                }
-            })
-            .catch(err => alert("오류 발생: " + err.message));
-        }
-    </script>
+	        fetch('${pageContext.request.contextPath}/mypage/recents/clear', { method: 'DELETE' })
+	        .then(res => {
+	            if (!res.ok) throw new Error("HTTP error " + res.status);
+	            return res.text();
+	        })
+	        .then(data => {
+	            if (data === 'SUCCESS') {
+	                location.reload();
+	            } else {
+	                alert("삭제 실패: " + data);
+	            }
+	        })
+	        .catch(err => alert("오류 발생: " + err.message));
+	    }
+	</script>
 </body>
-</html>c
+</html>

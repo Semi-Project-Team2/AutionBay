@@ -3,6 +3,10 @@
 
 <link rel="stylesheet" href="/css/common.css">
 <!-- 헤더 영역 -->
+ <script>
+    // Context Path를 전역 변수로 선언 (Spring Boot 기본 설정인 경우 빈 값 "")
+    window.contextPath = "${pageContext.request.contextPath}";
+</script>
 <header class="header">
     <div class="header-container">
         

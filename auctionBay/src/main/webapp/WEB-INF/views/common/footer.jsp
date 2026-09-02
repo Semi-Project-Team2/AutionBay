@@ -5,10 +5,10 @@
     <div class="footer-container">
         <!-- 상단 링크 메뉴 -->
         <div class="footer-links">
-            <a href="${pageContext.request.contextPath}/terms">이용약관</a>
-            <a href="${pageContext.request.contextPath}/privacy">개인정보처리방침</a>
-            <a href="${pageContext.request.contextPath}/support">고객센터</a>
-            <a href="${pageContext.request.contextPath}/partner">광고제휴</a>
+            <a href="#">이용약관</a>
+            <a href="#">개인정보처리방침</a>
+            <a href="#">고객센터</a>
+            <a href="#">광고제휴</a>
         </div>
         
         <!-- 하단 회사 정보 및 카피라이트 -->
@@ -18,3 +18,4 @@
         </div>
     </div>
 </footer>
+<script src="/js/unreadCount.js"></script>

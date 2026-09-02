@@ -65,7 +65,7 @@
                                             </button>
                                         </div>
 
-                                        <!-- 상품 정보 영역 (중복 태그 정돈) -->
+                                        <!-- 상품 정보 영역 -->
                                         <div class="product-info">
                                             <div class="product-title-row">
                                                 <span class="product-title">${item.title}</span>
@@ -115,8 +115,7 @@
     </div>
 	
 	<!-- 공통 푸터 포함 -->
-	    <jsp:include page="/WEB-INF/views/common/footer.jsp" />
-
+	<jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
@@ -169,7 +168,6 @@ document.addEventListener("DOMContentLoaded", function() {
         const end = start + itemsPerPage;
 
         cards.forEach((card, index) => {
-            // 강제 flex 지정 해제 -> CSS 본래 Display 규칙을 따르도록 설정
             card.style.display = (index >= start && index < end) ? '' : 'none';
         });
 
@@ -180,16 +178,23 @@ document.addEventListener("DOMContentLoaded", function() {
         const paginationContainer = document.getElementById('paginationContainer');
         paginationContainer.innerHTML = '';
 
-        if (totalItems === 0 || totalPages <= 1) return;
+        if (totalItems === 0) return;
 
-        const prevBtn = document.createElement('a');
-        prevBtn.className = 'page-btn' + (currentPage === 1 ? ' disabled' : '');
-        prevBtn.innerHTML = '&lt; 이전';
-        if (currentPage > 1) {
-            prevBtn.onclick = () => showPage(currentPage - 1);
+        // 1페이지 초과일 때만 이전 버튼 생성
+        if (totalPages > 1) {
+            const prevBtn = document.createElement('a');
+            prevBtn.className = 'page-btn' + (currentPage === 1 ? ' disabled' : '');
+            prevBtn.innerHTML = '&lt; 이전';
+            if (currentPage > 1) {
+                prevBtn.onclick = () => showPage(currentPage - 1);
+            } else {
+                prevBtn.style.opacity = '0.4';
+                prevBtn.style.cursor = 'default';
+            }
+            paginationContainer.appendChild(prevBtn);
         }
-        paginationContainer.appendChild(prevBtn);
 
+        // 페이지 번호 버튼 (아이템이 있으면 1페이지뿐이여도 '1'번 버튼이 무조건 생성됩니다)
         for (let i = 1; i <= totalPages; i++) {
             const pageBtn = document.createElement('a');
             pageBtn.className = 'page-btn' + (i === currentPage ? ' active' : '');
@@ -198,13 +203,19 @@ document.addEventListener("DOMContentLoaded", function() {
             paginationContainer.appendChild(pageBtn);
         }
 
-        const nextBtn = document.createElement('a');
-        nextBtn.className = 'page-btn' + (currentPage === totalPages ? ' disabled' : '');
-        nextBtn.innerHTML = '다음 &gt;';
-        if (currentPage < totalPages) {
-            nextBtn.onclick = () => showPage(currentPage + 1);
+        // 1페이지 초과일 때만 다음 버튼 생성
+        if (totalPages > 1) {
+            const nextBtn = document.createElement('a');
+            nextBtn.className = 'page-btn' + (currentPage === totalPages ? ' disabled' : '');
+            nextBtn.innerHTML = '다음 &gt;';
+            if (currentPage < totalPages) {
+                nextBtn.onclick = () => showPage(currentPage + 1);
+            } else {
+                nextBtn.style.opacity = '0.4';
+                nextBtn.style.cursor = 'default';
+            }
+            paginationContainer.appendChild(nextBtn);
         }
-        paginationContainer.appendChild(nextBtn);
     }
 
     if (getCards().length > 0) {
