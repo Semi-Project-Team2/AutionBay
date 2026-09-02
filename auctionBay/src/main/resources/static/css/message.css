@@ -1,11 +1,44 @@
-/* 쪽지함 영역 */
+/* ==========================================================
+   쪽지함 페이지 통합 CSS (1200px 중앙 정렬 및 우측 퀵메뉴 고정)
+   ========================================================== */
+
+body {
+    background-color: #ffffff !important;
+}
+
+.main-container {
+    width: 1200px;
+    min-width: 1200px;
+    margin: 30px auto;
+    background-color: #ffffff;
+}
+
+/* 본문 영역과 우측 퀵메뉴를 나란히 배치하기 위한 Flex 컨테이너 */
+.content-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 30px;
+    position: relative;
+}
+
+/* 쪽지함 본문 영역 (1200px 안에서 깔끔한 박스 형태로 유지) */
 .message-container {
-    max-width: 700px;
+    flex: 1;
+    min-width: 0;
+    background-color: #ffffff;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    padding: 30px;
 }
 
 .message-title {
-    font-size: 20px;
-    margin-bottom: 16px;
+    font-size: 28px;
+    font-weight: bold;
+    font-style: italic;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 25px;
+    color: #000;
 }
 
 /* 받은함 / 보낸함 탭 */
@@ -268,7 +301,7 @@
     color: #c0392b;
 }
 
-/* 예약 중 배지  */
+/* 예약 중 배지 */
 .trade-status-badge.reserved {
     background-color: #f0ad4e;
     color: white;
@@ -280,4 +313,51 @@
 
 .accept-btn {
     background-color: #5bc0de;
+}
+
+/* 우측 스크롤 고정 퀵 메뉴 (메인, 찜목록과 완벽히 통일) */
+.right-quick-menu {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    left: calc(50% + 645px);
+    width: 75px;
+    background-color: #ffffff;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px 0;
+    gap: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    z-index: 1000;
+}
+
+.quick-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+    font-size: 11px;
+    font-weight: bold;
+    gap: 5px;
+    position: relative;
+}
+
+.quick-icon { 
+    font-size: 20px; 
+}
+
+.badge {
+    position: absolute;
+    top: -2px;
+    right: 4px;
+    background-color: #ff3b30;
+    color: #fff;
+    font-size: 9px;
+    padding: 1px 5px;
+    border-radius: 10px;
+    font-weight: bold;
 }

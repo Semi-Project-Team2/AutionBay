@@ -23,10 +23,13 @@
     padding: 15px 0;
     margin-bottom: 30px;
     width: 100%;
+	min-width: 1200px;
 }
 .header-container {
-    width: 1200px;
+	max-width: 1200px;
+    width: 100%;
     margin: 0 auto;
+	padding: 0 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -56,6 +59,25 @@
     background-color: #f1f3f5;
     font-size: 14px;
     outline: none;
+}
+/* 헤더 검색창 기본 및 포커스 스타일 */
+.header-search input[type="text"] {
+    transition: all 0.2s ease-in-out;
+}
+
+.header-search input[type="text"]:focus {
+    outline: none;
+    border-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3); /* 은은한 흰색 외곽 빛 번짐 효과 */
+    background-color: #ffffff;
+}
+/* 헤더 로그인 환영 텍스트 스타일 */
+.header-welcome-text {
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    font-size: 14px;      /* 기존 13px에서 14px로 키움 */
+    font-weight: 600;     /* 적당히 굵은 폰트 두께 부여 */
 }
 
 .header-auth {
