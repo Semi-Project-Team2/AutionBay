@@ -260,5 +260,11 @@
 	SELECT * FROM PRODUCT_MEDIA WHERE PRODUCT_ID = #{productId}
 </select>
 
+<select id="getMaxMediaOrderByProductId" parameterType="long" resultType="integer">
+    SELECT NVL(MAX(MEDIA_ORDER), 0) 
+      FROM PRODUCT_MEDIA 
+     WHERE PRODUCT_ID = #{productId}
+</select>
+
 
 </mapper>

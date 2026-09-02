@@ -118,6 +118,7 @@
         LEFT JOIN PRODUCT_MEDIA PM 
                ON P.PRODUCT_ID = PM.PRODUCT_ID AND PM.MEDIA_ORDER = 1
      WHERE RV.USER_NO = #{userNo}
+       AND (P.IS_DELETED = 0 OR P.IS_DELETED IS NULL) -- 이 조건을 추가하세요!
      ORDER BY RV.VIEWED_AT DESC
 	</select>
 

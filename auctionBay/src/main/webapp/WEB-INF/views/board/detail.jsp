@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -9,9 +9,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>상품 상세 페이지</title>
     <style>
-   /* ==========================================================
-   1. 공통 및 초기화 스타일
-   ========================================================== */
+    /* ==========================================================
+       1. 공통 및 초기화 스타일
+       ========================================================== */
     * {
         box-sizing: border-box;
         margin: 0;
@@ -25,8 +25,8 @@
     }
 
     /* ==========================================================
-    2. 레이아웃 컨테이너
-    ========================================================== */
+       2. 레이아웃 컨테이너
+       ========================================================== */
     .page-container {
         width: 1200px;
         margin: 40px auto;
@@ -46,8 +46,8 @@
     }
 
     /* ==========================================================
-    2-1. 좌측 상품 이미지 영역 스타일
-    ========================================================== */
+       2-1. 좌측 상품 이미지 영역 스타일
+       ========================================================== */
     .product-image-section {
         width: 500px;
         background-color: #ffffff;
@@ -57,6 +57,14 @@
         display: flex;
         flex-direction: column;
         gap: 14px;
+    }
+
+    /* 뱃지와 제목을 한 줄로 정렬하기 위한 스타일 */
+    .product-title-header-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
     }
 
     .product-title-header {
@@ -136,8 +144,8 @@
     }
 
     /* ==========================================================
-    3. 상품 가격 헤더 영역
-    ========================================================== */
+       3. 상품 가격 헤더 영역
+       ========================================================== */
     .price-header {
         display: flex;
         justify-content: space-between;
@@ -160,8 +168,8 @@
     }
 
     /* ==========================================================
-    4. 상품 정보 박스
-    ========================================================== */
+       4. 상품 정보 박스
+       ========================================================== */
     .auction-info-box {
         background-color: #f9fafb;
         border-radius: 8px;
@@ -205,8 +213,8 @@
     }
 
     /* ==========================================================
-    6. 상품 설명 본문 영역
-    ========================================================== */
+       6. 상품 설명 본문 영역
+       ========================================================== */
     .description-box {
         background-color: #fff;
         border: 1px solid #e2e8f0;
@@ -224,8 +232,8 @@
     }
 
     /* ==========================================================
-    7. 하단 액션 버튼 그룹 (구매하기 + 찜하기)
-    ========================================================== */
+       7. 하단 액션 버튼 그룹 (구매하기 + 찜하기)
+       ========================================================== */
     .action-group {
         display: flex;
         gap: 8px;
@@ -282,8 +290,8 @@
     }
 
     /* ==========================================================
-    8. 판매자 프로필 영역
-    ========================================================== */
+       8. 판매자 프로필 영역
+       ========================================================== */
     .seller-card {
         margin-top: 20px;
         padding-top: 16px;
@@ -348,8 +356,8 @@
     }
 
     /* ==========================================================
-    10. 게시글 수정/삭제 버튼 영역 (우측 하단 배치용)
-    ========================================================== */
+       10. 게시글 수정/삭제 버튼 영역 (우측 하단 배치용)
+       ========================================================== */
     .post-owner-actions {
         width: 964px;
         display: flex;
@@ -384,8 +392,8 @@
     }
 
     /* ==========================================================
-    11. 댓글 영역 (페이지 하단 단독 배치)
-    ========================================================== */
+       11. 댓글 영역 (페이지 하단 단독 배치)
+       ========================================================== */
     .comment-section-full {
         width: 964px;
         background-color: #ffffff;
@@ -503,8 +511,8 @@
     }
 
     /* ==========================================================
-    9. 공통 모달창 스타일 (리뷰 기록)
-    ========================================================== */
+       9. 공통 모달창 스타일 (리뷰 기록)
+       ========================================================== */
     .modal-overlay {
         display: none;
         position: fixed;
@@ -628,6 +636,28 @@
         color: #94a3b8;
         font-size: 13px;
     }
+
+    .buy-badge {
+        background-color: #f0fdf4;
+        color: #16a34a;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 6px;
+        border: 1px solid #bbf7d0;
+        flex-shrink: 0;
+    }
+
+    .sell-badge {
+        background-color: #eff6ff;
+        color: #2563eb;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 6px;
+        border: 1px solid #bfdbfe;
+        flex-shrink: 0;
+    }
     </style>
     <link rel="stylesheet" href="/css/common.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -642,7 +672,6 @@
     <jsp:include page="/WEB-INF/views/common/header.jsp" />
 
     <div id="server-data" data-message="${message}"></div>
-    <!-- 상품 ID, 작성자 여부를 숨겨서 자바스크립트에서 접근 가능하게 함 -->
     <input type="hidden" id="product-id-value" value="${product.productId}">
     <input type="hidden" id="is-Owner-value" value="${isOwner}">
 
@@ -651,7 +680,17 @@
         
         <!-- 왼쪽: 상품 미디어 영역 -->
         <div class="product-image-section">
-            <h2 class="product-title-header">${product.title}</h2>
+            <div class="product-title-header-wrapper">
+                <c:choose>
+                    <c:when test="${product.tradeType == 'SELL'}">
+                        <span class="sell-badge">판매</span>
+                    </c:when>
+                    <c:when test="${product.tradeType == 'BUY'}">
+                        <span class="buy-badge">구매</span>
+                    </c:when>
+                </c:choose>
+                <h2 class="product-title-header">${product.title}</h2>
+            </div>
 
             <div class="main-image-container" id="mainImageContainer">
                 <c:choose>
@@ -666,13 +705,13 @@
                             </c:otherwise>
                         </c:choose>
                     </c:when>
-					<c:otherwise>
-					    <img src="${pageContext.request.contextPath}/uploads/product/common/default_thumb.png" alt="이미지 없음" class="no-image">
-					</c:otherwise>
+                    <c:otherwise>
+                        <img src="${pageContext.request.contextPath}/uploads/product/common/default_thumb.png" alt="이미지 없음" class="no-image">
+                    </c:otherwise>
                 </c:choose>
             </div>
             
-            <!-- 썸네일 리스트 (미디어가 여러 개일 경우) -->
+            <!-- 썸네일 리스트 -->
             <c:if test="${not empty product.mediaList && product.mediaList.size() > 1}">
                 <div class="thumbnail-list">
                     <c:forEach var="media" items="${product.mediaList}" varStatus="status">
@@ -709,17 +748,11 @@
                 <div class="info-row">
                     <span class="info-label">상품상태</span>
                     <div class="info-content" id="productCondition">
-                        <c:choose >
-							<c:when test="${product.productCondition == 'NEW'}">
-								미개봉
-							</c:when>
-							<c:when test="${product.productCondition == 'LIKE_NEW'}">
-								거의새것
-							</c:when>
-							<c:when test="${product.productCondition == 'USED'}">
-								사용감있음
-							</c:when>	
-						</c:choose>
+                        <c:choose>
+                            <c:when test="${product.productCondition == 'NEW'}">미개봉</c:when>
+                            <c:when test="${product.productCondition == 'LIKE_NEW'}">거의새것</c:when>
+                            <c:when test="${product.productCondition == 'USED'}">사용감있음</c:when>	
+                        </c:choose>
                     </div>
                 </div>
 
@@ -729,18 +762,18 @@
                 </div>
             </div>
 
-			<!-- 버튼 영역 -->
-			<div class="action-group">
-			    <button type="button" class="btn-submit" id="btnSendMessage"
-			            data-product-id="${product.productId}"
-			            data-receiver-no="${product.writerNo}"
-			            data-redirect-url="${pageContext.request.contextPath}/board/${product.productId}/detail">
-			        ${product.tradeType == 'SELL' ? '쪽지하여 구매하기' : '쪽지하여 판매하기'}
-			    </button>
-			    <button type="button" id="wishBtn" data-product-id="${product.productId}">
-			        <i class="${isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart'}"></i>
-			    </button>
-			</div>
+            <!-- 버튼 영역 -->
+            <div class="action-group">
+                <button type="button" class="btn-submit" id="btnSendMessage"
+                        data-product-id="${product.productId}"
+                        data-receiver-no="${product.writerNo}"
+                        data-redirect-url="${pageContext.request.contextPath}/board/${product.productId}/detail">
+                    ${product.tradeType == 'SELL' ? '쪽지하여 구매하기' : '쪽지하여 판매하기'}
+                </button>
+                <button type="button" id="wishBtn" data-product-id="${product.productId}">
+                    <i class="${isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart'}"></i>
+                </button>
+            </div>
 
             <!-- 판매자 정보 영역 -->
             <div class="seller-card">
@@ -748,7 +781,6 @@
                     <div class="seller-info">
                         <span class="seller-name" id="sellerNickname">유저 닉네임 : ${product.writerNickname}</span>
                     </div>
-                    
                 </div>
                 <div class="seller-stats">
                     <div class="stat-item">
@@ -762,7 +794,7 @@
             </div>
         </div>
 
-        <!-- 글 작성자일 경우에만 노출되는 수정/삭제 버튼 영역 (우측 하단 배치) -->
+        <!-- 글 작성자일 경우에만 노출되는 수정/삭제 버튼 영역 -->
         <c:if test="${isOwner or (not empty sessionScope.loginUser and sessionScope.loginUser.userNo == product.writerNo)}">
             <div class="post-owner-actions">
                 <button type="button" class="btn-owner" onclick="location.href='${pageContext.request.contextPath}/board/${product.productId}/update'">수정</button>
@@ -770,7 +802,7 @@
             </div>
         </c:if>
 
-        <%-- 댓글 영역 (아래로 단독 배치) --%>
+        <%-- 댓글 영역 --%>
         <section class="comment-section-full">
             <h3 id="comment-section-title" class="comment-section_title">댓글 <span id="comment-count">${empty comments ? 0 : comments.size()}</span></h3>
             <ul class="comment-list" id="comment-list">
