@@ -52,32 +52,6 @@
             </form>
 
         </main>
-
-        <aside class="right-quick-menu">
-            <a href="${pageContext.request.contextPath}/mypage/wishlists" class="quick-item">
-                <span class="quick-icon">❤️</span>
-                <span>찜목록</span>
-            </a>
-            <a href="${pageContext.request.contextPath}/message/received" class="quick-item">
-                <span class="quick-icon">✉️</span>
-                <span>쪽지함</span>
-                <c:choose>
-                    <c:when test="${sessionScope.loginUser.unreadCount > 0 && sessionScope.loginUser.unreadCount <= 99}">
-                        <span class="badge">${sessionScope.loginUser.unreadCount}</span>
-                    </c:when>
-                    <c:when test="${sessionScope.loginUser.unreadCount == 0}">
-                    </c:when>
-                    <c:otherwise>
-                        <span class="badge">99+</span>
-                    </c:otherwise>
-                </c:choose>
-            </a>
-            <a href="${pageContext.request.contextPath}/mypage/recents" class="quick-item">
-                <span class="quick-icon">⏱️</span>
-                <span>최근 본 글</span>
-            </a>
-        </aside>
-
     </div>
 </div>
 
