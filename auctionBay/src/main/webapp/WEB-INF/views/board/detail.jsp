@@ -661,6 +661,7 @@
     </style>
     <link rel="stylesheet" href="/css/common.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="">
 </head>
 <body>
     <c:if test="${not empty error}">
@@ -738,7 +739,7 @@
         <div class="auction-card">
             <!-- 가격 헤더 -->
             <div class="price-header">
-                <span class="price-label">판매가</span>
+                <span class="price-label">희망가격</span>
                 <span class="price-value" id="currentPrice"><fmt:formatNumber value="${product.price}" pattern="#,###" />원</span>
             </div>
 

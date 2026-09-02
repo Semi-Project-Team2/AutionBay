@@ -29,7 +29,7 @@
             <!-- 우측 댓글 리스트 메인 콘텐츠 -->
             <main class="main-content">
                 <div class="content-header">
-                    <span class="content-title">댓글 관리</span>
+                    <div class="content-title">댓글 관리</div>
                 </div>
 
                 <div class="comment-list" id="commentListContainer">

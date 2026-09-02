@@ -45,30 +45,36 @@
     box-sizing: border-box;
 }
 
+/* review.css 의 3번 항목 수정을 진행하세요 */
+
 .review-header {
     display: flex;
     align-items: center;
     gap: 12px;
     width: 100%;
     font-size: 14px;
-    white-space: nowrap; /* 글자 세로 떨어짐 방지 */
+    /* white-space: nowrap; 삭제 또는 주석 처리 */
 }
 
 .review-header .title {
     font-weight: 700;
     color: #222;
     text-decoration: none;
-    white-space: normal; /* 제목이 길 때만 자연스럽게 줄바꿈 */
+    flex-shrink: 1;        /* 공간 부족시 제목 줄어들게 설정 */
+    min-width: 0;          /* flex 자식의 너비 축소 버그 방지 (핵심!) */
+    cursor: pointer;
 }
 
 .review-header .nickname {
     color: #666;
-    margin-left: auto; /* 닉네임을 우측으로 밀어 정렬 */
+    margin-left: auto;     /* 닉네임을 우측 끝으로 밀기 */
+    flex-shrink: 0;        /* 닉네임은 줄어들지 않도록 고정 */
 }
 
 .review-header .time {
     color: #999;
     font-size: 12px;
+    flex-shrink: 0;        /* 작성일도 줄어들지 않도록 고정 */
 }
 
 .review-body {

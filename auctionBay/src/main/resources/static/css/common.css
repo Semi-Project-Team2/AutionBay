@@ -108,8 +108,8 @@
 /* 헤더 빨간색 안읽은 쪽지 뱃지 */
 .auth-btn.header-msg-btn .header-badge {
     position: absolute;
-    top: -6px;            /* 위로 끌어올림 */
-    right: -10px;          /* 오른쪽으로 밀어붙임 */
+    top: 0px;
+    right: 0px; 
     background-color: #ff4d4f;
     color: #ffffff;
     font-size: 10px;
@@ -120,7 +120,6 @@
     text-align: center;
     border-radius: 50%;
     padding: 0 4px;
-    box-shadow: 0 0 0 2px #000000;   /* 헤더 배경과의 경계선 */
     z-index: 10;          /* 다른 요소에 가려지지 않게 최상단 배치 */
     pointer-events: none;             /* 클릭 이벤트가 버튼으로 전달되도록 설정 */
 }
@@ -155,4 +154,101 @@
 }
 .footer-info p {
     margin-bottom: 4px;
+}
+
+/* ==========================================
+   회원 탈퇴 / 비밀번호 확인 폼 스타일
+   ========================================== */
+
+/* 전체 영역 중앙 정렬 (마이페이지 메인 영역 내부 등에서 사용) */
+.withdraw-container {
+    max-width: 450px;
+    margin: 60px auto;
+    padding: 40px 30px;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+/* 상단 타이틀 */
+.withdraw-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #111111;
+    margin-bottom: 12px;
+}
+
+/* 서브 설명 문구 */
+.withdraw-desc {
+    font-size: 14px;
+    color: #666666;
+    margin-bottom: 28px;
+    line-height: 1.5;
+}
+
+/* 폼 레이아웃 */
+.withdraw-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* 비밀번호 입력창 */
+.withdraw-input {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 14px;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.withdraw-input:focus {
+    border-color: #ff4d4f;
+    box-shadow: 0 0 0 3px rgba(255, 77, 79, 0.15);
+}
+
+/* 버튼 그룹 (탈퇴하기 / 취소) */
+.withdraw-btn-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+/* 버튼 공통 스타일 */
+.withdraw-btn {
+    flex: 1;
+    padding: 12px 0;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+/* 탈퇴 완료 버튼 (강조 레드) */
+.withdraw-btn-submit {
+    background-color: #ff4d4f;
+    color: #ffffff;
+}
+
+.withdraw-btn-submit:hover {
+    background-color: #d9363e;
+}
+
+/* 취소 버튼 */
+.withdraw-btn-cancel {
+    background-color: #f1f3f5;
+    color: #495057;
+    border: 1px solid #ced4da;
+}
+
+.withdraw-btn-cancel:hover {
+    background-color: #e9ecef;
 }
