@@ -81,10 +81,6 @@ public class AuctionController {
 		List<ReviewDTO> reviewList = reviewService.getReceivedReviews(condition)
 									.getReviews();
 		
-		if(product.getIsDeleted() > 0) {
-			rttr.addFlashAttribute("message", "이미 삭제된 게시글입니다.");
-			return "redirect:/";
-		}
 		// 작성자인지 여부
 		boolean isOwner = false;
 	    if (loginUser != null && product != null) {

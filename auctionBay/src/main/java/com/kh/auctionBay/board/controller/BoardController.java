@@ -1,6 +1,5 @@
 package com.kh.auctionBay.board.controller;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -15,10 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.auctionBay.activity.service.ActivityService;
-import com.kh.auctionBay.auction.model.dto.BidsDTO;
-import com.kh.auctionBay.board.model.dto.BoardDTO;
-import com.kh.auctionBay.board.model.dto.BoardListResult;
-import com.kh.auctionBay.board.model.dto.BoardSearchCondition;
 import com.kh.auctionBay.board.model.dto.CommentDTO;
 import com.kh.auctionBay.board.service.BoardService;
 import com.kh.auctionBay.board.service.CommentService;
@@ -77,10 +72,6 @@ public class BoardController {
 		List<ReviewDTO> reviewList = reviewService.getReceivedReviews(condition)
 									.getReviews();
 		
-		if(product.getIsDeleted() > 0) {
-			rttr.addFlashAttribute("message", "이미 삭제된 게시글입니다.");
-			return "redirect:/board/"+productId+"/detail";
-		}
 		// 작성자인지 여부
 		boolean isOwner = false;
 	    if (loginUser != null && product != null) {
