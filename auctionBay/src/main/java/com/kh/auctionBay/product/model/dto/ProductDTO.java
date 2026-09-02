@@ -77,6 +77,9 @@ public class ProductDTO {
 	
 	private List<ProductMediaDTO> mediaList;
 	
+	// 찜 여부
+	public int isWished;
+	
 	// 해당 게시글에 달린 댓글 개수
 		private int commentCount;
 }
