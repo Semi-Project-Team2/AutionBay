@@ -11,3 +11,5 @@
         <li><a href="${pageContext.request.contextPath}/mypage/wishlists" class="${param.activeMenu == 'wishlists' ? 'active' : ''}">찜목록</a></li>
     </ul>
 </nav>
+
+<script src="${pageContext.request.contextPath}/js/mypage.js"></script>

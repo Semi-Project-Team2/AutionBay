@@ -12,15 +12,17 @@
     margin-top: 15px;
 }
 
-/* 카드 아이템 단일 */
+/* 카드 아이템 단일 (하얀색 카드 스타일로 변경) */
 .history-card {
-    background-color: #e9ecef; /* 필요 시 배경색 조정 가능 */
-    border-radius: 10px;
-    padding: 20px 24px;
+    background-color: #ffffff; /* 회색(#e9ecef)에서 흰색(#ffffff)으로 변경 */
+    border: 1px solid #f0f0f0; /* 테두리 추가 */
+    border-radius: 14px;       /* 곡률 조정 (10px -> 14px) */
+    padding: 16px 20px;        /* 여백 조정 */
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02); /* 입체감을 위한 미세 그림자 추가 */
 }
 
 /* 왼쪽 정보 영역 (가로 배치) */

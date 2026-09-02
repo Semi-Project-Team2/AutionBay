@@ -6,6 +6,7 @@
 <head> 
     <meta charset="UTF-8">
     <title>게시글 작성</title>
+    <link rel="stylesheet" href="/css/productWrite.css">
 </head>
 
 <body>
@@ -178,10 +179,13 @@
 
         if (type === "BUY") {
             priceArea.style.display = "flex";
-            conditionArea.style.display = "none";
+            conditionArea.style.display = "none"; // 화면에서 숨김
             auctionPriceArea.style.display = "none";
             auctionEndArea.style.display = "none";
 
+            // 구매인 경우 기본값 USED 지정 및 필수 체크 해제
+            productCondition.value = "USED";
+            
             price.required = true;
             productCondition.required = false;
             auctionStartPrice.required = false;

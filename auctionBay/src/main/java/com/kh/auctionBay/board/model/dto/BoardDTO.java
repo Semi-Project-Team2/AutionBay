@@ -22,6 +22,7 @@ public class BoardDTO {
     private Long writerNo;
     private String memberId;
     
+    
     private String nickname; 
     
     private int readCount;
@@ -29,4 +30,5 @@ public class BoardDTO {
     
     private String deleteBoard;
 
+    private String tradeType;
 }
