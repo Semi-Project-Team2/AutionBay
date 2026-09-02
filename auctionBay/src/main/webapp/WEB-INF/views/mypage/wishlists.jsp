@@ -40,6 +40,9 @@
                                                 <c:when test="${not empty item.mainImage}">
                                                     <img src="${pageContext.request.contextPath}${item.mainImage}" alt="상품 이미지">
                                                 </c:when>
+												<c:when test="${item.status == 'EXPIRED'}">
+													<span class="expired-badge">경매 기간 만료</span>
+												</c:when>
 												<c:when test="${item.status == 'COMPLETED'}">
 													<span class="finished-badge">거래완료</span>
 												</c:when>
@@ -67,6 +70,9 @@
                                             <div class="product-title-row">
                                                 <span class="product-title">${item.title}</span>
                                                 <c:choose>
+													<c:when test="${item.status == 'EXPIRED'}">
+														<span class="expired-badge">유찰</span>
+													</c:when>
                                                     <c:when test="${item.tradeType == 'BUY'}">
                                                         <span class="buy-badge">구매</span>
                                                     </c:when>
