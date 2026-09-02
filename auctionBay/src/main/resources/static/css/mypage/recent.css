@@ -1,0 +1,167 @@
+@charset "UTF-8";
+
+/* ==========================================
+   최근 본 글 메인 영역 (Recent View List)
+   ========================================== */
+
+/* 메인 영역 레이아웃 유지 */
+.mypage-main {
+    flex: 1 !important;
+    min-width: 0 !important;
+    width: 100% !important;
+}
+
+/* 1. 상단 헤더 & 전체 삭제 버튼 */
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #111111;
+}
+
+.content-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111111;
+}
+
+.btn-clear-all {
+    background-color: #f5f5f5;
+    color: #666666;
+    border: 1px solid #ddd;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-clear-all:hover {
+    background-color: #ff4d4f;
+    color: #ffffff;
+    border-color: #ff4d4f;
+}
+
+/* 2. 게시글 목록 컨테이너 */
+.board-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 25px;
+    width: 100%;
+}
+
+/* 3. 개별 카드 항목 */
+.board-card {
+    background-color: #ffffff;
+    border: 1px solid #f0f0f0;
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex !important; /* JS style.display 제어 대응 */
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.board-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* 카드 내부 좌측 (이미지 + 뱃지/제목) */
+.board-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+    min-width: 0; /* 말줄임표 작동에 필수 */
+}
+
+/* 썸네일 이미지 */
+.board-thumb {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    border: 1px solid #eaeaea;
+    flex-shrink: 0;
+}
+
+/* 유형 뱃지 (경매 / 일반) */
+.type-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 4px;
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
+.type-badge.auction {
+    background-color: #fff0f6;
+    color: #eb2f96;
+    border: 1px solid #ffadd2;
+}
+
+.type-badge.general {
+    background-color: #e6f7ff;
+    color: #1890ff;
+    border: 1px solid #91d5ff;
+}
+
+/* 게시글 제목 */
+.board-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #222222;
+    text-decoration: none;
+    vertical-align: middle;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 450px;
+    display: inline-block;
+}
+
+.board-title:hover {
+    text-decoration: underline;
+    color: #000000;
+}
+
+/* 4. 개별 삭제 (✕) 버튼 */
+.btn-delete-item {
+    background: none;
+    border: none;
+    color: #ccc;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 50%;
+    line-height: 1;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.btn-delete-item:hover {
+    color: #ff4d4f;
+    background-color: #ffeef0;
+}
+
+/* 5. 데이터 없음 안내 상자 */
+.no-data {
+    background-color: #ffffff;
+    padding: 60px;
+    text-align: center;
+    border-radius: 12px;
+    color: #999999;
+    font-size: 14px;
+    border: 1px dashed #e0e0e0;
+    width: 100%;
+    box-sizing: border-box;
+}
