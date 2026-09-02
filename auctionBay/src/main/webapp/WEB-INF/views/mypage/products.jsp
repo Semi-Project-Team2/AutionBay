@@ -80,13 +80,13 @@
 									        <%-- 1. 경매글일 때 --%>
 									        <c:when test="${board.tradeType == 'AUCTION'}">
 									            <button type="button" class="btn-action" onclick="location.href='${pageContext.request.contextPath}/auction/${pNo}/update'">수정</button>
-									            <button type="button" class="btn-action" style="color: #c92a2a;" onclick="if(confirm('정말 삭제하시겠습니까?')) { location.href='${pageContext.request.contextPath}/product/${pNo}/delete'; }">삭제</button>
+									            <button type="button" class="btn-action" style="color: #c92a2a;" data-product-no="${pNo}" onclick="deleteProduct(this)">삭제</button>
 									        </c:when>
 									        
 									        <%-- 2. 일반글일 때 (경매와 경로 형식을 board로 통일) --%>
 									        <c:otherwise>
 									            <button type="button" class="btn-action" onclick="location.href='${pageContext.request.contextPath}/board/${pNo}/update'">수정</button>
-									            <button type="button" class="btn-action" style="color: #c92a2a;" onclick="if(confirm('정말 삭제하시겠습니까?')) { location.href='${pageContext.request.contextPath}/product/${pNo}/delete'; }">삭제</button>
+									            <button type="button" class="btn-action" style="color: #c92a2a;" data-product-no="${pNo}" onclick="deleteProduct(this)">삭제</button>
 									        </c:otherwise>
 									    </c:choose>
 									</div>
