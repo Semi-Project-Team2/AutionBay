@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <title>거래 후기 작성</title>
     <!-- 외부 CSS 연결 -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/review.css">
+    <link rel="stylesheet" href="/css/mypage/review.css">
 </head>
 <body>
 
@@ -65,6 +65,6 @@
     </div>
 
     <!-- js 파일 연결 -->
-    <script src="/js/review.js"></script>
+    <script src="/js/txHistory.js"></script>
 </body>
 </html>
