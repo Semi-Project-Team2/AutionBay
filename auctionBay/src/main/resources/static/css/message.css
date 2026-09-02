@@ -361,3 +361,32 @@ body {
     border-radius: 10px;
     font-weight: bold;
 }
+
+/* 쪽지함에서 상품 정보 요약 */
+.product-summary {
+    padding: 14px 16px;
+    background: #f8fafc;
+    border-radius: 8px;
+    margin: 16px 0 20px;
+    border: 1px solid #e2e8f0;
+}
+
+.product-summary-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.product-summary-price {
+    font-size: 14px;
+    color: #0f172a;
+    font-weight: 700;
+}
+
+.product-summary-type {
+    font-size: 13px;
+    color: #64748b;
+    font-weight: 500;
+    margin-left: 8px;
+}
