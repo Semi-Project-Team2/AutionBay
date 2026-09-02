@@ -51,15 +51,23 @@ public class BoardController {
     public String boardDetail(@PathVariable Long productId, Model model, HttpSession session, SearchCondition condition, RedirectAttributes rttr) {
 
     	// 세션 영역에서 로그인된 유저 가져오기
-    			UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
+		
+		// 상품정보 조회용
+		ProductDTO product = productService.getProductByProductId(productId);
+		
+		// 삭제된 게시물 여부
+    	if(product.getIsDeleted() > 0) {
+			rttr.addFlashAttribute("message", "이미 삭제된 게시글입니다.");
+			return "redirect:/product/list";
+		}
 		
     	// 최근본글 테이블 인서트 (로그인한 회원만)
 		if (loginUser != null) {
 			activityService.addRecentView(loginUser.getUserNo(), productId);
 		}
 		
-		// 상품정보 조회용
-		ProductDTO product = productService.getProductByProductId(productId);
+		
 	
 		// 게시물 등록자의 받은 리뷰요약 조회용(ReviewSummaryDTO에는 reviewAvg, reviewCount 필드 저장되어있음
 		ReviewSummaryDTO rs = reviewService.getAvgAndCountReview(product.getWriterNo());
