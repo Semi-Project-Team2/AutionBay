@@ -85,12 +85,12 @@
     gap: 10px;
 }
 .auth-btn {
-    background-color: #ffeef4;
-    border: 1px solid #ffccd5;
+    background-color: #f3e8ff;
+    color: #6b21a8;
+    border: 1px solid #e9d5ff;
     padding: 8px 16px;
     border-radius: 6px;
     text-decoration: none;
-    color: #333;
     font-size: 13px;
     font-weight: bold;
     cursor: pointer;

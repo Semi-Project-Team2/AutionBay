@@ -387,8 +387,6 @@ public class MyPageController {
 	    model.addAttribute("keyword", keyword);
 		// 로그인한 유저 정보 전달 (프로필 영역에 설정한 프로필 이미지 표시용)
 		model.addAttribute("user", loginUser);
-		
-		System.out.println(productList);
 
 	    return "mypage/products";
 	}

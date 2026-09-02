@@ -159,7 +159,7 @@ body {
 /* 이미지 스타일: 분홍색 선택 메뉴 Active 스타일 */
 .mypage-sidebar li a.active {
     background-color: #f2d2f7;
-    color: #111111;
+    color: #380123;
     font-weight: 700;
 }
 
@@ -359,8 +359,8 @@ body {
 .page-btn {
     padding: 8px 14px;
     border: none;
-    background-color: #f1f3f5;
-    color: #555;
+    background-color: #f3e8ff;
+    color: #6b21a8;
     text-decoration: none;
     border-radius: 8px;
     font-size: 13px;
@@ -369,13 +369,13 @@ body {
 }
 
 .page-btn.active {
-    background-color: #f2d2f7;
+    background-color: #d4acff;
     color: #111;
     font-weight: 700;
 }
 
 .page-btn:hover:not(.active) {
-    background-color: #e9ecef;
+    background-color: #d9b6ff;
 }
 
 /* ==========================================

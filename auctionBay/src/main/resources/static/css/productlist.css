@@ -69,7 +69,7 @@ body {
 }
 .filter-item.active {
     background-color: #f3e8ff;
-    color: #7c3aed;
+    color: #6b21a8;
     font-weight: bold;
 }
 /* 필터 바 내의 모든 행이 일관된 간격과 정렬을 가지도록 설정 */
@@ -171,6 +171,7 @@ body {
 }
 .btn-product-write:hover {
     background-color: #e9d5ff;
+    background-color: #d9b6ff;  /* 액티브/호버 */
 }
 
 /* 3. 상품 그리드 섹션 */
