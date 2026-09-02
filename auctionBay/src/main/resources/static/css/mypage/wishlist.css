@@ -108,8 +108,10 @@
 }
 
 .auction-price-loading {
-    color: #eb2f96;
-    font-size: 13px;
+	font-size: 15px;
+   font-weight: 700;
+   color: #111111;
+   margin-top: 2px;
 }
 
 /* 4. 데이터 없음 안내 박스 */
@@ -168,7 +170,41 @@
     border-radius: 10px;
     font-weight: 700;
 }
+/* '경매' 뱃지 (기존) */
+.auction-badge {
+    background-color: #fff0f5; /* 연한 핑크빛 배경 */
+    color: #ff2d55;            /* 진한 핑크/핫핑크 텍스트 */
+    font-size: 13px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    border: 1px solid #ffb6c1; /* 연한 핑크 테두리 */
+    flex-shrink: 0;
+}
 
+/* '구매' 뱃지 (연한 초록색 계열) */
+.buy-badge {
+    background-color: #f0fdf4; /* 연한 초록빛 배경 */
+    color: #16a34a;            /* 진한 초록 텍스트 */
+    font-size: 13px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    border: 1px solid #bbf7d0; /* 연한 초록 테두리 */
+    flex-shrink: 0;
+}
+
+/* '판매' 뱃지 (연한 파란색 계열) */
+.sell-badge {
+    background-color: #eff6ff; /* 연한 파란빛 배경 */
+    color: #2563eb;            /* 진한 파란 텍스트 */
+    font-size: 13px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    border: 1px solid #bfdbfe; /* 연한 파란 테두리 */
+    flex-shrink: 0;
+}
 /* 6. 페이지네이션 */
 .pagination {
     display: flex;
@@ -206,4 +242,44 @@
     opacity: 0.4;
     cursor: default;
     pointer-events: none;
+}
+/* 상품 썸네일 영역 기준점 설정 (필수) */
+.product-img {
+    position: relative; 
+}
+
+/* 찜(하트) 버튼 디자인 스타일 */
+.wish-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    background: rgba(0, 0, 0, 0.4);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.wish-btn:hover {
+    background: rgba(0, 0, 0, 0.6);
+    transform: scale(1.05);
+}
+
+/* 하트 SVG 아이콘 스타일 */
+.wish-btn .heart-icon {
+    width: 18px;
+    height: 18px;
+    fill: rgba(255, 255, 255, 0.8);
+    transition: fill 0.2s ease;
+}
+
+/* 찜 활성화(Active) 상태: 빨간색 하트 */
+.wish-btn.active .heart-icon {
+    fill: #ff2d55;
 }

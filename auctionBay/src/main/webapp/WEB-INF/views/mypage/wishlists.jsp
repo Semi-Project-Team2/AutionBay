@@ -30,7 +30,6 @@
                     <c:choose>
                         <c:when test="${not empty wishlist}">
                             <c:forEach var="item" items="${wishlist}">
-                                
                                 <div class="product-card" onclick="location.href='${pageContext.request.contextPath}/${item.tradeType == 'AUCTION' ? 'auction' : 'board'}/${item.productNo}/detail'">
                                     <div class="product-img">
                                         <c:choose>
@@ -41,23 +40,34 @@
                                                 <img src="${pageContext.request.contextPath}/uploads/product/common/default_thumb.png" alt="이미지 없음">
                                             </c:otherwise>
                                         </c:choose>
+    
+                                        <!-- 찜(하트) 버튼 -->
+                                        <button type="button" class="wish-btn active" data-product-id="${item.productNo}" onclick="toggleWish(event, this)">
+                                            <svg class="heart-icon" viewBox="0 0 24 24">
+                                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                            </svg>
+                                        </button>
                                     </div>
                                     <div class="product-info">
                                         <div class="product-title-row">
                                             <span class="product-title">${item.title}</span>
-                                            <span class="trade-type">
-                                                <c:choose>
-                                                    <c:when test="${item.tradeType == 'BUY'}">구매</c:when>
-                                                    <c:when test="${item.tradeType == 'SELL'}">판매</c:when>
-                                                    <c:otherwise>경매</c:otherwise>
-                                                </c:choose>
-                                            </span>
+                                            <c:choose>
+                                                <c:when test="${item.tradeType == 'BUY'}">
+                                                    <span class="buy-badge">구매</span>
+                                                </c:when>
+                                                <c:when test="${item.tradeType == 'SELL'}">
+                                                    <span class="sell-badge">판매</span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span class="auction-badge">경매</span>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </div>
                                         <div class="product-price" id="price-${item.productNo}">
                                             <c:choose>
                                                 <c:when test="${item.tradeType == 'AUCTION'}">
                                                     <!-- 경매 상품: JS로 가격 동적 조회 -->
-                                                    <span class="auction-price-loading" data-pno="${item.productNo}">조회중...</span>
+                                                    <span class="auction-price-loading" data-pno="${item.productNo}">${item.auctionStartPrice}원 (시작가)</span>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <!-- 일반 상품: DTO price 출력 -->
@@ -85,24 +95,19 @@
 
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
-<div style="margin-top: 50px;">
-    <jsp:include page="/WEB-INF/views/common/footer.jsp" />
-</div>
-
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     const auctionElements = document.querySelectorAll('.auction-price-loading');
 
     auctionElements.forEach(el => {
         const productNo = el.getAttribute('data-pno');
+        const path = (typeof contextPath !== 'undefined' ? contextPath : '') + '/auction/' + productNo + '/detail';
         
-        fetch(contextPath + '/auction/' + productNo + '/detail')
+        fetch(path)
             .then(response => response.text())
             .then(htmlStr => {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(htmlStr, 'text/html');
-                
-                // 상세페이지 내 가격 엘리먼트 추출
                 const priceTarget = doc.querySelector('.price, .current-price, .start-price, #price, [class*="price"]');
                 
                 if (priceTarget && priceTarget.textContent.trim() !== '') {
@@ -122,30 +127,36 @@ document.addEventListener("DOMContentLoaded", function() {
     // ------------------------------------------------------
     // 찜목록 클라이언트 사이드 페이지네이션
     // ------------------------------------------------------
-    const itemsPerPage = 8; // 4열 배치 기준 2줄(8개)씩 노출
+    const itemsPerPage = 8; 
     let currentPage = 1;
-    const cards = document.querySelectorAll('#wishlistGrid .product-card');
-    const totalItems = cards.length;
+
+    function getCards() {
+        return document.querySelectorAll('#wishlistGrid .product-card');
+    }
 
     function showPage(page) {
         currentPage = page;
-        const start = (page - 1) * itemsPerPage;
+        const cards = getCards();
+        const totalItems = cards.length;
+        
+        const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
+        if (currentPage > totalPages) currentPage = totalPages;
+
+        const start = (currentPage - 1) * itemsPerPage;
         const end = start + itemsPerPage;
 
         cards.forEach((card, index) => {
             card.style.display = (index >= start && index < end) ? 'flex' : 'none';
         });
 
-        renderPagination();
+        renderPagination(totalItems, totalPages);
     }
 
-    function renderPagination() {
+    function renderPagination(totalItems, totalPages) {
         const paginationContainer = document.getElementById('paginationContainer');
         paginationContainer.innerHTML = '';
 
         if (totalItems === 0) return;
-
-        const totalPages = Math.ceil(totalItems / itemsPerPage);
         if (totalPages <= 1) return;
 
         const prevBtn = document.createElement('a');
@@ -156,7 +167,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         paginationContainer.appendChild(prevBtn);
 
-        // 페이지 번호 버튼
         for (let i = 1; i <= totalPages; i++) {
             const pageBtn = document.createElement('a');
             pageBtn.className = 'page-btn' + (i === currentPage ? ' active' : '');
@@ -174,10 +184,60 @@ document.addEventListener("DOMContentLoaded", function() {
         paginationContainer.appendChild(nextBtn);
     }
 
-    if (totalItems > 0) {
+    if (getCards().length > 0) {
         showPage(1);
     }
 });
+
+/* 상품 카드 찜 버튼 클릭 이벤트 (비동기 처리) */
+async function toggleWish(event, button) {
+    event.stopPropagation(); 
+    event.preventDefault();
+
+    const productId = button.getAttribute('data-product-id');
+
+    try {
+        const response = await fetch('/api/board/wish', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ productId: Number(productId) })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            alert(result.message || "찜목록 처리 중 오류가 발생했습니다.");
+            return;
+        }
+
+        if (result.data) {
+            button.classList.add('active');
+        } else {
+            const card = button.closest('.product-card');
+            if (card) {
+                card.remove();
+                
+                const remainingCards = document.querySelectorAll('#wishlistGrid .product-card');
+                if (remainingCards.length === 0) {
+                    document.getElementById('wishlistGrid').innerHTML = `
+                        <div class="empty-wishlist">
+                            찜한 상품이 없습니다.
+                        </div>
+                    `;
+                    document.getElementById('paginationContainer').innerHTML = '';
+                } else {
+                    location.reload(); 
+                }
+            }
+        }
+
+    } catch (error) {
+        console.error('Error:', error);
+        alert("네트워크 오류 발생");
+    }
+}
 </script>
 
 </body>

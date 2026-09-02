@@ -58,7 +58,35 @@
         flex-direction: column;
         gap: 14px;
     }
+	/* 제목과 경매 뱃지를 한 줄에 배치하기 위한 래퍼 */
+	.product-title-header-wrapper {
+	    display: flex;
+	    align-items: center;
+	    gap: 8px;
+	    margin-bottom: 4px;
+	}
 
+	/* '경매' 뱃지 스타일 (분홍색 계열로 변경) */
+	.auction-badge {
+	    background-color: #fff0f5; /* 연한 핑크빛 배경 */
+	    color: #ff2d55;            /* 진한 핑크/핫핑크 텍스트 */
+	    font-size: 13px;
+	    font-weight: 700;
+	    padding: 3px 8px;
+	    border-radius: 6px;
+	    border: 1px solid #ffb6c1; /* 연한 핑크 테두리 */
+	    flex-shrink: 0;
+	}
+
+	/* 기존 product-title-header 마진 조정 */
+	.product-title-header {
+	    font-size: 22px; 
+	    font-weight: 700;
+	    color: #0f172a;  
+	    word-break: break-all;
+	    line-height: 1.4;
+	    margin-bottom: 0; /* 래퍼로 마진을 이동했으므로 0으로 설정 */
+	}
 	.product-title-header {
         font-size: 22px; /* 글씨 크기 확대 (기존 18px -> 22px) */
         font-weight: 700;
@@ -756,10 +784,13 @@
     <div class="page-container">
         
         <!-- 왼쪽: 상품 미디어 영역 -->
-        <div class="product-image-section">
-            <h2 class="product-title-header">${product.title}</h2>
+		<div class="product-image-section">
+		    <div class="product-title-header-wrapper">
+		        <span class="auction-badge">경매</span>
+		        <h2 class="product-title-header">${product.title}</h2>
+		    </div>
 
-            <div class="main-image-container" id="mainImageContainer">
+		    <div class="main-image-container" id="mainImageContainer">
                 <c:choose>
                     <c:when test="${not empty product.mediaList}">
                         <c:set var="firstMedia" value="${product.mediaList[0]}" />

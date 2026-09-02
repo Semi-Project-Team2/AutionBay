@@ -53,26 +53,35 @@
                                         </c:choose>
 
                                         <div>
-                                            <c:choose>
-                                                <c:when test="${board.tradeType == 'AUCTION'}">
-                                                    <span class="type-badge auction">경매</span>
-                                                    <a href="${pageContext.request.contextPath}/auction/${pNo}/detail" class="board-title">
-                                                        ${board.title}
-                                                        <c:if test="${board.commentCount > 0}">
-                                                            <span class="comment-count">댓글: ${board.commentCount}</span>
-                                                        </c:if>
-                                                    </a>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <span class="type-badge general">일반</span>
-                                                    <a href="${pageContext.request.contextPath}/board/${pNo}/detail" class="board-title">
-                                                        ${board.title}
-                                                        <c:if test="${board.commentCount > 0}">
-                                                            <span class="comment-count">댓글: ${board.commentCount}</span>
-                                                        </c:if>
-                                                    </a>
-                                                </c:otherwise>
-                                            </c:choose>
+											<c:choose>
+											    <c:when test="${board.tradeType == 'AUCTION'}">
+											        <span class="auction-badge">경매</span>
+											        <a href="${pageContext.request.contextPath}/auction/${pNo}/detail" class="board-title">
+											            ${board.title}
+											            <c:if test="${board.commentCount > 0}">
+											                <span class="comment-count">댓글: ${board.commentCount}</span>
+											            </c:if>
+											        </a>
+											    </c:when>
+											    <c:when test="${board.tradeType == 'BUY'}">
+											        <span class="buy-badge">구매</span>
+											        <a href="${pageContext.request.contextPath}/board/${pNo}/detail" class="board-title">
+											            ${board.title}
+											            <c:if test="${board.commentCount > 0}">
+											                <span class="comment-count">댓글: ${board.commentCount}</span>
+											            </c:if>
+											        </a>
+											    </c:when>
+											    <c:otherwise>
+											        <span class="sell-badge">판매</span>
+											        <a href="${pageContext.request.contextPath}/board/${pNo}/detail" class="board-title">
+											            ${board.title}
+											            <c:if test="${board.commentCount > 0}">
+											                <span class="comment-count">댓글: ${board.commentCount}</span>
+											            </c:if>
+											        </a>
+											    </c:otherwise>
+											</c:choose>
                                         </div>
                                     </div>
 									<div class="board-actions">

@@ -132,18 +132,28 @@
 	                                        </c:otherwise>
 	                                    </c:choose>
 
-	                                    <!-- 찜(하트) 버튼 추가 (이미지 우측 상단 배치) -->
-	                                    <button type="button" class="wish-btn ${p.isWished > 0 ? 'active' : ''}" data-product-id="${p.productId}" onclick="toggleWish(event, this)">
-	                                        <svg class="heart-icon" viewBox="0 0 24 24">
-	                                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-	                                        </svg>
-	                                    </button>
+										<!-- 찜(하트) 버튼 (p.isWished > 0 일 때 active 클래스 추가) -->
+										<button type="button" class="wish-btn ${p.isWished > 0 ? 'active' : ''}" data-product-id="${p.productId}" onclick="toggleWish(event, this)">
+										    <svg class="heart-icon" viewBox="0 0 24 24">
+										        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+										    </svg>
+										</button>
 	                                </div>
 	                                <div class="product-info">
-	                                    <div class="product-title-row">
-	                                        <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 120px;">${p.title}</span>
-	                                        <span>${p.typeStatus}</span>
-	                                    </div>
+										<div class="product-title-row">
+										    <span class="product-title">${p.title}</span>
+										    <c:choose>
+										        <c:when test="${p.tradeType == 'AUCTION'}">
+										            <span class="auction-badge">경매</span>
+										        </c:when>
+										        <c:when test="${p.tradeType == 'BUY'}">
+										            <span class="buy-badge">구매</span>
+										        </c:when>
+										        <c:otherwise>
+										            <span class="sell-badge">판매</span>
+										        </c:otherwise>
+										    </c:choose>
+										</div>
 	                                    <div class="product-price">
 	                                        <c:choose>
 	                                            <c:when test="${p.tradeType == 'AUCTION'}">
