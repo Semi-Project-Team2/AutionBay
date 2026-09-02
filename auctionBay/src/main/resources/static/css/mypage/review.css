@@ -1,15 +1,90 @@
 @charset "UTF-8";
+/* 후기 목록 화면 */
 
-body {
-    font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
-    background-color: #f9f9f9;
-    margin: 0;
+/* 1. 후기 탭 버튼 스타일 */
+.review-tabs {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
+.tab-btn {
+    padding: 10px 20px;
+    border: 1px solid #e0e0e0;
+    background-color: #ffffff;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #666;
+}
+
+.tab-btn.active {
+    background-color: #f2d2f7;
+    color: #111;
+    border-color: #f2d2f7;
+}
+
+/* 2. 탭 전환 숨김/표시 처리 */
+.review-section {
+    display: none;
+    width: 100%;
+}
+
+.review-section.active {
+    display: block;
+}
+
+/* 3. 후기 카드 내부 레이아웃 (너비 꽉 차게 고정) */
+.review-item.mypage-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%; /* 너비 꽉 채우기 */
+    box-sizing: border-box;
+}
+
+.review-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    font-size: 14px;
+    white-space: nowrap; /* 글자 세로 떨어짐 방지 */
+}
+
+.review-header .title {
+    font-weight: 700;
+    color: #222;
+    text-decoration: none;
+    white-space: normal; /* 제목이 길 때만 자연스럽게 줄바꿈 */
+}
+
+.review-header .nickname {
+    color: #666;
+    margin-left: auto; /* 닉네임을 우측으로 밀어 정렬 */
+}
+
+.review-header .time {
+    color: #999;
+    font-size: 12px;
+}
+
+.review-body {
+    width: 100%;
+    color: #444;
+    font-size: 14px;
+    line-height: 1.5;
+    background-color: #f8f9fa;
+    padding: 12px;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+/* ==========================================
+   4. 후기 작성 팝업 (body 스타일 삭제됨)
+   ========================================== */
 .popup-container {
     width: 450px;
     background: #ffffff;
@@ -17,6 +92,7 @@ body {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     padding: 30px;
     box-sizing: border-box;
+    margin: 40px auto; /* 중앙 정렬용 margin 추가 */
 }
 
 .popup-header h2 {
@@ -69,7 +145,7 @@ body {
 .star {
     position: relative;
     font-size: 28px;
-    color: #e0e0e0; /* 기본 빈 별 색상 */
+    color: #e0e0e0;
 }
 
 /* 반쪽 클릭 인식을 위한 영역 */

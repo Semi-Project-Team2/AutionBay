@@ -6,140 +6,28 @@
     <meta charset="UTF-8">
     <title>마이페이지 - 후기</title>
     <link rel="stylesheet" href="/css/common.css">
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Malgun Gothic', sans-serif; background-color: #f8f9fa; color: #333; }
-        
-        .container { width: 1200px; margin: 30px auto; }
-
-        /* 상단 프로필 영역 */
-        .profile-area {
-            background-color: #e2e2e2;
-            padding: 30px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 30px;
-        }
-        .profile-info { display: flex; align-items: center; gap: 20px; }
-        .profile-img { width: 70px; height: 70px; background-color: #333; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-        .profile-text h2 { font-size: 20px; font-weight: bold; margin-bottom: 5px; }
-        .profile-text p { font-size: 14px; color: #555; }
-        .profile-right { display: flex; gap: 10px; }
-        .btn-edit { background-color: #d4edda; border: 1px solid #c3e6cb; padding: 8px 15px; border-radius: 4px; font-weight: bold; color: #155724; cursor: pointer; text-decoration: none; font-size: 13px; }
-        .btn-withdraw { background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 8px 15px; border-radius: 4px; font-weight: bold; color: #721c24; cursor: pointer; text-decoration: none; font-size: 13px; }
-
-        /* 메인 콘텐츠 영역 */
-        .content-area { display: flex; gap: 30px; align-items: flex-start; }
-        
-        /* 사이드바 */
-        .mypage-sidebar {
-            width: 200px;
-            background-color: #e2e2e2;
-            border-radius: 6px;
-            padding: 15px 0;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .sidebar-item {
-            padding: 12px 20px;
-            text-decoration: none;
-            color: #555;
-            font-size: 15px;
-            font-weight: 500;
-            display: block;
-        }
-
-        .sidebar-item:hover {
-            background-color: #d1d1d1;
-            color: #000;
-        }
-
-        .sidebar-item.active {
-            background-color: #c5c5c5;
-            color: #000;
-            font-weight: bold;
-        }
-        /* 후기 메인 콘텐츠 */
-        .main-content { flex: 1; min-width: 0; }
-        
-        /* 탭 메뉴 스타일 */
-        .review-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-        .tab-btn { background-color: #e2e2e2; border: 1px solid #ccc; padding: 10px 20px; border-radius: 4px; font-size: 14px; font-weight: bold; cursor: pointer; color: #555; }
-        .tab-btn.active { background-color: #333; color: #fff; border-color: #333; }
-
-        /* 후기 리스트 */
-        .review-list { display: flex; flex-direction: column; gap: 15px; }
-        .review-section { display: none; }
-        .review-section.active { display: flex; flex-direction: column; gap: 15px; }
-
-        .review-item { background-color: #e2e2e2; padding: 20px; border-radius: 6px; }
-        .review-header { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; font-size: 14px; font-weight: bold; }
-        .rating { color: #f39c12; }
-        .title {color: #333; font-weight: 800;}
-        .nickname { color: #666; }
-        .time { margin-left: auto; color: #777; font-size: 12px; font-weight: normal; }
-        .review-body p { font-size: 14px; color: #444; line-height: 1.4; }
-        
-        .no-data { background-color: #e2e2e2; padding: 40px; text-align: center; border-radius: 6px; color: #777; font-size: 14px; }
-
-        /* 페이징 바 */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-            margin-top: 20px;
-        }
-
-        .page-btn {
-            padding: 6px 12px;
-            border: 1px solid #ddd;
-            background-color: #fff;
-            color: #333;
-            text-decoration: none;
-            border-radius: 3px;
-            font-size: 13px;
-        }
-
-        .page-btn.active {
-            background-color: #222;
-            color: #fff;
-            border-color: #222;
-            font-weight: bold;
-        }
-
-        .page-btn:hover:not(.active) {
-            background-color: #f1f1f1;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/mypage/common.css">
+    <link rel="stylesheet" href="/css/mypage/review.css">
 </head>
 <body>
 
     <!-- 공통 헤더 포함 -->
     <jsp:include page="/WEB-INF/views/common/header.jsp" />
 
-    <div class="container">
+    <div class="mypage-container">
         <!-- 프로필 영역 포함 -->
         <jsp:include page="/WEB-INF/views/mypage/profile/profile.jsp" />
-        <!-- 메인 콘텐츠 영역 -->
-        <div class="content-area">
-        <!-- 3. 사이드바 -->
-        <div class="mypage-sidebar">
-            <a href="${pageContext.request.contextPath}/mypage/products" class="sidebar-item">게시글 관리</a>
-            <a href="${pageContext.request.contextPath}/mypage/comments" class="sidebar-item">댓글 관리</a>
-            <a href="${pageContext.request.contextPath}/mypage/txHistories" class="sidebar-item">거래 내역</a>
-            <a href="${pageContext.request.contextPath}/mypage/reviews" class="sidebar-item active">후기</a>
-            <a href="${pageContext.request.contextPath}/mypage/recents" class="sidebar-item">최근 본 글</a>
-            <a href="${pageContext.request.contextPath}/mypage/wishlists" class="sidebar-item">찜목록</a>
-            <a href="${pageContext.request.contextPath}/message/received" class="sidebar-item">쪽지함</a>
-        </div>
+
+        <!-- 메인 콘텐츠 영역 (공통 레이아웃 클래스 적용) -->
+        <div class="mypage-content-area">
+            
+            <!-- 사이드바 -->
+            <jsp:include page="/WEB-INF/views/mypage/sidebar.jsp">
+                <jsp:param name="activeMenu" value="reviews"></jsp:param>
+            </jsp:include>
 
             <!-- 후기 콘텐츠 영역 -->
-            <main class="main-content">
+            <main class="mypage-main">
                 <!-- 탭 메뉴 -->
                 <div class="review-tabs">
                     <button class="tab-btn ${activeTab eq 'received' ? 'active' : ''}">받은 후기</button>
@@ -150,53 +38,47 @@
                 <div id="receivedSection" class="review-section ${activeTab eq 'received' ? 'active' : ''}">
                     <c:choose>
                         <c:when test="${not empty receivedReviews}">
-                            <c:forEach var="review" items="${receivedReviews}">
-                                <div class="review-item">
-                                    <div class="review-header">
-                                        <span class="rating">⭐ ${review.rating}</span>
-                                        <c:choose>
-                                            <c:when test="${review.tradeType == '경매'}">
-                                                <a href="${pageContext.request.contextPath}/auction/${review.productId}/detail"
-                                                    class="title">${review.title}</a>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <a href="${pageContext.request.contextPath}/board/${review.productId}/detail"
-                                                    class="title">${review.title}</a>
-                                            </c:otherwise>
-                                        </c:choose>
-                                        <span class="nickname">${review.reviewerNickname}</span>
-                                        <span class="time">${review.createdAtStr}</span>
+                            <div class="mypage-list">
+                                <c:forEach var="review" items="${receivedReviews}">
+                                    <div class="review-item mypage-card">
+                                        <div class="review-header">
+                                            <span class="rating">⭐ ${review.rating}</span>
+                                            <c:choose>
+                                                <c:when test="${review.tradeType == '경매'}">
+                                                    <a href="${pageContext.request.contextPath}/auction/${review.productId}/detail"
+                                                        class="title">${review.title}</a>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <a href="${pageContext.request.contextPath}/board/${review.productId}/detail"
+                                                        class="title">${review.title}</a>
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <span class="nickname">${review.reviewerNickname}</span>
+                                            <span class="time">${review.createdAtStr}</span>
+                                        </div>
+                                        <div class="review-body">
+                                            <p>${review.content}</p>
+                                        </div>
                                     </div>
-                                    <div class="review-body">
-                                        <p>${review.content}</p>
-                                    </div>
-                                </div>
-                            </c:forEach>
-                            <c:if test="${not empty receivedReviews}">
-                                <div class="pagination">
-                                    <%-- 페이징 바 --%>
-                                        <%-- 이전 페이지 그룹이 있을 경우 --%>
-                                        <c:if test="${receivedPageInfo.hasPrevGroup}">
-                                            <a class="page-btn"
-                                            href="/mypage/reviews?tab=received&page=${receivedPageInfo.startPage - 1}">
-                                        &lt;&lt;</a>
-                                        </c:if>
-                                
-                                        <%-- 현재 페이지 그룹 표시 --%>
-                                        <c:forEach var="i" begin="${receivedPageInfo.startPage}"
-                                         end="${receivedPageInfo.endPage}">
-                                            <a class="page-btn  ${currentPage eq i  ? 'active' : ''}"
-                                            href="/mypage/reviews?tab=received&page=${i}">
-                                        ${i}</a>
-                                        </c:forEach>
-                                        <%-- 다음 페이지 그룹이 있을 경우 --%>
-                                        <c:if test="${receivedPageInfo.hasNextGroup}">
-                                            <a class="page-btn"
-                                            href="/mypage/reviews?tab=received&page=${receivedPageInfo.endPage + 1}">
-                                        &gt;&gt;</a>
-                                        </c:if>
-                                </div>
-                            </c:if>
+                                </c:forEach>
+                            </div>
+
+                            <div class="pagination">
+                                <c:if test="${receivedPageInfo.hasPrevGroup}">
+                                    <a class="page-btn"
+                                        href="/mypage/reviews?tab=received&page=${receivedPageInfo.startPage - 1}">&lt;&lt;</a>
+                                </c:if>
+                        
+                                <c:forEach var="i" begin="${receivedPageInfo.startPage}" end="${receivedPageInfo.endPage}">
+                                    <a class="page-btn ${currentPage eq i ? 'active' : ''}"
+                                        href="/mypage/reviews?tab=received&page=${i}">${i}</a>
+                                </c:forEach>
+
+                                <c:if test="${receivedPageInfo.hasNextGroup}">
+                                    <a class="page-btn"
+                                        href="/mypage/reviews?tab=received&page=${receivedPageInfo.endPage + 1}">&gt;&gt;</a>
+                                </c:if>
+                            </div>
                         </c:when>
                         <c:otherwise>
                             <div class="no-data">받은 후기가 없습니다.</div>
@@ -208,44 +90,38 @@
                 <div id="sentSection" class="review-section ${activeTab eq 'sent' ? 'active' : ''}">
                     <c:choose>
                         <c:when test="${not empty sentReviews}">
-                            <c:forEach var="review" items="${sentReviews}">
-                                <div class="review-item">
-                                    <div class="review-header">
-                                        <span class="rating">⭐ ${review.rating}</span>
-                                        <span class="title">${review.title}</span>
-                                        <span class="nickname">${review.revieweeNickname}</span>
-                                        <span class="time">${review.createdAtStr}</span>
+                            <div class="mypage-list">
+                                <c:forEach var="review" items="${sentReviews}">
+                                    <div class="review-item mypage-card">
+                                        <div class="review-header">
+                                            <span class="rating">⭐ ${review.rating}</span>
+                                            <span class="title">${review.title}</span>
+                                            <span class="nickname">${review.revieweeNickname}</span>
+                                            <span class="time">${review.createdAtStr}</span>
+                                        </div>
+                                        <div class="review-body">
+                                            <p>${review.content}</p>
+                                        </div>
                                     </div>
-                                    <div class="review-body">
-                                        <p>${review.content}</p>
-                                    </div>
-                                </div>
-                            </c:forEach>
-                            <c:if test="${not empty sentReviews}">
-                                <div class="pagination">
-                                    <%-- 페이징 바 --%>
-                                        <%-- 이전 페이지 그룹이 있을 경우 --%>
-                                        <c:if test="${sentPageInfo.hasPrevGroup}">
-                                            <a class="page-btn"
-                                            href="/mypage/reviews?tab=sent&page=${sentPageInfo.startPage - 1}">
-                                        &lt;&lt;</a>
-                                        </c:if>
-                                
-                                        <%-- 현재 페이지 그룹 표시 --%>
-                                        <c:forEach var="i" begin="${sentPageInfo.startPage}"
-                                         end="${sentPageInfo.endPage}">
-                                            <a class="page-btn ${currentPage eq i  ? 'active' : ''}"
-                                            href="/mypage/reviews?tab=sent&page=${i}">
-                                        ${i}</a>
-                                        </c:forEach>
-                                        <%-- 다음 페이지 그룹이 있을 경우 --%>
-                                        <c:if test="${sentPageInfo.hasNextGroup}">
-                                            <a class="page-btn"
-                                            href="/mypage/reviews?tab=sent&page=${sentPageInfo.endPage + 1}">
-                                        &gt;&gt;</a>
-                                        </c:if>
-                                </div>
-                            </c:if>
+                                </c:forEach>
+                            </div>
+
+                            <div class="pagination">
+                                <c:if test="${sentPageInfo.hasPrevGroup}">
+                                    <a class="page-btn"
+                                        href="/mypage/reviews?tab=sent&page=${sentPageInfo.startPage - 1}">&lt;&lt;</a>
+                                </c:if>
+                        
+                                <c:forEach var="i" begin="${sentPageInfo.startPage}" end="${sentPageInfo.endPage}">
+                                    <a class="page-btn ${currentPage eq i ? 'active' : ''}"
+                                        href="/mypage/reviews?tab=sent&page=${i}">${i}</a>
+                                </c:forEach>
+
+                                <c:if test="${sentPageInfo.hasNextGroup}">
+                                    <a class="page-btn"
+                                        href="/mypage/reviews?tab=sent&page=${sentPageInfo.endPage + 1}">&gt;&gt;</a>
+                                </c:if>
+                            </div>
                         </c:when>
                         <c:otherwise>
                             <div class="no-data">보낸 후기가 없습니다.</div>

@@ -1,0 +1,128 @@
+@charset "UTF-8";
+
+/* ==========================================
+   댓글 관리 메인 영역 (Comment List)
+   ========================================== */
+
+/* 메인 영역 폭 및 기본 레이아웃 */
+.main-content {
+    flex: 1 !important;
+    min-width: 0 !important;
+    width: 100% !important;
+}
+
+/* 댓글 목록 컨테이너 */
+.comment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 25px;
+    width: 100%;
+}
+
+/* 댓글 카드 개별 항목 */
+.comment-card {
+    background-color: #ffffff;
+    border: 1px solid #f0f0f0;
+    padding: 18px 24px;
+    border-radius: 14px;
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    width: 100%;
+    box-sizing: border-box;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.comment-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* 댓글 정보 (제목 | 내용 영역) */
+.comment-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0; /* Text truncation 동작용 */
+    font-size: 14px;
+}
+
+/* 게시글 제목 링크 */
+.comment-title {
+    font-weight: 700;
+    color: #222222;
+    text-decoration: none;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 0; /* 제목 너비 유지 */
+}
+
+.comment-title:hover {
+    text-decoration: underline;
+    color: #111111;
+}
+
+/* 삭제된 게시글 스타일 */
+.comment-title.deleted {
+    color: #aaa;
+    font-weight: 500;
+}
+
+/* 구분선 (|) */
+.divider {
+    color: #e0e0e0;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+/* 댓글 내용 */
+.comment-content {
+    color: #555555;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+}
+
+/* 삭제된 댓글 스타일 */
+.comment-content.deleted {
+    color: #999999;
+    font-style: italic;
+}
+
+/* 댓글 삭제 버튼 */
+.btn-delete {
+    background-color: #ffeef0;
+    color: #ff4d4f;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-delete:hover {
+    background-color: #ff4d4f;
+    color: #ffffff;
+}
+
+/* 데이터 없음 안내 상자 */
+.no-data {
+    background-color: #ffffff;
+    padding: 60px;
+    text-align: center;
+    border-radius: 14px;
+    color: #999999;
+    font-size: 14px;
+    border: 1px dashed #e0e0e0;
+    width: 100%;
+}
