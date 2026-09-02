@@ -143,6 +143,9 @@
 										<div class="product-title-row">
 										    <span class="product-title">${p.title}</span>
 										    <c:choose>
+												<c:when test="${p.status == 'COMPLETED'}">
+												            <span class="finished-badge">거래완료</span>
+												</c:when>
 										        <c:when test="${p.tradeType == 'AUCTION'}">
 										            <span class="auction-badge">경매</span>
 										        </c:when>

@@ -39,6 +39,14 @@
                                             <c:choose>
                                                 <c:when test="${not empty item.mainImage}">
                                                     <img src="${pageContext.request.contextPath}${item.mainImage}" alt="상품 이미지">
+												<c:when test="${item.status == 'COMPLETED'}">
+													<span class="finished-badge">거래완료</span>
+												</c:when>
+                                                <c:when test="${item.tradeType == 'BUY'}">
+                                                    <span class="buy-badge">구매</span>
+                                                </c:when>
+                                                <c:when test="${item.tradeType == 'SELL'}">
+                                                    <span class="sell-badge">판매</span>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <img src="${pageContext.request.contextPath}/uploads/product/common/default_thumb.png" alt="이미지 없음">
@@ -98,8 +106,10 @@
             </div>
         </div>
     </div>
+	
+	<!-- 공통 푸터 포함 -->
+	    <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
-    <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {

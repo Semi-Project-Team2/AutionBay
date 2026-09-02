@@ -55,7 +55,15 @@ public class AuctionController {
 
 		// 세션 영역에서 로그인된 유저 가져오기
 		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
-
+		
+		// 상품정보 조회용
+		ProductDTO product = productService.getProductByProductId(productId);
+		
+		// 삭제된 게시물 여부
+    	if(product.getIsDeleted() > 0) {
+			rttr.addFlashAttribute("message", "이미 삭제된 게시글입니다.");
+			return "redirect:/product/list";
+		}
 
 		// 최근본글 테이블 인서트 (로그인한 회원만)
 		if (loginUser != null) {
@@ -65,9 +73,6 @@ public class AuctionController {
 		// 경매 입찰 내역 조회용
 		List<BidsDTO> bids = service.getBidsByProductId(productId);
 
-		// 상품정보 조회용
-		ProductDTO product = productService.getProductByProductId(productId);
-
 		// 게시물 등록자의 받은 리뷰요약 조회용(ReviewSummaryDTO에는 reviewAvg, reviewCount 필드 저장되어있음
 		ReviewSummaryDTO rs = reviewService.getAvgAndCountReview(product.getWriterNo());
 
@@ -76,10 +81,6 @@ public class AuctionController {
 		List<ReviewDTO> reviewList = reviewService.getReceivedReviews(condition)
 									.getReviews();
 		
-		if(product.getIsDeleted() > 0) {
-			rttr.addFlashAttribute("message", "이미 삭제된 게시글입니다.");
-			return "redirect:/";
-		}
 		// 작성자인지 여부
 		boolean isOwner = false;
 	    if (loginUser != null && product != null) {
@@ -135,7 +136,7 @@ public class AuctionController {
 		// 삭제된 게시물 여부
     	if(product.getIsDeleted() > 0) {
 			rttr.addFlashAttribute("message", "이미 삭제된 게시글입니다.");
-			return "redirect:/";
+			return "redirect:/product/list";
 		}
 
 	    // 서비스 호출 (비즈니스 로직 처리 후 결과 문자열 리턴 받기)

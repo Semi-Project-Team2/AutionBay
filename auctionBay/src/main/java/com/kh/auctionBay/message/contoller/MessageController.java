@@ -121,6 +121,9 @@ public class MessageController {
 			return "redirect:"+redirectURL;
 		}
 		
+		ProductDTO product = productService.getProductByProductId(productId);
+		
+		model.addAttribute("product", product);
 		model.addAttribute("productId", productId);
 		model.addAttribute("receiverNo", receiverNo);
 		model.addAttribute("redirectURL", redirectURL);

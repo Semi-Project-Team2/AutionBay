@@ -60,7 +60,7 @@
     border: 1px solid #f0f0f0;
     border-radius: 12px;
     padding: 16px 20px;
-    display: flex !important; /* JS style.display 제어 대응 */
+    display: flex; /* JS style.display 제어 대응 */
     align-items: center;
     justify-content: space-between;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);

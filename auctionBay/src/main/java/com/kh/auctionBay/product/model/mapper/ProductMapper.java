@@ -66,4 +66,6 @@ public interface ProductMapper {
     // productId로 Media List 가져오기
     List<ProductMediaDTO> selectMediaListByProductId(Long productId);
     
+    Integer getMaxMediaOrderByProductId(Long productId);
+    
 }
