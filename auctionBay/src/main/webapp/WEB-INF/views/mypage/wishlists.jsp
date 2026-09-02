@@ -1,17 +1,34 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>AuctionBay - 찜목록</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
-	<link rel="stylesheet" href="/css/common.css">
-	<style>
+    <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Malgun Gothic', sans-serif; background-color: #f8f9fa; color: #333; }
+        body { font-family: 'Malgun Gothic', sans-serif; background-color: #ffffff !important; color: #333; }
         
-        .container { width: 1200px; margin: 30px auto; position: relative; }
+        .main-container {
+            width: 1200px;
+            min-width: 1200px;
+            margin: 30px auto;
+            background-color: #ffffff;
+        }
+
+        /* 상품 그리드 영역과 퀵메뉴를 나란히 배치하기 위한 Flex 컨테이너 */
+        .content-wrapper {
+            display: flex;
+            align-items: flex-start;
+            gap: 30px;
+            position: relative;
+        }
+
+        .wishlist-section {
+            flex: 1;
+            min-width: 0;
+        }
 
         .wishlist-header-title {
             font-size: 28px;
@@ -26,24 +43,30 @@
         .wishlist-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 15px;
+            gap: 20px;
             margin-bottom: 40px;
-            padding-right: 90px;
         }
 
         .product-card {
             background-color: #fff;
-            border-radius: 4px;
+            border: 1px solid #eaeaea;
+            border-radius: 8px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
         }
         
         .product-img {
             width: 100%;
             height: 150px;
-            background-color: #d1d1d1;
+            background-color: #f1f3f5;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -52,7 +75,7 @@
         }
 
         .product-info {
-            padding: 10px;
+            padding: 12px;
             display: flex;
             flex-direction: column;
             gap: 4px;
@@ -78,7 +101,7 @@
         .product-price {
             font-size: 14px;
             font-weight: bold;
-            color: #000;
+            color: #111;
             margin-top: 2px;
         }
 
@@ -86,27 +109,31 @@
             grid-column: span 5;
             text-align: center;
             padding: 60px;
-            background-color: #e2e2e2;
-            border-radius: 6px;
+            background-color: #f8f9fa;
+            border: 1px solid #eaeaea;
+            border-radius: 8px;
             color: #666;
             font-size: 15px;
         }
 
-		.right-quick-menu {
-		    position: absolute;
-		    top: 120px;
-		    right: 0;
-		    width: 75px;
-		    background-color: #ffeef4;
-		    border: 1px solid #ffccd5;
-		    border-radius: 6px;
-		    display: flex;
-		    flex-direction: column;
-		    align-items: center;
-		    padding: 15px 0;
-		    gap: 20px;
-		    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-		}
+        /* 우측 스크롤 고정 퀵 메뉴 (메인 페이지와 동일한 방식) */
+        .right-quick-menu {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            left: calc(50% + 645px);
+            width: 75px;
+            background-color: #ffffff;
+            border: 1px solid #eaeaea;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 0;
+            gap: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            z-index: 1000;
+        }
         .quick-item {
             display: flex;
             flex-direction: column;
@@ -118,16 +145,17 @@
             gap: 5px;
             position: relative;
         }
-        .quick-icon { font-size: 22px; }
+        .quick-icon { font-size: 20px; }
         .badge {
             position: absolute;
-            top: 0px;
-            right: -2px;
-            background-color: #000;
+            top: -2px;
+            right: 4px;
+            background-color: #ff3b30;
             color: #fff;
             font-size: 9px;
-            padding: 1px 4px;
-            border-radius: 50%;
+            padding: 1px 5px;
+            border-radius: 10px;
+            font-weight: bold;
         }
 
         .pagination {
@@ -136,22 +164,21 @@
             align-items: center;
             gap: 5px;
             margin-top: 30px;
-            padding-right: 90px;
         }
         .page-btn {
-            padding: 5px 10px;
+            padding: 6px 12px;
             border: 1px solid #ddd;
             background-color: #fff;
             color: #333;
             text-decoration: none;
-            border-radius: 3px;
-            font-size: 12px;
+            border-radius: 4px;
+            font-size: 13px;
             cursor: pointer;
         }
         .page-btn.active {
-            background-color: #000;
+            background-color: #111;
             color: #fff;
-            border-color: #000;
+            border-color: #111;
             font-weight: bold;
         }
         .page-btn:hover:not(.active) { background-color: #f1f1f1; }
@@ -164,61 +191,64 @@
 </head>
 <body>
 
-<div class="container">
-	<jsp:include page="/WEB-INF/views/common/header.jsp" />
-    
-    <main style="margin-top: 30px;">
-        <div class="wishlist-header-title">WISHLISTS</div>
+<jsp:include page="/WEB-INF/views/common/header.jsp" />
 
-        <div class="wishlist-grid" id="wishlistGrid">
-            <c:choose>
-                <c:when test="${not empty wishlist}">
-                    <c:forEach var="item" items="${wishlist}">
-                        
-                        <div class="product-card" onclick="location.href='${pageContext.request.contextPath}/${item.tradeType == 'AUCTION' ? 'auction' : 'board'}/${item.productNo}/detail'">
-							<div class="product-img">
-							    <c:choose>
-							        <c:when test="${not empty item.mainImage}">
-							            <img src="${pageContext.request.contextPath}${item.mainImage}" alt="상품 이미지" style="width:100%; height:100%; object-fit:cover;">
-							        </c:when>
-							        <c:otherwise>
-							            <img src="/uploads/product/common/default_thumb.png" alt="이미지 없음" style="width:100%; height:100%; object-fit:cover;">
-							        </c:otherwise>
-							    </c:choose>
-							</div>
-                            <div class="product-info">
-                                <div class="product-title-row">
-                                    <span class="product-title">${item.title}</span>
-                                    <span class="trade-type">
-                                        <c:choose>
-                                            <c:when test="${item.tradeType == 'BUY'}">구매</c:when>
-                                            <c:when test="${item.tradeType == 'SELL'}">판매</c:when>
-                                            <c:otherwise>경매</c:otherwise>
-                                        </c:choose>
-                                    </span>
-                                </div>
-                                <div class="product-price" id="price-${item.productNo}">
+<div class="main-container">
+    <div class="content-wrapper">
+        
+        <div class="wishlist-section">
+            <div class="wishlist-header-title">WISHLISTS</div>
+
+            <div class="wishlist-grid" id="wishlistGrid">
+                <c:choose>
+                    <c:when test="${not empty wishlist}">
+                        <c:forEach var="item" items="${wishlist}">
+                            <div class="product-card" onclick="location.href='${pageContext.request.contextPath}/${item.tradeType == 'AUCTION' ? 'auction' : 'board'}/${item.productNo}/detail'">
+                                <div class="product-img">
                                     <c:choose>
-                                        <c:when test="${item.tradeType == 'AUCTION'}">
-                                            <!-- 경매 상품: JS로 가격 동적 조회 -->
-                                            <span class="auction-price-loading" data-pno="${item.productNo}">조회중...</span>
+                                        <c:when test="${not empty item.mainImage}">
+                                            <img src="${pageContext.request.contextPath}${item.mainImage}" alt="상품 이미지" style="width:100%; height:100%; object-fit:cover;">
                                         </c:when>
                                         <c:otherwise>
-                                            <!-- 일반 상품: DTO price 출력 -->
-                                            ${item.price}원
+                                            <img src="/uploads/product/common/default_thumb.png" alt="이미지 없음" style="width:100%; height:100%; object-fit:cover;">
                                         </c:otherwise>
                                     </c:choose>
                                 </div>
+                                <div class="product-info">
+                                    <div class="product-title-row">
+                                        <span class="product-title">${item.title}</span>
+                                        <span class="trade-type">
+                                            <c:choose>
+                                                <c:when test="${item.tradeType == 'BUY'}">구매</c:when>
+                                                <c:when test="${item.tradeType == 'SELL'}">판매</c:when>
+                                                <c:otherwise>경매</c:otherwise>
+                                            </c:choose>
+                                        </span>
+                                    </div>
+                                    <div class="product-price" id="price-${item.productNo}">
+                                        <c:choose>
+                                            <c:when test="${item.tradeType == 'AUCTION'}">
+                                                <span class="auction-price-loading" data-pno="${item.productNo}">조회중...</span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                ${item.price}원
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
+                                </div>
                             </div>
+                        </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="empty-wishlist">
+                            찜한 상품이 없습니다.
                         </div>
-                    </c:forEach>
-                </c:when>
-                <c:otherwise>
-                    <div class="empty-wishlist">
-                        찜한 상품이 없습니다.
-                    </div>
-                </c:otherwise>
-            </c:choose>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+
+            <!-- 자바스크립트가 실제 카드 개수 기준으로 채워줄 페이징 바 영역 -->
+            <div class="pagination" id="paginationContainer"></div>
         </div>
 
         <aside class="right-quick-menu">
@@ -229,8 +259,7 @@
             <a href="${pageContext.request.contextPath}/message/received" class="quick-item">
                 <span class="quick-icon">✉️</span>
                 <span>쪽지함</span>
-
-                 <c:choose>
+                <c:choose>
                     <c:when test="${sessionScope.loginUser.unreadCount > 0 && sessionScope.loginUser.unreadCount <= 99}">
                         <span class="badge">${sessionScope.loginUser.unreadCount}</span>
                     </c:when>
@@ -247,33 +276,27 @@
             </a>
         </aside>
 
-        <!-- 자바스크립트가 실제 카드 개수 기준으로 채워줄 페이징 바 영역 -->
-        <div class="pagination" id="paginationContainer"></div>
-    </main>
-
-    <div style="margin-top: 50px;">
-        <jsp:include page="/WEB-INF/views/common/footer.jsp" />
     </div>
+</div>
+
+<div style="margin-top: 50px;">
+    <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 </div>
 
 <script>
 const contextPath = "${pageContext.request.contextPath}";
 
 document.addEventListener("DOMContentLoaded", function() {
-    const contextPath = "${pageContext.request.contextPath}";
     const auctionElements = document.querySelectorAll('.auction-price-loading');
 
     auctionElements.forEach(el => {
         const productNo = el.getAttribute('data-pno');
         
-        // 경매 상세 페이지 HTML/JSON에서 가격 파싱
         fetch(contextPath + '/auction/' + productNo + '/detail')
             .then(response => response.text())
             .then(htmlStr => {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(htmlStr, 'text/html');
-                
-                // 상세페이지 내 가격 엘리먼트 추출 (클래스/ID에 맞게 선택자 자동 매칭)
                 const priceTarget = doc.querySelector('.price, .current-price, .start-price, #price, [class*="price"]');
                 
                 if (priceTarget && priceTarget.textContent.trim() !== '') {
@@ -290,10 +313,6 @@ document.addEventListener("DOMContentLoaded", function() {
             });
     });
 
-    // ------------------------------------------------------
-    // 찜목록 클라이언트 사이드 페이지네이션
-    // (한 페이지당 10개 = 그리드 2줄. 필요하면 itemsPerPage만 조정)
-    // ------------------------------------------------------
     const itemsPerPage = 10;
     let currentPage = 1;
     const cards = document.querySelectorAll('#wishlistGrid .product-card');
@@ -315,12 +334,11 @@ document.addEventListener("DOMContentLoaded", function() {
         const paginationContainer = document.getElementById('paginationContainer');
         paginationContainer.innerHTML = '';
 
-        if (totalItems === 0) return; // 찜한 상품이 없으면 페이징 바 자체를 노출하지 않음
+        if (totalItems === minTotalItemsCheck = 0) return; 
 
         const totalPages = Math.ceil(totalItems / itemsPerPage);
-        if (totalPages <= 1) return; // 1페이지 이하면 페이징 바 숨김
+        if (totalPages <= 1) return;
 
-        // 이전 버튼
         const prevBtn = document.createElement('a');
         prevBtn.className = 'page-btn' + (currentPage === 1 ? ' disabled' : '');
         prevBtn.innerHTML = '&lt; 이전';
@@ -329,7 +347,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         paginationContainer.appendChild(prevBtn);
 
-        // 페이지 번호 버튼 (실제 totalPages 만큼만 생성)
         for (let i = 1; i <= totalPages; i++) {
             const pageBtn = document.createElement('a');
             pageBtn.className = 'page-btn' + (i === currentPage ? ' active' : '');
@@ -338,7 +355,6 @@ document.addEventListener("DOMContentLoaded", function() {
             paginationContainer.appendChild(pageBtn);
         }
 
-        // 다음 버튼
         const nextBtn = document.createElement('a');
         nextBtn.className = 'page-btn' + (currentPage === totalPages ? ' disabled' : '');
         nextBtn.innerHTML = '다음 &gt;';

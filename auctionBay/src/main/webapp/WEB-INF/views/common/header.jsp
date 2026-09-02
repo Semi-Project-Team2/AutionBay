@@ -6,12 +6,12 @@
 <header class="header">
     <div class="header-container">
         
-        <!-- 1. 로고 이미지 수정 영역 -->
+        <!-- 1. 로고 이미지 영역 -->
         <a href="${pageContext.request.contextPath}/" class="header-logo">
             <img src="${pageContext.request.contextPath}/css/logo/logo.png" alt="AuctionBay" class="logo-img">
         </a>
 
-        <!-- 2. 검색창 영역 (독립된 form 태그 적용) -->
+        <!-- 2. 검색창 영역 -->
         <div class="header-search">
             <form action="${pageContext.request.contextPath}/product/list" method="get" style="width: 100%;">
                 <input type="text" name="keyword" value="${param.keyword}" placeholder="제목 또는 작성자 검색">
@@ -28,7 +28,7 @@
                 </c:when>
                 <%-- 로그인 상태일 때 --%>
                 <c:otherwise>
-                    <span>
+                    <span class="header-welcome-text">
                         ${sessionScope.loginUser.nickname}님 환영합니다!
                     </span>
                     <a href="${pageContext.request.contextPath}/mypage/products" class="auth-btn">마이페이지</a>
