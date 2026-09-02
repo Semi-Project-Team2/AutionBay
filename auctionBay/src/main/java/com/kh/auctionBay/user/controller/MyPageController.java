@@ -460,25 +460,7 @@ public class MyPageController {
 	
 	
 
-	/**
-	 * [내가 작성한 게시글 삭제 처리 (AJAX 비동기 통신)]
-	 * - 요청 URL: DELETE /mypage/deleteProduct?productNo=상품번호
-	 * - 처리 과정:
-	 *    1. 비동기 요청 시 파라미터로 넘어온 상품 번호(productNo)와 로그인 유저 번호를 확인합니다.
-	 *    2. 소프트 딜리트(삭제 상태값 변경) 방식을 통해 게시글 삭제 처리를 수행합니다.
-	 * - 응답 데이터: 처리가 성공하면 "SUCCESS", 실패하거나 비로그인 시 "FAIL" 문자열을 반환합니다.
-	 */
-	@DeleteMapping("/deleteProduct") 
-	@ResponseBody 
-	public String deleteMyProduct(Long productNo, HttpSession session) {
-		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
-		if (loginUser == null) {
-			return "FAIL";
-		}
 
-		boolean isDeleted = activityService.deleteMyProduct(productNo, loginUser.getUserNo());
-		return isDeleted ? "SUCCESS" : "FAIL";
-	}
 
 	/**
 	 * [내가 작성한 댓글 삭제 처리 (AJAX 비동기 통신)]
