@@ -21,9 +21,6 @@ public interface ActivityService {
 	// 4. 최근 본 글 목록 조회
 	List<RecentViewDTO> selectRecentViews(Long userNo);
 	
-	// 5. 내가 작성한 게시글 삭제
-	boolean deleteMyProduct(Long productNo, Long writerNo);
-
 	// 6. 내가 작성한 댓글 삭제
 	boolean deleteMyComment(Long commentNo, Long writerNo);
 	
