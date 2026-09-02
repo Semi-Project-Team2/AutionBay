@@ -9,6 +9,5 @@
         <li><a href="${pageContext.request.contextPath}/mypage/reviews" class="${param.activeMenu == 'reviews' ? 'active' : ''}">후기</a></li>
         <li><a href="${pageContext.request.contextPath}/mypage/recents" class="${param.activeMenu == 'recents' ? 'active' : ''}">최근 본 글</a></li>
         <li><a href="${pageContext.request.contextPath}/mypage/wishlists" class="${param.activeMenu == 'wishlists' ? 'active' : ''}">찜목록</a></li>
-        <li><a href="${pageContext.request.contextPath}/message/received" class="${param.activeMenu == 'messages' ? 'active' : ''}">쪽지함</a></li>
     </ul>
 </nav>
