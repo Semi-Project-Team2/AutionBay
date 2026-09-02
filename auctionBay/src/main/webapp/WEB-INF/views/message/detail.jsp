@@ -19,6 +19,7 @@
         <main class="message-container">
 
             <a class="back-link" href="${pageContext.request.contextPath}/message/received">&laquo; 쪽지함으로</a>
+            <a class="back-link" href="${pageContext.request.contextPath}/board/${product.productId}/detail">&laquo; 상품보기</a>
 
             <c:if test="${not empty completeMessage}">
                 <div class="alert alert-success">${completeMessage}</div>
