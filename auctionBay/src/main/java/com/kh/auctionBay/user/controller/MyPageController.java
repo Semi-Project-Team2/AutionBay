@@ -107,22 +107,6 @@ public class MyPageController {
 	}
 	
 	/**
-	 * 거래내역 상세 화면
-	 */
-	@GetMapping("/txHistory/{historyId}")
-	public String txHistoryDetail(@PathVariable Long historyId,	Model model) {
-		
-		// DB에서 거래내역 조회 후 변수에 저장
-		TxHistoryDTO txHistory = txService.getTxHistoryDetail(historyId);
-		
-		// 브라우저에서 "txHistory"로 요청 시 txHistory 전달
-		model.addAttribute("txHistory", txHistory);
-		
-		return "mypage/txHistory/detail";
-	}
-
-	
-	/**
 	 * 후기 목록 화면
 	 * @param session
 	 * @param model

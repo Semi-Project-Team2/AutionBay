@@ -1,4 +1,8 @@
 @charset "utf-8";
+
+html {
+    overflow-y: scroll;
+}
 /* 구글 폰트 Noto sans KR*/
 @import url('https://fonts.googleapis.com/css2?family=Chiron+GoRound+TC:wght@200..900&family=Gamja+Flower&family=Gasoek+One&family=Noto+Sans+KR:wght@100..900&display=swap');
    html, body, div, p, span, strong, b, em, iframe, pre,
@@ -6,7 +10,7 @@
    img, dl, dt, dd,
    fieldset, form, legend, label,
    table, caption, thead, tbody, tfoot, tr, th, td,
-   ul, ol, li, a, input, select, textarea { margin: 0; padding: 0; border: 0 none; box-sizing: border-box; }
+   ul, ol, li, a, input, select, textarea, form { margin: 0; padding: 0; border: 0 none; box-sizing: border-box; }
 
    body { font-family: Noto Sans KR, '맑은 고딕', '돋움', Dotum, AppleGothic, Sans-serif, Arial; font-size: 14px; line-height: 1.5; color: #333; background-color: #f8f9fa; }
 
@@ -53,13 +57,20 @@
 }
 .header-search input {
     width: 100%;
-    padding: 10px 20px;
+    height: 38px;
+    padding: 0 20px;
     border: 1px solid transparent;
     border-radius: 30px;
     background-color: #f1f3f5;
     font-size: 14px;
+    box-sizing: border-box;
     outline: none;
+    
+    /* placeholder 수직 중앙 정렬 핵심 속성 */
+    line-height: normal;      /* 고정 줄간격 해제 */
+    vertical-align: middle;   /* 수직 정렬 축 맞춤 */
 }
+
 /* 헤더 검색창 기본 및 포커스 스타일 */
 .header-search input[type="text"] {
     transition: all 0.2s ease-in-out;
