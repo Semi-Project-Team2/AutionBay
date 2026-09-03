@@ -37,8 +37,9 @@ public class UserContoller {
 	}
 
 	@GetMapping("/login")
-	public String loginForm() {
-		return "user/login";
+	public String loginForm(@RequestParam(required = false) String redirectURL, Model model) {
+	    model.addAttribute("redirectURL", redirectURL);
+	    return "user/login"; // 로그인 JSP 경로
 	}
 
 	@PostMapping("/join")
@@ -110,7 +111,7 @@ public class UserContoller {
 	
 
 	@PostMapping("/login")
-	public String login(String userId, String password, @RequestParam(required = false) String redirectURL,
+	public String login(String userId, String password, @RequestParam(defaultValue="/")String redirectURL,
 			HttpSession session, RedirectAttributes redirectAttr) {
 		try {
 			UserDTO user = service.login(userId, password);

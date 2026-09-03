@@ -15,11 +15,6 @@
     
 </head>
 <body>
-    <c:if test="${not empty error}">
-        <div style="background-color: #fee2e2; color: #ef4444; padding: 12px; border-radius: 6px; margin-bottom: 16px; font-size: 14px; font-weight: 600;">
-            ⚠️ ${error}
-        </div>
-    </c:if>
     <!-- 공통 헤더 -->
     <jsp:include page="/WEB-INF/views/common/header.jsp" />
 

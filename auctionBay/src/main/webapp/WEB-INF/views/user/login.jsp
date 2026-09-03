@@ -11,7 +11,7 @@
 <body>
 
   <jsp:include page="/WEB-INF/views/common/header.jsp"/>
-
+  <div id="server-data" data-message="${message}"></div>
   <!-- 로그인 전용 카드 영역 -->
   <main class="auth-card">
     <h1>로그인</h1>
@@ -34,7 +34,7 @@
         <label for="password">비밀번호</label>
         <input type="password" id="password" name="password" required>
       </div>
-
+	  <input type="hidden" name="redirectURL" value="${redirectURL}">
       <div class="submit-row">
         <button type="submit" class="btn-primary">로그인</button>
       </div>
@@ -46,6 +46,12 @@
   </main>
 
   <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
-
+  <script>
+	  const serverMessage = document.querySelector("#server-data").dataset.message;
+	
+	  if (serverMessage) {
+	      alert(serverMessage);
+	  }
+  </script>
 </body>
 </html>

@@ -120,7 +120,8 @@ public class AuctionController {
 		UserDTO loginUser = (UserDTO)session.getAttribute(SessionConst.LOGIN_USER);
 		if (loginUser == null) {
 	        rttr.addFlashAttribute("message", "로그인 후 이용해주세요.");
-	        return "redirect:/user/login";
+	        String redirectURL = "/auction/" + bidDTO.getProductId() + "/detail"; 
+	        return "redirect:/user/login?redirectURL=" + redirectURL;
 	    }
 
 		// 로그인한 유저의 UserNo 세팅
