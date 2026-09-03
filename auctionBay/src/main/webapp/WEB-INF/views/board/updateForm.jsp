@@ -8,25 +8,7 @@
     <title>일반 게시글 수정</title>
     <link rel="stylesheet" href="/css/productWrite.css">
     <style>
-        /* 글자 수 표시 영역 스타일 */
-        .char-count-wrapper {
-            position: relative;
-            width: 100%;
-        }
-        .char-count {
-            position: absolute;
-            right: 12px;
-            bottom: 12px;
-            font-size: 12px;
-            color: #a0aec0;
-            pointer-events: none;
-        }
-        textarea.with-count {
-            padding-bottom: 30px;
-        }
-        input.with-count {
-            padding-right: 65px;
-        }
+
     </style>
 </head>
 
@@ -48,7 +30,6 @@
         <div class="trade-type-area">
             <button type="button" class="trade-button ${product.tradeType == 'BUY' ? 'active' : ''}" id="buyButton" onclick="changeTradeType('BUY')">구매</button>
             <button type="button" class="trade-button ${product.tradeType == 'SELL' ? 'active' : ''}" id="sellButton" onclick="changeTradeType('SELL')">판매</button>
-            <button type="button" class="trade-button ${product.tradeType == 'AUCTION' ? 'active' : ''}" id="auctionButton" onclick="changeTradeType('AUCTION')">경매</button>
         </div>
 
         <!-- 일반 게시글 수정 Form -->
@@ -129,18 +110,6 @@
                     <div class="form-row" id="priceArea">
                         <label for="price">희망가격</label>
                         <input type="number" id="price" name="price" value="${product.price}" min="0" placeholder="가격을 입력해주세요">
-                    </div>
-
-                    <!-- 경매 시작 가격 (경매 전용) -->
-                    <div class="form-row" id="auctionPriceArea">
-                        <label for="auctionStartPrice">시작가격</label>
-                        <input type="number" id="auctionStartPrice" name="auctionStartPrice" value="${product.auctionStartPrice}" min="0" placeholder="경매 시작 가격">
-                    </div>
-
-                    <!-- 경매 마감시간 (경매 전용) -->
-                    <div class="form-row" id="auctionEndArea">
-                        <label for="auctionEndTime">마감시간</label>
-                        <input type="datetime-local" id="auctionEndTime" name="auctionEndTime" value="${product.auctionEndTime}">
                     </div>
 
                     <!-- 설명 (500자 제한) -->

@@ -28,7 +28,7 @@
     justify-content: center;
     gap: 12px;
     margin-bottom: 36px;
-    background-color: #f5f5f7;
+    background-color: #f3e8ff;
     padding: 6px;
     border-radius: 12px;
 }
@@ -38,7 +38,8 @@
     padding: 14px 0;
     font-size: 15px;
     font-weight: 600;
-    color: #666666;
+    background-color: #f3e8ff;
+    color: #6b21a8;
     background: transparent;
     border: none;
     border-radius: 8px;
@@ -47,12 +48,12 @@
 }
 
 .trade-button:hover {
-    color: #111111;
+    background-color: #e4caff;
 }
 
 .trade-button.active {
-    background-color: #ffffff;
-    color: #2b6cb0;
+    background-color: #d4acff;
+    color: #111;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
@@ -170,7 +171,7 @@
 }
 
 .media-button {
-    background: #f1f5f9;
+    background-color: #f3e8ff;
     border: none;
     width: 32px;
     height: 32px;
@@ -185,7 +186,7 @@
 }
 
 .media-button:hover {
-    background: #e2e8f0;
+    background-color: #e4caff;
 }
 
 .image-count {
@@ -198,8 +199,8 @@
     width: 100%;
     margin-top: 12px;
     padding: 10px;
-    background-color: #edf2f7;
-    color: #4a5568;
+    background-color: #f3e8ff;
+    color: #6b21a8;
     border: none;
     border-radius: 8px;
     font-size: 14px;
@@ -209,7 +210,7 @@
 }
 
 .media-add-btn:hover {
-    background-color: #e2e8f0;
+    background-color: #e4caff;
 }
 
 /* 숨김 파일 인풋 */
@@ -296,11 +297,31 @@
 }
 
 .btn-submit {
-    background-color: #3182ce;
+    background-color: #f3e8ff;
+    color: #6b21a8;
     border: none;
-    color: #ffffff;
 }
 
 .btn-submit:hover {
-    background-color: #2b6cb0;
+    background-color: #e4caff;
+}
+
+/* 글자 수 표시 영역 스타일 */
+.char-count-wrapper {
+    position: relative;
+    width: 100%;
+}
+.char-count {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    font-size: 12px;
+    color: #a0aec0;
+    pointer-events: none;
+}
+textarea.with-count {
+    padding-bottom: 30px;
+}
+input.with-count {
+    padding-right: 65px;
 }

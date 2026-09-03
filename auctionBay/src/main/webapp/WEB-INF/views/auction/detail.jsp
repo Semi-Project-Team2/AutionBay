@@ -51,6 +51,7 @@
 					</c:otherwise>
                 </c:choose>
             </div>
+        </div>
             
             <!-- 썸네일 리스트 (미디어가 여러 개일 경우) -->
 			<c:if test="${not empty product.mediaList && product.mediaList.size() > 1}">

@@ -107,6 +107,10 @@ html {
     cursor: pointer;
 }
 
+.auth-btn:hover {
+    background-color: #e4caff;
+}
+
 /* 헤더 쪽지함 버튼 위치 상대 지정 */
 .auth-btn.header-msg-btn {
     position: relative;
