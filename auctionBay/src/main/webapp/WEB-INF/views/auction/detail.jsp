@@ -51,7 +51,6 @@
 					</c:otherwise>
                 </c:choose>
             </div>
-        </div>
             
             <!-- 썸네일 리스트 (미디어가 여러 개일 경우) -->
 			<c:if test="${not empty product.mediaList && product.mediaList.size() > 1}">
@@ -78,6 +77,7 @@
                     </c:forEach>
                 </div>
             </c:if>
+        </div>
 
         <!-- 우측 기존 경매 상세 카드 영역 -->
         <div class="auction-card">
