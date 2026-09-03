@@ -74,7 +74,9 @@
 			<div class="field-row">
 				<label for="phoneNumber">연락처</label>
 			    <div class="input-with-btn">
-			    	<input type="tel" name="phoneNumber" id="phoneNumber" pattern="[0-9]*" maxlength="11" placeholder="- 제외하고 숫자만 입력">
+			    	<input type="tel" name="phoneNumber" id="phoneNumber" pattern="[0-9]*" maxlength="11" 
+                    value="${user.phoneNumber}"
+                    placeholder="- 제외하고 숫자만 입력">
 			        <button type="button" id="check-phoneNumber-btn" class="btn-sub">중복확인</button>
 			    </div>
 			    <p id="check-phoneNumber-result" class="form-tip"></p>
