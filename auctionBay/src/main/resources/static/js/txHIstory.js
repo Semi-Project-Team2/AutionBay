@@ -30,6 +30,12 @@ if (reviewForm) {
     reviewForm.addEventListener("submit", async function (e) {
         e.preventDefault();
 
+        const ratingInput = document.getElementById("rating");
+        if (!ratingInput || !ratingInput.value || parseInt(ratingInput.value) <= 0) {
+            alert("별점을 선택해 주세요.");
+            return; // 서버 전송 중단
+        }
+
         const formData = new FormData(reviewForm);
 
         try {
@@ -111,6 +117,25 @@ document.addEventListener("DOMContentLoaded", function () {
                 star.classList.add("half-filled");
             } else {
                 star.classList.add("empty");
+            }
+        });
+    }
+
+    /* 거래내역 검색 시 공백 정제 (trim 및 연속 공백 1개로 치환) */
+    const searchForm = document.querySelector(".search-bar");
+    if (searchForm) {
+        searchForm.addEventListener("submit", function (e) {
+            const keywordInput = searchForm.querySelector("#mypageKeywordInput");
+            
+            if (keywordInput) {
+                // 앞뒤 공백 제거
+                let cleanedValue = keywordInput.value.trim();
+                
+                // 2개 이상의 연속된 공백을 단일 공백으로 치환
+                cleanedValue = cleanedValue.replace(/\s+/g, " ");
+
+                // 정제된 값으로 다시 입력
+                keywordInput.value = cleanedValue;
             }
         });
     }

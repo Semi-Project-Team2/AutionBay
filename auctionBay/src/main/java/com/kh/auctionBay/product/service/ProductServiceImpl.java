@@ -352,7 +352,7 @@ public class ProductServiceImpl implements ProductService{
                         mediaDTO.setMediaType(mediaType);
                         mediaDTO.setMediaOrder((long) order); 
                         
-                        // 👉 [핵심 수정] 기존에 이미지가 전혀 없는 상태에서 새로 추가하는 첫 번째 파일(order == 1)일 때만 썸네일 부여
+                        // 기존에 이미지가 전혀 없는 상태에서 새로 추가하는 첫 번째 파일(order == 1)일 때만 썸네일 부여
                         if (order == 1) {
                             if ("IMAGE".equals(mediaType)) {
                                 mediaDTO.setThumbnailUrl(savedFile.getPath());

@@ -137,7 +137,7 @@ public class ProductController {
 		
 		// 입찰이력이 존재하는 경우
 		List<BidsDTO> list = auctionService.getBidsByProductId(productId);
-		if(list != null && list.size() > 0) {
+		if(list == null || list.size() > 0) {
 			rttr.addFlashAttribute("message", "입찰이력이 존재하면 삭제할 수 없습니다.");
 			return "redirect:/auction/"+productId+"/detail";
 		}

@@ -158,7 +158,7 @@ public class BoardController {
 	    try {
 	        // 서비스 레이어로 위임
 	        productService.updateProduct(product, images, deletedMediaIds);
-	        rttr.addFlashAttribute("message", "경매 게시글이 성공적으로 수정되었습니다.");
+	        rttr.addFlashAttribute("message", "게시글이 성공적으로 수정되었습니다.");
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        rttr.addFlashAttribute("message", "게시글 수정 중 오류가 발생했습니다.");
