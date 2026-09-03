@@ -6,7 +6,6 @@
 <head> 
     <meta charset="UTF-8">
     <title>경매 게시글 수정</title>
-    <!-- 제공해주신 CSS 파일 링크 연결 -->
     <link rel="stylesheet" href="/css/productWrite.css">
 </head>
 

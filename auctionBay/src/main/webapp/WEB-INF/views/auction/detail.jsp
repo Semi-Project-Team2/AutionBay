@@ -77,6 +77,7 @@
                     </c:forEach>
                 </div>
             </c:if>
+        </div>
 
         <!-- 우측 기존 경매 상세 카드 영역 -->
         <div class="auction-card">
