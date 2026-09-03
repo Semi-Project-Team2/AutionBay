@@ -20,6 +20,7 @@ public class BidsDTO {
 	
 	// join용
 	private String bidderId;
+	private String bidderNickname;
 	
 	// 입찰 단위
 	private Long bidUnit;

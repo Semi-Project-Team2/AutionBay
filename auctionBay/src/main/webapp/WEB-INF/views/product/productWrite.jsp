@@ -7,6 +7,27 @@
     <meta charset="UTF-8">
     <title>게시글 작성</title>
     <link rel="stylesheet" href="/css/productWrite.css">
+    <style>
+        /* 글자 수 표시 영역 스타일 */
+        .char-count-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        .char-count {
+            position: absolute;
+            right: 10px;
+            bottom: 5px;
+            font-size: 12px;
+            color: #999;
+            pointer-events: none; /* 클릭 방지 */
+        }
+        textarea.with-count {
+            padding-bottom: 25px; /* 카운트 영역 확보 */
+        }
+        input.with-count {
+            padding-right: 60px; /* 카운트 영역 확보 */
+        }
+    </style>
 </head>
 
 <body>
@@ -37,7 +58,7 @@
 
             <div class="write-area">
 
-                <!-- 이미지 영역 (정사각형 fixed) -->
+                <!-- 이미지 영역 -->
                 <div class="image-area">
                     <label for="imageInput" style="width: 100%;">
                         <div class="image-box">
@@ -65,10 +86,13 @@
                 <!-- 입력 영역 -->
                 <div class="form-area">
 
-                    <!-- 상품명 -->
+                    <!-- 상품명 (20자 제한) -->
                     <div class="form-row">
                         <label for="title">상품명</label>
-                        <input type="text" id="title" name="title" placeholder="상품명을 입력해주세요" required>
+                        <div class="char-count-wrapper">
+                            <input type="text" id="title" name="title" class="with-count" placeholder="상품명을 입력해주세요 (최대 20자)" required maxlength="20">
+                            <span class="char-count" id="titleCount">(0/20)</span>
+                        </div>
                     </div>
 
                     <!-- 카테고리 -->
@@ -87,9 +111,9 @@
                         <label for="productCondition">상품상태</label>
                         <select id="productCondition" name="productCondition">
                             <option value="">선택해주세요</option>
-                            <option value="NEW">새상품</option>
-                            <option value="LIKE_NEW">미개봉</option>
-                            <option value="USED">개봉</option>
+                            <option value="NEW">미개봉</option>
+                            <option value="LIKE_NEW">거의 새것</option>
+                            <option value="USED">사용감 있음</option>
                         </select>
                     </div>
 
@@ -111,10 +135,13 @@
                         <input type="datetime-local" id="auctionEndTime" name="auctionEndTime">
                     </div>
 
-                    <!-- 설명 -->
+                    <!-- 설명 (500자 제한) -->
                     <div class="form-row">
                         <label for="description">상품설명</label>
-                        <textarea id="description" name="description" placeholder="상품에 대한 설명을 입력해주세요" required></textarea>
+                        <div class="char-count-wrapper">
+                            <textarea id="description" name="description" class="with-count" placeholder="상품에 대한 설명을 입력해주세요 (최대 500자)" required maxlength="500"></textarea>
+                            <span class="char-count" id="descriptionCount">(0/500)</span>
+                        </div>
                     </div>
 
                     <!-- 거래 방식 -->
@@ -126,10 +153,13 @@
                         </select>
                     </div>
 
-                    <!-- 거래 장소 -->
+                    <!-- 거래 장소 (20자 제한) -->
                     <div class="form-row" id="locationArea">
                         <label for="tradeLocation">거래장소</label>
-                        <input type="text" id="tradeLocation" name="tradeLocation" placeholder="거래 장소를 입력해주세요">
+                        <div class="char-count-wrapper">
+                            <input type="text" id="tradeLocation" name="tradeLocation" class="with-count" placeholder="거래 장소를 입력해주세요 (최대 20자)" maxlength="20">
+                            <span class="char-count" id="tradeLocationCount">(0/20)</span>
+                        </div>
                     </div>
 
                 </div>
@@ -147,233 +177,326 @@
     </div>
 
     <script>
-    let currentTradeType = "BUY";
-    let selectedFiles = new DataTransfer();
-    let currentMediaIndex = 0;
+		// 페이지 로드 완료 후 모든 스크립트 실행
+		document.addEventListener('DOMContentLoaded', function() {
+		        
+        // --- 기존 기능 구현부 ---
+        let currentTradeType = "BUY";
+        let selectedFiles = new DataTransfer();
+        let currentMediaIndex = 0;
 
-    const imageInput = document.getElementById("imageInput");
-    const imagePreview = document.getElementById("imagePreview");
-    const imagePlaceholder = document.getElementById("imagePlaceholder");
-    const imageCount = document.getElementById("imageCount");
-    const currentMediaDeleteBtn = document.getElementById("currentMediaDeleteBtn");
-    const mediaOrderBadge = document.getElementById("mediaOrderBadge");
+        const imageInput = document.getElementById("imageInput");
+        const imagePreview = document.getElementById("imagePreview");
+        const imagePlaceholder = document.getElementById("imagePlaceholder");
+        const imageCount = document.getElementById("imageCount");
+        const currentMediaDeleteBtn = document.getElementById("currentMediaDeleteBtn");
+        const mediaOrderBadge = document.getElementById("mediaOrderBadge");
 
-    function changeTradeType(type) {
-        currentTradeType = type;
-        document.getElementById("tradeType").value = type;
+        // 거래 방식 관련 요소 가져오기
+        const isDirectSelect = document.getElementById("isDirect");
+        const locationArea = document.getElementById("locationArea");
+        const tradeLocationInput = document.getElementById("tradeLocation");
 
-        // 버튼 Active 토글
-        document.getElementById("buyButton").classList.toggle("active", type === "BUY");
-        document.getElementById("sellButton").classList.toggle("active", type === "SELL");
-        document.getElementById("auctionButton").classList.toggle("active", type === "AUCTION");
-
-        const priceArea = document.getElementById("priceArea");
-        const conditionArea = document.getElementById("conditionArea");
-        const auctionPriceArea = document.getElementById("auctionPriceArea");
-        const auctionEndArea = document.getElementById("auctionEndArea");
-
-        const price = document.getElementById("price");
-        const productCondition = document.getElementById("productCondition");
-        const auctionStartPrice = document.getElementById("auctionStartPrice");
-        const auctionEndTime = document.getElementById("auctionEndTime");
-
-        if (type === "BUY") {
-            priceArea.style.display = "flex";
-            conditionArea.style.display = "none"; // 화면에서 숨김
-            auctionPriceArea.style.display = "none";
-            auctionEndArea.style.display = "none";
-
-            // 구매인 경우 기본값 USED 지정 및 필수 체크 해제
-            productCondition.value = "USED";
-            
-            price.required = true;
-            productCondition.required = false;
-            auctionStartPrice.required = false;
-            auctionEndTime.required = false;
-
-        } else if (type === "SELL") {
-            priceArea.style.display = "flex";
-            conditionArea.style.display = "flex";
-            auctionPriceArea.style.display = "none";
-            auctionEndArea.style.display = "none";
-
-            price.required = true;
-            productCondition.required = true;
-            auctionStartPrice.required = false;
-            auctionEndTime.required = false;
-
-        } else if (type === "AUCTION") {
-            priceArea.style.display = "none";
-            conditionArea.style.display = "flex";
-            auctionPriceArea.style.display = "flex";
-            auctionEndArea.style.display = "flex";
-
-            price.required = false;
-            productCondition.required = true;
-            auctionStartPrice.required = true;
-            auctionEndTime.required = true;
+        // --- [수정] 거래 방식 변경 시 UI를 제어하는 함수 (판매/구매 탭용) ---
+        function toggleLocationInput() {
+            // 경매 탭이 아닐 때만 현재 선택 값에 따라 주소 입력란 제어
+            if (currentTradeType !== "AUCTION") {
+                if (isDirectSelect.value === "1") { // 직거래 선택 시
+                    locationArea.style.display = "flex";
+                    tradeLocationInput.required = true;
+                } else { // 택배 선택 시
+                    locationArea.style.display = "none";
+                    tradeLocationInput.required = false;
+                    tradeLocationInput.value = ""; // 값 초기화
+                }
+            }
         }
-    }
 
-    imageInput.addEventListener("change", function () {
-        Array.from(this.files).forEach(function(file) {
-            const alreadyExists = Array.from(selectedFiles.files).some(function(existingFile) {
-                return existingFile.name === file.name
-                    && existingFile.size === file.size
-                    && existingFile.lastModified === file.lastModified;
+        // 거래 방식 셀렉트 박스에 이벤트 리스너 등록
+        isDirectSelect.addEventListener("change", toggleLocationInput);
+
+        window.changeTradeType = function(type) {
+            currentTradeType = type;
+            document.getElementById("tradeType").value = type;
+
+            // 버튼 Active 토글
+            document.getElementById("buyButton").classList.toggle("active", type === "BUY");
+            document.getElementById("sellButton").classList.toggle("active", type === "SELL");
+            document.getElementById("auctionButton").classList.toggle("active", type === "AUCTION");
+
+            const priceArea = document.getElementById("priceArea");
+            const conditionArea = document.getElementById("conditionArea");
+            const auctionPriceArea = document.getElementById("auctionPriceArea");
+            const auctionEndArea = document.getElementById("auctionEndArea");
+
+            const price = document.getElementById("price");
+            const productCondition = document.getElementById("productCondition");
+            const auctionStartPrice = document.getElementById("auctionStartPrice");
+            const auctionEndTime = document.getElementById("auctionEndTime");
+
+            // --- [수정] 각 탭별 거래 방식 제어 로직 ---
+            if (type === "BUY") {
+                priceArea.style.display = "flex";
+                conditionArea.style.display = "none"; 
+                auctionPriceArea.style.display = "none";
+                auctionEndArea.style.display = "none";
+
+                productCondition.value = "USED";
+                
+                price.required = true;
+                productCondition.required = false;
+                auctionStartPrice.required = false;
+                auctionEndTime.required = false;
+
+                // [구매] 거래 방식: 변경 가능, 현재 선택 상태 반영
+                isDirectSelect.disabled = false;
+                toggleLocationInput(); 
+
+            } else if (type === "SELL") {
+                priceArea.style.display = "flex";
+                conditionArea.style.display = "flex";
+                auctionPriceArea.style.display = "none";
+                auctionEndArea.style.display = "none";
+
+                price.required = true;
+                productCondition.required = true;
+                auctionStartPrice.required = false;
+                auctionEndTime.required = false;
+
+                // [판매] 거래 방식: 변경 가능, 현재 선택 상태 반영
+                isDirectSelect.disabled = false;
+                toggleLocationInput(); 
+
+            } else if (type === "AUCTION") {
+                priceArea.style.display = "none";
+                conditionArea.style.display = "flex";
+                auctionPriceArea.style.display = "flex";
+                auctionEndArea.style.display = "flex";
+
+                price.required = false;
+                productCondition.required = true;
+                auctionStartPrice.required = true;
+                auctionEndTime.required = true;
+
+                // --- [핵심 수정] 경매 탭: 택배로 고정 ---
+                isDirectSelect.value = "0";       // 1. 값 강제 설정 (택배)
+                isDirectSelect.disabled = true;   // 2. 비활성화 (사용자 변경 불가)
+                
+                // 3. 거래 장소 입력란 숨기기 및 초기화
+                locationArea.style.display = "none";
+                tradeLocationInput.value = "";
+                tradeLocationInput.required = false;
+            }
+        }
+
+        imageInput.addEventListener("change", function () {
+            Array.from(this.files).forEach(function(file) {
+                const alreadyExists = Array.from(selectedFiles.files).some(function(existingFile) {
+                    return existingFile.name === file.name
+                        && existingFile.size === file.size
+                        && existingFile.lastModified === file.lastModified;
+                });
+
+                if (!alreadyExists) {
+                    selectedFiles.items.add(file);
+                }
             });
 
-            if (!alreadyExists) {
-                selectedFiles.items.add(file);
+            if (selectedFiles.files.length > 5) {
+                alert("이미지와 동영상은 최대 5개까지 등록할 수 있습니다.");
+                const newDataTransfer = new DataTransfer();
+                Array.from(selectedFiles.files).slice(0, 5).forEach(function(file) {
+                    newDataTransfer.items.add(file);
+                });
+                selectedFiles = newDataTransfer;
+            }
+
+            imageInput.files = selectedFiles.files;
+            renderPreview();
+        });
+
+        function renderPreview() {
+            imagePreview.innerHTML = "";
+
+            if (selectedFiles.files.length === 0) {
+                imagePlaceholder.style.display = "block";
+                currentMediaDeleteBtn.style.display = "none";
+                mediaOrderBadge.style.display = "none";
+                imageCount.innerText = "(0/5)";
+                return;
+            }
+
+            imagePlaceholder.style.display = "none";
+            currentMediaDeleteBtn.style.display = "flex";
+            mediaOrderBadge.style.display = "block";
+
+            if (currentMediaIndex >= selectedFiles.files.length) {
+                currentMediaIndex = selectedFiles.files.length - 1;
+            }
+
+            const file = selectedFiles.files[currentMediaIndex];
+            const url = URL.createObjectURL(file);
+
+            if (file.type.startsWith("image/")) {
+                const img = document.createElement("img");
+                img.src = url;
+                imagePreview.appendChild(img);
+            } else if (file.type.startsWith("video/")) {
+                const video = document.createElement("video");
+                video.src = url;
+                video.controls = true;
+                imagePreview.appendChild(video);
+            }
+
+            mediaOrderBadge.innerText = (currentMediaIndex + 1) + " / " + selectedFiles.files.length;
+            imageCount.innerText = "(" + selectedFiles.files.length + "/5)";
+        }
+
+        window.removeCurrentMedia = function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            if (selectedFiles.files.length === 0) return;
+
+            const newDataTransfer = new DataTransfer();
+            const files = selectedFiles.files;
+
+            for (let i = 0; i < files.length; i++) {
+                if (i !== currentMediaIndex) {
+                    newDataTransfer.items.add(files[i]);
+                }
+            }
+
+            selectedFiles = newDataTransfer;
+            imageInput.files = selectedFiles.files;
+
+            if (currentMediaIndex >= selectedFiles.files.length && currentMediaIndex > 0) {
+                currentMediaIndex--;
+            }
+
+            renderPreview();
+        }
+
+        window.showPreviousMedia = function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            if (selectedFiles.files.length === 0) return;
+
+            currentMediaIndex--;
+            if (currentMediaIndex < 0) {
+                currentMediaIndex = selectedFiles.files.length - 1;
+            }
+            renderPreview();
+        }
+
+        window.showNextMedia = function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            if (selectedFiles.files.length === 0) return;
+
+            currentMediaIndex++;
+            if (currentMediaIndex >= selectedFiles.files.length) {
+                currentMediaIndex = 0;
+            }
+            renderPreview();
+        }
+
+        window.checkFirstMedia = function() {
+            if (selectedFiles.files.length === 0) return true;
+            const firstFile = selectedFiles.files[0];
+
+            if (firstFile.type.startsWith("video/")) {
+                return confirm(
+                    "첫 번째 등록 미디어가 동영상입니다.\n" +
+                    "목록 화면에서는 기본 이미지로 표시됩니다.\n\n" +
+                    "등록하시겠습니까?"
+                );
+            }
+            return true;
+        }
+
+        window.temporarySave = function() {
+            alert("임시저장 기능은 준비 중입니다.");
+        }
+
+        // 경매 마감시간 유효성 검사
+        document.getElementById("auctionEndTime").addEventListener("change", function() {
+            if (!this.value) return;
+            const selectedTime = new Date(this.value);
+            if (selectedTime <= new Date()) {
+                alert("경매 마감시간은 현재 시간 이후로 선택해주세요.");
+                this.value = "";
             }
         });
 
-        if (selectedFiles.files.length > 5) {
-            alert("이미지와 동영상은 최대 5개까지 등록할 수 있습니다.");
-            const newDataTransfer = new DataTransfer();
-            Array.from(selectedFiles.files).slice(0, 5).forEach(function(file) {
-                newDataTransfer.items.add(file);
-            });
-            selectedFiles = newDataTransfer;
-        }
+        // 폼 제출 시 최종 검사
+        document.getElementById("productForm").addEventListener("submit", function(e) {
+            if (currentTradeType === "AUCTION") {
+                const auctionEndTime = document.getElementById("auctionEndTime");
+                if (!auctionEndTime.value) {
+                    alert("경매 마감시간을 선택해주세요.");
+                    e.preventDefault();
+                    return;
+                }
 
-        imageInput.files = selectedFiles.files;
-        renderPreview();
-    });
+                if (new Date(auctionEndTime.value) <= new Date()) {
+                    alert("경매 마감시간은 현재 시간 이후로 설정해주세요.");
+                    auctionEndTime.value = "";
+                    e.preventDefault();
+                    return;
+                }
+            }
+        });
 
-    function renderPreview() {
-        imagePreview.innerHTML = "";
+        // --- [신규] 글자 수 제한 실시간 표시 기능 ---
+        // 대상 필드 설정: [입력요소ID, 카운터표시ID, 최대길이]
+        const limitConfigs = [
+            ['title', 'titleCount', 20],            // 상품명: 20자
+            ['description', 'descriptionCount', 500], // 상세설명: 500자
+            ['tradeLocation', 'tradeLocationCount', 20] // 거래장소: 20자
+        ];
 
-        if (selectedFiles.files.length === 0) {
-            imagePlaceholder.style.display = "block";
-            currentMediaDeleteBtn.style.display = "none";
-            mediaOrderBadge.style.display = "none";
-            imageCount.innerText = "(0/5)";
-            return;
-        }
+        limitConfigs.forEach(function(config) {
+            const inputElement = document.getElementById(config[0]);
+            const counterElement = document.getElementById(config[1]);
+            const maxLength = config[2];
 
-        imagePlaceholder.style.display = "none";
-        currentMediaDeleteBtn.style.display = "flex";
-        mediaOrderBadge.style.display = "block";
+            if (inputElement && counterElement) {
+                // 1. 초기 로드 시 카운터 업데이트
+                updateCounterDisplay(inputElement, counterElement, maxLength);
 
-        if (currentMediaIndex >= selectedFiles.files.length) {
-            currentMediaIndex = selectedFiles.files.length - 1;
-        }
+                // 2. 입력(input) 이벤트 리스너 등록 (실시간 반영)
+                inputElement.addEventListener('input', function() {
+                    // maxlength를 초과하여 입력되는 경우 방지 (HTML maxlength 속성이 작동하지만 안전장치)
+                    if (this.value.length > maxLength) {
+                        this.value = this.value.substring(0, maxLength);
+                    }
+                    updateCounterDisplay(this, counterElement, maxLength);
+                });
+            }
+        });
 
-        const file = selectedFiles.files[currentMediaIndex];
-        const url = URL.createObjectURL(file);
-
-        if (file.type.startsWith("image/")) {
-            const img = document.createElement("img");
-            img.src = url;
-            imagePreview.appendChild(img);
-        } else if (file.type.startsWith("video/")) {
-            const video = document.createElement("video");
-            video.src = url;
-            video.controls = true;
-            imagePreview.appendChild(video);
-        }
-
-        mediaOrderBadge.innerText = (currentMediaIndex + 1) + " / " + selectedFiles.files.length;
-        imageCount.innerText = "(" + selectedFiles.files.length + "/5)";
-    }
-
-    function removeCurrentMedia(event) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        if (selectedFiles.files.length === 0) return;
-
-        const newDataTransfer = new DataTransfer();
-        const files = selectedFiles.files;
-
-        for (let i = 0; i < files.length; i++) {
-            if (i !== currentMediaIndex) {
-                newDataTransfer.items.add(files[i]);
+        // 카운터 텍스트를 업데이트하는 헬퍼 함수
+        function updateCounterDisplay(inputObj, counterObj, limit) {
+            const currentLength = inputObj.value.length;
+            counterObj.textContent = '(' + currentLength + '/' + limit + ')';
+            
+            // 제한 근접 시 색상 변경 (옵션: CSS로도 제어 가능)
+            if (currentLength >= limit) {
+                counterObj.style.color = '#ef4444'; // 경고 색상 (빨강)
+                counterObj.style.fontWeight = 'bold';
+            } else if (currentLength >= limit * 0.9) {
+                counterObj.style.color = '#f59e0b'; // 주의 색상 (주황)
+            } else {
+                counterObj.style.color = '#999'; // 기본 색상
+                counterObj.style.fontWeight = 'normal';
             }
         }
+        // -------------------------------------------
 
-        selectedFiles = newDataTransfer;
-        imageInput.files = selectedFiles.files;
-
-        if (currentMediaIndex >= selectedFiles.files.length && currentMediaIndex > 0) {
-            currentMediaIndex--;
-        }
-
-        renderPreview();
-    }
-
-    function showPreviousMedia(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        if (selectedFiles.files.length === 0) return;
-
-        currentMediaIndex--;
-        if (currentMediaIndex < 0) {
-            currentMediaIndex = selectedFiles.files.length - 1;
-        }
-        renderPreview();
-    }
-
-    function showNextMedia(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        if (selectedFiles.files.length === 0) return;
-
-        currentMediaIndex++;
-        if (currentMediaIndex >= selectedFiles.files.length) {
-            currentMediaIndex = 0;
-        }
-        renderPreview();
-    }
-
-    function checkFirstMedia() {
-        if (selectedFiles.files.length === 0) return true;
-        const firstFile = selectedFiles.files[0];
-
-        if (firstFile.type.startsWith("video/")) {
-            return confirm(
-                "첫 번째 등록 미디어가 동영상입니다.\n" +
-                "목록 화면에서는 기본 이미지로 표시됩니다.\n\n" +
-                "등록하시겠습니까?"
-            );
-        }
-        return true;
-    }
-
-    function temporarySave() {
-        alert("임시저장 기능은 준비 중입니다.");
-    }
-
-    document.getElementById("auctionEndTime").addEventListener("change", function() {
-        if (!this.value) return;
-        const selectedTime = new Date(this.value);
-        if (selectedTime <= new Date()) {
-            alert("경매 마감시간은 현재 시간 이후로 선택해주세요.");
-            this.value = "";
-        }
+        // 초깃값 실행 (페이지 로드 시 '구매' 탭 설정)
+        changeTradeType("BUY");
     });
-
-    document.getElementById("productForm").addEventListener("submit", function(e) {
-        if (currentTradeType === "AUCTION") {
-            const auctionEndTime = document.getElementById("auctionEndTime");
-            if (!auctionEndTime.value) {
-                alert("경매 마감시간을 선택해주세요.");
-                e.preventDefault();
-                return;
-            }
-
-            if (new Date(auctionEndTime.value) <= new Date()) {
-                alert("경매 마감시간은 현재 시간 이후로 설정해주세요.");
-                auctionEndTime.value = "";
-                e.preventDefault();
-                return;
-            }
-        }
-    });
-
-    // 초깃값 실행
-    changeTradeType("BUY");
-    </script>
+	</script>
 </body>
 </html>
