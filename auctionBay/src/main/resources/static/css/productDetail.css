@@ -1,6 +1,22 @@
 @charset "utf-8";
+
 /* ==========================================================
-   1. 레이아웃 컨테이너
+   1. 공통 및 초기화 스타일
+   ========================================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+body {
+    background-color: #f4f6f8;
+    color: #333;
+}
+
+/* ==========================================================
+   2. 레이아웃 컨테이너
    ========================================================== */
 .page-container {
     width: 1200px;
@@ -21,7 +37,7 @@
 }
 
 /* ==========================================================
-   2. 좌측 상품 이미지 영역 스타일
+   3. 좌측 상품 이미지 영역 스타일
    ========================================================== */
 .product-image-section {
     width: 500px;
@@ -38,7 +54,19 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    margin-bottom: 4px;
     width: 100%;
+}
+
+.auction-badge {
+    background-color: #fff0f5;
+    color: #ff2d55;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    border: 1px solid #ffb6c1;
+    flex-shrink: 0;
 }
 
 .product-title-header {
@@ -47,6 +75,7 @@
     color: #0f172a;
     word-break: break-all;
     line-height: 1.4;
+    margin-bottom: 0;
 }
 
 .main-image-container {
@@ -118,7 +147,7 @@
 }
 
 /* ==========================================================
-   3. 상품 가격 헤더 영역
+   4. 경매 가격 헤더 영역
    ========================================================== */
 .price-header {
     display: flex;
@@ -142,7 +171,7 @@
 }
 
 /* ==========================================================
-   4. 상품 정보 박스
+   5. 경매 정보 박스
    ========================================================== */
 .auction-info-box {
     background-color: #f9fafb;
@@ -154,7 +183,6 @@
 
 .info-row {
     display: flex;
-    align-items: center;
     margin-bottom: 12px;
     font-size: 13px;
 }
@@ -168,11 +196,30 @@
     color: #777;
     font-weight: 500;
     flex-shrink: 0;
+    padding-top: 1px;
 }
 
 .info-content {
     flex-grow: 1;
     color: #333;
+    word-break: keep-all;
+}
+
+.start-price-text {
+    font-weight: 600;
+    font-size: 14px;
+    color: #444;
+}
+
+.time-highlight {
+    font-weight: 600;
+    color: #d9534f;
+}
+
+.time-sub {
+    color: #888;
+    font-size: 11px;
+    margin-top: 2px;
 }
 
 .history-link {
@@ -186,8 +233,70 @@
     text-decoration: underline;
 }
 
+.divider {
+    height: 1px;
+    background-color: #e5e7eb;
+    margin: 14px 0;
+}
+
 /* ==========================================================
-   5. 상품 설명 본문 영역
+   6. 입찰 입력 및 조절 영역
+   ========================================================== */
+.bid-input-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: bold;
+    color: #475569;
+    transition: all 0.2s;
+}
+
+.btn-circle:hover {
+    background-color: #f1f5f9;
+    border-color: #94a3b8;
+}
+
+.bid-input-group {
+    display: flex;
+    align-items: center;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: #fff;
+    width: 150px;
+}
+
+.bid-input {
+    width: 110px;
+    border: none;
+    text-align: right;
+    padding: 6px 8px;
+    font-size: 14px;
+    outline: none;
+    color: #1e293b;
+}
+
+.input-unit {
+    font-size: 13px;
+    color: #64748b;
+    padding-right: 8px;
+}
+
+/* ==========================================================
+   7. 상품 설명 본문 영역
    ========================================================== */
 .description-box {
     background-color: #fff;
@@ -205,8 +314,65 @@
     word-break: break-all;
 }
 
+.direct-or-post {
+    display: flex;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #e5e7eb;
+    font-size: 13px;
+    align-items: flex-start;
+}
+
+.direct-or-post-text {
+    flex-grow: 1;
+    color: #334155;
+    padding-left: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.trade-method-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 4px;
+    width: fit-content;
+}
+
+.trade-method-item.delivery {
+    background-color: #f1f5f9;
+    color: #475569;
+}
+
+.trade-method-item.direct {
+    background-color: #f0fdf4;
+    color: #16a34a;
+}
+
+.trade-location-box {
+    margin-top: 4px;
+    padding: 8px 12px;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.4;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.trade-location-box i {
+    margin-top: 2px;
+    color: #94a3b8;
+}
+
 /* ==========================================================
-   6. 하단 액션 버튼 그룹 (구매하기 + 찜하기)
+   8. 하단 액션 버튼 그룹 (입찰하기 + 찜하기)
    ========================================================== */
 .action-group {
     display: flex;
@@ -264,7 +430,7 @@
 }
 
 /* ==========================================================
-   7. 판매자 프로필 영역
+   9. 판매자 프로필 영역
    ========================================================== */
 .seller-card {
     margin-top: 20px;
@@ -330,7 +496,7 @@
 }
 
 /* ==========================================================
-   8. 게시글 수정/삭제 버튼 영역
+   10. 게시글 수정/삭제 버튼 영역 (우측 하단 배치용)
    ========================================================== */
 .post-owner-actions {
     width: 964px;
@@ -364,9 +530,8 @@
 .btn-owner.delete:hover {
     background-color: #fef2f2;
 }
-
 /* ==========================================================
-   9. 댓글 영역 (페이지 하단 배치)
+   11. 댓글 영역 (페이지 하단 단독 배치)
    ========================================================== */
 .comment-section-full {
     width: 964px;
@@ -485,7 +650,7 @@
 }
 
 /* ==========================================================
-   10. 공통 모달창 스타일 (리뷰 기록)
+   12. 공통 모달창 스타일 (입찰 기록 & 리뷰 기록)
    ========================================================== */
 .modal-overlay {
     display: none;
@@ -539,6 +704,7 @@
     color: #0f172a;
 }
 
+/* --- 별점 UI 스타일 --- */
 .star-rating {
     position: relative;
     unicode-bidi: bidi-override;
@@ -557,6 +723,7 @@
     color: #f59e0b;
 }
 
+.bid-history-list,
 .review-list {
     overflow-y: auto;
     max-height: 350px;
@@ -564,6 +731,17 @@
     flex-direction: column;
     gap: 8px;
     padding-right: 4px;
+}
+
+.bid-history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background-color: #f8fafc;
+    border: 1px solid #f1f5f9;
+    border-radius: 8px;
+    font-size: 13px;
 }
 
 .review-list-item {
@@ -578,6 +756,12 @@
     gap: 8px;
 }
 
+.bid-history-user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 .review-list-user-info {
     display: flex;
     align-items: center;
@@ -585,15 +769,26 @@
     width: 100%;
 }
 
+.bid-history-username {
+    font-weight: 600;
+    color: #334155;
+}
+
 .review-list-userNickname {
     font-weight: 600;
     color: #334155;
-    white-space: nowrap; 
+    white-space: nowrap;
 }
 
+.bid-history-date,
 .review-list-date {
     color: #94a3b8;
     font-size: 11px;
+}
+
+.bid-history-price {
+    font-weight: 600;
+    color: #0f172a;
 }
 
 .review-list-content {
@@ -604,6 +799,7 @@
     line-height: 1.4;
 }
 
+.bid-history-empty,
 .review-list-empty {
     text-align: center;
     padding: 40px 0;
