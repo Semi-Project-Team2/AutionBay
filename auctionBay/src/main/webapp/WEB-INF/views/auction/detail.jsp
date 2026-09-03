@@ -997,7 +997,7 @@
                         <c:forEach var="bid" items="${bids}">
                             <div class="bid-history-item">
                                 <div class="bid-history-user-info">
-                                    <span class="bid-history-username">${bid.bidderId}</span>
+                                    <span class="bid-history-username">${bid.bidderNickname}</span>
                                     <span class="bid-history-date">${bid.createdAtStr}</span>
                                 </div>
                                 <div class="bid-history-price">

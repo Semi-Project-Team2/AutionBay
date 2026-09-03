@@ -211,51 +211,26 @@
     background-color: rgb(188, 188, 188);   
     color: white;
 	font-size: 13px;
-	    font-weight: 700;
-	    padding: 3px 8px;
-	    border-radius: 6px;
-	    border: 1px solid rgb(226, 226, 220); 
-	    flex-shrink: 0;
+	font-weight: 700;
+	padding: 3px 8px;
+	border-radius: 6px;
+	border: 1px solid rgb(226, 226, 220); 
+	flex-shrink: 0;
 }
 
-/* 6. 페이지네이션 */
-.pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 6px;
-    margin-top: 20px;
-    padding-right: 85px; /* 우측 퀵메뉴 오프셋 적용 */
+/* '경매 기간 만료' 뱃지 */
+.expired-badge{
+	background-color: rgb(188, 188, 188);   
+	color: white;
+	font-size: 13px;
+	font-weight: 700;
+	padding: 3px 8px;
+	border-radius: 6px;
+	border: 1px solid rgb(226, 226, 220); 
+	flex-shrink: 0;
 }
 
-.page-btn {
-    padding: 6px 12px;
-    border: 1px solid #e0e0e0;
-    background-color: #ffffff;
-    color: #333333;
-    text-decoration: none;
-    border-radius: 4px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
 
-.page-btn.active {
-    background-color: #111111;
-    color: #ffffff;
-    border-color: #111111;
-    font-weight: 700;
-}
-
-.page-btn:hover:not(.active) {
-    background-color: #f1f1f1;
-}
-
-.page-btn.disabled {
-    opacity: 0.4;
-    cursor: default;
-    pointer-events: none;
-}
 /* 상품 썸네일 영역 기준점 설정 (필수) */
 .product-img {
     position: relative; 

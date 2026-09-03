@@ -107,22 +107,6 @@ public class MyPageController {
 	}
 	
 	/**
-	 * 거래내역 상세 화면
-	 */
-	@GetMapping("/txHistory/{historyId}")
-	public String txHistoryDetail(@PathVariable Long historyId,	Model model) {
-		
-		// DB에서 거래내역 조회 후 변수에 저장
-		TxHistoryDTO txHistory = txService.getTxHistoryDetail(historyId);
-		
-		// 브라우저에서 "txHistory"로 요청 시 txHistory 전달
-		model.addAttribute("txHistory", txHistory);
-		
-		return "mypage/txHistory/detail";
-	}
-
-	
-	/**
 	 * 후기 목록 화면
 	 * @param session
 	 * @param model
@@ -387,8 +371,6 @@ public class MyPageController {
 	    model.addAttribute("keyword", keyword);
 		// 로그인한 유저 정보 전달 (프로필 영역에 설정한 프로필 이미지 표시용)
 		model.addAttribute("user", loginUser);
-		
-		System.out.println(productList);
 
 	    return "mypage/products";
 	}

@@ -1,28 +1,29 @@
 document.addEventListener('DOMContentLoaded', function() {
     const tabBtns = document.querySelectorAll(".tab-btn");
-    const receivedArea = document.querySelector("#received-reviews-area"); // 받은 후기 감싸는 div ID
-    const sentArea = document.querySelector("#sent-reviews-area");         // 보낸 후기 감싸는 div ID
+    const receivedSection = document.getElementById("receivedSection");
+    const sentSection = document.getElementById("sentSection");
 
     tabBtns.forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
 
-            // 1. 탭 버튼 활성화 스타일 교체
+            // 1. 모든 탭 버튼 및 섹션의 active 클래스 제거
             tabBtns.forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
+            if (receivedSection) receivedSection.classList.remove('active');
+            if (sentSection) sentSection.classList.remove('active');
 
-            // 2. 받은/보낸 후기 영역 display 제어 (새로고침/비동기 요청 X)
+            // 2. 클릭된 탭과 해당 섹션에 active 클래스 추가
+            this.classList.add('active');
+            
             if (this.textContent.includes('받은 후기')) {
-                if (receivedArea) receivedArea.style.display = 'block';
-                if (sentArea) sentArea.style.display = 'none';
+                if (receivedSection) receivedSection.classList.add('active');
             } else {
-                if (receivedArea) receivedArea.style.display = 'none';
-                if (sentArea) sentArea.style.display = 'block';
+                if (sentSection) sentSection.classList.add('active');
             }
         });
     });
 
-    // 제목 링크 클릭 시 카드 버블링 방지
+    // 제목 링크 클릭 시 이벤트 버블링 방지
     const titleLinks = document.querySelectorAll('.review-header .title');
     titleLinks.forEach(link => {
         link.addEventListener('click', function(e) {
