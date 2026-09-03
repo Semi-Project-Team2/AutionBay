@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
+<link rel="icon" href="/favicon.ico" sizes="any" />
 <link rel="stylesheet" href="/css/common.css">
 <!-- 헤더 영역 -->
  <script>
