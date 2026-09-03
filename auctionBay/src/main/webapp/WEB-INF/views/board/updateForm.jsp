@@ -214,30 +214,22 @@
 
                 document.getElementById("buyButton").classList.toggle("active", type === "BUY");
                 document.getElementById("sellButton").classList.toggle("active", type === "SELL");
-                document.getElementById("auctionButton").classList.toggle("active", type === "AUCTION");
 
                 const priceArea = document.getElementById("priceArea");
                 const conditionArea = document.getElementById("conditionArea");
-                const auctionPriceArea = document.getElementById("auctionPriceArea");
-                const auctionEndArea = document.getElementById("auctionEndArea");
-
                 const price = document.getElementById("price");
                 const productCondition = document.getElementById("productCondition");
-                const auctionStartPrice = document.getElementById("auctionStartPrice");
-                const auctionEndTime = document.getElementById("auctionEndTime");
 
                 if (type === "BUY") {
                     priceArea.style.display = "flex";
                     conditionArea.style.display = "none"; 
-                    auctionPriceArea.style.display = "none";
-                    auctionEndArea.style.display = "none";
+                    
 
                     productCondition.value = "USED";
                     
                     price.required = true;
                     productCondition.required = false;
-                    auctionStartPrice.required = false;
-                    auctionEndTime.required = false;
+                   
 
                     isDirectSelect.disabled = false;
                     toggleLocationInput(); 
@@ -245,36 +237,16 @@
                 } else if (type === "SELL") {
                     priceArea.style.display = "flex";
                     conditionArea.style.display = "flex";
-                    auctionPriceArea.style.display = "none";
-                    auctionEndArea.style.display = "none";
+                  
 
                     price.required = true;
                     productCondition.required = true;
-                    auctionStartPrice.required = false;
-                    auctionEndTime.required = false;
+                 
 
                     isDirectSelect.disabled = false;
                     toggleLocationInput(); 
-
-                } else if (type === "AUCTION") {
-                    priceArea.style.display = "none";
-                    conditionArea.style.display = "flex";
-                    auctionPriceArea.style.display = "flex";
-                    auctionEndArea.style.display = "flex";
-
-                    price.required = false;
-                    productCondition.required = true;
-                    auctionStartPrice.required = true;
-                    auctionEndTime.required = true;
-
-                    isDirectSelect.value = "0";
-                    isDirectSelect.disabled = true;
-                    
-                    locationArea.style.display = "none";
-                    tradeLocationInput.value = "";
-                    tradeLocationInput.required = false;
-                }
-            }
+				}
+            };
 
             imageInput.addEventListener("change", function () {
                 Array.from(this.files).forEach(function(file) {
@@ -414,33 +386,10 @@
                 return true;
             }
 
-            document.getElementById("auctionEndTime").addEventListener("change", function() {
-                if (!this.value) return;
-                const selectedTime = new Date(this.value);
-                if (selectedTime <= new Date()) {
-                    alert("경매 마감시간은 현재 시간 이후로 선택해주세요.");
-                    this.value = "";
-                }
-            });
 
             document.getElementById("productForm").addEventListener("submit", function(e) {
                 updateInputFiles();
 
-                if (currentTradeType === "AUCTION") {
-                    const auctionEndTime = document.getElementById("auctionEndTime");
-                    if (!auctionEndTime.value) {
-                        alert("경매 마감시간을 선택해주세요.");
-                        e.preventDefault();
-                        return;
-                    }
-
-                    if (new Date(auctionEndTime.value) <= new Date()) {
-                        alert("경매 마감시간은 현재 시간 이후로 설정해주세요.");
-                        auctionEndTime.value = "";
-                        e.preventDefault();
-                        return;
-                    }
-                }
             });
 
             // 글자 수 제한 실시간 표시 기능
