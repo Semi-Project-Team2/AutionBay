@@ -234,7 +234,16 @@
                     <li class="comment-item" id="comment-${comment.commentId}">
                         <div class="comment-list_body">
                             <span class="comment-list_writer">${comment.writerNickname}</span>
-                            <span class="comment-list_content">${comment.content}</span>
+							<span class="comment-list_content">
+							    <c:choose>
+							        <c:when test="${comment.isDeleted == 1}">
+							            삭제된 댓글입니다.
+							        </c:when>
+							        <c:otherwise>
+							            ${comment.content}
+							        </c:otherwise>
+							    </c:choose>
+							</span>
                             <span class="comment-list_date">${comment.createdAtStr}</span>
                         </div>
                         <c:if test="${not empty loginUser and loginUser.userNo == comment.writerNo}">
@@ -252,7 +261,7 @@
                     </form>
                 </c:when>
                 <c:otherwise>
-                    <p class="form-tip"><a href="/user/login">로그인</a> 후 댓글을 작성하세요.</p>
+                    <p class="form-tip"><a href="/user/login?redirectURL=/auction/${product.productId}/detail">로그인</a> 후 댓글을 작성하세요.</p>
                 </c:otherwise>
             </c:choose>
         </section>

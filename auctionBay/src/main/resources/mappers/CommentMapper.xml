@@ -29,7 +29,7 @@
 	
 	<select id="selectCommentsByProductId" parameterType="long" resultType="CommentDTO">
 		SELECT C.COMMENT_ID, C.PRODUCT_ID, C.WRITER_NO, C.CONTENT, C.IS_DELETED, C.CREATED_AT,
-			   TO_CHAR(C.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS CREATED_AT_STR,
+			   TO_CHAR(C.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS CREATED_AT_STR, C.IS_DELETED,
 			   case
 			    	when U.IS_DELETED = 1 then '탈퇴한 회원'
 			    	else U.NICKNAME
@@ -37,7 +37,6 @@
 		  FROM COMMENTS C
 		  	LEFT JOIN USERS U ON C.WRITER_NO = U.USER_NO
 		 WHERE C.PRODUCT_ID = #{productId} 
-		 	AND C.IS_DELETED = 0
 		 ORDER BY C.COMMENT_ID ASC	
 	</select>
 	

@@ -114,9 +114,22 @@ if (commentList) {
 				alert(result.message || "댓글 삭제에 실패했습니다.");
 				return;
 			} 
-			
+			const commentItem = document.querySelector(`#comment-${commentId}`);
+			if (commentItem) {
+			    // 내용 부분을 "삭제된 댓글입니다."로 변경
+			    const contentSpan = commentItem.querySelector(".comment-list_content");
+			    if (contentSpan) {
+			        contentSpan.textContent = "삭제된 댓글입니다.";
+			    }
+
+			    // 삭제 버튼 제거 (선택사항)
+			    const deleteBtn = commentItem.querySelector(".comment-delete-btn");
+			    if (deleteBtn) {
+			        deleteBtn.remove();
+			    }
+			}
 			// 화면상에서 해당 댓글 제거
-			document.querySelector(`#comment-${commentId}`).remove();
+			//document.querySelector(`#comment-${commentId}`).remove();
             // 댓글 개수 실시간으로 1 감소시키기
             const commentCountElem = document.querySelector("#comment-count"); // 만약 클래스라면 ".comment-count"로 변경
             if (commentCountElem) {
