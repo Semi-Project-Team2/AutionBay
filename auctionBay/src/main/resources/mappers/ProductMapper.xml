@@ -232,6 +232,7 @@
 	SET 
 		CATEGORY_ID = #{categoryId},
 		TITLE = #{title},
+		TRADE_TYPE = #{tradeType},
 		DESCRIPTION = #{description},
 		PRODUCT_CONDITION = #{productCondition},
 		PRICE = #{price},

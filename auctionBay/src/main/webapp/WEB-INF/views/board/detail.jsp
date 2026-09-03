@@ -64,26 +64,30 @@
             </div>
             
             <!-- 썸네일 리스트 -->
-            <c:if test="${not empty product.mediaList && product.mediaList.size() > 1}">
-                <div class="thumbnail-list">
-                    <c:forEach var="media" items="${product.mediaList}" varStatus="status">
-                        <div class="thumbnail-item ${status.first ? 'active' : ''}" 
-                             onclick="changeMainMedia(this, '${media.mediaUrl}', '${media.mediaType}')">
-                            <c:choose>
-                                <c:when test="${not empty media.thumbnailUrl}">
-                                    <img src="${media.thumbnailUrl}" alt="썸네일">
-                                </c:when>
-                                <c:otherwise>
-                                    <img src="${media.mediaUrl}" alt="썸네일">
-                                </c:otherwise>
-                            </c:choose>
-                            <c:if test="${media.mediaType == 'VIDEO'}">
-                                <div class="video-badge"><i class="fa-solid fa-play"></i></div>
-                            </c:if>
-                        </div>
-                    </c:forEach>
-                </div>
-            </c:if>
+			<c:if test="${not empty product.mediaList && product.mediaList.size() > 1}">
+	            <div class="thumbnail-list">
+	                <c:forEach var="media" items="${product.mediaList}" varStatus="status">
+	                    <div class="thumbnail-item ${status.first ? 'active' : ''}" 
+	                         onclick="changeMainMedia(this, '${media.mediaUrl}', '${media.mediaType}')">
+	                        <c:choose>
+	                            
+	                            <c:when test="${media.mediaType == 'VIDEO'}">
+	                                <img src="${pageContext.request.contextPath}/uploads/product/common/video_thumb.png" alt="동영상 썸네일">
+	                            </c:when>
+	                            <c:when test="${not empty media.thumbnailUrl}">
+	                                <img src="${media.thumbnailUrl}" alt="썸네일">
+	                            </c:when>
+	                            <c:otherwise>
+	                                <img src="${media.mediaUrl}" alt="썸네일">
+	                            </c:otherwise>
+	                        </c:choose>
+	                        <c:if test="${media.mediaType == 'VIDEO'}">
+	                            <div class="video-badge"><i class="fa-solid fa-play"></i></div>
+	                        </c:if>
+	                    </div>
+	                </c:forEach>
+	            </div>
+	        </c:if>
         </div>
 
         <!-- 우측 일반 상품 상세 카드 영역 -->
@@ -112,6 +116,33 @@
                 <div class="description-box" id="productDescription">
                     ${product.description}
                 </div>
+				<!-- 상품거래 방식(택배, 직거래) - CSS 수정에 맞춰 구조 변경 -->
+				<div class="direct-or-post">
+					<span class="info-label">거래방식</span>
+					<div class="direct-or-post-text">
+						<c:choose>
+							<c:when test="${product.isDirect == 0}">
+								<!-- 택배 -->
+								<span class="trade-method-item delivery">
+									<i class="fas fa-shipping-fast"></i>
+									택배 배송
+								</span>
+							</c:when>
+							<c:otherwise>
+								<!-- 직거래 -->
+								<span class="trade-method-item direct">
+									<i class="fas fa-handshake"></i>
+									직거래
+								</span>
+								<!-- 거래장소 박스 -->
+								<div class="trade-location-box">
+									<i class="fas fa-map-marker-alt"></i>
+									<span>거래장소: ${product.tradeLocation}</span>
+								</div>
+							</c:otherwise>
+						</c:choose>
+					</div>
+				</div>
             </div>
 
             <!-- 버튼 영역 -->

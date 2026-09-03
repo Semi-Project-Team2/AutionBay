@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -160,16 +161,18 @@
 										        </c:otherwise>
 										    </c:choose>
 										</div>
-	                                    <div class="product-price">
-	                                        <c:choose>
-	                                            <c:when test="${p.tradeType == 'AUCTION'}">
-	                                                ${p.auctionStartPrice}원 <span>(시작가)</span>
-	                                            </c:when>
-	                                            <c:otherwise>
-	                                                ${p.price}원
-	                                            </c:otherwise>
-	                                        </c:choose>
-	                                    </div>
+										<div class="product-price">
+										    <c:choose>
+										        <c:when test="${p.tradeType == 'AUCTION'}">
+										            <%-- 경매 시작가에 콤마 적용 --%>
+										            <fmt:formatNumber value="${p.auctionStartPrice}" pattern="#,###" />원 <span>(시작가)</span>
+										        </c:when>
+										        <c:otherwise>
+										            <%-- 일반 판매가에 콤마 적용 --%>
+										            <fmt:formatNumber value="${p.price}" pattern="#,###" />원
+										        </c:otherwise>
+										    </c:choose>
+										</div>
 	                                </div>
 	                            </div>
 	                        </c:forEach>
