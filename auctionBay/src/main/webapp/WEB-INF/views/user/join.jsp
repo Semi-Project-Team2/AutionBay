@@ -12,7 +12,6 @@
 
 <!-- 1. 헤더는 바깥에 독립 배치 (화면 전체 너비 사용) -->
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
-
 <!-- 2. 중앙 폼 카드만 auth-card 클래스로 감싸기 -->
 <main class="auth-card">
 
