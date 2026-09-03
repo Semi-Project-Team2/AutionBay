@@ -88,14 +88,14 @@
 									    <c:choose>
 									        <%-- 1. 경매글일 때 --%>
 									        <c:when test="${board.tradeType == 'AUCTION'}">
-									            <button type="button" class="btn-action" onclick="location.href='${pageContext.request.contextPath}/auction/${pNo}/update'">수정</button>
-									            <button type="button" class="btn-action" style="color: #c92a2a;" data-product-no="${pNo}" onclick="deleteProduct(this)">삭제</button>
+									            <button type="button" class="btn-action" onclick="goToUpdate(${pNo}, 'AUCTION')">수정</button>
+									            <button type="button" class="btn-action" style="color: #c92a2a;" data-product-no="${pNo}" onclick="deleteProduct(${pNo})">삭제</button>
 									        </c:when>
 									        
 									        <%-- 2. 일반글일 때 (경매와 경로 형식을 board로 통일) --%>
 									        <c:otherwise>
-									            <button type="button" class="btn-action" onclick="location.href='${pageContext.request.contextPath}/board/${pNo}/update'">수정</button>
-									            <button type="button" class="btn-action" style="color: #c92a2a;" data-product-no="${pNo}" onclick="deleteProduct(this)">삭제</button>
+									            <button type="button" class="btn-action" onclick="goToUpdate(${pNo}, 'BOARD')">수정</button>
+									            <button type="button" class="btn-action" style="color: #c92a2a;" data-product-no="${pNo}" onclick="deleteProduct(${pNo})">삭제</button>
 									        </c:otherwise>
 									    </c:choose>
 									</div>
@@ -116,137 +116,163 @@
 
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
-	<script>
-	    const itemsPerPage = 5;
-	    let currentPage = 1;
-	    const cards = document.querySelectorAll('.board-card');
-	    const totalItems = cards.length;
 
-	    function showPage(page) {
-	        currentPage = page;
-	        const start = (page - 1) * itemsPerPage;
-	        const end = start + itemsPerPage;
+		<script>
+			    const itemsPerPage = 5;
+			    let currentPage = 1;
+			    let cards = document.querySelectorAll('.board-card');
+			    let totalItems = cards.length;
 
-	        cards.forEach((card, index) => {
-	            if (index >= start && index < end) {
-	                card.style.display = 'flex';
-	            } else {
-	                card.style.display = 'none';
-	            }
-	        });
+			    function showPage(page) {
+			        currentPage = page;
+			        const start = (page - 1) * itemsPerPage;
+			        const end = start + itemsPerPage;
 
-	        renderPagination();
-	    }
+			        cards.forEach((card, index) => {
+			            if (index >= start && index < end) {
+			                card.style.display = 'flex';
+			            } else {
+			                card.style.display = 'none';
+			            }
+			        });
 
-	    function renderPagination() {
-	        const paginationContainer = document.getElementById('paginationContainer');
-	        paginationContainer.innerHTML = '';
+			        renderPagination();
+			    }
 
-	        if (totalItems === 0) return;
+			    function renderPagination() {
+			        const paginationContainer = document.getElementById('paginationContainer');
+			        paginationContainer.innerHTML = '';
 
-	        const totalPages = Math.ceil(totalItems / itemsPerPage);
+			        if (totalItems === 0) return;
 
-	        // 1페이지 초과일 때만 이전 버튼 생성
-	        if (totalPages > 1) {
-	            const prevBtn = document.createElement('a');
-	            prevBtn.className = 'page-btn';
-	            prevBtn.innerHTML = '&lt; 이전';
-	            if (currentPage > 1) {
-	                prevBtn.onclick = () => showPage(currentPage - 1);
-	            } else {
-	                prevBtn.style.opacity = '0.4';
-	                prevBtn.style.cursor = 'default';
-	            }
-	            paginationContainer.appendChild(prevBtn);
-	        }
+			        const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-	        // 페이지 번호 버튼 (5개 이하일 때는 '1'만 생성됨)
-	        for (let i = 1; i <= totalPages; i++) {
-	            const pageBtn = document.createElement('a');
-	            pageBtn.className = 'page-btn' + (i === currentPage ? ' active' : '');
-	            pageBtn.innerText = i;
-	            pageBtn.onclick = () => showPage(i);
-	            paginationContainer.appendChild(pageBtn);
-	        }
+			        if (totalPages > 1) {
+			            const prevBtn = document.createElement('a');
+			            prevBtn.className = 'page-btn';
+			            prevBtn.innerHTML = '&lt; 이전';
+			            if (currentPage > 1) {
+			                prevBtn.onclick = () => showPage(currentPage - 1);
+			            } else {
+			                prevBtn.style.opacity = '0.4';
+			                prevBtn.style.cursor = 'default';
+			            }
+			            paginationContainer.appendChild(prevBtn);
+			        }
 
-	        // 1페이지 초과일 때만 다음 버튼 생성
-	        if (totalPages > 1) {
-	            const nextBtn = document.createElement('a');
-	            nextBtn.className = 'page-btn';
-	            nextBtn.innerHTML = '다음 &gt;';
-	            if (currentPage < totalPages) {
-	                nextBtn.onclick = () => showPage(currentPage + 1);
-	            } else {
-	                nextBtn.style.opacity = '0.4';
-	                nextBtn.style.cursor = 'default';
-	            }
-	            paginationContainer.appendChild(nextBtn);
-	        }
-	    }
+			        for (let i = 1; i <= totalPages; i++) {
+			            const pageBtn = document.createElement('a');
+			            pageBtn.className = 'page-btn' + (i === currentPage ? ' active' : '');
+			            pageBtn.innerText = i;
+			            pageBtn.onclick = () => showPage(i);
+			            paginationContainer.appendChild(pageBtn);
+			        }
 
-	    // 페이지 최초 로드 시 1페이지 실행
-	    if (totalItems > 0) {
-	        showPage(1);
-	    }
+			        if (totalPages > 1) {
+			            const nextBtn = document.createElement('a');
+			            nextBtn.className = 'page-btn';
+			            nextBtn.innerHTML = '다음 &gt;';
+			            if (currentPage < totalPages) {
+			                nextBtn.onclick = () => showPage(currentPage + 1);
+			            } else {
+			                nextBtn.style.opacity = '0.4';
+			                nextBtn.style.cursor = 'default';
+			            }
+			            paginationContainer.appendChild(nextBtn);
+			        }
+			    }
 
-	    // 검색창 및 엔터키 이벤트 설정
-	    document.addEventListener("DOMContentLoaded", function() {
-	        const urlParams = new URLSearchParams(window.location.search);
-	        const keywordParam = urlParams.get('keyword');
-	        const mypageInput = document.getElementById('mypageKeywordInput');
-	        
-	        if (keywordParam && mypageInput) {
-	            mypageInput.value = keywordParam;
-	        }
+			    if (totalItems > 0) {
+			        showPage(1);
+			    }
 
-	        const headerInput = document.querySelector('header input[name="keyword"], .header input[name="keyword"]');
-	        if (headerInput) {
-	            headerInput.value = '';
-	        }
+			    document.addEventListener("DOMContentLoaded", function() {
+			        const urlParams = new URLSearchParams(window.location.search);
+			        const keywordParam = urlParams.get('keyword');
+			        const mypageInput = document.getElementById('mypageKeywordInput');
 
-	        if (mypageInput) {
-	            mypageInput.addEventListener('keydown', function(event) {
-	                if (event.key === 'Enter') {
-	                    event.preventDefault();
-	                    searchMypageProducts();
-	                }
-	            });
-	        }
-	    });
+			        if (keywordParam && mypageInput) {
+			            mypageInput.value = keywordParam;
+			        }
 
-	    function searchMypageProducts() {
-	        const input = document.getElementById('mypageKeywordInput');
-	        const keyword = input ? input.value.trim() : '';
-	        location.href = '${pageContext.request.contextPath}/mypage/products?keyword=' + encodeURIComponent(keyword);
-	    }
+			        const headerInput = document.querySelector('header input[name="keyword"], .header input[name="keyword"]');
+			        if (headerInput) {
+			            headerInput.value = '';
+			        }
 
-	    function deleteProduct(button) {
-	        const productNo = button.getAttribute("data-product-no");
-	        
-	        if (!productNo || productNo === 'undefined' || productNo === '') {
-	            alert("게시글 번호를 찾을 수 없습니다.");
-	            return;
-	        }
-	        
-	        if (!confirm("정말 이 게시글을 삭제하시겠습니까?")) {
-	            return;
-	        }
+			        if (mypageInput) {
+			            mypageInput.addEventListener('keydown', function(event) {
+			                if (event.key === 'Enter') {
+			                    event.preventDefault();
+			                    searchMypageProducts();
+			                }
+			            });
+			        }
+			    });
 
-	        fetch('${pageContext.request.contextPath}/mypage/deleteProduct?productNo=' + productNo, {
-	            method: 'DELETE'
-	        })
-	        .then(response => response.text())
-	        .then(result => {
-	            if (result.trim() === "SUCCESS") {
-	                location.reload();
-	            } else {
-	                alert("게시글 삭제에 실패했습니다.");
-	            }
-	        })
-	        .catch(error => {
-	            console.error('Error:', error);
-	            alert("서버 통신 중 오류가 발생했습니다.");
-	        });
-	    }
-	</script></body>
+			    function searchMypageProducts() {
+			        const input = document.getElementById('mypageKeywordInput');
+			        const keyword = input ? input.value.trim() : '';
+			        location.href = '${pageContext.request.contextPath}/mypage/products?keyword=' + encodeURIComponent(keyword);
+			    }
+
+			    // 삭제 처리 (AJAX 방식 - 마이페이지에 머무름)
+			    function deleteProduct(pNo) {
+			        if (!confirm('정말 삭제하시겠습니까?')) {
+			            return;
+			        }
+
+			        fetch('${pageContext.request.contextPath}/product/' + pNo + '/delete', {
+			            method: 'GET',
+			            credentials: 'same-origin' // 세션 쿠키 포함
+			        })
+			        .then(response => {
+			            // 컨트롤러는 무조건 redirect로만 응답하므로 response.ok는 항상 true.
+			            // 대신 최종 리다이렉트된 URL로 성공/실패를 판단한다.
+			            // 성공 시: /product/list 로 리다이렉트됨
+			            if (response.url.includes('/product/list')) {
+			                const target = document.getElementById('board-card-' + pNo);
+			                if (target) {
+			                    target.remove();
+			                }
+			                cards = document.querySelectorAll('.board-card');
+			                totalItems = cards.length;
+			                showPage(currentPage);
+			            } else {
+			                // 실패: 입찰이력 존재 / 이미 삭제됨 / 작성자 아님 / 로그인 필요 등
+			                alert('삭제할 수 없습니다. (입찰 이력이 있거나 이미 삭제된 게시글일 수 있어요)');
+			            }
+			        })
+			        .catch(err => {
+			            alert('삭제 중 오류가 발생했습니다.');
+			            console.error(err);
+			        });
+			    }
+
+			    // 수정 이동 처리 (AJAX 확인 방식 - 실패 시 마이페이지에 머무름)
+			    function goToUpdate(pNo, tradeType) {
+			        const updatePath = tradeType === 'AUCTION'
+			            ? '${pageContext.request.contextPath}/auction/' + pNo + '/update'
+			            : '${pageContext.request.contextPath}/board/' + pNo + '/update';
+
+			        fetch(updatePath, {
+			            method: 'GET',
+			            credentials: 'same-origin'
+			        })
+			        .then(response => {
+			            // 성공 시: .../update 로 응답 (수정 폼 렌더링)
+			            // 실패 시: .../detail 또는 /user/login 으로 리다이렉트됨
+			            if (response.url.endsWith('/update')) {
+			                location.href = updatePath;
+			            } else {
+			                alert('수정할 수 없습니다. (입찰 이력이 있거나 거래완료/마감된 상품일 수 있어요)');
+			            }
+			        })
+			        .catch(err => {
+			            alert('오류가 발생했습니다.');
+			            console.error(err);
+			        });
+			    }
+			</script>
+</body>
 </html>

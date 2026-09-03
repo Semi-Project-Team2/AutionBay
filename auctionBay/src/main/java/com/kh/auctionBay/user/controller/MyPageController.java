@@ -107,22 +107,6 @@ public class MyPageController {
 	}
 	
 	/**
-	 * 거래내역 상세 화면
-	 */
-	@GetMapping("/txHistory/{historyId}")
-	public String txHistoryDetail(@PathVariable Long historyId,	Model model) {
-		
-		// DB에서 거래내역 조회 후 변수에 저장
-		TxHistoryDTO txHistory = txService.getTxHistoryDetail(historyId);
-		
-		// 브라우저에서 "txHistory"로 요청 시 txHistory 전달
-		model.addAttribute("txHistory", txHistory);
-		
-		return "mypage/txHistory/detail";
-	}
-
-	
-	/**
 	 * 후기 목록 화면
 	 * @param session
 	 * @param model
@@ -387,8 +371,6 @@ public class MyPageController {
 	    model.addAttribute("keyword", keyword);
 		// 로그인한 유저 정보 전달 (프로필 영역에 설정한 프로필 이미지 표시용)
 		model.addAttribute("user", loginUser);
-		
-		System.out.println(productList);
 
 	    return "mypage/products";
 	}
@@ -460,25 +442,7 @@ public class MyPageController {
 	
 	
 
-	/**
-	 * [내가 작성한 게시글 삭제 처리 (AJAX 비동기 통신)]
-	 * - 요청 URL: DELETE /mypage/deleteProduct?productNo=상품번호
-	 * - 처리 과정:
-	 *    1. 비동기 요청 시 파라미터로 넘어온 상품 번호(productNo)와 로그인 유저 번호를 확인합니다.
-	 *    2. 소프트 딜리트(삭제 상태값 변경) 방식을 통해 게시글 삭제 처리를 수행합니다.
-	 * - 응답 데이터: 처리가 성공하면 "SUCCESS", 실패하거나 비로그인 시 "FAIL" 문자열을 반환합니다.
-	 */
-	@DeleteMapping("/deleteProduct") 
-	@ResponseBody 
-	public String deleteMyProduct(Long productNo, HttpSession session) {
-		UserDTO loginUser = (UserDTO) session.getAttribute(SessionConst.LOGIN_USER);
-		if (loginUser == null) {
-			return "FAIL";
-		}
 
-		boolean isDeleted = activityService.deleteMyProduct(productNo, loginUser.getUserNo());
-		return isDeleted ? "SUCCESS" : "FAIL";
-	}
 
 	/**
 	 * [내가 작성한 댓글 삭제 처리 (AJAX 비동기 통신)]
