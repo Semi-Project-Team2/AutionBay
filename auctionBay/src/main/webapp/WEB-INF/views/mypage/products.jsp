@@ -88,13 +88,13 @@
 									    <c:choose>
 									        <%-- 1. 경매글일 때 --%>
 									        <c:when test="${board.tradeType == 'AUCTION'}">
-									            <button type="button" class="btn-action" onclick="location.href='${pageContext.request.contextPath}/auction/${pNo}/update'">수정</button>
+									            <button type="button" class="btn-action" onclick="goToUpdate(${pNo}, 'AUCTION')">수정</button>
 									            <button type="button" class="btn-action" style="color: #c92a2a;" data-product-no="${pNo}" onclick="deleteProduct(${pNo})">삭제</button>
 									        </c:when>
 									        
 									        <%-- 2. 일반글일 때 (경매와 경로 형식을 board로 통일) --%>
 									        <c:otherwise>
-									            <button type="button" class="btn-action" onclick="location.href='${pageContext.request.contextPath}/board/${pNo}/update'">수정</button>
+									            <button type="button" class="btn-action" onclick="goToUpdate(${pNo}, 'BOARD')">수정</button>
 									            <button type="button" class="btn-action" style="color: #c92a2a;" data-product-no="${pNo}" onclick="deleteProduct(${pNo})">삭제</button>
 									        </c:otherwise>
 									    </c:choose>
@@ -245,6 +245,31 @@
 			        })
 			        .catch(err => {
 			            alert('삭제 중 오류가 발생했습니다.');
+			            console.error(err);
+			        });
+			    }
+
+			    // 수정 이동 처리 (AJAX 확인 방식 - 실패 시 마이페이지에 머무름)
+			    function goToUpdate(pNo, tradeType) {
+			        const updatePath = tradeType === 'AUCTION'
+			            ? '${pageContext.request.contextPath}/auction/' + pNo + '/update'
+			            : '${pageContext.request.contextPath}/board/' + pNo + '/update';
+
+			        fetch(updatePath, {
+			            method: 'GET',
+			            credentials: 'same-origin'
+			        })
+			        .then(response => {
+			            // 성공 시: .../update 로 응답 (수정 폼 렌더링)
+			            // 실패 시: .../detail 또는 /user/login 으로 리다이렉트됨
+			            if (response.url.endsWith('/update')) {
+			                location.href = updatePath;
+			            } else {
+			                alert('수정할 수 없습니다. (입찰 이력이 있거나 거래완료/마감된 상품일 수 있어요)');
+			            }
+			        })
+			        .catch(err => {
+			            alert('오류가 발생했습니다.');
 			            console.error(err);
 			        });
 			    }
