@@ -130,7 +130,8 @@ if (commentList) {
 			}
 			// 화면상에서 해당 댓글 제거
 			//document.querySelector(`#comment-${commentId}`).remove();
-            // 댓글 개수 실시간으로 1 감소시키기
+            /*
+			// 댓글 개수 실시간으로 1 감소시키기
             const commentCountElem = document.querySelector("#comment-count"); // 만약 클래스라면 ".comment-count"로 변경
             if (commentCountElem) {
                 let currentCount = parseInt(commentCountElem.textContent.replace(/[^0-9]/g, '')) || 0;
@@ -138,6 +139,7 @@ if (commentList) {
                     commentCountElem.textContent = currentCount - 1;
                 }
             }
+			*/
 		} catch (error) {
 			alert("댓글 삭제 중 오류가 발생했습니다.");
 		}
