@@ -5,7 +5,20 @@ const serverMessage = document.querySelector("#server-data").dataset.message;
 if (serverMessage) {
     alert(serverMessage);
 }
-
+// 페이지 로드 시 이미 화면에 그려져 있는 댓글 중 삭제된 댓글의 삭제 버튼 제거
+document.addEventListener("DOMContentLoaded", function() {
+    const commentItems = document.querySelectorAll("#comment-list > li");
+    
+    commentItems.forEach(item => {
+        const contentSpan = item.querySelector(".comment-list_content");
+        if (contentSpan && contentSpan.textContent.trim() === "삭제된 댓글입니다.") {
+            const deleteBtn = item.querySelector(".comment-delete-btn");
+            if (deleteBtn) {
+                deleteBtn.remove(); // 또는 deleteBtn.style.display = 'none';
+            }
+        }
+    });
+});
 // 댓글 기능
 const commentForm = document.querySelector("#comment-form");
 const productId = document.querySelector("#product-id-value").value;
@@ -68,11 +81,24 @@ function appendComment(comment) {
 	li.id = `comment-${comment.commentId}`;
 	
 	cloneComment.querySelector(".comment-list_writer").textContent = comment.writerNickname;
-	cloneComment.querySelector(".comment-list_content").textContent = comment.content;
-	cloneComment.querySelector(".comment-list_date").textContent = comment.createdAtStr;
 	
-	cloneComment.querySelector(".comment-delete-btn").dataset.commentId = comment.commentId;
-	// => dataset 을 사용하면 data-* 속성으로 추가될 것임.
+	// 댓글이 이미 삭제된 상태로 로드되는 경우 처리
+	const contentSpan = cloneComment.querySelector(".comment-list_content");
+	const deleteBtn = cloneComment.querySelector(".comment-delete-btn");
+
+	if (comment.isDeleted === 1) {
+		contentSpan.textContent = "삭제된 댓글입니다.";
+		if (deleteBtn) {
+			deleteBtn.remove(); // 삭제된 댓글이면 버튼 제거
+		}
+	} else {
+		contentSpan.textContent = comment.content;
+		if (deleteBtn) {
+			deleteBtn.dataset.commentId = comment.commentId;
+		}
+	}
+	
+	cloneComment.querySelector(".comment-list_date").textContent = comment.createdAtStr;
 	
 	commentList.appendChild(cloneComment);
 
