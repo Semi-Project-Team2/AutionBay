@@ -34,9 +34,11 @@
 			    <div class="product-summary">
 			        <div class="product-summary-title">${product.title}</div>
 			        <div class="product-summary-price">
-			            <fmt:formatNumber value="${product.price}" pattern="#,###"/>원
+						<c:if test="${product.tradeType ne 'AUCTION'}">
+						                <fmt:formatNumber value="${product.price}" pattern="#,###"/>원
+						            </c:if>
 			            <span class="product-summary-type">
-			                ${product.tradeType eq 'SELL' ? '판매글' : '구매글'}
+			                ${product.tradeType eq 'SELL' ? '판매글' : product.tradeType eq 'BUY' ? '구매글' : '경매글'}
 			            </span>
 			        </div>
 			    </div>

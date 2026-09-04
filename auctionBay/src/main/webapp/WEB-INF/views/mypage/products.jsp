@@ -240,7 +240,7 @@
 			                showPage(currentPage);
 			            } else {
 			                // 실패: 입찰이력 존재 / 이미 삭제됨 / 작성자 아님 / 로그인 필요 등
-			                alert('삭제할 수 없습니다. (입찰 이력이 있거나 이미 삭제된 게시글일 수 있어요)');
+			                alert('삭제할 수 없습니다. (입찰 이력이 있거나 이미 삭제된 게시글일 수 있습니다)');
 			            }
 			        })
 			        .catch(err => {
@@ -265,7 +265,7 @@
 			            if (response.url.endsWith('/update')) {
 			                location.href = updatePath;
 			            } else {
-			                alert('수정할 수 없습니다. (입찰 이력이 있거나 거래완료/마감된 상품일 수 있어요)');
+			                alert('수정할 수 없습니다. (입찰 이력이 있거나 거래완료/마감된 상품일 수 있습니다)');
 			            }
 			        })
 			        .catch(err => {
