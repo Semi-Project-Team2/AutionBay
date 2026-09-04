@@ -45,12 +45,20 @@
 			AND P.TRADE_TYPE = #{tradeType}
 		</if>
 		
-		<!-- 3. 가격 범위 필터 -->
+		<!-- 3. 가격 범위 필터 (일반 판매는 PRICE, 경매는 AUCTION_START_PRICE 기준 분기) -->
 		<if test="minPrice != null">
-		    AND P.PRICE &gt;= #{minPrice}
+		    AND (
+		        (P.TRADE_TYPE = 'AUCTION' AND P.AUCTION_START_PRICE &gt;= #{minPrice})
+		        OR
+		        (P.TRADE_TYPE != 'AUCTION' AND P.PRICE &gt;= #{minPrice})
+		    )
 		</if>
 		<if test="maxPrice != null">
-		    AND P.PRICE &lt;= #{maxPrice}
+		    AND (
+		        (P.TRADE_TYPE = 'AUCTION' AND P.AUCTION_START_PRICE &lt;= #{maxPrice})
+		        OR
+		        (P.TRADE_TYPE != 'AUCTION' AND P.PRICE &lt;= #{maxPrice})
+		    )
 		</if>
 		
 		<!-- 4. 상품 상태 필터 -->
@@ -118,10 +126,16 @@
 	ORDER BY 
 	<choose>
 		<when test="sortBy == 'PRICE_ASC' or sortBy == 'priceAsc'">
-			P.PRICE ASC, P.PRODUCT_ID DESC
+			CASE 
+				WHEN P.TRADE_TYPE = 'AUCTION' THEN P.AUCTION_START_PRICE 
+				ELSE P.PRICE 
+			END ASC, P.PRODUCT_ID DESC
 		</when>
 		<when test="sortBy == 'PRICE_DESC' or sortBy == 'priceDesc'">
-			P.PRICE DESC, P.PRODUCT_ID DESC
+			CASE 
+				WHEN P.TRADE_TYPE = 'AUCTION' THEN P.AUCTION_START_PRICE 
+				ELSE P.PRICE 
+			END DESC, P.PRODUCT_ID DESC
 		</when>
 		<when test="sortBy == 'VIEWS' or sortBy == 'views'">
 			P.VIEW_COUNT DESC, P.PRODUCT_ID DESC
